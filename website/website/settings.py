@@ -51,11 +51,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'website.urls'
-
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "sightseeing" / "static"]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "sightseeing" / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
