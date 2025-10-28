@@ -1,9 +1,9 @@
 from django.urls import path, include
 from rest_framework import routers
-from .api_views import PlaceViewSet
 
+# `PlaceViewSet` was removed from `sightseeing.api_views`.
+# If you re-add API viewsets later, register them on the router here.
 router = routers.DefaultRouter()
-router.register(r"places", PlaceViewSet, basename="place")
 
 urlpatterns = [
     path("", include(router.urls)),
