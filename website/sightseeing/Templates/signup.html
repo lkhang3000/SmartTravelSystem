@@ -11,9 +11,14 @@
   <main class="card">
     <h1 class="brand">Sign up</h1>
 
+    {% if messages %}
+      {% for message in messages %}
+        <div class="error">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
     <form id="signupForm" method="post" action="{% url 'signup_page' %}" novalidate>
       {% csrf_token %}
-
       <button type="button" id="googleBtnSignup" class="btn google">Continue with Google</button>
 
       <div class="divider"><span>OR</span></div>
