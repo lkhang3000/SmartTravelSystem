@@ -13,34 +13,26 @@ def get_home(request):
     #destination = Destinations.desName.all()
     return render(request, 'homepage.html')
 
-
 def user_input(request):
     return render(request, 'userInput.html')
-
 
 def user_login(request):
     return render(request, 'login.html')
 
-
 def login_page(request):
     return render(request, 'login_page.html')
-
 
 def signup_page(request):
     return render(request, 'signup.html')
 
-
 def password_reset(request):
     return render(request, 'password_reset.html')
-
 
 def password_reset_done(request):
     return render(request, 'password_reset_done.html')
 
-
 def password_reset_confirm(request):
     return render(request, 'password_reset_confirm.html')
-
 
 def password_reset_complete(request):
     return render(request, 'password_reset_complete.html')
