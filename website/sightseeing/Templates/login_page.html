@@ -15,7 +15,7 @@
       <div class="error">{{ form.non_field_errors }}</div>
     {% endif %}
 
-    <form id="loginForm" method="post" action="{% url 'accounts:login' %}" novalidate>
+    <form id="loginForm" method="post" action="{% url 'login_page' %}" novalidate>
       {% csrf_token %}
       <button type="button" id="googleBtn" class="btn google">Continue with Google</button>
 
@@ -34,11 +34,11 @@
       </label>
 
       <div class="row-between">
-        <a class="link" href="{% url 'accounts:password_reset' %}">Forget your password</a>
+        <a class="link" href="{% url 'password_reset' %}">Forget your password</a>
         <button type="submit" class="btn primary">Log in</button>
       </div>
 
-      <p class="muted">Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a></p>
+      <p class="muted">Don't have an account? <a href="{% url 'signup_page' %}">Sign up</a></p>
     </form>
   </main>
 
