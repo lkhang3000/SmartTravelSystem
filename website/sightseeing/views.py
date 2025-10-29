@@ -10,7 +10,7 @@ from .Services.recommender import SightseeingRecommender
 
 # Create your views here.
 def get_home(request):
-    destination = Destinations.desName.all()
+    #destination = Destinations.desName.all()
     return render (request, 'homepage.html')
 
 def user_input(request):
@@ -18,6 +18,9 @@ def user_input(request):
 
 def user_login(request):
     return render(request, 'login.html')
+
+
+
 
 def api_recommend(request):
     """Accept POST JSON from frontend, save to Services/user_data.json,
