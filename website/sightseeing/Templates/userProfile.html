@@ -93,21 +93,38 @@
       color: #333;
     }
 
-    /* === EDIT BUTTON === */
-    .edit-btn {
-      margin-top: 25px;
-      background: #0077ff;
-      color: white;
+    /* === BUTTON AREA === */
+    .button-row {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .btn {
       border: none;
       padding: 10px 25px;
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
       transition: background 0.3s ease;
+      color: white;
+    }
+
+    .edit-btn {
+      background: #0077ff;
     }
 
     .edit-btn:hover {
       background: #005fcc;
+    }
+
+    .logout-btn {
+      background: #ff4b5c;
+    }
+
+    .logout-btn:hover {
+      background: #d93a4c;
     }
   </style>
 </head>
@@ -130,11 +147,15 @@
       <!-- User info will be inserted here by JavaScript -->
     </div>
 
-    <button class="edit-btn" onclick="editProfile()">Edit</button>
+    <!-- Buttons row -->
+    <div class="button-row">
+      <button class="btn edit-btn" onclick="editProfile()">Edit</button>
+      <button class="btn logout-btn" onclick="logout()">Logout</button>
+    </div>
   </div>
 
   <script>
-    // Example data (in real case, fetched from backend)
+    // Example user data
     const userData = {
       username: "traveler01",
       gender: "Female",
@@ -147,7 +168,7 @@
       arrival_day: "2025-11-20"
     };
 
-    // Function to display data
+    // Display user info dynamically
     function displayUserInfo(data) {
       const userInfoDiv = document.getElementById("userInfo");
       userInfoDiv.innerHTML = `
@@ -163,9 +184,15 @@
       `;
     }
 
-    // Edit button click handler
+    // Edit button handler
     function editProfile() {
       alert("Edit profile clicked!");
+    }
+
+    // Logout button handler
+    function logout() {
+      alert("Logging out...");
+      // Redirect to login page or clear session here
     }
 
     displayUserInfo(userData);
@@ -173,3 +200,4 @@
 </body>
 
 </html>
+
