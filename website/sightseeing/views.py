@@ -50,6 +50,8 @@ def password_reset_confirm(request):
 def password_reset_complete(request):
     return render(request, 'password_reset_complete.html')
 
+def recommend_result(request):
+    return render(request, 'recommendResult.html')
 
 
 
