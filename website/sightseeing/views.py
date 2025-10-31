@@ -53,6 +53,9 @@ def password_reset_complete(request):
 def recommend_result(request):
     return render(request, 'recommendResult.html')
 
+def user_profile(request):
+    return render(request, 'userProfile.html')
+
 
 
 
