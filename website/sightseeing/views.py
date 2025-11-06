@@ -50,6 +50,12 @@ def password_reset_confirm(request):
 def password_reset_complete(request):
     return render(request, 'password_reset_complete.html')
 
+def about_us(request):
+    return render(request, 'About-us.html')
+
+def contact_us(request):
+    return render(request, 'Contact-us.html')
+
 
 
 
