@@ -1,0 +1,12 @@
+# Django and core dependencies
+Django>=4.2,<5.0
+djangorestframework>=3.14.0
+
+# Database
+# SQLite is built-in with Python, no extra package needed
+
+# Google Gemini AI
+google-generativeai>=0.8.0
+
+# Other dependencies (add as needed)
+# Add your other project dependencies here
