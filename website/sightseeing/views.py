@@ -14,9 +14,6 @@ def get_home(request):
     #destination = Destinations.desName.all()
     return render(request, 'homepage.html')
 
-def user_input(request):
-    return render(request, 'userInput.html')
-
 def login_page(request):
     
     if request.method == "POST":

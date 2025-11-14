@@ -6,7 +6,6 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('', views.get_home, name='home'),
-    path('discover/', views.user_input, name='user_input'),
     path('save-input/', views.save_user_input, name='save_user_input'),
     path('login/', views.login_page, name='login_page'),
     path('register/', views.signup_page, name='signup_page'),
