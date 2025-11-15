@@ -24,7 +24,7 @@ def login_page(request):
             login(request, user)
             return redirect('home')
         else: messages.info(request, 'user or password is incorrect!')
-    return render(request, 'login_page.html')
+    return render(request, 'loginPage.html')
 
 def signup_page(request):
     if request.method == "POST":
@@ -57,6 +57,10 @@ def recommend_result(request):
 
 def user_profile(request):
     return render(request, 'userProfile.html')
+
+def user_input(request):
+    return render(request, 'userInput.html')
+
 
 def save_user_input(request):
     """Xử lý form và tạo file JSON cho recommender"""
