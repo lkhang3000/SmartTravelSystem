@@ -38,7 +38,7 @@ def signup_page(request):
         form = registerForm()
     
     context = {'form': form}
-    return render(request, 'signup.html', context)
+    return render(request, 'signupPage.html', context)
 
 def password_reset(request):
     return render(request, 'password_reset.html')
