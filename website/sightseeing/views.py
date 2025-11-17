@@ -71,14 +71,14 @@ def recommend_result(request):
             
             # Get filtered recommendations based on user preferences
             preferences = user_data.get('trip_preferences', {})
-            region = preferences.get('domestic_or_international', {}).get('region', '').lower()
+            location = preferences.get('domestic_or_international', {}).get('location', '').lower()
             tags = [t.lower() for t in preferences.get('tags', [])]
             
             filtered = recommender.spots
             
-            # Filter by region
-            if region:
-                filtered = [spot for spot in filtered if region in spot.region.lower()] or filtered
+            # Filter by location (city)
+            if location:
+                filtered = [spot for spot in filtered if location in spot.location.lower()] or filtered
             
             # Filter by tags
             if tags:
@@ -131,7 +131,7 @@ def save_user_input(request):
     if request.method == 'POST':
         # Lấy dữ liệu từ form
         username = request.POST.get('username', 'anonymous')
-        region = request.POST.get('region')
+        location = request.POST.get('location')  # Thành phố thay vì miền
         budget = request.POST.get('budget')
         departure_date = request.POST.get('departure_date')
         return_date = request.POST.get('return_date')
@@ -147,7 +147,7 @@ def save_user_input(request):
             "trip_preferences": {
                 "domestic_or_international": {
                     "type": "domestic",
-                    "region": region
+                    "location": location  # Lưu location thay vì region
                 },
                 "tags": tags,
                 "budget": int(budget) if budget else 0,

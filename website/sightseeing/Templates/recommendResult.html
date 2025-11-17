@@ -41,7 +41,7 @@
         <h2 class="u-align-left u-text u-text-default u-text-1">Recommend Results{% if user_preferences %} for {{ user_preferences.user_info.username }}{% endif %}</h2>
         {% if user_preferences %}
         <p class="u-text u-text-grey-50" style="margin-bottom: 20px;">
-          Region: {{ user_preferences.trip_preferences.domestic_or_international.region|title }} | 
+          Location: {{ user_preferences.trip_preferences.domestic_or_international.location|title }} | 
           Budget: {{ user_preferences.trip_preferences.budget|default:"Not specified" }} VND
           {% if user_preferences.trip_preferences.tags %}
           | Interests: {{ user_preferences.trip_preferences.tags|join:", " }}
@@ -60,8 +60,8 @@
                     <div class="u-container-layout u-container-layout-{{ forloop.counter|add:1 }}">
                       <h5 class="u-text u-text-default u-text-{{ forloop.counter|add:2 }}">{{ spot.rating }}/5.0 rating</h5>
                       <p class="u-custom-font u-font-roboto u-text u-text-{{ forloop.counter|add:3 }}">
-                        <strong>{{ spot.location }}</strong> - {{ spot.category }}<br>
-                        Region: {{ spot.region }}
+                        <strong>Location:</strong> {{ spot.location }}<br>
+                        <strong>Category:</strong> {{ spot.category }}
                       </p>
                     </div>
                   </div>

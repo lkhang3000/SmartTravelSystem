@@ -16,28 +16,27 @@ class UsersProfile(models.Model):
     def __str__(self):
         return self.name
     
-class Region(models.Model):
-    regionName = models.CharField(max_length=200, null=True)
+class Location(models.Model):
+    locationName = models.CharField(max_length=200, null=True)  # Ha Noi, Ho Chi Minh, Da Nang, etc.
 
     def __str__(self):
-        return self.regionName
+        return self.locationName
 
 
 class Destinations(models.Model):
-    desName = models.CharField(max_length=200, null=True)
-    region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='destinations', null=True, blank=True)
-    location = models.CharField(max_length=200, null=True)
-    description = models.TextField(null=True, blank=True)
-    price_range = models.CharField(max_length=50, null=True, blank=True)
+    # Core fields matching CSV structure
+    desName = models.CharField(max_length=200, null=True)  # 'name' in CSV
+    address = models.TextField(null=True, blank=True)  # 'address' in CSV
+    rating = models.FloatField(default=0.0, null=True, blank=True)  # 'ratings' in CSV
+    category = models.CharField(max_length=100, null=True, blank=True)  # 'category' in CSV
+    description = models.TextField(null=True, blank=True)  # 'description' in CSV
     
-    # Thông tin chi tiết
-    category = models.CharField(max_length=100, null=True, blank=True)  # Loại hình: Biển, Núi, Di sản...
-    rating = models.FloatField(default=0.0, null=True, blank=True)  # Đánh giá 0-5
-    address = models.TextField(null=True, blank=True)  # Địa chỉ đầy đủ
-    phone = models.CharField(max_length=20, null=True, blank=True)  # Số điện thoại
-    website = models.URLField(max_length=500, null=True, blank=True)  # Website
-    opening_hours = models.TextField(null=True, blank=True)  # Giờ mở cửa
-    image_url = models.URLField(max_length=500, null=True, blank=True)  # Link ảnh đại diện
+    # Location as ForeignKey (references 'location' in CSV)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='destinations', null=True, blank=True)
+    
+    # Additional fields not in CSV
+    price_range = models.CharField(max_length=50, null=True, blank=True)
+    image_url = models.URLField(max_length=500, null=True, blank=True)
     
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True, null=True)
