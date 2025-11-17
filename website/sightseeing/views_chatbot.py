@@ -77,4 +77,3 @@ def chat_with_gemini(request):
         return JsonResponse({
             'error': f'Lỗi: {str(e)}'
         }, status=500)
-
