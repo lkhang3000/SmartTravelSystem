@@ -34,6 +34,101 @@
     chatBox.style.display =
       chatBox.style.display === "flex" ? "none" : "flex";
   }
+
+  // Initialize chatbot when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    const chatInput = document.querySelector('.chat-input input');
+    const sendButton = document.querySelector('.chat-input button');
+    const chatBody = document.querySelector('.chat-body');
+
+    // Function to add message to chat
+    function addMessage(text, isUser = false) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = isUser ? 'user-msg' : 'bot-msg';
+      msgDiv.textContent = text;
+      chatBody.appendChild(msgDiv);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Function to send message to Gemini API
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      // Add user message to chat
+      addMessage(message, true);
+      chatInput.value = '';
+
+      // Show typing indicator
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'bot-msg typing';
+      typingDiv.textContent = 'Typing...';
+      chatBody.appendChild(typingDiv);
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+      try {
+        // Get CSRF token
+        const csrftoken = getCookie('csrftoken');
+        
+        console.log('Sending message:', message);
+        console.log('CSRF token:', csrftoken);
+
+        // Send to backend API
+        const response = await fetch('/api/chat/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken || ''
+          },
+          body: JSON.stringify({ message: message })
+        });
+
+        console.log('Response status:', response.status);
+        
+        // Remove typing indicator
+        typingDiv.remove();
+
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        if (data.reply) {
+          addMessage(data.reply);
+        } else if (data.error) {
+          addMessage('Error: ' + data.error);
+        } else {
+          addMessage('Unexpected response format');
+        }
+      } catch (error) {
+        typingDiv.remove();
+        addMessage('Network error. Please check console (F12).');
+        console.error('Chat error:', error);
+      }
+    }
+
+    // Helper function to get CSRF token from cookies
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // Event listeners
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  });
 </script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
   <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-clearfix u-gradient u-header u-sticky u-sticky-269a u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-header" id="header"><a href="Home.html" data-page-id="173102888" class="u-image u-logo u-image-1" data-image-width="750" data-image-height="750">
         <img src="{% static 'images/SmartTour11.png' %}" class="u-logo-image u-logo-image-1" title="Home">
