@@ -15,20 +15,19 @@ from typing import List, Dict
 # Data Model
 
 class SightseeingSpot:
-    def __init__(self, name: str, location: str, category: str, rating: float, region: str):
+    def __init__(self, name: str, location: str, category: str, rating: float, region: str = None):
         self.name = name
         self.location = location
         self.category = category
         self.rating = rating
-        self.region = region  # Miền Bắc / Trung / Nam
+        # Keep region for backward compatibility but use location for filtering
 
     def to_dict(self) -> Dict:
         return {
             "name": self.name,
             "location": self.location,
             "category": self.category,
-            "rating": self.rating,
-            "region": self.region
+            "rating": self.rating
         }
 # Recommender System
 class SightseeingRecommender:
@@ -57,15 +56,15 @@ class SightseeingRecommender:
         """Filter and recommend one best spot for a user."""
 
         preferences = user_data["trip_preferences"]
-        region = preferences["domestic_or_international"].get("region", "").lower()
+        location = preferences["domestic_or_international"].get("location", "").lower()
         tags = [t.lower() for t in preferences.get("tags", [])]
         budget = preferences.get("budget", 0)
 
         filtered = self.spots
 
-        # Lọc theo vùng
-        if region:
-            filtered = [spot for spot in filtered if spot.region.lower() == region] or filtered
+        # Lọc theo thành phố/location
+        if location:
+            filtered = [spot for spot in filtered if location in spot.location.lower()] or filtered
 
         # Lọc theo tags (VD: biển, núi, thiên nhiên, thư giãn...)
         if tags:
@@ -74,7 +73,7 @@ class SightseeingRecommender:
                 if any(tag in spot.category.lower() or tag in spot.name.lower() for tag in tags)
             ] or filtered
 
-        # Giả sử chi phí cao hơn = rating cao hơn, người có budget cao sẽ chọn rating cao
+        # Sắp xếp theo rating
         filtered.sort(key=lambda s: s.rating, reverse=True)
 
         if not filtered:
