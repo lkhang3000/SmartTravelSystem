@@ -1,203 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Information</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #81d2e3;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* === HEADER BAR === */
-    .header {
-      width: 100%;
-      background: linear-gradient(to right, #0077ff, #00c6ff);
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    /* === CONTAINER === */
-    .container {
-      position: relative;
-      max-width: 600px;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      padding: 60px 30px 40px 30px;
-      margin: 60px auto;
-      text-align: center;
-    }
-
-    /* === AVATAR CIRCLE === */
-    .avatar {
-      position: absolute;
-      top: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4a90e2, #0077ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      border: 4px solid white;
-    }
-
-    .avatar img {
-      width: 80%;
-      height: 80%;
-      border-radius: 50%;
-    }
-
-    /* === MAIN TEXT === */
-    h2 {
-      margin-top: 20px;
-      text-align: center;
-      color: #333;
-    }
-
-    .user-info {
-      margin-top: 25px;
-      text-align: left;
-    }
-
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    .info-item:last-child {
-      border-bottom: none;
-    }
-
-    .label {
-      font-weight: bold;
-      color: #555;
-    }
-
-    .value {
-      color: #333;
-    }
-
-    /* === BUTTON AREA === */
-    .button-row {
-      margin-top: 30px;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-
-    .btn {
-      border: none;
-      padding: 10px 25px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      color: white;
-    }
-
-    .edit-btn {
-      background: #0077ff;
-    }
-
-    .edit-btn:hover {
-      background: #005fcc;
-    }
-
-    .logout-btn {
-      background: #ff4b5c;
-    }
-
-    .logout-btn:hover {
-      background: #d93a4c;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tour Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            margin: 0;
+        }
+        header {
+            background-color: #1e76ff;
+            padding: 18px;
+            text-align: center;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+            position: relative;
+        }
+        .logout-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: orange;
+            color: white;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .profile-container {
+            width: 55%;
+            background: white;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+        }
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 4px solid #1e76ff;
+            display: block;
+            margin: auto;
+        }
+        .username {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .section {
+            background: #eaf2ff;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #2b4d9e;
+        }
+        .tag {
+            display: inline-block;
+            background: white;
+            padding: 3px 10px;
+            border-radius: 6px;
+            margin-right: 5px;
+            border: 1px solid #c8d8ff;
+            font-size: 12px;
+            color: #2b4d9e;
+        }
+        .btn-row {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .btn {
+            background-color: orange;
+            color: white;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+    </style>
 </head>
-
 <body>
-  <!-- Header -->
-  <div class="header">
-    SMART TOUR
-  </div>
+    <header>
+        SMART TOUR
+        <button class="logout-btn">Logout</button>
+    </header>
 
-  <!-- Main content -->
-  <div class="container">
-    <div class="avatar">
-      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="User Avatar">
+    <div class="profile-container">
+        <img src="avatar.png" alt="Avatar" class="avatar">
+        <div class="username">Nguyen Van A</div>
+
+        <div class="section">
+            <div class="section-title">📍 Destination</div>
+            Ho Chi Minh City
+        </div>
+
+        <div class="section">
+            <div class="section-title">❤️ Preferences</div>
+            <span class="tag">Landmark</span>
+            <span class="tag">Sanctuary</span>
+            <span class="tag">Cultural Sites</span>
+            <span class="tag">Local Cuisine</span>
+        </div>
+
+        <div class="section">
+            <div class="section-title">💲 Budget</div>
+            $500 - $1000
+        </div>
+
+        <div class="section">
+            <div class="section-title">⭐ Preferred Ratings</div>
+            4+ Stars
+        </div>
+
+        <div class="section">
+            <div class="section-title">👥 Group Size</div>
+            2–4 people
+        </div>
+
+        <div class="section">
+            <div class="section-title">📅 Travel Dates</div>
+            Arrival: <b>December 15, 2024</b><br>
+            Departure: <b>December 22, 2024</b>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn">Edit</button>
+            <button class="btn">Search</button>
+        </div>
     </div>
-
-    <h2>Client's Info</h2>
-
-    <div class="user-info" id="userInfo">
-      <!-- User info will be inserted here by JavaScript -->
-    </div>
-
-    <!-- Buttons row -->
-    <div class="button-row">
-      <button class="btn edit-btn" onclick="editProfile()">Edit</button>
-      <button class="btn logout-btn" onclick="logout()">Logout</button>
-    </div>
-  </div>
-
-  <script>
-    // Example user data
-    const userData = {
-      username: "traveler01",
-      gender: "Female",
-      age: 22,
-      language: "Vietnamese",
-      budget: 3000000,
-      group_size: 4,
-      preferences: ["thiên nhiên", "lịch sử", "ẩm thực"],
-      departure_day: "2025-11-15",
-      arrival_day: "2025-11-20"
-    };
-
-    // Display user info dynamically
-    function displayUserInfo(data) {
-      const userInfoDiv = document.getElementById("userInfo");
-      userInfoDiv.innerHTML = `
-        <div class="info-item"><span class="label">Username:</span><span class="value">${data.username}</span></div>
-        <div class="info-item"><span class="label">Gender:</span><span class="value">${data.gender}</span></div>
-        <div class="info-item"><span class="label">Age:</span><span class="value">${data.age}</span></div>
-        <div class="info-item"><span class="label">Language:</span><span class="value">${data.language}</span></div>
-        <div class="info-item"><span class="label">Budget:</span><span class="value">${data.budget.toLocaleString()} VND</span></div>
-        <div class="info-item"><span class="label">Group Size:</span><span class="value">${data.group_size}</span></div>
-        <div class="info-item"><span class="label">Preferences:</span><span class="value">${data.preferences.join(', ')}</span></div>
-        <div class="info-item"><span class="label">Departure Day:</span><span class="value">${data.departure_day}</span></div>
-        <div class="info-item"><span class="label">Arrival Day:</span><span class="value">${data.arrival_day}</span></div>
-      `;
-    }
-
-    // Edit button handler
-    function editProfile() {
-      alert("Edit profile clicked!");
-    }
-
-    // Logout button handler
-    function logout() {
-      alert("Logging out...");
-      // Redirect to login page or clear session here
-    }
-
-    displayUserInfo(userData);
-  </script>
 </body>
-
 </html>
+
 

@@ -125,6 +125,8 @@ def user_profile(request):
 def user_input(request):
     return render(request, 'userInput.html')
 
+def destination(request):
+    return render(request, 'destination,html')
 
 def save_user_input(request):
     """Xử lý form và tạo file JSON cho recommender"""
