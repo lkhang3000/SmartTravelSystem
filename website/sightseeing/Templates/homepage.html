@@ -34,138 +34,30 @@
     chatBox.style.display =
       chatBox.style.display === "flex" ? "none" : "flex";
   }
-
-  // Initialize chatbot when page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    const chatInput = document.querySelector('.chat-input input');
-    const sendButton = document.querySelector('.chat-input button');
-    const chatBody = document.querySelector('.chat-body');
-
-    // Function to add message to chat
-    function addMessage(text, isUser = false) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = isUser ? 'user-msg' : 'bot-msg';
-      msgDiv.textContent = text;
-      chatBody.appendChild(msgDiv);
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    // Function to send message to Gemini API
-    async function sendMessage() {
-      const message = chatInput.value.trim();
-      if (!message) return;
-
-      // Add user message to chat
-      addMessage(message, true);
-      chatInput.value = '';
-
-      // Show typing indicator
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'bot-msg typing';
-      typingDiv.textContent = 'Typing...';
-      chatBody.appendChild(typingDiv);
-      chatBody.scrollTop = chatBody.scrollHeight;
-
-      try {
-        // Get CSRF token
-        const csrftoken = getCookie('csrftoken');
-        
-        console.log('Sending message:', message);
-        console.log('CSRF token:', csrftoken);
-
-        // Send to backend API
-        const response = await fetch('/api/chat/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken || ''
-          },
-          body: JSON.stringify({ message: message })
-        });
-
-        console.log('Response status:', response.status);
-        
-        // Remove typing indicator
-        typingDiv.remove();
-
-        const data = await response.json();
-        console.log('Response data:', data);
-        
-        if (data.reply) {
-          addMessage(data.reply);
-        } else if (data.error) {
-          addMessage('Error: ' + data.error);
-        } else {
-          addMessage('Unexpected response format');
-        }
-      } catch (error) {
-        typingDiv.remove();
-        addMessage('Network error. Please check console (F12).');
-        console.error('Chat error:', error);
-      }
-    }
-
-    // Helper function to get CSRF token from cookies
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    }
-
-    // Event listeners
-    sendButton.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    });
-  });
-</script><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-home-page="Home.html" data-home-page-title="Home" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-clearfix u-gradient u-header u-header" id="header" style="background: linear-gradient(90deg, #1e90ff 0%, #00bfff 100%); min-height: 100px; padding: 10px 0;"><div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-sheet-1">
-        <a href="{% url 'home' %}" class="u-image u-logo u-image-1" data-image-width="750" data-image-height="750" style="width: 80px; height: 80px;">
-          <img src="{% static 'images/SmartTour11.png' %}" class="u-logo-image u-logo-image-1" style="width: 100%; height: 100%;">
-        </a>
-        <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-body-alt-color u-text-default-lg u-text-default-md u-text-default-sm u-text-default-xl u-text-1" style="font-size: 2rem; font-weight: 700; margin: 0;">
-          <a href="{% url 'home' %}" style="text-decoration: none; color: white;">SMART TOUR</a>
-        </p>
-        <a href="{% url 'login_page' %}" class="u-active-palette-5-dark-2 u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-hover-palette-5-light-1 u-radius u-white u-btn-1">Log in/ Register</a>
-      </div></header>
-    <section class="u-carousel u-slide u-block-175f-1" id="carousel-71a7" data-interval="6000" data-u-ride="carousel" data-pause="false">
-      <ol class="u-absolute-hcenter u-carousel-indicators u-block-175f-2">
-        <li data-u-target="#carousel-71a7" class="u-active u-hover-grey-40 u-shape-rectangle u-white" style="width: 70px; height: 10px;" data-u-slide-to="0"></li>
-        <li data-u-target="#carousel-71a7" class="u-hover-grey-40 u-shape-rectangle u-white" style="width: 70px; height: 10px;" data-u-slide-to="1"></li>
-        <li data-u-target="#carousel-71a7" class="u-hover-grey-40 u-shape-rectangle u-white" style="width: 70px; height: 10px;" data-u-slide-to="2"></li>
-        <li data-u-target="#carousel-71a7" class="u-hover-grey-40 u-shape-rectangle u-white" style="width: 70px; height: 10px;" data-u-slide-to="3"></li>
+</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+  <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-clearfix u-gradient u-header u-sticky u-sticky-269a u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-header" id="header"><a href="Home.html" data-page-id="173102888" class="u-image u-logo u-image-1" data-image-width="750" data-image-height="750">
+        <img src="{% static 'images/SmartTour11.png' %}" class="u-logo-image u-logo-image-1" title="Home">
+      </a><p class="u-custom-font u-text u-text-body-alt-color u-text-default u-text-1">SMART TOUR<span style="font-weight: 900;"><span style="font-weight: 900;"><span style="font-weight: 800;"><span style="font-weight: 800;"></span></span></span></span>
+      </p><a href="" class="u-active-custom-color-10 u-border-none u-btn u-btn-round u-button-style u-custom-color-7 u-custom-font u-font-montserrat u-hover-custom-color-6 u-radius u-btn-1">Log in</a><a href="" class="u-active-custom-color-10 u-border-none u-btn u-btn-round u-button-style u-custom-color-7 u-custom-font u-font-montserrat u-hover-custom-color-6 u-radius u-btn-2">Register </a></header>
+    <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-ea85" data-interval="6000" data-u-ride="carousel" data-pause="false">
+      <ol class="u-absolute-hcenter u-carousel-indicators u-hidden u-block-7160-2">
+        <li data-u-target="#carousel-ea85" class="u-active u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="0"></li>
+        <li data-u-target="#carousel-ea85" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="1"></li>
+        <li data-u-target="#carousel-ea85" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="2"></li>
+        <li data-u-target="#carousel-ea85" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="3"></li>
       </ol>
       <div class="u-carousel-inner" role="listbox">
-        <div class="u-active u-align-center u-carousel-item u-clearfix u-image u-shading u-section-1-1" data-image-width="1140" data-image-height="800" style="background-image: url('{% static 'images/HP.png' %}'); background-position: 50% 50%; background-size: 100% 100%; min-height: 600px;">
-          <div class="u-clearfix u-sheet u-sheet-1">
-            <a href="{% url 'user_input' %}" class="u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-btn-2" style="background-color: #ff8c00; color: white; padding: 15px 40px; font-size: 18px;">Discover​⌯⌲</a>
-          </div>
+        <div class="u-active u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-1">
+          <img class="u-absolute-hcenter u-expanded u-image u-image-1" src="{% static 'images/HP5.png' %}" data-image-width="1140" data-image-height="550">
         </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-image u-shading u-section-1-2" data-image-width="1140" data-image-height="800" style="background-image: url('{% static 'images/HP1.png' %}'); background-position: 50% 50%; background-size: 100% 100%; min-height: 600px;">
-          <div class="u-clearfix u-sheet u-sheet-1">
-            <a href="{% url 'user_input' %}" class="u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-btn-2" style="background-color: #ff8c00; color: white; padding: 15px 40px; font-size: 18px;">Discover​⌯⌲</a>
-          </div>
+        <div class="u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-2">
+          <img class="u-absolute-hcenter u-expanded u-image u-image-default" src="{% static 'images/HP32.png' %}" alt="" data-image-width="1140" data-image-height="550">
         </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-image u-shading u-section-1-3" data-image-width="1140" data-image-height="800" style="background-image: url('{% static 'images/HP2.png' %}'); background-position: 50% 50%; background-size: 100% 100%; min-height: 600px;">
-          <div class="u-clearfix u-sheet u-sheet-1">
-            <a href="{% url 'user_input' %}" class="u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-btn-2" style="background-color: #ff8c00; color: white; padding: 15px 40px; font-size: 18px;">Discover​⌯⌲</a>
-          </div>
+        <div class="u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-3">
+          <img class="u-absolute-hcenter u-expanded u-image u-image-default" src="{% static 'images/HP12.png' %}" alt="" data-image-width="1140" data-image-height="550">
         </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-image u-shading u-section-1-4" data-image-width="1140" data-image-height="800" style="background-image: url('{% static 'images/HP3.png' %}'); background-position: 50% 50%; background-size: 100% 100%; min-height: 600px;">
-          <div class="u-clearfix u-sheet u-sheet-1">
-            <a href="{% url 'user_input' %}" class="u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-btn-2" style="background-color: #ff8c00; color: white; padding: 15px 40px; font-size: 18px;">Discover​⌯⌲</a>
-          </div>
+        <div class="u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-4">
+          <img class="u-absolute-hcenter u-expanded u-image u-image-default" src="{% static 'images/HP22.png' %}" alt="" data-image-width="1140" data-image-height="550">
         </div>
       </div>
       <a class="u-absolute-vcenter u-carousel-control u-carousel-control-prev u-hidden u-text-grey-30 u-block-7160-3" href="#carousel-ea85" role="button" data-u-slide="prev"><span aria-hidden="true">
@@ -510,24 +402,6 @@
     border-radius: 10px;
     width: fit-content;
     color: #000;
-    margin-bottom: 8px;
-    max-width: 80%;
-  }
-
-  .user-msg {
-    background: #1e5f74;
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 10px;
-    width: fit-content;
-    margin-bottom: 8px;
-    margin-left: auto;
-    max-width: 80%;
-  }
-
-  .typing {
-    font-style: italic;
-    opacity: 0.7;
   }
 
   .chat-input {
