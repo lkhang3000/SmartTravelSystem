@@ -109,6 +109,11 @@ def save_user_input(request):
         return redirect('user_input')
     
     return redirect('user_input')
+def about_us(request):
+    return render(request, 'About-us.html')
+
+def contact_us(request):
+    return render(request, 'Contact-us.html')
 
 
 
