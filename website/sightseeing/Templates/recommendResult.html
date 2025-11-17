@@ -38,81 +38,45 @@
       </div></header>
     <section class="u-clearfix u-section-1" id="block-1">
       <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <h2 class="u-align-left u-text u-text-default u-text-1">Recommend Results </h2>
+        <h2 class="u-align-left u-text u-text-default u-text-1">Recommend Results{% if user_preferences %} for {{ user_preferences.user_info.username }}{% endif %}</h2>
+        {% if user_preferences %}
+        <p class="u-text u-text-grey-50" style="margin-bottom: 20px;">
+          Region: {{ user_preferences.trip_preferences.domestic_or_international.region|title }} | 
+          Budget: {{ user_preferences.trip_preferences.budget|default:"Not specified" }} VND
+          {% if user_preferences.trip_preferences.tags %}
+          | Interests: {{ user_preferences.trip_preferences.tags|join:", " }}
+          {% endif %}
+        </p>
+        {% endif %}
         <div class="u-expanded-width u-list u-list-1">
           <div class="u-repeater u-repeater-1">
-            <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-1">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1">
-                <img class="custom-expanded u-image u-image-round u-radius-20 u-image-1" src="{% static 'images/e24e478a7c44eb93ab68887f9c8b39046457d40ed4441b4776ffab9e5cac99fa350072bdf7e48642fd322bee5c4555646529d72aa86a8225750aa3_1280.jpg' %}" data-image-width="1280" data-image-height="853">
-                <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-2"> Ba Na Hills</h5>
-                <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-1">
-                  <div class="u-container-layout u-container-layout-2">
-                    <h5 class="u-text u-text-default u-text-3"> 100% rating</h5>
-                    <p class="u-custom-font u-font-roboto u-text u-text-4">Very cool</p>
+            {% if recommendations %}
+              {% for spot in recommendations %}
+              <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-{{ forloop.counter }}">
+                <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-{{ forloop.counter }}">
+                  <img class="custom-expanded u-image u-image-round u-radius-20 u-image-{{ forloop.counter }}" src="{% static 'images/e24e478a7c44eb93ab68887f9c8b39046457d40ed4441b4776ffab9e5cac99fa350072bdf7e48642fd322bee5c4555646529d72aa86a8225750aa3_1280.jpg' %}" data-image-width="1280" data-image-height="853" alt="{{ spot.name }}">
+                  <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-{{ forloop.counter|add:1 }}">{{ spot.name }}</h5>
+                  <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-{{ forloop.counter }}">
+                    <div class="u-container-layout u-container-layout-{{ forloop.counter|add:1 }}">
+                      <h5 class="u-text u-text-default u-text-{{ forloop.counter|add:2 }}">{{ spot.rating }}/5.0 rating</h5>
+                      <p class="u-custom-font u-font-roboto u-text u-text-{{ forloop.counter|add:3 }}">
+                        <strong>{{ spot.location }}</strong> - {{ spot.category }}<br>
+                        Region: {{ spot.region }}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-2">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-3">
-                <img class="custom-expanded u-image u-image-round u-radius-20 u-image-2" src="{% static 'images/6d3248eb94c52339aa198d0fdeef761349d13c80d577b82c74d39aabfcbe5705d284926417f800be3cae4b79c6e3771a7a4d594c1bcdc65bdaf717_1280.jpg' %}" data-image-width="1280" data-image-height="853">
-                <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-5"> Thang Long Imperial City</h5>
-                <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-2">
-                  <div class="u-container-layout u-container-layout-4">
-                    <h5 class="u-text u-text-default u-text-6"> 96% rating</h5>
-                    <p class="u-custom-font u-font-roboto u-text u-text-7">Description here</p>
-                  </div>
+              {% endfor %}
+            {% else %}
+              <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item">
+                <div class="u-container-layout u-similar-container u-valign-middle">
+                  <p class="u-text u-text-body-alt-color" style="padding: 40px; text-align: center;">
+                    No recommendations available. Please submit your travel preferences first.
+                  </p>
                 </div>
               </div>
-            </div>
-            <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-3">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-5">
-                <img class="custom-expanded u-image u-image-round u-radius-20 u-image-3" src="{% static 'images/independencePalace.jpeg' %}" data-image-width="1280" data-image-height="853">
-                <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-8">Independence Palace</h5>
-                <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-3">
-                  <div class="u-container-layout u-container-layout-6">
-                    <h5 class="u-text u-text-default u-text-9"> 80% rating</h5>
-                    <p class="u-custom-font u-font-roboto u-text u-text-10">Description here</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-4">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-7">
-                <img class="custom-expanded u-image u-image-round u-radius-20 u-image-4" src="{% static 'images/notreDameCatheral.jpeg' %}" data-image-width="1280" data-image-height="853">
-                <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-11">Notre-Dame Cathedral</h5>
-                <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-4">
-                  <div class="u-container-layout u-container-layout-8">
-                    <h5 class="u-text u-text-default u-text-12"> 95% rating</h5>
-                    <p class="u-custom-font u-font-roboto u-text u-text-13">Description here</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-5">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-9">
-                <img class="custom-expanded u-image u-image-round u-radius-20 u-image-5" src="{% static 'images/chamTemple.jpg' %}" data-image-width="1280" data-image-height="853">
-                <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-14">Cham Temple</h5>
-                <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-5">
-                  <div class="u-container-layout u-container-layout-10">
-                    <h5 class="u-text u-text-default u-text-15"> 100% rating</h5>
-                    <p class="u-custom-font u-font-roboto u-text u-text-16">Description here</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-6">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-11">
-                <img class="custom-expanded u-image u-image-round u-radius-20 u-image-6" src="{% static 'images/nhaTrangBeach.jpg' %}" data-image-width="1024" data-image-height="683">
-                <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-17">Nha Trang Beach </h5>
-                <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-6">
-                  <div class="u-container-layout u-container-layout-12">
-                    <h5 class="u-text u-text-default u-text-18"> 95% rating</h5>
-                    <p class="u-custom-font u-font-roboto u-text u-text-19">Description here</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {% endif %}
           </div>
         </div>
       </div>
