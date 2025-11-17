@@ -2,6 +2,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
+from django.conf import settings
 import json
 import os
 
@@ -32,6 +33,7 @@ def chat_with_gemini(request):
         "error": "mô tả lỗi"
     }
     """
+    api_key = settings.GEMINI_API_KEY
     
     if not genai:
         return JsonResponse({
@@ -47,7 +49,7 @@ def chat_with_gemini(request):
             return JsonResponse({'error': 'Không có message'}, status=400)
         
         # Lấy API key từ environment
-        api_key = os.environ.get('GEMINI_API_KEY')
+        api_key = settings.GEMINI_API_KEY
         if not api_key:
             return JsonResponse({
                 'error': 'Chưa set GEMINI_API_KEY. Xem QUICKSTART_CHATBOT.md'
@@ -57,7 +59,8 @@ def chat_with_gemini(request):
         genai.configure(api_key=api_key)
         
         # Khởi tạo model Gemini 2.0 Flash
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        model = genai.GenerativeModel('gemini-2.0-flash')
+
         
         # Gửi message và nhận response
         response = model.generate_content(user_message)
