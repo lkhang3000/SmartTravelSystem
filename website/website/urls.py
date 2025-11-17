@@ -22,4 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('sightseeing.urls')),
     path('', views.get_home, name='home'),
+    
+    # Chatbot Gemini
+    path('', include('sightseeing.urls_chatbot')),
 ]

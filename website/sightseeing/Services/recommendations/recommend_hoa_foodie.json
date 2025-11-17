@@ -1,0 +1,10 @@
+{
+    "username": "hoa_foodie",
+    "recommended_spot": {
+        "name": "Phú Quốc",
+        "location": "Kiên Giang",
+        "category": "Biển",
+        "rating": 4.9,
+        "region": "miền Nam"
+    }
+}
