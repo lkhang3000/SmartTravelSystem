@@ -130,10 +130,63 @@
     });
   });
 </script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-clearfix u-gradient u-header u-sticky u-sticky-269a u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-header" id="header"><a href="Home.html" data-page-id="173102888" class="u-image u-logo u-image-1" data-image-width="750" data-image-height="750">
-        <img src="{% static 'images/SmartTour11.png' %}" class="u-logo-image u-logo-image-1" title="Home">
-      </a><p class="u-custom-font u-text u-text-body-alt-color u-text-default u-text-1">SMART TOUR<span style="font-weight: 900;"><span style="font-weight: 900;"><span style="font-weight: 800;"><span style="font-weight: 800;"></span></span></span></span>
-      </p><a href="" class="u-active-custom-color-10 u-border-none u-btn u-btn-round u-button-style u-custom-color-7 u-custom-font u-font-montserrat u-hover-custom-color-6 u-radius u-btn-1">Log in</a><a href="" class="u-active-custom-color-10 u-border-none u-btn u-btn-round u-button-style u-custom-color-7 u-custom-font u-font-montserrat u-hover-custom-color-6 u-radius u-btn-2">Register </a></header>
+  <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
+        style="display:flex; align-items:center; justify-content:space-between; padding:10px 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
+
+    <!-- LEFT: Logo -->
+    <a href="./" 
+       class="u-logo" 
+       style="display:flex; align-items:center;">
+        <img src="{% static 'images/SmartTour11.png' %}" 
+             style="height:130px; width:130px; display:block;" 
+             alt="logo">
+    </a>
+
+    <!-- MIDDLE: Title -->
+    <p style="margin:0; 
+        font-size:60px; 
+        font-weight:800; 
+        color:white; 
+        letter-spacing:1px;
+        margin-left:40px;
+        text-shadow:0 3px 6px rgba(0,0,0,6);">
+        SMART TOUR
+    </p>
+
+    <!-- RIGHT: Buttons -->
+    <div style="display:flex; gap:10px;">
+        <a href="" 
+           style="
+             padding:8px 18px; 
+             background:#F7931E; 
+             border-radius:25px; 
+             color:white; 
+             font-weight:700;            
+             text-decoration:none;
+             transition:0.2s;
+           "
+           onmouseover="this.style.background='#C48300'"
+           onmouseout="this.style.background='#F7931E'">
+            Log in
+        </a>
+
+        <a href="" 
+           style="
+             padding:8px 18px; 
+             background:#F7931E; 
+             border-radius:25px; 
+             color:white; 
+             font-weight:700;            
+             text-decoration:none;
+             transition:0.2s;
+           "
+           onmouseover="this.style.background='#C48300'"
+           onmouseout="this.style.background='#F7931E'">
+            Register
+        </a>
+    </div>
+
+</header>
     <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-ea85" data-interval="6000" data-u-ride="carousel" data-pause="false">
       <ol class="u-absolute-hcenter u-carousel-indicators u-hidden u-block-7160-2">
         <li data-u-target="#carousel-ea85" class="u-active u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="0"></li>
