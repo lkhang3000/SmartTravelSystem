@@ -8,6 +8,7 @@ urlpatterns = [
     # Authentication URLs
     path('login/', views.login_page, name='login_page'),
     path('signup/', views.signup_page, name='signup_page'),
+    path('logout/', views.logout_view, name='logout'),
     
     # Password reset URLs
     path('password-reset/', views.password_reset, name='password_reset'),

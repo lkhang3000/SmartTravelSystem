@@ -34,12 +34,14 @@
           <div class="u-repeater u-repeater-1">
             <div class="u-border-2 u-border-grey-75 u-container-style u-list-item u-radius u-repeater-item u-white u-list-item-1">
               <div class="u-container-layout u-similar-container u-container-layout-1">
+                <a href="{% url 'home' %}">
                 <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-1" src="{% static 'images/SmartTour11.png' %}" alt="" data-image-width="750" data-image-height="750">
+                </a>
                 <h1 class="u-text u-text-default u-text-1">Create Account </h1>
                 <h1 class="u-align-center u-text u-text-2"><span style="font-weight: 700;">Join Smart Tour today</span>
                 </h1>
                 <p class="u-custom-font u-font-ubuntu u-text u-text-3">
-                  <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-custom-color-4 u-btn-1" href="#">Log in </a>
+                  <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-custom-color-4 u-btn-1" href="{% url 'login_page' %}">Log in </a>
                 </p>
                 <p class="u-custom-font u-font-ubuntu u-text u-text-4">Already have an account?</p>
               </div>
@@ -47,30 +49,44 @@
           </div>
         </div>
         <div class="u-carousel u-carousel-duration-250 u-carousel-fade u-form u-form-1" data-interval="0" data-u-ride="false">
-          <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+          <form action="{% url 'signup_page' %}" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
+            {% csrf_token %}
+            
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background: {% if 'error' in message.tags %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if 'error' in message.tags %}#721c24{% else %}#155724{% endif %};">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+            
             <div class="u-carousel-inner" role="listbox">
               <div class="u-carousel-item u-form-step u-slide u-active">
                 <div class="u-form-group u-form-name u-label-top u-form-group-1">
-                  <label for="name-bd58" class="u-label">Name</label>
-                  <input type="text" placeholder="Enter your name" id="name-bd58" name="name" class="u-input u-input-rectangle" required="">
+                  <label for="username" class="u-label">Username</label>
+                  <input type="text" placeholder="Enter your username" id="username" name="username" class="u-input u-input-rectangle" required="">
                 </div>
                 <div class="u-form-email u-form-group u-label-top">
-                  <label for="name-0430" class="u-label">Emal</label>
-                  <input type="email" placeholder="Enter your email" id="name-0430" name="email" class="u-input u-input-rectangle" required="required">
+                  <label for="email" class="u-label">Email</label>
+                  <input type="email" placeholder="Enter your email" id="email" name="email" class="u-input u-input-rectangle" required="required">
                 </div>
-                <div class="u-form-group u-form-phone u-label-top u-form-group-3">
-                  <label for="phone-1956" class="u-label">Phone</label>
-                  <input type="tel" placeholder="091 234 56 78" id="phone-1956" name="phone" class="u-input u-input-rectangle" required="" data-country-code="vn">
+                <div class="u-form-group u-label-top u-form-group-3">
+                  <label for="first_name" class="u-label">First Name</label>
+                  <input type="text" placeholder="Enter your first name" id="first_name" name="first_name" class="u-input u-input-rectangle">
                 </div>
-                <div class="u-form-group u-label-top">
-                  <label for="email-0430" class="u-label">Password</label>
-                  <input type="text" placeholder="Create a password" id="email-0430" name="password" class="u-input u-input-rectangle" required="required">
+                <div class="u-form-group u-label-top u-form-group-4">
+                  <label for="last_name" class="u-label">Last Name</label>
+                  <input type="text" placeholder="Enter your last name" id="last_name" name="last_name" class="u-input u-input-rectangle">
                 </div>
                 <div class="u-form-group u-label-top u-form-group-5">
-                  <label for="text-7c0c" class="u-label">Confirm password</label>
-                  <input type="text" placeholder="Confirm your password" id="text-7c0c" name="confirmPassword" class="u-input u-input-rectangle" required="required">
+                  <label for="password1" class="u-label">Password</label>
+                  <input type="password" placeholder="Create a password (8+ characters)" id="password1" name="password1" class="u-input u-input-rectangle" required="required" minlength="8">
                 </div>
-                <div class="u-form-agree u-form-group u-label-top u-form-group-6">
+                <div class="u-form-group u-label-top u-form-group-6">
+                  <label for="password2" class="u-label">Confirm password</label>
+                  <input type="password" placeholder="Confirm your password" id="password2" name="password2" class="u-input u-input-rectangle" required="required" minlength="8">
+                </div>
+                <div class="u-form-agree u-form-group u-label-top u-form-group-7">
                   <input type="checkbox" id="agree-78de" name="agree" class="u-agree-checkbox u-field-input" required="">
                   <label for="agree-78de" class="u-agree-label u-field-label">I accept the <a class="u-active-none u-btn u-button-link u-button-style u-hover-none u-none u-text-custom-color-4 u-btn-2" href="#" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">Terms of Service</a>
                   </label>
@@ -79,15 +95,8 @@
               <div class="u-carousel-item u-form-step u-slide"></div>
             </div>
             <div class="u-align-center u-form-group u-form-submit u-label-top">
-              <a href="#" class="u-border-none u-btn u-btn-step u-btn-step-prev u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-hidden u-btn-3">Back</a>
-              <a href="#" class="u-border-none u-btn u-btn-step u-btn-step-next u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-btn-3">Create account</a>
-              <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-hidden u-btn-3">Submit</a>
-              <input type="submit" value="submit" class="u-form-control-hidden">
+              <button type="submit" class="u-border-none u-btn u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-btn-3">CREATE ACCOUNT</button>
             </div>
-            <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-            <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-            <input type="hidden" value="" name="recaptchaResponse">
-            <input type="hidden" name="formServices" value="17f87783-fbe7-1f79-3e8d-3dc58b4d4e35">
           </form>
         </div>
       </div>
