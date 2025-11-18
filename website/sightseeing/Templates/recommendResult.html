@@ -248,52 +248,51 @@
       </div>
     </section>
     
-    <section class="u-clearfix u-section-1" id="block-1">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <h2 class="u-align-left u-text u-text-default u-text-1">Recommend Results{% if user_preferences %} for {{ user_preferences.user_info.username }}{% endif %}</h2>
-        {% if user_preferences %}
-        <p class="u-text u-text-grey-50" style="margin-bottom: 20px;">
-          Location: {{ user_preferences.trip_preferences.domestic_or_international.region|title }} | 
-          Budget: {{ user_preferences.trip_preferences.budget|default:"Not specified" }} VND
-          {% if user_preferences.trip_preferences.tags %}
-          | Interests: {{ user_preferences.trip_preferences.tags|join:", " }}
-          {% endif %}
-        </p>
+<section class="recommendation-section" id="block-1">
+  <div class="container">
+    <h2 class="section-title">Recommend Results{% if user_preferences %} for {{ user_preferences.user_info.username }}{% endif %}</h2>
+    
+    {% if user_preferences %}
+    <div class="preference-info">
+      <p>
+        <span class="info-item">Location: {{ user_preferences.trip_preferences.domestic_or_international.region|title }}</span>
+        <span class="info-separator">|</span>
+        <span class="info-item">Budget: {{ user_preferences.trip_preferences.budget|default:"Not specified" }} VND</span>
+        {% if user_preferences.trip_preferences.tags %}
+        <span class="info-separator">|</span>
+        <span class="info-item">Interests: {{ user_preferences.trip_preferences.tags|join:", " }}</span>
         {% endif %}
-        <div class="u-expanded-width u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
-            {% if recommendations %}
-              {% for spot in recommendations %}
-              <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item u-list-item-{{ forloop.counter }}">
-                <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-{{ forloop.counter }}">
-                  <img class="custom-expanded u-image u-image-round u-radius-20 u-image-{{ forloop.counter }}" src="{{ spot.image_url }}" data-image-width="1280" data-image-height="853" alt="{{ spot.name }}" onerror="this.src='https://picsum.photos/seed/{{ spot.id }}/800/600'">
-                  <h5 class="u-custom-font u-font-roboto u-text u-text-default u-text-{{ forloop.counter|add:1 }}">{{ spot.name }}</h5>
-                  <div class="u-container-style u-expanded-width u-group u-radius-20 u-shape-round u-white u-group-{{ forloop.counter }}">
-                    <div class="u-container-layout u-container-layout-{{ forloop.counter|add:1 }}">
-                      <h5 class="u-text u-text-default u-text-{{ forloop.counter|add:2 }}">{{ spot.rating }}/5.0 rating</h5>
-                      <p class="u-custom-font u-font-roboto u-text u-text-{{ forloop.counter|add:3 }}">
-                        <strong>{{ spot.location }}</strong> - {{ spot.category }}<br>
-                        {% if spot.address %}📍 {{ spot.address|truncatewords:10 }}{% endif %}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {% endfor %}
-            {% else %}
-              <div class="u-container-style u-custom-item u-gradient u-list-item u-radius-20 u-repeater-item">
-                <div class="u-container-layout u-similar-container u-valign-middle">
-                  <p class="u-text u-text-body-alt-color" style="padding: 40px; text-align: center;">
-                    No recommendations available. Please submit your travel preferences first.
-                  </p>
-                </div>
-              </div>
-            {% endif %}
+      </p>
+    </div>
+    {% endif %}
+    <!khúc này để thêm ảnh nè, có gì sửa gì thì sửa chỗ này> 
+  <div class="recommendation-grid">
+      {% if recommendations %}
+        {% for spot in recommendations %}
+        <div class="recommendation-card">
+          <div class="card-image">
+            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
+                 onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
+          </div>
+          
+          <div class="card-content">
+            <h3 class="spot-name">{{ spot.name }}</h3>
+            
+            <div class="card-info-row">
+              <span class="rating-value">{{ spot.rating }}/5.0</span>
+              <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-    
+        {% endfor %}
+      {% else %}
+        <div class="no-recommendations">
+          <p>No recommendations available. Please submit your travel preferences first.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
     
     
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="sec-6200"><div class="u-clearfix u-sheet u-sheet-1">
