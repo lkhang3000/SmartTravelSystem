@@ -15,6 +15,9 @@ urlpatterns = [
     path('password-reset/confirm/', views.password_reset_confirm, name='password_reset_confirm'),
     path('password-reset/complete/', views.password_reset_complete, name='password_reset_complete'),
     
+    #Function pages
+    path('Trip-planner/', views.trip_planner, name='trip_planner'),
+
     # User pages
     path('profile/', views.user_profile, name='user_profile'),
     path('user-input/', views.user_input, name='user_input'),
