@@ -97,13 +97,17 @@
 </head>
 <body>
     <header>
+        <a href="{% url 'home' %}" style="text-decoration:none; color:white;">
         SMART TOUR
-        <button class="logout-btn">Logout</button>
+        </a>
+        <a href="{% url 'logout' %}" style="text-decoration:none;">
+            <button class="logout-btn">Logout</button>
+        </a>
     </header>
 
     <div class="profile-container">
-        <img src="avatar.png" alt="Avatar" class="avatar">
-        <div class="username">Nguyen Van A</div>
+        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=1e76ff&color=fff&size=110" alt="Avatar" class="avatar">
+        <div class="username">{{ user.username }}</div>
 
         <div class="section">
             <div class="section-title">📍 Destination</div>
