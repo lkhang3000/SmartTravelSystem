@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="{% static 'css/index.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
     <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
-    <meta name="generator" content="Nicepage 7.15.4, nicepage.com">
+    <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
     
     
     
@@ -131,68 +131,429 @@
   });
 </script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
   <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
-        style="display:flex; align-items:center; justify-content:space-between; padding:10px 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
+
+        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
+
 
     <!-- LEFT: Logo -->
-    <a href="./" 
+<<<<<<< HEAD
+    <a href="{% url 'home' %}" 
+=======
+
+    <a href="{% url 'home' %}" 
+
+>>>>>>> origin/Frontend
        class="u-logo" 
+
        style="display:flex; align-items:center;">
+
         <img src="{% static 'images/SmartTour11.png' %}" 
+
              style="height:130px; width:130px; display:block;" 
+
              alt="logo">
+
     </a>
 
+
+
     <!-- MIDDLE: Title -->
+<<<<<<< HEAD
+    <a href="{% url 'home' %}" style="text-decoration:none;">
+=======
+
+    <a href="{% url 'home' %}" style="text-decoration:none;">
+
+>>>>>>> origin/Frontend
     <p style="margin:0; 
+
         font-size:60px; 
+
         font-weight:800; 
+
         color:white; 
+
         letter-spacing:1px;
+
         margin-left:40px;
+
         text-shadow:0 3px 6px rgba(0,0,0,6);">
+
         SMART TOUR
+
     </p>
+    </a>
 
-    <!-- RIGHT: Buttons -->
-    <div style="display:flex; gap:10px;">
-        <a href="" 
+<<<<<<< HEAD
+    <!-- RIGHT: Buttons / User Menu -->
+    <div style="display:flex; gap:10px; align-items:center;">
+        {% if user.is_authenticated %}
+        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
+        <div style="position:relative;">
+            <button id="userMenuBtn" style="
+              padding:8px 12px; 
+              background:#F7931E; 
+              border-radius:25px; 
+              color:white; 
+              font-weight:700;            
+              border:none;
+              cursor:pointer;
+              display:flex;
+              align-items:center;
+              gap:8px;
+              transition:0.2s;
+            "
+            onmouseover="this.style.background='#C48300'"
+            onmouseout="this.style.background='#F7931E'"
+            onclick="toggleUserMenu()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                {{ user.username }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+            
+            <div id="userDropdown" style="
+              display:none;
+              position:absolute;
+              top:110%;
+              right:0;
+              background:white;
+              border-radius:8px;
+              box-shadow:0 4px 12px rgba(0,0,0,0.15);
+              min-width:180px;
+              z-index:1000;
+            ">
+                <a href="{% url 'user_profile' %}" style="
+                  display:block;
+                  padding:12px 16px;
+                  color:#333;
+                  text-decoration:none;
+                  border-bottom:1px solid #eee;
+                  transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    👤 My Profile
+                </a>
+                <a href="{% url 'recommend_result' %}" style="
+                  display:block;
+                  padding:12px 16px;
+                  color:#333;
+                  text-decoration:none;
+                  border-bottom:1px solid #eee;
+                  transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    🗺️ My Destinations
+                </a>
+                <a href="/logout/" style="
+                  display:block;
+                  padding:12px 16px;
+                  color:#d32f2f;
+                  text-decoration:none;
+                  transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    🚪 Logout
+                </a>
+            </div>
+        </div>
+        
+        <script>
+        function toggleUserMenu() {
+            var dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // Đóng dropdown khi click bên ngoài
+        window.onclick = function(event) {
+            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+                var dropdown = document.getElementById('userDropdown');
+                if (dropdown && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+        </script>
+        
+        {% else %}
+        <!-- User chưa đăng nhập: hiển thị Login/Register -->
+        <a href="{% url 'login_page' %}" 
+=======
+    </a>
+
+    <!-- RIGHT: Buttons / User Menu -->
+
+    <div style="display:flex; gap:10px; align-items:center;">
+
+        {% if user.is_authenticated %}
+
+        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
+
+        <div style="position:relative;">
+
+            <button id="userMenuBtn" style="
+
+              padding:8px 12px; 
+
+              background:#F7931E; 
+
+              border-radius:25px; 
+
+              color:white; 
+
+              font-weight:700;            
+
+              border:none;
+
+              cursor:pointer;
+
+              display:flex;
+
+              align-items:center;
+
+              gap:8px;
+
+              transition:0.2s;
+
+            "
+
+            onmouseover="this.style.background='#C48300'"
+
+            onmouseout="this.style.background='#F7931E'"
+
+            onclick="toggleUserMenu()">
+
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+
+                </svg>
+
+                {{ user.username }}
+
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+
+                    <path d="M7 10l5 5 5-5z"/>
+
+                </svg>
+
+            </button>
+
+            <div id="userDropdown" style="
+
+              display:none;
+
+              position:absolute;
+
+              top:110%;
+
+              right:0;
+
+              background:white;
+
+              border-radius:8px;
+
+              box-shadow:0 4px 12px rgba(0,0,0,0.15);
+
+              min-width:180px;
+
+              z-index:1000;
+
+            ">
+
+                <a href="{% url 'user_profile' %}" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#333;
+
+                  text-decoration:none;
+
+                  border-bottom:1px solid #eee;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
+                    👤 My Profile
+
+                </a>
+
+                <a href="{% url 'recommend_result' %}" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#333;
+
+                  text-decoration:none;
+
+                  border-bottom:1px solid #eee;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
+                    🗺️ My Destinations
+
+                </a>
+
+                <a href="/logout/" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#d32f2f;
+
+                  text-decoration:none;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
+                    🚪 Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        
+
+        <script>
+
+        function toggleUserMenu() {
+
+            var dropdown = document.getElementById('userDropdown');
+
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+
+        }
+
+
+        // Đóng dropdown khi click bên ngoài
+
+        window.onclick = function(event) {
+
+            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+
+                var dropdown = document.getElementById('userDropdown');
+
+                if (dropdown && dropdown.style.display === 'block') {
+
+                    dropdown.style.display = 'none';
+
+                }
+
+            }
+
+        }
+
+        </script>
+
+        {% else %}
+
+        <!-- User chưa đăng nhập: hiển thị Login/Register -->
+
+        <a href="{% url 'login_page' %}" 
+
+>>>>>>> origin/Frontend
            style="
+
              padding:8px 18px; 
+
              background:#F7931E; 
+
              border-radius:25px; 
+
              color:white; 
+
              font-weight:700;            
+
              text-decoration:none;
+
              transition:0.2s;
+
            "
+
            onmouseover="this.style.background='#C48300'"
+
            onmouseout="this.style.background='#F7931E'">
+
             Log in
+
         </a>
 
-        <a href="" 
+        <a href="{% url 'signup_page' %}" 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Frontend
            style="
+
              padding:8px 18px; 
+
              background:#F7931E; 
+
              border-radius:25px; 
+
              color:white; 
+
              font-weight:700;            
+
              text-decoration:none;
+
              transition:0.2s;
+
            "
+
            onmouseover="this.style.background='#C48300'"
+
            onmouseout="this.style.background='#F7931E'">
+
             Register
+
         </a>
+<<<<<<< HEAD
+        {% endif %}
+=======
+
+        {% endif %}
+
+>>>>>>> origin/Frontend
     </div>
 
 </header>
-    <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-ea85" data-interval="6000" data-u-ride="carousel" data-pause="false">
+
+    <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-bdd5" data-interval="6000" data-u-ride="carousel" data-pause="false">
       <ol class="u-absolute-hcenter u-carousel-indicators u-hidden u-block-7160-2">
-        <li data-u-target="#carousel-ea85" class="u-active u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="0"></li>
-        <li data-u-target="#carousel-ea85" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="1"></li>
-        <li data-u-target="#carousel-ea85" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="2"></li>
-        <li data-u-target="#carousel-ea85" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="3"></li>
+        <li data-u-target="#carousel-bdd5" class="u-active u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="0"></li>
+        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="1"></li>
+        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="2"></li>
+        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="3"></li>
       </ol>
       <div class="u-carousel-inner" role="listbox">
         <div class="u-active u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-1">
@@ -208,93 +569,148 @@
           <img class="u-absolute-hcenter u-expanded u-image u-image-default" src="{% static 'images/HP22.png' %}" alt="" data-image-width="1140" data-image-height="550">
         </div>
       </div>
-      <a class="u-absolute-vcenter u-carousel-control u-carousel-control-prev u-hidden u-text-grey-30 u-block-7160-3" href="#carousel-ea85" role="button" data-u-slide="prev"><span aria-hidden="true">
+      <a class="u-absolute-vcenter u-carousel-control u-carousel-control-prev u-hidden u-text-grey-30 u-block-7160-3" href="#carousel-bdd5" role="button" data-u-slide="prev"><span aria-hidden="true">
           <svg class="u-svg-link" viewBox="0 0 477.175 477.175"><path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
                     c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"></path></svg></span><span class="sr-only">Previous</span>
       </a>
-      <a class="u-absolute-vcenter u-carousel-control u-carousel-control-next u-hidden u-text-grey-30 u-block-7160-4" href="#carousel-ea85" role="button" data-u-slide="next"><span aria-hidden="true">
+      <a class="u-absolute-vcenter u-carousel-control u-carousel-control-next u-hidden u-text-grey-30 u-block-7160-4" href="#carousel-bdd5" role="button" data-u-slide="next"><span aria-hidden="true">
           <svg class="u-svg-link" viewBox="0 0 477.175 477.175"><path d="M360.731,229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1l215.5,215.5l-215.5,215.5
                     c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z"></path></svg></span><span class="sr-only">Next</span>
       </a>
     </section>
     <section class="u-clearfix u-section-2" id="block-8">
       <div class="u-clearfix u-sheet u-sheet-1">
+        <form id="searchForm" method="GET" action="{% url 'recommend_result' %}">
         <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-radius u-white u-layout-wrap-1">
           <div class="u-layout">
             <div class="u-layout-row">
-              <div class="u-container-style u-layout-cell u-size-12 u-layout-cell-1">
+              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
                 <div class="u-container-layout u-container-layout-1">
                   <div class="custom-expanded u-form u-form-1">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-1">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-1">Region</label>
+                        <label for="filter-location" class="u-custom-font u-font-montserrat u-label u-label-1">Location</label>
                         <div class="u-form-select-wrapper">
+<<<<<<< HEAD
+                          <select id="filter-location" name="location" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-1">
+                            <option value="">All Locations</option>
+                            {% for loc in all_locations %}
+                            <option value="{{ loc.id }}">{{ loc.locationName }}</option>
+                            {% endfor %}
+=======
                           <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-1">
+                            <option value="All region">All region</option>
                             <option value="Ho Chi Minh" data-calc="">Ho Chi Minh</option>
                             <option value="Ha Long Bay" data-calc="">Ha Long Bay</option>
                             <option value="Ha Noi" data-calc="">Ha Noi</option>
                             <option value="Hue" data-calc="">Hue</option>
+>>>>>>> origin/Frontend
                           </select>
                           <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-1"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
+                    </div>
                   </div><span class="u-icon u-text-custom-color-7 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 54.757 54.757" style=""><use xlink:href="#svg-b87b"></use></svg><svg class="u-svg-content" viewBox="0 0 54.757 54.757" x="0px" y="0px" id="svg-b87b" style="enable-background:new 0 0 54.757 54.757;"><path d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952
 	L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7
 	S31.416,26,27.557,26z"></path></svg></span>
                 </div>
               </div>
-              <div class="u-container-style u-layout-cell u-size-12 u-layout-cell-2">
+              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
                 <div class="u-container-layout u-container-layout-2">
                   <div class="custom-expanded u-form u-form-2">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-3">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-2">Region</label>
+                        <label for="filter-category" class="u-custom-font u-font-montserrat u-label u-label-2">Category</label>
                         <div class="u-form-select-wrapper">
+<<<<<<< HEAD
+                          <select id="filter-category" name="category" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-2">
+                            <option value="">All Categories</option>
+                            {% for cat in all_categories %}
+                            <option value="{{ cat }}">{{ cat }}</option>
+                            {% endfor %}
+=======
                           <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-2">
+                            <option value="All locations">All locations</option>
                             <option value="Landmark" data-calc="">Landmark</option>
                             <option value="Scenery" data-calc="">Scenery</option>
                             <option value="Sanctuary" data-calc="">Sanctuary</option>
                             <option value="Museum" data-calc="">Museum</option>
                             <option value="Attraction" data-calc="">Attraction</option>
+>>>>>>> origin/Frontend
                           </select>
                           <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-2"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
+                    </div>
                   </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/617418-fb032591.png' %}" alt=""></span>
                 </div>
               </div>
-              <div class="u-container-style u-layout-cell u-size-12 u-layout-cell-3">
+              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
                 <div class="u-container-layout u-container-layout-3">
                   <div class="custom-expanded u-form u-form-3">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-5">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-3">Region</label>
+                        <label for="filter-price" class="u-custom-font u-font-montserrat u-label u-label-3">Price Range</label>
                         <div class="u-form-select-wrapper">
+<<<<<<< HEAD
+                          <select id="filter-price" name="price" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-3">
+                            <option value="">All Prices</option>
+                            <option value="free">Free</option>
+                            <option value="budget">Budget (&lt; 200k)</option>
+                            <option value="medium">Medium (200k-500k)</option>
+                            <option value="premium">Premium (&gt; 500k)</option>
+=======
                           <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-3">
-                            <option value="Free" data-calc="">Free</option>
-                            <option value="Paid" data-calc="">Paid</option>
+                            <option value="★☆☆☆☆ (1+)" data-calc="">★☆☆☆☆ (1+)</option>
+                            <option value="★★☆☆☆ (2+)" data-calc="">★★☆☆☆ (2+)</option>
+                            <option value="★★★☆☆ (3+)" data-calc="">★★★☆☆ (3+)</option>
+                            <option value="★★★★☆ (4+)" data-calc="">★★★★☆ (4+)</option>
+                            <option value="★★★★★" data-calc="">★★★★★</option>
+>>>>>>> origin/Frontend
                           </select>
                           <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
+<<<<<<< HEAD
+                    </div>
+                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/74742-16735a4c.png' %}" alt=""></span>
+                </div>
+              </div>
+              <div class="u-container-style u-layout-cell u-size-12 u-layout-cell-4">
+                <div class="u-container-layout u-container-layout-4">
+                  <div class="custom-expanded u-form u-form-4">
+                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-7">
+                        <label for="filter-rating" class="u-custom-font u-font-montserrat u-label u-label-4">Rating</label>
+                        <div class="u-form-select-wrapper">
+                          <select id="filter-rating" name="rating" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-4">
+                            <option value="">All Ratings</option>
+                            <option value="4.5">★★★★★ 4.5+</option>
+                            <option value="4.0">★★★★ 4.0+</option>
+                            <option value="3.5">★★★ 3.5+</option>
+                            <option value="3.0">★★ 3.0+</option>
+                          </select>
+                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-4"><img src="{% static 'images/471709-0c33d784.png' %}" alt=""></span>
+                </div>
+              </div>
+              <div class="u-container-style u-layout-cell u-size-12 u-layout-cell-5">
+                <div class="u-container-layout u-container-layout-5">
+                  <div class="custom-expanded u-form u-form-5">
+                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
+                      <div class="u-form-group u-label-none u-form-group-9">
+                        <label class="u-custom-font u-font-montserrat u-label u-label-5">Filters</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px; padding: 5px 0;">
+                          <p class="u-custom-font u-font-montserrat" style="margin: 0; font-size: 13px; color: #666;">Select filters</p>
+                          <p class="u-custom-font u-font-montserrat" style="margin: 0; font-size: 13px; color: #666;">then click Search</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-5"><img src="{% static 'images/1077114-5fba23cd.png' %}" alt=""></span>
+=======
                       <div class="u-align-right u-form-group u-form-submit u-label-none">
                         <input type="submit" value="submit" class="u-form-control-hidden">
                         <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-3"></a>
@@ -304,77 +720,61 @@
                       <input type="hidden" value="" name="recaptchaResponse">
                       <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
                     </form>
-                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/74742-16735a4c.png' %}" alt=""></span>
-                </div>
-              </div>
-              <div class="u-container-style u-layout-cell u-size-12 u-layout-cell-4">
-                <div class="u-container-layout u-container-layout-4">
-                  <div class="custom-expanded u-form u-form-4">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-7">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-4">Region</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-4">
-                            <option value="★☆☆☆☆" data-calc="">★☆☆☆☆</option>
-                            <option value="★★☆☆☆" data-calc="">★★☆☆☆</option>
-                            <option value="★★★☆☆" data-calc="">★★★☆☆</option>
-                            <option value="★★★★☆" data-calc="">★★★★☆</option>
-                            <option value="★★★★★" data-calc="">★★★★★</option>
-                          </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                        </div>
-                      </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-4"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
-                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-4"><img src="{% static 'images/471709-0c33d784.png' %}" alt=""></span>
-                </div>
-              </div>
-              <div class="u-container-style u-layout-cell u-size-12 u-layout-cell-5">
-                <div class="u-container-layout u-container-layout-5">
-                  <div class="custom-expanded u-form u-form-5">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-9">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-5">Region</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-5">
-                            <option value="1 Member" data-calc="">1 Member</option>
-                            <option value="2 Members" data-calc="">2 Members</option>
-                            <option value="3 Members" data-calc="">3 Members</option>
-                            <option value="5+ Members" data-calc="">5+ Members</option>
-                            <option value="10+ Members" data-calc="">10+ Members</option>
-                          </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                        </div>
-                      </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-5"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
-                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-5"><img src="{% static 'images/1077114-5fba23cd.png' %}" alt=""></span>
+                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/471709-0c33d784.png' %}" alt=""></span>
+>>>>>>> origin/Frontend
                 </div>
               </div>
             </div>
           </div>
         </div>
+<<<<<<< HEAD
+        </form>
         <div class="u-align-center u-clearfix u-group-elements u-group-elements-1">
-          <a href="" class="u-btn u-btn-round u-button-style u-custom-color-7 u-custom-font u-font-montserrat u-radius u-btn-6">SEARCH </a><span class="u-icon u-text-white u-icon-6"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 56.966 56.966" style=""><use xlink:href="#svg-7c06"></use></svg><svg class="u-svg-content" viewBox="0 0 56.966 56.966" x="0px" y="0px" id="svg-7c06" style="enable-background:new 0 0 56.966 56.966;"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23
+          <a href="javascript:void(0);" onclick="document.getElementById('searchForm').submit();" class="u-btn u-btn-round u-button-style u-custom-color-7 u-custom-font u-font-montserrat u-radius u-btn-6">SEARCH </a><span class="u-icon u-text-white u-icon-6"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 56.966 56.966" style=""><use xlink:href="#svg-7c06"></use></svg><svg class="u-svg-content" viewBox="0 0 56.966 56.966" x="0px" y="0px" id="svg-7c06" style="enable-background:new 0 0 56.966 56.966;"><path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23
 	s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92
 	c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17
 	s-17-7.626-17-17S14.61,6,23.984,6z"></path></svg></span>
         </div>
       </div>
+=======
+        <div class="u-clearfix u-group-elements u-group-elements-1"
+     style="display:flex; align-items:center; justify-content:center;">
+
+    <a href="{% url 'trip_planner' %}"
+       class="u-btn u-button-style u-custom-font u-font-montserrat"
+       style="
+           display:flex;
+           align-items:center;
+           justify-content:center;
+           width:700px;
+           height:50px;
+           background:#F7931E;        
+           border-radius:50px;
+           font-weight:700;           
+           font-size:20px;           
+           gap:12px;
+           text-transform:uppercase;
+           color:white;
+       ">
+
+        <span>SEARCH</span>
+
+        
+        <span class="u-icon u-text-white"
+              style="display:flex; align-items:center; justify-content:center; width:20px; height:20px;">
+            <svg viewBox="0 0 56.966 56.966" width="20" height="20">
+                <path fill="white" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786
+                    c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208
+                    c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z 
+                    M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z"/>
+            </svg>
+        </span>
+
+    </a>
+</div>
+
+
+>>>>>>> origin/Frontend
     </section>
     <section class="u-clearfix u-container-align-center u-white u-section-3" id="sec-9086">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
@@ -466,7 +866,7 @@
     
     
     
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
+    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
         <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
           <div class="chat-container"><!-- Floating Button -->
             <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->

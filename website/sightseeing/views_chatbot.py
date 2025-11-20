@@ -1,4 +1,4 @@
-# Django API cho chatbot Gemini - CHỈ BACKEND
+# file views_chatbot.py: # Django API for Gemini chatbot - BACKEND ONLY
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
@@ -11,61 +11,75 @@ try:
     import google.generativeai as genai
 except ImportError:
     genai = None
+    APIError = type('APIError', (Exception,), {})  # Dummy error class for graceful handling
+
+
+# --- SYSTEM INSTRUCTION (Fixed Prompt for the Chatbot) ---
+SYSTEM_INSTRUCTION = """
+You are 'VietTour Guide', a Vietnam travel expert for four destinations: Hue, Ho Chi Minh City (Saigon), Hanoi, and Ha Long Bay.
+
+Your goal is to give short, focused, and practical travel answers.
+
+### Response Rules:
+1. **Scope:** Only answer questions about Hue, Ho Chi Minh City, Hanoi, Ha Long Bay, or combinations of these.
+2. **Style:** Clear, friendly English. Keep answers brief and straight to the point.
+3. **Format:** Use bullet points. Maximum 3–5 key points per answer.
+4. **Out-of-scope:** If asked about another place, reply:
+   "Sorry! I only specialize in Hue, Ho Chi Minh City, Hanoi, and Ha Long Bay. Would you like recommendations for these destinations?"
+"""
+# --------------------------------------------------------
 
 
 @ensure_csrf_cookie
 @require_http_methods(["POST"])
 def chat_with_gemini(request):
     """
-    API endpoint đơn giản để chat với Gemini 2.0 Flash
+    Simple API endpoint to chat with Gemini 2.0 Flash
     
     POST /api/chat/
-    Request Body: {"message": "câu hỏi của user"}
-    
-    Response Success:
-    {
-        "success": true,
-        "reply": "câu trả lời từ Gemini"
-    }
-    
-    Response Error:
-    {
-        "error": "mô tả lỗi"
-    }
+    Request Body: {"message": "user question"}
     """
-    api_key = settings.GEMINI_API_KEY
     
     if not genai:
         return JsonResponse({
-            'error': 'Chưa cài đặt google-generativeai. Chạy: pip install google-generativeai'
+            'error': 'google-generativeai is not installed. Run: pip install google-generativeai'
         }, status=500)
     
     try:
-        # Lấy message từ request
+        # Get message from request
         data = json.loads(request.body)
         user_message = data.get('message', '')
         
         if not user_message:
-            return JsonResponse({'error': 'Không có message'}, status=400)
+            return JsonResponse({'error': 'No message provided'}, status=400)
         
-        # Lấy API key từ environment
-        api_key = settings.GEMINI_API_KEY
+        # Get API key from environment
+        try:
+            api_key = settings.GEMINI_API_KEY
+        except AttributeError:
+             return JsonResponse({
+                'error': 'GEMINI_API_KEY not set in settings.py (or .env).'
+            }, status=500)
+
         if not api_key:
             return JsonResponse({
-                'error': 'Chưa set GEMINI_API_KEY. Xem QUICKSTART_CHATBOT.md'
+                'error': 'GEMINI_API_KEY is empty. Please check your configuration.'
             }, status=500)
         
         # Configure Gemini
         genai.configure(api_key=api_key)
         
-        # Khởi tạo model Gemini 2.0 Flash
+        # Create full prompt: System Instruction + User Message
+        full_prompt = f"{SYSTEM_INSTRUCTION}\n\nCustomer Question: \"{user_message}\""
+        
+        # Initialize Gemini 2.0 Flash model
         model = genai.GenerativeModel('gemini-2.0-flash')
 
         
-        # Gửi message và nhận response
-        response = model.generate_content(user_message)
+        # Send message and get response
+        response = model.generate_content(full_prompt)
         
-        # Trả về JSON
+        # Return JSON
         return JsonResponse({
             'success': True,
             'reply': response.text
@@ -73,7 +87,13 @@ def chat_with_gemini(request):
         
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
-    except Exception as e:
+    except APIError as e:
+        # Handle errors from Google API (e.g., invalid API key, rate limit)
         return JsonResponse({
-            'error': f'Lỗi: {str(e)}'
+            'error': f'Gemini API error: {str(e)}'
+        }, status=500)
+    except Exception as e:
+        # Handle general errors
+        return JsonResponse({
+            'error': f'Server error: {str(e)}'
         }, status=500)
