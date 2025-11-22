@@ -174,7 +174,6 @@
         SMART TOUR
 
     </p>
-    </a>
 
     </a>
 
@@ -398,6 +397,7 @@
         </a>
 
         <a href="{% url 'signup_page' %}" 
+
            style="
 
              padding:8px 18px; 
@@ -462,28 +462,34 @@
     </section>
     <section class="u-clearfix u-section-2" id="block-8">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <form id="searchForm" method="GET" action="{% url 'recommend_result' %}">
         <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-radius u-white u-layout-wrap-1">
           <div class="u-layout">
             <div class="u-layout-row">
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
                 <div class="u-container-layout u-container-layout-1">
                   <div class="custom-expanded u-form u-form-1">
-                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
+                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-1">
-                        <label for="filter-location" class="u-custom-font u-font-montserrat u-label u-label-1">Location</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-1">
-                            <option value="All region">All region</option>
-                            <option value="Ho Chi Minh" data-calc="">Ho Chi Minh</option>
-                            <option value="Ha Long Bay" data-calc="">Ha Long Bay</option>
-                            <option value="Ha Noi" data-calc="">Ha Noi</option>
-                            <option value="Hue" data-calc="">Hue</option>
-                          </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                        </div>
+                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-1">Region</label>
+                        <!-- Location Filter -->
+                      <div style="flex: 1; min-width: 150px;">
+                        <select name="location" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: white; cursor: pointer; transition: all 0.3s;">
+                          <option value="">All Locations</option>
+                          {% for loc in all_locations %}
+                          <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
+                          {% endfor %}
+                        </select>
                       </div>
-                    </div>
+                      </div>
+                      <div class="u-align-right u-form-group u-form-submit u-label-none">
+                        <input type="submit" value="submit" class="u-form-control-hidden">
+                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-1"></a>
+                      </div>
+                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
+                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
+                      <input type="hidden" value="" name="recaptchaResponse">
+                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
+                    </form>
                   </div><span class="u-icon u-text-custom-color-7 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 54.757 54.757" style=""><use xlink:href="#svg-b87b"></use></svg><svg class="u-svg-content" viewBox="0 0 54.757 54.757" x="0px" y="0px" id="svg-b87b" style="enable-background:new 0 0 54.757 54.757;"><path d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952
 	L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7
 	S31.416,26,27.557,26z"></path></svg></span>
@@ -492,40 +498,47 @@
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
                 <div class="u-container-layout u-container-layout-2">
                   <div class="custom-expanded u-form u-form-2">
-                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
+                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-3">
-                        <label for="filter-category" class="u-custom-font u-font-montserrat u-label u-label-2">Category</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-2">
-                            <option value="All locations">All locations</option>
-                            <option value="Landmark" data-calc="">Landmark</option>
-                            <option value="Scenery" data-calc="">Scenery</option>
-                            <option value="Sanctuary" data-calc="">Sanctuary</option>
-                            <option value="Museum" data-calc="">Museum</option>
-                            <option value="Attraction" data-calc="">Attraction</option>
-                          </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                        </div>
+                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-2">Region</label>
+                                    <!-- Category Filter -->
+                      <div style="flex: 1; min-width: 150px;">
+                        <select name="category" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: white; cursor: pointer; transition: all 0.3s;">
+                          <option value="">All Categories</option>
+                          {% for cat in all_categories %}
+                          <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                          {% endfor %}
+                        </select>
                       </div>
-                    </div>
+                      </div>
+                      <div class="u-align-right u-form-group u-form-submit u-label-none">
+                        <input type="submit" value="submit" class="u-form-control-hidden">
+                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-2"></a>
+                      </div>
+                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
+                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
+                      <input type="hidden" value="" name="recaptchaResponse">
+                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
+                    </form>
                   </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/617418-fb032591.png' %}" alt=""></span>
                 </div>
               </div>
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
                 <div class="u-container-layout u-container-layout-3">
                   <div class="custom-expanded u-form u-form-3">
-                    <div class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
+                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-5">
-                        <label for="filter-price" class="u-custom-font u-font-montserrat u-label u-label-3">Price Range</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-3">
-                            <option value="★☆☆☆☆ (1+)" data-calc="">★☆☆☆☆ (1+)</option>
-                            <option value="★★☆☆☆ (2+)" data-calc="">★★☆☆☆ (2+)</option>
-                            <option value="★★★☆☆ (3+)" data-calc="">★★★☆☆ (3+)</option>
-                            <option value="★★★★☆ (4+)" data-calc="">★★★★☆ (4+)</option>
-                            <option value="★★★★★" data-calc="">★★★★★</option>
+                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-3">Region</label>
+                         <!-- Rating Filter with Icon -->
+                        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                          <select name="rating" style="flex: 1; padding: 12px 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background: white; cursor: pointer; font-family: 'Montserrat', sans-serif;">
+                            <option value="">★☆☆☆☆ (1+)</option>
+                            <option value="4.5" {% if selected_rating == '4.5' %}selected{% endif %}>★★★★★ (4.5+)</option>
+                            <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
+                            <option value="3.5" {% if selected_rating == '3.5' %}selected{% endif %}>★★★☆☆ (3.5+)</option>
+                            <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>★★☆☆☆ (3.0+)</option>
+                            <option value="1.0" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
                           </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
                       <div class="u-align-right u-form-group u-form-submit u-label-none">
@@ -546,7 +559,7 @@
         <div class="u-clearfix u-group-elements u-group-elements-1"
      style="display:flex; align-items:center; justify-content:center;">
 
-    <a href="{% url 'trip_planner' %}"
+    <a href="{% url 'recommend_result' %}"
        class="u-btn u-button-style u-custom-font u-font-montserrat"
        style="
            display:flex;
