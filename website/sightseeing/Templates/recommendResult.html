@@ -206,16 +206,6 @@
             </select>
           </div>
           
-          <!-- Price Range Filter -->
-          <div style="flex: 1; min-width: 150px;">
-            <select name="price" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: white; cursor: pointer; transition: all 0.3s;">
-              <option value="">💰 All Prices</option>
-              <option value="free" {% if selected_price == 'free' %}selected{% endif %}>Free</option>
-              <option value="budget" {% if selected_price == 'budget' %}selected{% endif %}>Budget (< 200k)</option>
-              <option value="medium" {% if selected_price == 'medium' %}selected{% endif %}>Medium (200k-500k)</option>
-              <option value="premium" {% if selected_price == 'premium' %}selected{% endif %}>Premium (> 500k)</option>
-            </select>
-          </div>
           
           <!-- Rating Filter -->
           <div style="flex: 1; min-width: 150px;">
