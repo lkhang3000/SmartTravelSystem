@@ -312,6 +312,26 @@ def save_user_input(request):
         return redirect('recommend_result')
     
     return redirect('user_input')
+
+def destination_detail(request, destination_id):
+    """View to display detailed information about a specific destination"""
+    try:
+        destination = Destinations.objects.select_related('location').get(id=destination_id)
+        
+        # Get related destinations (same location or category)
+        related = Destinations.objects.filter(
+            location=destination.location
+        ).exclude(id=destination_id)[:3]
+        
+        context = {
+            'destination': destination,
+            'related_destinations': related,
+        }
+        return render(request, 'detail_destination.html', context)
+    except Destinations.DoesNotExist:
+        messages.error(request, 'Destination not found.')
+        return redirect('recommend_result')
+
 def about_us(request):
     return render(request, 'About-us.html')
 
