@@ -182,7 +182,7 @@
       </div></header>
     
     <!-- Filter Bar -->
-    <section class="u-clearfix u-section-filter" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px 0;">
+    <section class="u-clearfix u-section-filter" style="background: linear-gradient(135deg, #ff8a00 0%, #F7931E 100%); padding: 20px 0;">
       <div class="u-container-style u-white u-radius-20" style="max-width: 1320px; margin: 0 auto; padding: 20px 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
         <form method="GET" action="{% url 'recommend_result' %}" id="filterForm" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
           
@@ -206,16 +206,6 @@
             </select>
           </div>
           
-          <!-- Price Range Filter -->
-          <div style="flex: 1; min-width: 150px;">
-            <select name="price" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: white; cursor: pointer; transition: all 0.3s;">
-              <option value="">💰 All Prices</option>
-              <option value="free" {% if selected_price == 'free' %}selected{% endif %}>Free</option>
-              <option value="budget" {% if selected_price == 'budget' %}selected{% endif %}>Budget (< 200k)</option>
-              <option value="medium" {% if selected_price == 'medium' %}selected{% endif %}>Medium (200k-500k)</option>
-              <option value="premium" {% if selected_price == 'premium' %}selected{% endif %}>Premium (> 500k)</option>
-            </select>
-          </div>
           
           <!-- Rating Filter -->
           <div style="flex: 1; min-width: 150px;">
@@ -230,7 +220,7 @@
           
           <!-- Search Button -->
           <div>
-            <button type="submit" style="padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+            <button type="submit" style="padding: 12px 30px; background: linear-gradient(135deg, #ff8a00 0%, #F7931E 100%); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
               🔍 SEARCH
             </button>
           </div>
@@ -296,9 +286,9 @@
     
     
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="sec-6200"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
+        <p class="u-small-text u-text u-text-variant u-text-1">Hello Phuc.</p>
       </div></footer>
-    <section class="u-backlink u-clearfix u-grey-80"> This website was created with <a href="https://nicepage.com">Nicepage</a>
+  
     </section>
   
 </body></html>
