@@ -188,6 +188,9 @@ def contact_us(request):
 def trip_planner(request):
     return render(request, 'Trip-planner.html')
 
+def input_trip_planner(request):
+    return render(request, 'inputTripPlanner.html')
+
 
 
 
