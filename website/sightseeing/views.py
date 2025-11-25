@@ -191,6 +191,9 @@ def trip_planner(request):
 def input_trip_planner(request):
     return render(request, 'inputTripPlanner.html')
 
+def trip_planner_overview(request):
+    return render(request, 'Trip-planner-overview.html')
+
 
 
 

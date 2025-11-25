@@ -18,6 +18,7 @@ urlpatterns = [
     #Function pages
     path('Trip-planner/', views.trip_planner, name='trip_planner'),
     path('inputTripPlanner/', views.input_trip_planner, name='input_trip_planner'),
+    path('Trip-planner-overview/', views.trip_planner_overview, name='tripplanner_overview'),
 
     # User pages
     path('profile/', views.user_profile, name='user_profile'),
