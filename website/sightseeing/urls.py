@@ -8,6 +8,7 @@ urlpatterns = [
     # Authentication URLs
     path('login/', views.login_page, name='login_page'),
     path('signup/', views.signup_page, name='signup_page'),
+    path('logout/', views.logout_view, name='logout'),
     
     # Password reset URLs
     path('password-reset/', views.password_reset, name='password_reset'),
@@ -15,11 +16,15 @@ urlpatterns = [
     path('password-reset/confirm/', views.password_reset_confirm, name='password_reset_confirm'),
     path('password-reset/complete/', views.password_reset_complete, name='password_reset_complete'),
     
+    #Function pages
+    path('Trip-planner/', views.trip_planner, name='trip_planner'),
+
     # User pages
     path('profile/', views.user_profile, name='user_profile'),
     path('user-input/', views.user_input, name='user_input'),
     path('save-user-input/', views.save_user_input, name='save_user_input'),
     path('recommend-result/', views.recommend_result, name='recommend_result'),
+    path('destination/<int:destination_id>/', views.destination_detail, name='destination_detail'),
     path('destination/', views.user_profile, name='destination'),
     
     # Info pages
