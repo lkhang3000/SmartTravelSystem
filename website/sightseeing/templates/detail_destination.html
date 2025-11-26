@@ -428,12 +428,37 @@
    <div style="display:flex; gap:40px; align-items:flex-start; margin-top:20px;">
 
     <!-- LEFT COLUMN: Image -->
-    <div style="flex:1;">
+    <div style="flex:1.0;">
         <img src="{{ destination.image_url }}" 
              class="u-expanded-width u-image place-img" 
              alt="{{ destination.desName }}"
              style="border-radius:10px;"
              onerror="this.src='https://picsum.photos/seed/{{ destination.id }}/800/600'" />
+    <!-- CAROUSEL -->
+    <div class="carousel-container" style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
+    <div style="font-weight:bold; color:#1a4fa3; margin-bottom:10px;">📸 More Images</div>
+
+    <div class="carousel-wrapper" style="position:relative; width:60%; max-width:750px;">
+        <!-- Left Button -->
+        <button class="carousel-btn left" onclick="scrollCarousel(-1)">&#10094;</button>
+
+        <div class="carousel" id="carousel" style="
+            display:flex;
+            gap:10px;
+            overflow:hidden;
+            scroll-behavior:smooth;
+        ">
+            <img src="https://picsum.photos/seed/1/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/2/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/3/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/4/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/5/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+        </div>
+
+        <!-- Right Button -->
+        <button class="carousel-btn right" onclick="scrollCarousel(1)">&#10095;</button>
+    </div>
+</div>         
     </div>
 
     <!-- RIGHT COLUMN: Content -->
@@ -498,31 +523,7 @@
     </div>
 
 </div>
-    <!-- CAROUSEL -->
-    <div class="carousel-container" style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
-    <div style="font-weight:bold; color:#1a4fa3; margin-bottom:10px;">📸 More Images</div>
-
-    <div class="carousel-wrapper" style="position:relative; width:90%; max-width:750px;">
-        <!-- Left Button -->
-        <button class="carousel-btn left" onclick="scrollCarousel(-1)">&#10094;</button>
-
-        <div class="carousel" id="carousel" style="
-            display:flex;
-            gap:10px;
-            overflow:hidden;
-            scroll-behavior:smooth;
-        ">
-            <img src="https://picsum.photos/seed/1/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
-            <img src="https://picsum.photos/seed/2/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
-            <img src="https://picsum.photos/seed/3/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
-            <img src="https://picsum.photos/seed/4/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
-            <img src="https://picsum.photos/seed/5/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
-        </div>
-
-        <!-- Right Button -->
-        <button class="carousel-btn right" onclick="scrollCarousel(1)">&#10095;</button>
-    </div>
-</div>
+    
 <style>
     .carousel-img {
     height: 120px;
