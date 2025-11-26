@@ -501,15 +501,65 @@
     <!-- CAROUSEL -->
     <div class="carousel-container" style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
     <div style="font-weight:bold; color:#1a4fa3; margin-bottom:10px;">📸 More Images</div>
-    <div class="carousel" style="display:flex; gap:10px; overflow-x:auto; padding-bottom:10px;">
-        <img src="https://picsum.photos/seed/1/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
-        <img src="https://picsum.photos/seed/2/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
-        <img src="https://picsum.photos/seed/3/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
-        <img src="https://picsum.photos/seed/4/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
-        <img src="https://picsum.photos/seed/5/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
-    </div>
-    </div>
 
+    <div class="carousel-wrapper" style="position:relative; width:80%; max-width:600px;">
+        <!-- Left Button -->
+        <button class="carousel-btn left" onclick="scrollCarousel(-1)">&#10094;</button>
+
+        <div class="carousel" id="carousel" style="
+            display:flex;
+            gap:10px;
+            overflow:hidden;
+            scroll-behavior:smooth;
+        ">
+            <img src="https://picsum.photos/seed/1/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/2/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/3/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/4/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            <img src="https://picsum.photos/seed/5/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+        </div>
+
+        <!-- Right Button -->
+        <button class="carousel-btn right" onclick="scrollCarousel(1)">&#10095;</button>
+    </div>
+</div>
+<style>
+    .carousel-img {
+    height: 120px;
+    width: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .3s, border .3s;
+}
+
+.carousel-img:hover {
+    transform: scale(1.1);
+    border: 3px solid #1e76ff;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e76ff;
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.carousel-btn:hover {
+    opacity: 1;
+}
+
+.carousel-btn.left { left: -35px; }
+.carousel-btn.right { right: -35px; }
+
+</style>
 
         {% if related_destinations %}
         <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
@@ -552,12 +602,44 @@
     }
     </script>
 
-    <script>
-    function changeMainImage(src) {
-    const mainImage = document.querySelector('.place-img');
-    mainImage.src = src;
-    }
-    </script>
+
+<script>
+const carousel = document.querySelector(".carousel");
+const items = document.querySelectorAll(".carousel-img");
+const mainImage = document.querySelector(".place-img");
+
+let currentIndex = 0;
+
+// Cập nhật ảnh chính
+function updateMainImage() {
+    // dùng modulo để loop
+    currentIndex = ((currentIndex % items.length) + items.length) % items.length;
+    mainImage.src = items[currentIndex].src;
+}
+
+// Scroll carousel theo hướng (-1: trái, 1: phải)
+function scrollCarousel(direction) {
+    currentIndex += direction;
+    updateMainImage();
+    
+    // Scroll đến ảnh đang chọn
+    const width = items[0].offsetWidth + 10; // cộng gap giữa ảnh
+    carousel.scrollLeft = width * currentIndex;
+}
+
+// Click vào ảnh nhỏ
+items.forEach((item, index) => {
+    item.addEventListener("click", () => {
+        currentIndex = index;
+        updateMainImage();
+        const width = items[0].offsetWidth + 10;
+        carousel.scrollLeft = width * currentIndex;
+    });
+});
+
+// Set ảnh đầu tiên khi load
+updateMainImage();
+</script>
     
 </body>
 </html>
