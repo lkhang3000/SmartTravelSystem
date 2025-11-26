@@ -1,0 +1,727 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en"><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Page 2</title>
+    <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
+  <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" media="screen">
+    <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
+
+    <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
+    
+    
+    
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
+    <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "SmartTour",
+		"logo": "{% static 'images/SmartTour11.png' %}"
+}</script>
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Page 2">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+  <script>
+  function toggleChat() {
+    const chatBox = document.getElementById("chatBox");
+    chatBox.style.display =
+      chatBox.style.display === "flex" ? "none" : "flex";
+  }
+</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+  <body data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
+
+        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
+
+
+    <!-- LEFT: Logo -->
+
+    <a href="{% url 'home' %}" 
+
+       class="u-logo" 
+
+       style="display:flex; align-items:center;">
+
+        <img src="{% static 'images/SmartTour11.png' %}" 
+
+             style="height:130px; width:130px; display:block;" 
+
+             alt="logo">
+
+    </a>
+
+
+
+    <!-- MIDDLE: Title -->
+
+    <a href="{% url 'home' %}" style="text-decoration:none;">
+
+    <p style="margin:0; 
+
+        font-size:60px; 
+
+        font-weight:800; 
+
+        color:white; 
+
+        letter-spacing:1px;
+
+        margin-left:40px;
+
+        text-shadow:0 3px 6px rgba(0,0,0,6);">
+
+        SMART TOUR
+
+    </p>
+
+    </a>
+
+    <!-- RIGHT: Buttons / User Menu -->
+
+    <div style="display:flex; gap:10px; align-items:center;">
+
+        {% if user.is_authenticated %}
+
+        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
+
+        <div style="position:relative;">
+
+            <button id="userMenuBtn" style="
+
+              padding:8px 12px; 
+
+              background:#F7931E; 
+
+              border-radius:25px; 
+
+              color:white; 
+
+              font-weight:700;            
+
+              border:none;
+
+              cursor:pointer;
+
+              display:flex;
+
+              align-items:center;
+
+              gap:8px;
+
+              transition:0.2s;
+
+            "
+
+            onmouseover="this.style.background='#C48300'"
+
+            onmouseout="this.style.background='#F7931E'"
+
+            onclick="toggleUserMenu()">
+
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+
+                </svg>
+
+                {{ user.username }}
+
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+
+                    <path d="M7 10l5 5 5-5z"/>
+
+                </svg>
+
+            </button>
+
+            <div id="userDropdown" style="
+
+              display:none;
+
+              position:absolute;
+
+              top:110%;
+
+              right:0;
+
+              background:white;
+
+              border-radius:8px;
+
+              box-shadow:0 4px 12px rgba(0,0,0,0.15);
+
+              min-width:180px;
+
+              z-index:1000;
+
+            ">
+
+                <a href="{% url 'user_profile' %}" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#333;
+
+                  text-decoration:none;
+
+                  border-bottom:1px solid #eee;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
+                    👤 My Profile
+
+                </a>
+
+                <a href="{% url 'recommend_result' %}" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#333;
+
+                  text-decoration:none;
+
+                  border-bottom:1px solid #eee;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
+                    🗺️ My Destinations
+
+                </a>
+
+                <a href="/logout/" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#d32f2f;
+
+                  text-decoration:none;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
+                    🚪 Logout
+
+                </a>
+
+            </div>
+
+        </div>
+
+        
+
+        <script>
+
+        function toggleUserMenu() {
+
+            var dropdown = document.getElementById('userDropdown');
+
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+
+        }
+
+
+        // Đóng dropdown khi click bên ngoài
+
+        window.onclick = function(event) {
+
+            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+
+                var dropdown = document.getElementById('userDropdown');
+
+                if (dropdown && dropdown.style.display === 'block') {
+
+                    dropdown.style.display = 'none';
+
+                }
+
+            }
+
+        }
+
+        </script>
+
+        {% else %}
+
+        <!-- User chưa đăng nhập: hiển thị Login/Register -->
+
+        <a href="{% url 'login_page' %}" 
+
+           style="
+
+             padding:8px 18px; 
+
+             background:#F7931E; 
+
+             border-radius:25px; 
+
+             color:white; 
+
+             font-weight:700;            
+
+             text-decoration:none;
+
+             transition:0.2s;
+
+           "
+
+           onmouseover="this.style.background='#C48300'"
+
+           onmouseout="this.style.background='#F7931E'">
+
+            Log in
+
+        </a>
+
+        <a href="{% url 'signup_page' %}" 
+
+           style="
+
+             padding:8px 18px; 
+
+             background:#F7931E; 
+
+             border-radius:25px; 
+
+             color:white; 
+
+             font-weight:700;            
+
+             text-decoration:none;
+
+             transition:0.2s;
+
+           "
+
+           onmouseover="this.style.background='#C48300'"
+
+           onmouseout="this.style.background='#F7931E'">
+
+            Register
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</header>
+    <section class="u-clearfix u-valign-middle-xl u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1" id="block-2">
+      <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
+        <div class="u-layout">
+          <div class="u-layout-row">
+            <div class="u-size-11">
+              <div class="u-layout-col">
+                <div class="u-container-style u-layout-cell u-shape-rectangle u-size-60 u-layout-cell-1">
+                  <div class="u-container-layout u-container-layout-1">
+                    <div class="u-accordion u-expanded-width u-accordion-1" role="tablist">
+  <div class="u-accordion u-expanded-width u-accordion-1" role="tablist">
+  <div class="u-accordion-item">
+    <a class="active u-accordion-link u-button-style u-custom-font u-font-montserrat u-hover-grey-10 u-text-custom-color-7 u-accordion-link-2" 
+       id="link-ee32" aria-controls="ee32" aria-selected="true" role="tab">
+      <span class="u-accordion-link-text">Overview </span>
+      <span class="u-accordion-link-icon u-icon u-icon-rectangle u-text-custom-color-7 u-icon-2">
+        <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 16 16">
+          <use xlink:href="#svg-53f3"></use>
+        </svg>
+        <svg class="u-svg-content" viewBox="0 0 16 16" x="0px" y="0px" id="svg-53f3">
+          <path d="M8,10.7L1.6,5.3c-0.4-0.4-1-0.4-1.3,0c-0.4,0.4-0.4,0.9,0,1.3l7.2,6.1
+                   c0.1,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l7.1-6c0.4-0.4,0.4-0.9,0-1.3
+                   c-0.4-0.4-1-0.4-1.3,0L8,10.7z"></path>
+        </svg>
+      </span>
+    </a>
+    <div class="u-accordion-active u-accordion-pane u-container-style u-accordion-pane-2" 
+         id="ee32" aria-labelledby="link-ee32" role="tabpanel">
+      <div class="u-container-layout u-container-layout-3">
+        <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">Explore</p>
+        <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-2">Notes</p>
+        <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-3">Saved Destinations</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="u-size-49">
+              <div class="u-layout-col">
+                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-2">
+                  <div class="u-container-layout u-container-layout-5">
+                    <div class="u-absolute-hcenter u-expanded u-grey-light-2 u-map">
+                      <div class="embed-responsive">
+                        <iframe class="embed-responsive-item" src="https://maps.google.com/maps?output=embed&amp;q=Ho%20Chi%20Minh%2C%20VietNam&amp;z=9&amp;t=m" data-map="JTdCJTIycG9zaXRpb25UeXBlJTIyJTNBJTIybWFwLWFkZHJlc3MlMjIlMkMlMjJhZGRyZXNzJTIyJTNBJTIySG8lMjBDaGklMjBNaW5oJTJDJTIwVmlldE5hbSUyMiUyQyUyMnpvb20lMjIlM0E5JTJDJTIydHlwZUlkJTIyJTNBJTIycm9hZCUyMiUyQyUyMmxhbmclMjIlM0FudWxsJTJDJTIyYXBpS2V5JTIyJTNBbnVsbCUyQyUyMm1hcmtlcnMlMjIlM0ElNUIlNUQlN0Q="></iframe>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-3">
+                  <div class="u-container-layout u-container-layout-6">
+                    <div class="u-accordion u-expanded-width u-accordion-2" role="tablist">
+                      <div class="u-accordion-item">
+                        <a class="active u-accordion-link u-button-style u-custom-font u-font-montserrat u-text-custom-color-7 u-accordion-link-4" id="link-35fe" aria-controls="35fe" aria-selected="true" role="tab"><span class="u-accordion-link-text">Explore</span><span class="u-accordion-link-icon u-icon u-text-custom-color-7 u-icon-4"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 16 16" style=""><use xlink:href="#svg-5949"></use></svg><svg class="u-svg-content" viewBox="0 0 16 16" x="0px" y="0px" id="svg-5949"><path d="M8,10.7L1.6,5.3c-0.4-0.4-1-0.4-1.3,0c-0.4,0.4-0.4,0.9,0,1.3l7.2,6.1c0.1,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l7.1-6
+	c0.4-0.4,0.4-0.9,0-1.3c-0.4-0.4-1-0.4-1.3,0L8,10.7z"></path></svg></span>
+                        </a>
+                        <div class="u-accordion-active u-accordion-pane u-container-style u-accordion-pane-4" id="35fe" aria-labelledby="link-35fe" role="tabpanel">
+                          <div class="u-container-layout u-valign-top u-container-layout-7">
+                            <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1">
+                              <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-8">
+                                <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-1" src="{% static 'images/pexels-triduhi-youtuber-27418881.jpg' %}" alt="" data-image-width="5820" data-image-height="3880">
+                                <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-11">Imperial Capital Hue</p>
+                                <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-12">Hue City</p>
+                                <p class="u-text u-text-13"> "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm that preserves Vietnam’s graceful royal heritage."</p>
+                              </div>
+                            </div>
+                            <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-2">
+                              <div class="u-container-layout u-container-layout-9">
+                                <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-2" src="{% static 'images/cave-wallpaper-l.jpg' %}" alt="" data-image-width="1916" data-image-height="1400">
+                                <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-14">Sung Sot Cave</p>
+                                <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-15">Ha Long Bay</p>
+                                <p class="u-text u-text-16"> “The largest and most spectacular cave in Ha Long Bay, featuring massive chambers, dramatic rock formations, and colorful illuminated pathways.”</p>
+                              </div>
+                            </div>
+                            <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-3">
+                              <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-10">
+                                <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-3" src="{% static 'images/pexels-phamthe-13519138.jpg' %}" alt="" data-image-width="2726" data-image-height="4088">
+                                <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-17">Hoang Kiem Lake </p>
+                                <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-18">Hanoi </p>
+                                <p class="u-text u-text-19"> “A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge glowing beautifully at night.”</p>
+                              </div>
+                            </div>
+                            <div style="text-align:center; margin-top:15px;">
+  <button onclick="browseAll()" style="
+    padding:10px 20px;
+    border:none;
+    border-radius:12px;
+    background:#ffb703;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+  " onmouseover="this.style.background='#ffb703'" onmouseout="this.style.background='#ffb703'">
+    Browse all
+  </button>
+</div>
+
+                          </div>
+                        </div>
+                        <!-- NOTES ACCORDION -->
+<div class="u-accordion u-expanded-width u-accordion-notes" role="tablist" style="margin-top:20px;">
+  <div class="u-accordion-item">
+    <a class="u-accordion-link u-button-style u-custom-font u-font-montserrat u-text-custom-color-7 u-accordion-link-4"
+   id="link-notes" aria-controls="notes-panel" aria-selected="false" role="tab"
+   onclick="toggleAccordion('notes-panel', this)">
+  <span class="u-accordion-link-text">Notes</span>
+  <span class="u-accordion-link-icon u-icon u-icon-4 u-text-custom-color-7">
+    <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 16 16">
+      <use xlink:href="#svg-5949"></use>
+    </svg>
+    <svg class="u-svg-content" viewBox="0 0 16 16" x="0px" y="0px" id="svg-5949">
+      <path d="M8,10.7L1.6,5.3c-0.4-0.4-1-0.4-1.3,0c-0.4,0.4-0.4,0.9,0,1.3l7.2,6.1c0.1,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l7.1-6
+      c0.4-0.4,0.4-0.9,0-1.3c-0.4-0.4-1-0.4-1.3,0L8,10.7z"></path>
+    </svg>
+  </span>
+</a>
+
+    <div class="u-accordion-pane u-container-style" id="notes-panel" aria-labelledby="link-notes" style="display:none;">
+      <div class="u-container-layout" style="padding:10px;">
+        <!-- Note input -->
+        <div style="display:flex; gap:5px; margin-bottom:10px;">
+          <input type="text" id="noteInput" placeholder="Type a note..." style="flex:1; padding:5px; border-radius:12px; border:1px solid #ccc;">
+          <button onclick="addNote()" style="padding:5px 10px; border:none; background:#ffb703; color:white; border-radius:12px; cursor:pointer;">Add</button>
+        </div>
+        <!-- Notes container -->
+        <div id="notesContainer" style="display:flex; flex-direction:column; gap:5px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="u-accordion u-expanded-width u-accordion-2" role="tablist">
+                      <div class="u-accordion-item">
+                        <a class="active u-accordion-link u-button-style u-custom-font u-font-montserrat u-text-custom-color-7 u-accordion-link-4" id="link-35fe" aria-controls="35fe" aria-selected="true" role="tab"><span class="u-accordion-link-text">Saved Destinations</span><span class="u-accordion-link-icon u-icon u-text-custom-color-7 u-icon-4"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 16 16" style=""><use xlink:href="#svg-5949"></use></svg><svg class="u-svg-content" viewBox="0 0 16 16" x="0px" y="0px" id="svg-5949"><path d="M8,10.7L1.6,5.3c-0.4-0.4-1-0.4-1.3,0c-0.4,0.4-0.4,0.9,0,1.3l7.2,6.1c0.1,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l7.1-6
+	c0.4-0.4,0.4-0.9,0-1.3c-0.4-0.4-1-0.4-1.3,0L8,10.7z"></path></svg></span>
+                        </a>
+                        <div class="u-accordion-active u-accordion-pane u-container-style u-accordion-pane-4" id="35fe" aria-labelledby="link-35fe" role="tabpanel">
+                          <div class="u-container-layout u-valign-top u-container-layout-7">
+                            <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1">
+                              <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-8">
+                                <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-1" src="{% static 'images/pexels-triduhi-youtuber-27418881.jpg' %}" alt="" data-image-width="5820" data-image-height="3880">
+                                <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-11">Imperial Capital Hue</p>
+                                <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-12">Hue City</p>
+                                <p class="u-text u-text-13"> "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm that preserves Vietnam’s graceful royal heritage."</p>
+                              </div>
+                            </div>
+                            <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-2">
+                              <div class="u-container-layout u-container-layout-9">
+                                <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-2" src="{% static 'images/cave-wallpaper-l.jpg' %}" alt="" data-image-width="1916" data-image-height="1400">
+                                <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-14">Sung Sot Cave</p>
+                                <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-15">Ha Long Bay</p>
+                                <p class="u-text u-text-16"> “The largest and most spectacular cave in Ha Long Bay, featuring massive chambers, dramatic rock formations, and colorful illuminated pathways.”</p>
+                              </div>
+                            </div>
+                            <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-3">
+                              <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-10">
+                                <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-3" src="{% static 'images/pexels-phamthe-13519138.jpg' %}" alt="" data-image-width="2726" data-image-height="4088">
+                                <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-17">Hoang Kiem Lake </p>
+                                <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-18">Hanoi </p>
+                                <p class="u-text u-text-19"> “A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge glowing beautifully at night.”</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      
+      
+      
+    </section>
+    
+    
+    
+    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
+        <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
+          <div class="chat-container"><!-- Floating Button -->
+            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
+            <div class="chat-box" id="chatBox">
+              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
+              </div>
+              <div class="chat-body">
+                <div class="bot-msg">Hello! How can I help you today?</div>
+              </div>
+              <div class="chat-input">
+                <input type="text" placeholder="Type a message...">
+                <button>➤</button>
+              </div>
+            </div>
+          </div>
+          <style> .chat-container {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    font-family: sans-serif;
+  }
+
+  /* Floating button */
+  .chat-button {
+    width: 60px;
+    height: 60px;
+    background-color: #1e5f74; /* darker ocean tone */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    font-size: 28px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    color: #fff;
+  }
+
+  .chat-button:hover {
+    transform: scale(1.1);
+    background-color: #174c5c; /* slightly darker hover */
+  }
+
+  /* Chat box */
+  .chat-box {
+    display: none;
+    position: absolute;
+    bottom: 75px;
+    right: 0;
+    width: 350px;
+    height: 450px;
+    background: #eaf4f6; /* light blue-gray */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    overflow: hidden;
+    flex-direction: column;
+    color: #000; /* black text */
+  }
+
+  .chat-header {
+    background-color: #1e5f74;
+    color: #000;
+    padding: 12px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .chat-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    background: #f5f8f9;
+  }
+
+  .bot-msg {
+    background: #c8e3e8; /* pale teal bubble */
+    padding: 8px 12px;
+    border-radius: 10px;
+    width: fit-content;
+    color: #000;
+  }
+
+  .chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    color: #000;
+    background: #fff;
+  }
+
+  .chat-input button {
+    background: #1e5f74;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  .chat-input button:hover {
+    background: #174c5c;
+  }
+
+  .close-btn {
+    cursor: pointer;
+    font-size: 20px;
+  } </style>
+        </div>
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation">
+          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
+              <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
+              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+</g></svg>
+            </a>
+          </div>
+          <div class="u-custom-menu u-nav-container">
+            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" style="padding: 10px 20px;">Home</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
+</li></ul>
+          </div>
+          <div class="u-custom-menu u-nav-container-collapse" id="4bf4" role="region" aria-label="Menu panel">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-inner-container-layout u-sidenav-overflow">
+                <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="./">Home</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a>
+</li></ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not by copied due to copyright law </p>
+      </div></footer>
+    <section class="u-backlink u-clearfix u-grey-80"></section>
+
+<script>
+function browseAll() {
+    // Chuyển hướng đến trang hiển thị tất cả destinations
+    window.location.href = "http://127.0.0.1:8000/recommend-result/";
+}
+
+function toggleAccordion(panelId, link) {
+  const panel = document.getElementById(panelId);
+  const isOpen = panel.style.display === 'block';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if(link){
+    link.classList.toggle('active', !isOpen);
+  }
+}
+
+function addNote() {
+  const input = document.getElementById('noteInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const container = document.getElementById('notesContainer');
+
+  const noteDiv = document.createElement('div');
+  noteDiv.style.background = '#c8e3e8';
+  noteDiv.style.padding = '5px 10px';
+  noteDiv.style.borderRadius = '12px';
+  noteDiv.style.display = 'flex';
+  noteDiv.style.justifyContent = 'space-between';
+  noteDiv.style.alignItems = 'center';
+
+  const noteText = document.createElement('span');
+  noteText.textContent = text;
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = '×';
+  deleteBtn.style.border = 'none';
+  deleteBtn.style.background = 'transparent';
+  deleteBtn.style.cursor = 'pointer';
+  deleteBtn.onclick = () => noteDiv.remove();
+
+  noteDiv.appendChild(noteText);
+  noteDiv.appendChild(deleteBtn);
+  container.appendChild(noteDiv);
+
+  input.value = '';
+}
+
+// Bắt sự kiện Enter trên input note
+document.getElementById('noteInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // tránh submit form
+        addNote();
+    }
+});
+
+</script>
+
+</body></html>
