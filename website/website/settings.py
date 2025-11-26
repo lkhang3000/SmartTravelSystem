@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sightseeing',
     'rest_framework',
+    'account',
+    'chatservice',
 ]
 
 MIDDLEWARE = [
@@ -131,7 +134,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Gemini API Key
-GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
+GEMINI_API_KEY = config('GEMINI_API_KEY')
 
 # Email Configuration
 # For development, use console backend (prints emails to console)
@@ -148,3 +151,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # For now, use console backend
 DEFAULT_FROM_EMAIL = 'Smart Tour <noreply@smarttour.com>'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

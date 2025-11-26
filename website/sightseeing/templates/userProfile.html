@@ -1,31 +1,41 @@
 <!DOCTYPE html>
+{% load static %} 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Tour Profile</title>
-    {% load static %}
+    
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
             background-color: #f6f9ff;
             margin: 0;
         }
         .profile-container {
-            width: 55%;
+            width: 65%; 
+            min-width: 500px;
             background: white;
             margin: 40px auto;
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .avatar-container {
+            position: relative;
+            width: 110px; /* Bắt buộc phải là hình vuông */
+            height: 110px; /* Bắt buộc phải là hình vuông */
+            margin: auto;
         }
         .avatar {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
+            width: 100%; /* Chiếm toàn bộ container */
+            height: 100%; /* Chiếm toàn bộ container */
+            border-radius: 50%; /* Tạo hình tròn */
             border: 4px solid #1e76ff;
             display: block;
-            margin: auto;
+            object-fit: cover; /* Đảm bảo ảnh lấp đầy khung mà không bị méo */
+            cursor: pointer;
         }
         .username {
             text-align: center;
@@ -38,6 +48,7 @@
             padding: 18px;
             border-radius: 8px;
             margin-top: 15px;
+            position: relative;
         }
         .section-title {
             font-weight: bold;
@@ -62,15 +73,127 @@
             margin-top: 25px;
         }
         .btn {
-            background-color: orange;
+            background-color: #F7931E; 
             color: white;
             border: none;
-            padding: 8px 22px;
+            padding: 10px 25px;
             border-radius: 6px;
             cursor: pointer;
-            margin: 0 10px;
-            font-size: 15px;
+            margin: 0 5px;
+            font-size: 16px;
             font-weight: bold;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            text-decoration: none; 
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #C48300;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .logout-btn {
+            background-color: #dc3545; 
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .input-field {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .save-btn {
+            background-color: #1e76ff !important;
+        }
+        .date-pair {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+        .date-pair div {
+            flex-grow: 1;
+        }
+        .date-label {
+            display: block;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 3px;
+        }
+        .django-message-box {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 0.95;
+        }
+        .tab-menu {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #555;
+            border: none;
+            background: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px; 
+            transition: color 0.2s;
+        }
+        .tab-button.active {
+            color: #1e76ff;
+            border-bottom: 2px solid #1e76ff;
+        }
+        .preference-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .pref-label {
+            display: inline-block;
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            background: white;
+            font-size: 14px;
+        }
+        .pref-input:checked + .pref-label {
+            background-color: #1e76ff;
+            color: white;
+            border-color: #1e76ff;
+        }
+        .pref-input {
+            display: none; 
+        }
+        /* Style cho form đổi mật khẩu */
+        .password-form-group { margin-bottom: 15px; }
+        .password-form-group label { font-size: 14px; color: #333; font-weight: 500;}
+        .error-message { color: #dc3545; font-size: 12px; margin-top: 5px; display: none; }
+        .avatar-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+        .avatar-overlay:hover {
+            opacity: 1;
         }
     </style>
 </head>
@@ -118,49 +241,690 @@
     </header>
 
     <div class="profile-container">
-        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=1e76ff&color=fff&size=110" alt="Avatar" class="avatar">
+        <!-- Hiển thị Django Messages -->
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="django-message-box {{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- --- AVATAR & USERNAME --- -->
+        <div class="avatar-container">
+            <input type="file" id="avatar-file-input" class="hidden" accept="image/*">
+            <label for="avatar-file-input">
+                <!-- Sửa lỗi tỉ lệ: sử dụng object-fit: cover trong CSS để giữ hình tròn -->
+                <img src="{{ profile.avatar }}" id="current-avatar" alt="Avatar" class="avatar">
+                <div class="avatar-overlay">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                </div>
+            </label>
+        </div>
         <div class="username">{{ user.username }}</div>
 
-        <div class="section">
-            <div class="section-title">📍 Destination</div>
-            Ho Chi Minh City
+        <!-- Notification Bar (cho thông báo AJAX sau khi nhấn SAVE/Upload) -->
+        <div id="message-bar" class="hidden success" style="margin-top: 15px; padding: 10px; border-radius: 4px; font-weight: bold;"></div>
+        
+        <!-- --- TAB MENU --- -->
+        <div class="tab-menu">
+            <button class="tab-button active" onclick="openTab(event, 'preferences-tab')">Sở Thích Du Lịch</button>
+            <button class="tab-button" onclick="openTab(event, 'personal-info-tab')">Thông Tin Cá Nhân</button>
+            <button class="tab-button" onclick="openTab(event, 'history-tab')">Lịch Sử Chuyến Đi</button>
         </div>
 
-        <div class="section">
-            <div class="section-title">❤️ Preferences</div>
-            <span class="tag">Landmark</span>
-            <span class="tag">Sanctuary</span>
-            <span class="tag">Cultural Sites</span>
-            <span class="tag">Local Cuisine</span>
+        <!-- --- 1. TAB: SỞ THÍCH DU LỊCH (PREFERENCES) --- -->
+        <div id="preferences-tab" class="tab-content">
+            <!-- --- Destination --- -->
+            <div class="section" data-field="destination">
+                <div class="section-title">📍 Điểm Đến Mong Muốn</div>
+                <div id="destination-display">{{ profile.destination|default:"Chưa thiết lập" }}</div>
+                <input type="text" id="destination-input" class="input-field hidden" value="{{ profile.destination|default:'' }}" placeholder="Enter Destination">
+            </div>
+
+            <!-- --- Travel Dates --- -->
+            <div class="section" data-field="dates">
+                <div class="section-title">📅 Ngày Đi</div>
+                <div id="dates-display">
+                    Arrival: <b id="arrival-date-text">{{ profile.arrival_date|date:"F d, Y"|default:"Chưa thiết lập" }}</b><br>
+                    Departure: <b id="departure-date-text">{{ profile.departure_date|date:"F d, Y"|default:"Chưa thiết lập" }}</b>
+                </div>
+                <div id="dates-input-group" class="date-pair hidden">
+                    <div>
+                        <label class="date-label" for="arrival-input">Arrival:</label>
+                        <input type="date" id="arrival-input" class="input-field" value="{{ arrival_date_input|default:'' }}">
+                    </div>
+                    <div>
+                        <label class="date-label" for="departure-input">Departure:</label>
+                        <input type="date" id="departure-input" class="input-field" value="{{ departure_date_input|default:'' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- --- Group Size --- -->
+            <div class="section" data-field="group-size">
+                <div class="section-title">👥 Số Người</div>
+                <div id="group-size-display">{{ profile.group_size|default:"Chưa thiết lập" }}</div>
+                <input type="text" id="group-size-input" class="input-field hidden" value="{{ profile.group_size|default:'' }}" placeholder="Enter Group Size (e.g., 2-4 people)">
+            </div>
+
+            <!-- --- Preferences (Tags) --- -->
+            <div class="section" data-field="preferences">
+                <div class="section-title">❤️ Sở Thích (Loại hình)</div>
+                <!-- Hiện thị tĩnh -->
+                <div id="preferences-display">
+                    {% for pref in preferences_list %} 
+                        {% if pref %}
+                            <span class="tag">{{ pref }}</span>
+                        {% endif %}
+                    {% empty %}
+                        <span style="color:#777;">Chưa thiết lập sở thích</span>
+                    {% endfor %}
+                </div>
+                <!-- Form chỉnh sửa (Tags Input) -->
+                <div id="preferences-input-group" class="preference-grid hidden">
+                    {% for pref_choice in ALL_PREFERENCES_LIST %}
+                        {% with pref_choice_stripped=pref_choice|default:'' %}
+                        <input type="checkbox" id="pref-{{ forloop.counter }}" name="preferences" value="{{ pref_choice_stripped }}" class="pref-input"
+                            {% if pref_choice_stripped in preferences_list %}checked{% endif %}>
+                        <label class="pref-label" for="pref-{{ forloop.counter }}">{{ pref_choice_stripped }}</label>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- --- Budget (Dropdown + Custom Input) --- -->
+            <div class="section" data-field="budget">
+                <div class="section-title">💲 Ngân Sách</div>
+                <div id="budget-display">{{ profile.budget|default:"Chưa thiết lập" }}</div>
+                
+                <select id="budget-select" class="input-field hidden">
+                    <option value="" disabled>-- Chọn Ngân sách --</option>
+                    <option value="100K - 500K VND" {% if profile.budget == "100K - 500K VND" %}selected{% endif %}>100K - 500K VND</option>
+                    <option value="500K - 1M VND" {% if profile.budget == "500K - 1M VND" %}selected{% endif %}>500K - 1M VND</option>
+                    <option value="1M - 3M VND" {% if profile.budget == "1M - 3M VND" %}selected{% endif %}>1M - 3M VND</option>
+                    <option value="3M - 10M VND" {% if profile.budget == "3M - 10M VND" %}selected{% endif %}>3M - 10M VND</option>
+                    <option value="10M+ VND" {% if profile.budget == "10M+ VND" %}selected{% endif %}>Trên 10M VND</option>
+                    <option value="OTHER" {% if profile.budget != "100K - 500K VND" and profile.budget != "500K - 1M VND" and profile.budget != "1M - 3M VND" and profile.budget != "3M - 10M VND" and profile.budget != "10M+ VND" and profile.budget != "Chưa thiết lập" %}selected{% endif %}>Tự nhập (Khác)</option>
+                </select>
+                
+                <!-- Input tự nhập (Ẩn/Hiển thị bằng JS) -->
+                <input type="text" id="budget-custom-input" class="input-field hidden" 
+                       value="{% if profile.budget != '100K - 500K VND' and profile.budget != '500K - 1M VND' and profile.budget != '1M - 3M VND' and profile.budget != '3M - 10M VND' and profile.budget != '10M+ VND' and profile.budget != 'Chưa thiết lập' %}{{ profile.budget|default:'' }}{% endif %}" 
+                       placeholder="Nhập mức Ngân sách tùy chỉnh"
+                       style="margin-top: 5px;">
+            </div>
+
+            <!-- --- Preferred Ratings (Dropdown) --- -->
+            <div class="section" data-field="ratings">
+                <div class="section-title">⭐ Đánh Giá Ưu Tiên</div>
+                <div id="ratings-display">{{ profile.preferred_ratings|default:"Chưa thiết lập" }}</div>
+                
+                <select id="ratings-select" class="input-field hidden">
+                    <option value="" disabled>-- Chọn Đánh giá --</option>
+                    <option value="1+ Stars" {% if profile.preferred_ratings == "1+ Stars" %}selected{% endif %}>1+ Stars</option>
+                    <option value="2+ Stars" {% if profile.preferred_ratings == "2+ Stars" %}selected{% endif %}>2+ Stars</option>
+                    <option value="3+ Stars" {% if profile.preferred_ratings == "3+ Stars" %}selected{% endif %}>3+ Stars</option>
+                    <option value="4+ Stars" {% if profile.preferred_ratings == "4+ Stars" %}selected{% endif %}>4+ Stars</option>
+                    <option value="5 Stars" {% if profile.preferred_ratings == "5 Stars" %}selected{% endif %}>Chỉ 5 Stars</option>
+                </select>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn" id="edit-save-btn-preferences">Edit</button>
+                <button class="btn" id="search-btn">Search</button>
+            </div>
         </div>
 
-        <div class="section">
-            <div class="section-title">💲 Budget</div>
-            $500 - $1000
-        </div>
+        <!-- --- 2. TAB: THÔNG TIN CÁ NHÂN (PERSONAL INFO) --- -->
+        <div id="personal-info-tab" class="tab-content hidden">
+            <!-- Name -->
+            <div class="section" data-field="name">
+                <div class="section-title">👤 Họ Tên</div>
+                <div id="name-display">{{ profile.name|default:"Chưa thiết lập" }}</div>
+                <input type="text" id="name-input" class="input-field hidden" value="{{ profile.name|default:'' }}" placeholder="Enter Full Name">
+            </div>
 
-        <div class="section">
-            <div class="section-title">⭐ Preferred Ratings</div>
-            4+ Stars
-        </div>
+            <!-- Email -->
+            <div class="section" data-field="email">
+                <div class="section-title">📧 Email</div>
+                <div id="email-display">{{ profile.email|default:"Chưa thiết lập" }}</div>
+                <input type="email" id="email-input" class="input-field hidden" value="{{ profile.email|default:'' }}" placeholder="Enter Email Address">
+            </div>
+            
+            <!-- Bio -->
+            <div class="section" data-field="bio">
+                <div class="section-title">📝 Giới Thiệu Ngắn</div>
+                <div id="bio-display">{{ profile.bio|default:"Chưa có thông tin giới thiệu." }}</div>
+                <textarea id="bio-input" class="input-field hidden" rows="3" placeholder="Tell us a little about yourself">{{ profile.bio|default:'' }}</textarea>
+            </div>
+            
+            <!-- --- CHANGE PASSWORD BLOCK (Tích hợp AJAX) --- -->
+            <div class="section" style="background: #fff3e0;">
+                <div class="section-title" style="color:#d55d00;">🔑 Quản Lý Mật Khẩu</div>
+                <div id="password-display-btn" class="btn-row" style="margin-top: 15px; text-align: left;">
+                    <button class="btn save-btn" id="toggle-password-form" style="background-color: #d55d00 !important; margin: 0;">Đổi Mật Khẩu</button>
+                </div>
 
-        <div class="section">
-            <div class="section-title">👥 Group Size</div>
-            2–4 people
-        </div>
+                <!-- Form Đổi Mật Khẩu (Ẩn mặc định) -->
+                <div id="password-form-container" class="hidden" style="padding-top: 10px;">
+                    <form id="password-change-form">
+                        <div class="password-form-group">
+                            <label for="id_old_password">Mật khẩu cũ:</label>
+                            <input type="password" id="id_old_password" name="old_password" class="input-field" required>
+                            <div id="error_old_password" class="error-message"></div>
+                        </div>
+                        <div class="password-form-group">
+                            <label for="id_new_password1">Mật khẩu mới:</label>
+                            <input type="password" id="id_new_password1" name="new_password1" class="input-field" required>
+                            <div id="error_new_password1" class="error-message"></div>
+                        </div>
+                        <div class="password-form-group">
+                            <label for="id_new_password2">Xác nhận mật khẩu mới:</label>
+                            <input type="password" id="id_new_password2" name="new_password2" class="input-field" required>
+                            <div id="error_new_password2" class="error-message"></div>
+                        </div>
+                        <div class="btn-row" style="margin-top: 20px; text-align: left;">
+                            <button type="submit" class="btn save-btn" id="submit-password-change" style="background-color: #28a745 !important; margin: 0;">Lưu Mật Khẩu Mới</button>
+                            <button type="button" class="btn logout-btn" id="cancel-password-change" style="margin-left: 10px; background-color: #6c757d !important;">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- --- END CHANGE PASSWORD BLOCK --- -->
 
-        <div class="section">
-            <div class="section-title">📅 Travel Dates</div>
-            Arrival: <b>December 15, 2024</b><br>
-            Departure: <b>December 22, 2024</b>
+            <div class="btn-row">
+                <button class="btn" id="edit-save-btn-personal">Edit</button>
+            </div>
         </div>
-
-        <div class="btn-row">
-            <button class="btn">Edit</button>
-            <button class="btn">Search</button>
+        
+        <!-- --- 3. TAB: LỊCH SỬ CHUYẾN ĐI (HISTORY) --- -->
+        <div id="history-tab" class="tab-content hidden">
+            <div class="section">
+                <div class="section-title">⏳ Các Chuyến Đi Đã Lưu</div>
+                <p>Tính năng này sẽ sớm được hoàn thiện.</p>
+                <ul>
+                    <li>(Mục 1: Tên chuyến đi - Ngày)</li>
+                    <li>(Mục 2: Tên chuyến đi - Ngày)</li>
+                </ul>
+            </div>
         </div>
+        
+        <!-- Nút Log Out Cố định -->
+        <a href="{% url 'logout' %}" class="btn logout-btn" style="position: absolute; bottom: 40px; right: 40px;">Log Out</a>
     </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Lấy CSRF token từ cookie Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Hàm hiển thị thông báo AJAX
+        function showMessage(message, type) {
+            const bar = document.getElementById('message-bar');
+            bar.textContent = message;
+            bar.className = 'message-bar django-message-box';
+            bar.classList.add(type === 'success' ? 'success' : 'error');
+            bar.classList.remove('hidden');
+            
+            // Thêm style để phân biệt rõ hơn
+            if (type === 'success') {
+                 bar.style.backgroundColor = '#d4edda';
+                 bar.style.color = '#155724';
+            } else {
+                 bar.style.backgroundColor = '#f8d7da';
+                 bar.style.color = '#721c24';
+            }
+
+            setTimeout(() => {
+                bar.classList.add('hidden');
+            }, 5000);
+        }
+
+        // --- GLOBAL ELEMENTS ---
+        const editSaveBtnPref = document.getElementById('edit-save-btn-preferences');
+        const editSaveBtnPersonal = document.getElementById('edit-save-btn-personal');
+        const searchBtn = document.getElementById('search-btn');
+        const logoutLink = document.querySelector('.logout-btn');
+        const budgetSelect = document.getElementById('budget-select');
+        const budgetCustomInput = document.getElementById('budget-custom-input');
+        const avatarFileInput = document.getElementById('avatar-file-input');
+        const currentAvatar = document.getElementById('current-avatar');
+        
+        // Elements cho chức năng Đổi Mật Khẩu
+        const togglePasswordFormBtn = document.getElementById('toggle-password-form');
+        const passwordFormContainer = document.getElementById('password-form-container');
+        const passwordChangeForm = document.getElementById('password-change-form');
+        const cancelPasswordChangeBtn = document.getElementById('cancel-password-change');
+
+
+        // --- TAB SWITCHING LOGIC ---
+        function openTab(evt, tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.add('hidden'));
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+            evt.currentTarget.classList.add('active');
+            
+            // Reset chế độ Edit khi chuyển tab (tắt chế độ Save nếu nó đang bật ở tab khác)
+            if (editSaveBtnPref.textContent === 'Save' && tabId !== 'preferences-tab') toggleMode('preferences-tab', false);
+            if (editSaveBtnPersonal.textContent === 'Save' && tabId !== 'personal-info-tab') toggleMode('personal-info-tab', false);
+            
+            // Ẩn form đổi mật khẩu khi chuyển tab (nếu nó đang mở)
+            if (tabId !== 'personal-info-tab') {
+                passwordFormContainer.classList.add('hidden');
+                togglePasswordFormBtn.classList.remove('hidden');
+            }
+        }
+
+        // Kích hoạt tab Preferences khi load
+        document.addEventListener('DOMContentLoaded', () => {
+             const initialTab = document.querySelector('.tab-button');
+             if (initialTab) openTab({currentTarget: initialTab}, 'preferences-tab'); 
+             
+             // Kiểm tra và hiển thị input tùy chỉnh khi load
+             checkBudgetCustom(budgetSelect.value);
+        });
+        
+        // --- LOGIC CUSTOM BUDGET INPUT ---
+        function checkBudgetCustom(selectedValue) {
+            const isCustom = selectedValue === 'OTHER';
+            // Chỉ toggle nếu đang ở chế độ Edit
+            const isEditing = editSaveBtnPref.textContent === 'Save';
+            // Luôn ẩn nếu không phải tab preferences
+            const isPrefTabActive = document.getElementById('preferences-tab') && !document.getElementById('preferences-tab').classList.contains('hidden');
+
+            budgetCustomInput.classList.toggle('hidden', !(isCustom && isEditing && isPrefTabActive));
+        }
+        budgetSelect.addEventListener('change', (e) => checkBudgetCustom(e.target.value));
+
+        // --- EDIT MODE LOGIC ---
+        function toggleMode(tabId, editing) {
+            const tab = document.getElementById(tabId);
+            const displayElements = tab.querySelectorAll('[id$="-display"]:not(#password-display-btn)');
+            const inputElements = tab.querySelectorAll('.input-field, .preference-grid, #dates-input-group, #bio-input, #budget-select, #ratings-select');
+            const editBtn = tabId === 'preferences-tab' ? editSaveBtnPref : editSaveBtnPersonal;
+            const passwordBtnSection = document.getElementById('password-display-btn'); 
+            
+            // Xử lý hiển thị/ẩn input tùy chỉnh
+            if (tabId === 'preferences-tab') {
+                const isCustomSelected = budgetSelect.value === 'OTHER';
+                budgetCustomInput.classList.toggle('hidden', !(editing && isCustomSelected));
+            }
+
+
+            displayElements.forEach(el => el.classList.toggle('hidden', editing));
+            inputElements.forEach(el => el.classList.toggle('hidden', !editing));
+            
+            if (editing) {
+                editBtn.textContent = 'Save';
+                editBtn.classList.add('save-btn');
+                if (tabId === 'preferences-tab') {
+                    searchBtn.classList.add('hidden');
+                } else if (tabId === 'personal-info-tab') {
+                    passwordBtnSection.classList.add('hidden');
+                    passwordFormContainer.classList.add('hidden');
+                }
+                logoutLink.classList.add('hidden');
+            } else {
+                editBtn.textContent = 'Edit';
+                editBtn.classList.remove('save-btn');
+                if (tabId === 'preferences-tab') {
+                    searchBtn.classList.remove('hidden');
+                } else if (tabId === 'personal-info-tab') {
+                    passwordBtnSection.classList.remove('hidden');
+                }
+                logoutLink.classList.remove('hidden');
+                checkBudgetCustom(budgetSelect.value); // Kiểm tra lại input custom khi thoát Edit
+            }
+        }
+
+        // --- UPLOAD AVATAR LOGIC ---
+        avatarFileInput.addEventListener('change', handleAvatarUpload);
+
+        async function handleAvatarUpload() {
+            const file = avatarFileInput.files[0];
+            if (!file) return;
+
+            // 1. Xem trước ảnh
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentAvatar.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            // 2. Gửi file qua AJAX (Multipart/form-data)
+            const formData = new FormData();
+            formData.append('avatar_file', file);
+            formData.append('csrfmiddlewaretoken', csrftoken); 
+
+            showMessage('Đang tải ảnh lên...', 'success');
+
+            try {
+                const response = await fetch('{% url "upload_avatar_ajax" %}', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage(result.message || 'Ảnh đại diện đã cập nhật!', 'success');
+                    currentAvatar.src = result.avatar_url; // Cập nhật URL chính thức từ Backend
+                } else {
+                    showMessage(result.error || 'Lỗi tải ảnh lên.', 'error');
+                }
+            } catch (error) {
+                showMessage('Lỗi mạng hoặc server không phản hồi khi tải ảnh.', 'error');
+                console.error('Avatar upload error:', error);
+            }
+        }
+        
+        // --- AJAX SAVE PROFILE DATA LOGIC (Preferences & Personal Info) ---
+        async function sendSaveRequest(payload, tabId) {
+            // Lấy dữ liệu hiện tại từ tab còn lại để tránh mất dữ liệu
+            const currentPrefData = getDisplayData('preferences-tab');
+            const currentPersonalData = getDisplayData('personal-info-tab');
+            
+            // Xử lý giá trị Budget
+            let finalBudget = payload.budget;
+            if (finalBudget === 'OTHER') {
+                // Lấy giá trị từ custom input (nếu OTHER được chọn)
+                finalBudget = budgetCustomInput.value.trim() || 'Chưa thiết lập';
+            }
+            
+            // Hợp nhất payload
+            let finalPayload = {};
+            
+            if (tabId === 'preferences-tab') {
+                finalPayload = { ...currentPersonalData, ...payload, budget: finalBudget }; 
+            } else if (tabId === 'personal-info-tab') {
+                // Khi lưu Personal Info, ta cần lấy dữ liệu Preferences hiện tại 
+                const prefsArray = currentPrefData.preferences.split(',').map(p => p.trim()).filter(p => p);
+                finalPayload = { 
+                    ...currentPrefData, 
+                    ...payload, 
+                    preferences: prefsArray, 
+                    budget: currentPrefData.budget, 
+                    preferred_ratings: currentPrefData.preferred_ratings
+                };
+            }
+            
+            // Đảm bảo Preferences là mảng cho Backend
+            if (typeof finalPayload.preferences === 'string') {
+                finalPayload.preferences = finalPayload.preferences.split(',').map(p => p.trim()).filter(p => p);
+            }
+            
+            try {
+                const response = await fetch('{% url "edit_profile" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken 
+                    },
+                    body: JSON.stringify(finalPayload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (tabId === 'preferences-tab') updatePreferenceDisplay(finalPayload);
+                    if (tabId === 'personal-info-tab') updatePersonalDisplay(finalPayload);
+
+                    showMessage(result.message || 'Hồ sơ đã được cập nhật thành công!', 'success');
+                    toggleMode(tabId, false); 
+                } else {
+                    showMessage(result.error || 'Đã xảy ra lỗi khi cập nhật hồ sơ.', 'error');
+                }
+            } catch (error) {
+                showMessage('Lỗi mạng hoặc server không phản hồi.', 'error');
+                console.error('Fetch error:', error);
+            }
+        }
+
+        // 1. Logic cho nút Edit/Save (Preferences)
+        editSaveBtnPref.addEventListener('click', async function() {
+            if (editSaveBtnPref.textContent === 'Edit') {
+                toggleMode('preferences-tab', true);
+            } else {
+                const selectedPrefs = Array.from(document.querySelectorAll('#preferences-input-group .pref-input:checked'))
+                    .map(cb => cb.value);
+
+                const payload = {
+                    destination: document.getElementById('destination-input').value,
+                    group_size: document.getElementById('group-size-input').value,
+                    arrival_date: document.getElementById('arrival-input').value,
+                    departure_date: document.getElementById('departure-input').value,
+                    budget: document.getElementById('budget-select').value, 
+                    preferences: selectedPrefs, 
+                    preferred_ratings: document.getElementById('ratings-select').value,
+                };
+                
+                await sendSaveRequest(payload, 'preferences-tab');
+            }
+        });
+        
+        // 2. Logic cho nút Edit/Save (Personal Info)
+        editSaveBtnPersonal.addEventListener('click', async function() {
+            if (editSaveBtnPersonal.textContent === 'Edit') {
+                toggleMode('personal-info-tab', true);
+            } else {
+                // Lấy giá trị input hiện tại từ Tab Cá nhân
+                const payload = {
+                    name: document.getElementById('name-input').value,
+                    email: document.getElementById('email-input').value,
+                    bio: document.getElementById('bio-input').value,
+                };
+                
+                await sendSaveRequest(payload, 'personal-info-tab');
+            }
+        });
+
+        // Hàm lấy dữ liệu HIỂN THỊ hiện tại (cần cho việc gửi đủ dữ liệu)
+        function getDisplayData(tabId) {
+            if (tabId === 'preferences-tab') {
+                // Logic để xác định giá trị budget thực tế đang được display
+                let currentBudget = budgetSelect.value;
+                if (currentBudget === 'OTHER') {
+                    currentBudget = budgetCustomInput.value.trim() || '';
+                }
+
+                let preferencesList;
+                const isEditing = editSaveBtnPref.textContent === 'Save';
+
+                if (isEditing) {
+                    // Nếu đang EDIT, đọc từ checkbox (nhưng cần lấy từ input để gửi)
+                    preferencesList = Array.from(document.querySelectorAll('#preferences-input-group .pref-input:checked')).map(cb => cb.value);
+                } else {
+                    // Nếu không EDIT, đọc từ các thẻ <span> đã render
+                    preferencesList = Array.from(document.querySelectorAll('#preferences-display .tag')).map(el => el.textContent).filter(p => p);
+                }
+                
+                return {
+                    destination: document.getElementById('destination-input').value.trim(),
+                    group_size: document.getElementById('group-size-input').value.trim(),
+                    // Luôn lấy từ input fields type="date"
+                    arrival_date: document.getElementById('arrival-input').value,
+                    departure_date: document.getElementById('departure-input').value,
+                    budget: currentBudget, 
+                    preferences: preferencesList.join(','), // Trả về chuỗi tags
+                    preferred_ratings: document.getElementById('ratings-select').value,
+                };
+            }
+            if (tabId === 'personal-info-tab') {
+                // Luôn lấy từ input fields
+                 return {
+                    name: document.getElementById('name-input').value.trim(),
+                    email: document.getElementById('email-input').value.trim(),
+                    bio: document.getElementById('bio-input').value.trim(),
+                };
+            }
+            return {};
+        }
+
+        // Cập nhật hiển thị sau khi SAVE thành công (Preferences)
+        function updatePreferenceDisplay(payload) {
+             const finalBudget = payload.budget;
+             const finalRatings = payload.preferred_ratings;
+             
+             document.getElementById('destination-display').textContent = payload.destination || 'Chưa thiết lập';
+             document.getElementById('group-size-display').textContent = payload.group_size || 'Chưa thiết lập';
+             
+             // Cập nhật giá trị Ngân sách hiển thị
+             document.getElementById('budget-display').textContent = finalBudget || 'Chưa thiết lập';
+             // Cập nhật giá trị Đánh giá hiển thị
+             document.getElementById('ratings-display').textContent = finalRatings || 'Chưa thiết lập';
+
+             // Ngày tháng được gửi dưới dạng YYYY-MM-DD, cần định dạng lại cho display
+             document.getElementById('arrival-date-text').textContent = formatDateDisplay(payload.arrival_date) || 'Chưa thiết lập';
+             document.getElementById('departure-date-text').textContent = formatDateDisplay(payload.departure_date) || 'Chưa thiết lập';
+             
+             const prefDisplay = document.getElementById('preferences-display');
+             const preferencesArray = Array.isArray(payload.preferences) ? payload.preferences : (payload.preferences ? payload.preferences.split(',').map(p => p.trim()).filter(p => p) : []);
+             prefDisplay.innerHTML = preferencesArray.map(p => `<span class="tag">${p}</span>`).join(' ');
+             
+             // Cập nhật input fields để chúng có giá trị mới (cho lần edit tiếp theo)
+             document.getElementById('destination-input').value = payload.destination;
+             document.getElementById('group-size-input').value = payload.group_size;
+             // Cập nhật SELECTS (Quan trọng)
+             document.getElementById('budget-select').value = payload.budget;
+             document.getElementById('ratings-select').value = payload.preferred_ratings;
+             
+             // Ẩn/hiện custom input nếu cần
+             checkBudgetCustom(payload.budget);
+        }
+        
+        // Cập nhật hiển thị sau khi SAVE thành công (Personal Info)
+        function updatePersonalDisplay(payload) {
+             document.getElementById('name-display').textContent = payload.name || 'Chưa thiết lập';
+             document.getElementById('email-display').textContent = payload.email || 'Chưa thiết lập';
+             document.getElementById('bio-display').textContent = payload.bio || 'Chưa có thông tin giới thiệu.';
+             
+             // Cập nhật input fields
+             document.getElementById('name-input').value = payload.name;
+             document.getElementById('email-input').value = payload.email;
+             document.getElementById('bio-input').value = payload.bio;
+        }
+
+        // 3. Logic cho nút Search (Đã Cải Tiến)
+        searchBtn.addEventListener('click', function() {
+            // Lấy dữ liệu Preferences hiện tại đang hiển thị
+            const prefData = getDisplayData('preferences-tab');
+            
+            // Xây dựng URL cho trang kết quả tìm kiếm/gợi ý
+            const searchUrl = `{% url 'recommend_result' %}?destination=${encodeURIComponent(prefData.destination)}&budget=${encodeURIComponent(prefData.budget)}&ratings=${encodeURIComponent(prefData.preferred_ratings)}&group_size=${encodeURIComponent(prefData.group_size)}&preferences=${encodeURIComponent(prefData.preferences)}`;
+            
+            // Chuyển hướng người dùng
+            window.location.href = searchUrl;
+        });
+
+        // Định dạng ngày hiển thị 
+        function formatDateDisplay(dateString) {
+            try {
+                if (!dateString || dateString === 'None' || dateString.length < 10) return '';
+                // Nếu chuỗi là YYYY-MM-DD (định dạng input)
+                const date = new Date(dateString + 'T00:00:00'); 
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString('en-US', options);
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        // --- LOGIC ĐỔI MẬT KHẨU (AJAX) ---
+        
+        // 1. Toggle Form visibility
+        togglePasswordFormBtn.addEventListener('click', () => {
+            passwordFormContainer.classList.toggle('hidden');
+            togglePasswordFormBtn.classList.toggle('hidden');
+        });
+
+        // 2. Cancel button
+        cancelPasswordChangeBtn.addEventListener('click', () => {
+            passwordFormContainer.classList.add('hidden');
+            togglePasswordFormBtn.classList.remove('hidden');
+            passwordChangeForm.reset(); // Xóa dữ liệu form
+            // Ẩn tất cả thông báo lỗi
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+        });
+
+        // 3. AJAX Submission
+        passwordChangeForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Ẩn tất cả thông báo lỗi cũ
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+            
+            const formData = new FormData(this);
+            const payload = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('{% url "password_change_ajax" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken 
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Thành công
+                    showMessage(result.message || 'Mật khẩu đã được thay đổi thành công!', 'success');
+                    passwordChangeForm.reset(); // Xóa dữ liệu form
+                    passwordFormContainer.classList.add('hidden'); // Ẩn form
+                    togglePasswordFormBtn.classList.remove('hidden'); // Hiện nút
+                } else {
+                    // Lỗi (có thể là lỗi xác thực hoặc lỗi form)
+                    if (result.errors) {
+                        // Hiển thị lỗi ngay bên cạnh field tương ứng
+                        for (const field in result.errors) {
+                            const errorElement = document.getElementById(`error_${field}`);
+                            if (errorElement) {
+                                errorElement.textContent = result.errors[field].join(' '); // Hiển thị tất cả lỗi
+                                errorElement.style.display = 'block';
+                            } else {
+                                // Lỗi non-field errors (ví dụ: mật khẩu cũ sai hoặc mật khẩu mới không khớp)
+                                showMessage(result.errors[field].join(' '), 'error');
+                            }
+                        }
+                    } else {
+                        showMessage(result.error || 'Đã xảy ra lỗi khi đổi mật khẩu.', 'error');
+                    }
+                }
+            } catch (error) {
+                showMessage('Lỗi mạng hoặc server không phản hồi.', 'error');
+                console.error('Fetch error:', error);
+            }
+        });
+        
+    </script>
 </body>
 </html>
-
-

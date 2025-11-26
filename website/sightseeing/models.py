@@ -1,48 +1,63 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from datetime import date 
 
 #Register form
 class registerForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+ class Meta:
+  model = User
+  fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 
 class UsersProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False)
-    custom_user_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like user_001
-    name = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=200, null=True)
-
-    def __str__(self):
-        return self.name
-    
+  # Liên kết User
+  user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False)
+  custom_user_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like user_001
+  # Thông tin cơ bản
+  name = models.CharField(max_length=200, null=True)
+  email = models.CharField(max_length=200, null=True)
+  avatar = models.URLField(blank=True, default="https://ui-avatars.com/api/?name=User") 
+  bio = models.TextField(blank=True)
+  
+  # Dữ liệu Chuyến đi (Các trường đã được thêm/hợp nhất)
+  destination = models.CharField(max_length=100, default="Ho Chi Minh City")
+  group_size = models.CharField(max_length=20, default="2–4 people")
+  arrival_date = models.DateField(default=date.today)
+  departure_date = models.DateField(default=date.today)
+  budget = models.CharField(max_length=50, default="$500 - $1000")
+  preferences = models.TextField(default="Landmark, Sanctuary, Cultural Sites, Local Cuisine")
+  preferred_ratings = models.CharField(max_length=10, default="4+ Stars")
+ 
+  def __str__(self):
+    return self.name
+  
 class Location(models.Model):
-    locationName = models.CharField(max_length=200, null=True)
+ locationName = models.CharField(max_length=200, null=True)
 
-    def __str__(self):
-        return self.locationName
+ def __str__(self):
+  return self.locationName
 
 
 class Destinations(models.Model):
-    desName = models.CharField(max_length=200, null=True)
-    destination_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like dest_001
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='destinations', null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    price_range = models.CharField(max_length=50, null=True, blank=True)
-    
-    # Thông tin chi tiết
-    category = models.CharField(max_length=100, null=True, blank=True)  # Loại hình: Biển, Núi, Di sản...
-    rating = models.FloatField(default=0.0, null=True, blank=True)  # Đánh giá 0-5
-    address = models.TextField(null=True, blank=True)  # Địa chỉ đầy đủ
-    image_url = models.URLField(max_length=500, null=True, blank=True)  # Link ảnh đại diện
-    
-    # Metadata
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
+ desName = models.CharField(max_length=200, null=True)
+ destination_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like dest_001
+ location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='destinations', null=True, blank=True)
+ description = models.TextField(null=True, blank=True)
+ price_range = models.CharField(max_length=50, null=True, blank=True)
+ 
+ # Thông tin chi tiết
+ category = models.CharField(max_length=100, null=True, blank=True) # Loại hình: Biển, Núi, Di sản...
+ rating = models.FloatField(default=0.0, null=True, blank=True) # Đánh giá 0-5
+ address = models.TextField(null=True, blank=True) # Địa chỉ đầy đủ
+ image_url = models.URLField(max_length=500, null=True, blank=True) # Link ảnh đại diện
+ 
+ # Metadata
+ created_at = models.DateTimeField(auto_now_add=True, null=True)
+ updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    def __str__(self):
-        return self.desName
+ def __str__(self):
+  return self.desName
+
 
 class Hotel(models.Model):
     name = models.CharField(max_length=200, null=True)

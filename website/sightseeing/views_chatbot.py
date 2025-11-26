@@ -5,6 +5,8 @@ from django.views.decorators.http import require_http_methods
 from django.conf import settings
 import json
 import os
+from chatservice.models import ChatHistory
+
 
 # Import Gemini
 try:
@@ -73,15 +75,18 @@ def chat_with_gemini(request):
             return JsonResponse({
                 'error': 'GEMINI_API_KEY is empty. Please check your configuration.'
             }, status=500)
-        
+        api_key = settings.GEMINI_API_KEY
+        # DEBUG: In giá trị khóa API sau khi loại bỏ khoảng trắng
+        print(f"DEBUG: Khóa API THỰC TẾ: '{api_key.strip()}'") 
+        print(f"DEBUG: Độ dài sau strip: {len(api_key.strip())}")
         # Configure Gemini
-        genai.configure(api_key=api_key)
+        genai.configure(api_key=api_key.strip())
         
         # Create full prompt: System Instruction + User Message
         full_prompt = f"{SYSTEM_INSTRUCTION}\n\nCustomer Question: \"{user_message}\""
         
         # Initialize Gemini 2.0 Flash model
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash')
 
         
         # Send message and get response

@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from sightseeing import views
+from django.conf import settings
+from django.conf.urls.static import static
+
+# ... (các urlpatterns hiện tại)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,7 +29,14 @@ urlpatterns = [
     
     # Chatbot Gemini
     path('', include('sightseeing.urls_chatbot')),
-    
+    path("chat/api/", include("chatservice.urls")),
+
     # Include sightseeing app URLs (without api/ prefix for user-facing pages)
     path('', include('sightseeing.urls')),
+    path('account/', include('account.urls')),
+    path('chat/', include('chatservice.urls')),
 ]
+
+# Đây là nơi BẮT BUỘC để đặt code phục vụ MEDIA files:
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
