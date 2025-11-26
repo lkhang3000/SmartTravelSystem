@@ -1,6 +1,6 @@
 # file views_chatbot.py: # Django API for Gemini chatbot - BACKEND ONLY
 from django.http import JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 import json
@@ -38,7 +38,7 @@ Your main goal is to provide accurate, simple, and helpful travel information in
 # --------------------------------------------------------
 
 
-@ensure_csrf_cookie
+@csrf_exempt
 @require_http_methods(["POST"])
 def chat_with_gemini(request):
     """
