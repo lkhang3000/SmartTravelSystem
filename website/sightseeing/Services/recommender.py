@@ -53,8 +53,8 @@ class SightseeingRecommender:
             data = json.load(f)
             return data.get("users", [])
 
-    def recommend_for_user(self, user_data: Dict) -> Dict:
-        """Filter and recommend one best spot for a user."""
+    def recommend_for_user(self, user_data: Dict, top_k: int = 5) -> Dict:
+        """Gợi ý top K địa điểm thay vì chỉ 1"""
 
         preferences = user_data["trip_preferences"]
         region = preferences["domestic_or_international"].get("region", "").lower()
@@ -74,38 +74,77 @@ class SightseeingRecommender:
                 if any(tag in spot.category.lower() or tag in spot.name.lower() for tag in tags)
             ] or filtered
 
-        # Giả sử chi phí cao hơn = rating cao hơn, người có budget cao sẽ chọn rating cao
-        filtered.sort(key=lambda s: s.rating, reverse=True)
+        # Tính điểm relevance cho mỗi spot
+        scored_spots = []
+        for spot in filtered:
+            score = self.calculate_relevance_score(spot, user_data)
+            scored_spots.append((spot, score))
 
-        if not filtered:
-            return {}
+        # Sắp xếp theo điểm số và lấy top K
+        scored_spots.sort(key=lambda x: x[1], reverse=True)
+        top_spots = scored_spots[:top_k]
 
-        best_spot = filtered[0]
         return {
             "username": user_data["user_info"]["username"],
-            "recommended_spot": best_spot.to_dict()
+            "recommendations": [
+                {
+                    "spot": spot.to_dict(),
+                    "relevance_score": round(score, 2)
+                }
+                for spot, score in top_spots
+            ]
         }
 
-    def generate_recommendations(self, users_file: str, output_folder: str = "recommendations"):
-        """Generate a JSON file for each user."""
+    def calculate_relevance_score(self, spot: SightseeingSpot, user_data: Dict) -> float:
+        """Tính điểm relevance giữa spot và user preferences"""
+        score = 0.0
+
+        preferences = user_data["trip_preferences"]
+        tags = [t.lower() for t in preferences.get("tags", [])]
+        budget = preferences.get("budget", 0)
+
+        # 1. Điểm từ rating (40% trọng số)
+        score += spot.rating * 0.4  # Rating 4.8 -> 1.92 điểm
+
+        # 2. Điểm từ category match (30% trọng số)
+        category_match = any(tag in spot.category.lower() for tag in tags)
+        name_match = any(tag in spot.name.lower() for tag in tags)
+
+        if category_match or name_match:
+            score += 3.0 * 0.3  # Max 0.9 điểm
+
+        # 3. Điểm từ region match (20% trọng số)
+        user_region = preferences["domestic_or_international"].get("region", "").lower()
+        if user_region and spot.region.lower() == user_region:
+            score += 2.0 * 0.2  # 0.4 điểm
+
+        # 4. Điểm từ budget compatibility (10% trọng số)
+        # Giả sử budget cao hơn thì ưu tiên địa điểm premium
+        budget_score = min(budget / 10000000, 1.0) * 1.0 * 0.1  # Max 0.1 điểm
+        score += budget_score
+
+        return score
+
+    def generate_recommendations(self, users_file: str, output_folder: str = "recommendations", top_k: int = 5):
+        """Generate a JSON file for each user with top K recommendations."""
         os.makedirs(output_folder, exist_ok=True)
 
         with open(users_file, 'r', encoding='utf-8') as file:
             users_data = json.load(file)["users"]
         
         for user in users_data:
-            result = self.recommend_for_user(user)
+            result = self.recommend_for_user(user, top_k=top_k)
             username = result["username"]
             output_path = os.path.join(output_folder, f"recommend_{username}.json")
 
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump(result, f, ensure_ascii=False, indent=4)
 
-            print(f"✅ Recommendation saved for {username}: {output_path}")
+            print(f"✅ Top {top_k} recommendations saved for {username}: {output_path}")
 
 # 
 # Example run
 # 
 if __name__ == "__main__":
      recommender = SightseeingRecommender("sightseeing_spots.json", "user_data.json")
-     recommender.generate_recommendations("user_data.json")
+     recommender.generate_recommendations("user_data.json", top_k=5)

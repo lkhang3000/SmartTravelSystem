@@ -24,6 +24,8 @@ urlpatterns = [
     path('user-input/', views.user_input, name='user_input'),
     path('save-user-input/', views.save_user_input, name='save_user_input'),
     path('recommend-result/', views.recommend_result, name='recommend_result'),
+    path('api/recommendations/', views.get_recommendations, name='get_recommendations'),
+    path('personalized/', views.personalized_home, name='personalized_home'),
     path('destination/<int:destination_id>/', views.destination_detail, name='destination_detail'),
     path('destination/', views.user_profile, name='destination'),
     
