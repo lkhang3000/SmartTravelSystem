@@ -69,16 +69,36 @@ class SearchHistory(models.Model):
     def __str__(self):
         return f"{self.user_id} - {self.destination_id} - {self.score}"
 
+class Trip(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    destination = models.CharField(max_length=200, null=True, blank=True)
+    departure_date = models.DateField(null=True, blank=True)
+    arrival_date = models.DateField(null=True, blank=True)
+    budget = models.IntegerField(null=True, blank=True)  # Budget in million VND
+    travelers = models.IntegerField(default=1, null=True, blank=True)
+    price_per_person = models.IntegerField(null=True, blank=True)  # Price per person in VND
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.destination}"
+
 class TripItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    destination = models.ForeignKey(Destinations, on_delete=models.CASCADE)
+    destination = models.ForeignKey(Destinations, on_delete=models.CASCADE, null=True, blank=True)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, null=True, blank=True)
+    day = models.IntegerField(null=True, blank=True)  # Day of the trip (1, 2, 3, etc.)
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ['user', 'destination']
+        unique_together = ['user', 'destination', 'hotel']
 
     def __str__(self):
-        return f"{self.user.username} - {self.destination.desName}"
+        if self.destination:
+            return f"{self.user.username} - {self.destination.desName}"
+        elif self.hotel:
+            return f"{self.user.username} - {self.hotel.name}"
+        return f"{self.user.username} - Unknown"
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -5,15 +5,12 @@
     <meta charset="utf-8">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <title>Homepage</title>
+    <title>Page 1</title>
     <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
   <link rel="stylesheet" href="{% static 'css/index.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
     <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
     <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
-    
-    
-    
     
     
     
@@ -28,7 +25,7 @@
 		"logo": "{% static 'images/SmartTour11.png' %}"
 }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Homepage">
+    <meta property="og:title" content="Page 1">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
   <script>
@@ -37,7 +34,8 @@
     chatBox.style.display =
       chatBox.style.display === "flex" ? "none" : "flex";
   }
-// Initialize chatbot when page loads
+
+  // Initialize chatbot when page loads
   document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('.chat-input input');
     const sendButton = document.querySelector('.chat-input button');
@@ -131,45 +129,55 @@
       }
     });
   });
+</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
+  <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
 
-</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/">
-<header class="u-header" 
-    style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
+        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
 
-    <button onclick="history.back()" 
-            style="
-                line-height:1;
-                display:inline-flex;
-                align-items:center;
-                background:#F7931E;
-                color:white;
-                border:none;
-                border-radius:40px;
-                padding:10px 20px;
-                font-weight:700;
-                font-family:'Montserrat', sans-serif;
-                font-size:18px;
-                cursor:pointer;
-                transition:0.2s ease;
-            "
-            onmouseover="this.style.background='#E49900'"
-            onmouseout="this.style.background='#F7931E'">
-        RETURN
-    </button>
 
-    <div style="display:flex; align-items:center; gap:20px;">
-    <a href="{% url 'home' %}" class="u-logo" style="display:flex; align-items:center;">
+    <!-- LEFT: Logo -->
+
+    <a href="{% url 'home' %}" 
+
+       class="u-logo" 
+
+       style="display:flex; align-items:center;">
+
         <img src="{% static 'images/SmartTour11.png' %}" 
+
              style="height:130px; width:130px; display:block;" 
+
              alt="logo">
+
     </a>
+
+
+
+    <!-- MIDDLE: Title -->
 
     <a href="{% url 'home' %}" style="text-decoration:none;">
-        <p style="margin:0; font-size:60px; font-family:'Montserrat', sans-serif; font-weight:700; color:white; letter-spacing:1px; text-shadow:0 3px 6px rgba(0,0,0,0.6);">
-            SMART TOUR
-        </p>
+
+    <p style="margin:0; 
+
+        font-size:60px; 
+
+        font-weight:800; 
+
+        color:white; 
+
+        letter-spacing:1px;
+
+        margin-left:40px;
+
+        text-shadow:0 3px 6px rgba(0,0,0,6);">
+
+        SMART TOUR
+
+    </p>
+
     </a>
-</div>
+
+    <!-- RIGHT: Buttons / User Menu -->
 
     <div style="display:flex; gap:10px; align-items:center;">
 
@@ -181,106 +189,259 @@
                  onmouseout="this.style.background='#F7931E'">
                 <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px;" alt="Trip List">
             </div>
-            {% if trip_count %}
-            <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold;">
-                {{ trip_count }}
+            <span class="trip-count" style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; {% if not trip_count %}display:none;{% endif %}">
+                {{ trip_count|default:0 }}
             </span>
-            {% endif %}
         </a>
 
         <!-- User đã đăng nhập: hiển thị icon + dropdown -->
+
         <div style="position:relative;">
+
             <button id="userMenuBtn" style="
+
               padding:8px 12px; 
+
               background:#F7931E; 
+
               border-radius:25px; 
+
               color:white; 
-              font-weight:700; 
-              font-family:'Montserrat', sans-serif; /* Added font to button for consistency */
+
+              font-weight:700;            
+
               border:none;
+
               cursor:pointer;
+
               display:flex;
+
               align-items:center;
+
               gap:8px;
+
               transition:0.2s;
+
             "
+
             onmouseover="this.style.background='#C48300'"
+
             onmouseout="this.style.background='#F7931E'"
+
             onclick="toggleUserMenu()">
 
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+
                 </svg>
 
                 {{ user.username }}
 
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+
                     <path d="M7 10l5 5 5-5z"/>
+
                 </svg>
+
             </button>
 
             <div id="userDropdown" style="
+
               display:none;
+
               position:absolute;
+
               top:110%;
+
               right:0;
+
               background:white;
+
               border-radius:8px;
+
               box-shadow:0 4px 12px rgba(0,0,0,0.15);
+
               min-width:180px;
+
               z-index:1000;
+
             ">
-                <a href="{% url 'user_profile' %}" style="display:block; padding:12px 16px; color:#333; text-decoration:none; border-bottom:1px solid #eee; transition:0.2s;"
-                   onmouseover="this.style.background='#f5f5f5'"
-                   onmouseout="this.style.background='white'">
+
+                <a href="{% url 'user_profile' %}" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#333;
+
+                  text-decoration:none;
+
+                  border-bottom:1px solid #eee;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
                     👤 My Profile
+
                 </a>
-                <a href="{% url 'recommend_result' %}" style="display:block; padding:12px 16px; color:#333; text-decoration:none; border-bottom:1px solid #eee; transition:0.2s;"
-                   onmouseover="this.style.background='#f5f5f5'"
-                   onmouseout="this.style.background='white'">
+
+                <a href="{% url 'recommend_result' %}" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#333;
+
+                  text-decoration:none;
+
+                  border-bottom:1px solid #eee;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
                     🗺️ My Destinations
+
                 </a>
-                <a href="/logout/" style="display:block; padding:12px 16px; color:#d32f2f; text-decoration:none; transition:0.2s;"
-                   onmouseover="this.style.background='#f5f5f5'"
-                   onmouseout="this.style.background='white'">
+
+                <a href="/logout/" style="
+
+                  display:block;
+
+                  padding:12px 16px;
+
+                  color:#d32f2f;
+
+                  text-decoration:none;
+
+                  transition:0.2s;
+
+                "
+
+                onmouseover="this.style.background='#f5f5f5'"
+
+                onmouseout="this.style.background='white'">
+
                     🚪 Logout
+
                 </a>
+
             </div>
+
         </div>
 
+        
+
         <script>
+
         function toggleUserMenu() {
+
             var dropdown = document.getElementById('userDropdown');
+
             dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+
         }
 
+
+        // Đóng dropdown khi click bên ngoài
+
         window.onclick = function(event) {
+
             if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+
                 var dropdown = document.getElementById('userDropdown');
+
                 if (dropdown && dropdown.style.display === 'block') {
+
                     dropdown.style.display = 'none';
+
                 }
+
             }
+
         }
+
         </script>
 
         {% else %}
-        <a href="{% url 'login_page' %}" style="padding:8px 18px; background:#F7931E; border-radius:25px; color:white; font-weight:700; font-family:'Montserrat', sans-serif; text-decoration:none; transition:0.2s;"
+
+        <!-- User chưa đăng nhập: hiển thị Login/Register -->
+
+        <a href="{% url 'login_page' %}" 
+
+           style="
+
+             padding:8px 18px; 
+
+             background:#F7931E; 
+
+             border-radius:25px; 
+
+             color:white; 
+
+             font-weight:700;            
+
+             text-decoration:none;
+
+             transition:0.2s;
+
+           "
+
            onmouseover="this.style.background='#C48300'"
+
            onmouseout="this.style.background='#F7931E'">
+
             Log in
+
         </a>
-        <a href="{% url 'signup_page' %}" style="padding:8px 18px; background:#F7931E; border-radius:25px; color:white; font-weight:700; font-family:'Montserrat', sans-serif; text-decoration:none; transition:0.2s;"
+
+        <a href="{% url 'signup_page' %}" 
+
+           style="
+
+             padding:8px 18px; 
+
+             background:#F7931E; 
+
+             border-radius:25px; 
+
+             color:white; 
+
+             font-weight:700;            
+
+             text-decoration:none;
+
+             transition:0.2s;
+
+           "
+
            onmouseover="this.style.background='#C48300'"
+
            onmouseout="this.style.background='#F7931E'">
+
             Register
+
         </a>
+
         {% endif %}
+
     </div>
 
 </header>
 
- <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-bdd5" data-interval="6000" data-u-ride="carousel" data-pause="false">
+    <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-bdd5" data-interval="6000" data-u-ride="carousel" data-pause="false">
       <ol class="u-absolute-hcenter u-carousel-indicators u-hidden u-block-7160-2">
         <li data-u-target="#carousel-bdd5" class="u-active u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="0"></li>
         <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="1"></li>
@@ -310,143 +471,80 @@
                     c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z"></path></svg></span><span class="sr-only">Next</span>
       </a>
     </section>
-    <section class="u-clearfix u-section-2" id="block-8">
-      <div class="u-clearfix u-sheet u-sheet-1">
-        <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-radius u-white u-layout-wrap-1">
-          <div class="u-layout">
-            <div class="u-layout-row">
-              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
-                <div class="u-container-layout u-container-layout-1">
-                  <div class="custom-expanded u-form u-form-1">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-1">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-1">Region</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-1">
-                            <option value="All region">All region</option>
-                            <option value="Ho Chi Minh" data-calc="">Ho Chi Minh</option>
-                            <option value="Ha Long Bay" data-calc="">Ha Long Bay</option>
-                            <option value="Ha Noi" data-calc="">Ha Noi</option>
-                            <option value="Hue" data-calc="">Hue</option>
-                          </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                        </div>
-                      </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-1"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
-                  </div><span class="u-icon u-text-custom-color-7 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 54.757 54.757" style=""><use xlink:href="#svg-b87b"></use></svg><svg class="u-svg-content" viewBox="0 0 54.757 54.757" x="0px" y="0px" id="svg-b87b" style="enable-background:new 0 0 54.757 54.757;"><path d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952
-	L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7
-	S31.416,26,27.557,26z"></path></svg></span>
-                </div>
-              </div>
-              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
-                <div class="u-container-layout u-container-layout-2">
-                  <div class="custom-expanded u-form u-form-2">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-3">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-2">Region</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-2">
-                            <option value="All locations">All locations</option>
-                            <option value="Landmark" data-calc="">Landmark</option>
-                            <option value="Scenery" data-calc="">Scenery</option>
-                            <option value="Sanctuary" data-calc="">Sanctuary</option>
-                            <option value="Museum" data-calc="">Museum</option>
-                            <option value="Attraction" data-calc="">Attraction</option>
-                          </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                        </div>
-                      </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-2"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
-                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/617418-fb032591.png' %}" alt=""></span>
-                </div>
-              </div>
-              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
-                <div class="u-container-layout u-container-layout-3">
-                  <div class="custom-expanded u-form u-form-3">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-5">
-                        <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-3">Region</label>
-                        <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-none u-custom-font u-font-montserrat u-input u-input-rectangle u-input-3">
-                            <option value="★☆☆☆☆ (1+)" data-calc="">★☆☆☆☆ (1+)</option>
-                            <option value="★★☆☆☆ (2+)" data-calc="">★★☆☆☆ (2+)</option>
-                            <option value="★★★☆☆ (3+)" data-calc="">★★★☆☆ (3+)</option>
-                            <option value="★★★★☆ (4+)" data-calc="">★★★★☆ (4+)</option>
-                            <option value="★★★★★" data-calc="">★★★★★</option>
-                          </select>
-                          <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                        </div>
-                      </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-3"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
-                  </div><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/471709-0c33d784.png' %}" alt=""></span>
-                </div>
-              </div>
-            </div>
+    <section class="u-clearfix u-section-2" id="block-8" style="padding: 60px 0; display: flex; justify-content: center; align-items: center;">
+      <div style="width: 100%; max-width: 1400px; padding: 0 20px;">
+          <form method="GET" action="{% url 'recommend_result' %}" id="searchForm">
+              <div style="display: flex; gap: 0; justify-content: center; align-items: stretch; background: #fff; padding: 0; border-radius: 60px; box-shadow: 0 4px 20px rgba(0,0,0,0.10); overflow: hidden; margin: 0 auto;">
+                  <!-- Location Filter with Icon -->
+                  <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px 24px 40px;">
+                      <span class="u-icon u-text-custom-color-7 u-icon-1" style="margin-top: 20px;">
+                          <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 54.757 54.757" style="width: 35px; height: 35px;">
+                              <path fill="#F7931E" d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7S31.416,26,27.557,26z"></path>
+                          </svg>
+                      </span>
+                      <select name="location" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
+                          <option value="">All Locations</option>
+                          {% for loc in all_locations %}
+                          <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+          <!-- Category Filter with Icon (img from homepage) -->
+          <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px;">
+            <span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2" style="margin-top: 20px;"><img src="{% static 'images/617418-fb032591.png' %}" alt="" style="width: 35px; height: 35px;"></span>
+            <select name="category" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
+              <option value="">All Categories</option>
+              {% for cat in all_categories %}
+              <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+              {% endfor %}
+            </select>
           </div>
-        </div>
-        <div class="u-clearfix u-group-elements u-group-elements-1"
-     style="display:flex; align-items:center; justify-content:center;">
-
-    <a href="{% url 'input_trip_planner' %}"
-       class="u-btn u-button-style u-custom-font u-font-montserrat"
-       style="
-           display:flex;
-           align-items:center;
-           justify-content:center;
-           width:700px;
-           height:50px;
-           background:#F7931E;        
-           border-radius:50px;
-           font-weight:700;           
-           font-size:20px;           
-           gap:12px;
-           text-transform:uppercase;
-           color:white;
-       ">
-
-        <span>SEARCH</span>
-
-        
-        <span class="u-icon u-text-white"
-              style="display:flex; align-items:center; justify-content:center; width:20px; height:20px;">
-            <svg viewBox="0 0 56.966 56.966" width="20" height="20">
-                <path fill="white" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786
-                    c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208
-                    c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z 
-                    M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z"/>
-            </svg>
-        </span>
-
-    </a>
-</div>
-
-
-
-    </section>
+          <!-- Rating Filter with Icon (img from homepage) -->
+          <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px;">
+            <span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3" style="margin-top: 20px;"><img src="{% static 'images/471709-0c33d784.png' %}" alt="" style="width: 35px; height: 35px;"></span>
+            <select name="rating" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
+              <option value="">★☆☆☆☆ (1+)</option>
+              <option value="4.5" {% if selected_rating == '4.5' %}selected{% endif %}>★★★★★ (4.5+)</option>
+              <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
+              <option value="3.5" {% if selected_rating == '3.5' %}selected{% endif %}>★★★☆☆ (3.5+)</option>
+              <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>★★☆☆☆ (3.0+)</option>
+              <option value="1.0" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
+            </select>
+          </div>
+          <button type="submit" style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      min-width: 160px;
+                      background: #F7931E;
+                      border-radius: 0 60px 60px 0;
+                      font-weight: 700;
+                      font-size: 18px;
+                      gap: 10px;
+                      text-transform: uppercase;
+                      color: white;
+                      border: none;
+                      cursor: pointer;
+                      padding: 20px 30px;
+                      transition: all 0.3s;
+                      flex-shrink: 0;
+                  "
+                  onmouseover="this.style.background='#E67E22'"
+                  onmouseout="this.style.background='#F7931E'">
+                      <span>SEARCH</span>
+                      <span style="display: flex; align-items: center; justify-content: center;">
+                          <svg viewBox="0 0 56.966 56.966" width="20" height="20">
+                              <path fill="white" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786
+                                  c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208
+                                  c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z 
+                                  M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z"/>
+                          </svg>
+                      </span>
+                  </button>
+              </div>
+          </form>
+      </div>
+  </section>
     <section class="u-clearfix u-container-align-center u-white u-section-3" id="sec-9086">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
         <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">Why should you choose us?</h2>
@@ -484,259 +582,169 @@
       </div>
     </section>
     
-    <section class="u-clearfix u-section-4" id="block-10">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1"
-     style="text-align:center;">
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Explore the Country </h6>
-        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Popular Destinations</h2>
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0"> Discover amazing places and book your perfect stay<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
+    {% if personalized_recommendations %}
+    <section class="u-clearfix u-section-5" id="personalized-recommendations">
+      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
+        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Recommended Destinations</h2>
         </h6>
-        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1"
-     style="display:inline-block; vertical-align:top; margin:20px 22.5px 0 0;">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-1">
-            <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-1" src="{% static 'images/pexels-triduhi-youtuber-27418881.jpg' %}" alt="" data-image-width="5820" data-image-height="3880">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-4">Imperial Capital Hue</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-5">Hue City</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-6"> ★★★★☆ (9236 reviews)</p>
-            <p class="u-text u-text-7"> "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm that preserves Vietnam’s graceful royal heritage."</p>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-1">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-8">200.000<span style="text-decoration: underline !important;">đ</span>/Person
-            </p>
+        
+        <!-- Carousel Container -->
+        <div class="recommendations-carousel" style="position: relative; max-width: 1200px; margin: 40px auto; overflow: hidden;">
+          <!-- Carousel Track -->
+          <div class="carousel-track" id="recommendations-track" style="display: flex; transition: transform 0.5s ease;">
+            {% for rec in personalized_recommendations %}
+            <div class="carousel-slide" style="flex: 0 0 300px; margin: 0 10px;">
+              <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1" style="width: 300px; height: 350px; position: relative;">
+                <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-1">
+                  <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-1" src="{{ rec.image_url }}" alt="{{ rec.name }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px 10px 0 0;">
+                  <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-4" style="margin: 10px 0; font-weight: bold; font-size: 16px;">{{ rec.name }}</p>
+                  <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-5" style="margin: 5px 0; color: #666; font-size: 14px;">{{ rec.location }}</p>
+                  <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-6" style="margin: 5px 0; color: #666; font-size: 14px;">{{ rec.category }} •  {{ rec.rating|floatformat:1 }}/5.0</p>
+                  <a href="{% url 'destination_detail' rec.id %}" class="u-border-none u-btn u-btn-round u-button-style u-radius u-btn-1" style="position: absolute !important; bottom: -10px !important; left: 50% !important; transform: translateX(-50%) !important; background: #F7931E !important; color: white !important; padding: 8px 20px !important; border-radius: 25px !important; text-decoration: none !important; font-weight: bold !important; transition: 0.2s !important;" onmouseover="this.style.background='#C48300' !important" onmouseout="this.style.background='#F7931E' !important">View Details</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          
+          <!-- Navigation Buttons -->
+          <button class="carousel-nav carousel-prev" onclick="moveCarousel(-1)" style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%); background: #F7931E; border: none; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 24px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='#C48300'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='#F7931E'; this.style.transform='translateY(-50%) scale(1)'">‹</button>
+          <button class="carousel-nav carousel-next" onclick="moveCarousel(1)" style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%); background: #F7931E; border: none; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 24px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='#C48300'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='#F7931E'; this.style.transform='translateY(-50%) scale(1)'">›</button>
+          
+          <!-- Carousel Controls Panel -->
+          <div class="carousel-controls" style="position: absolute; top: -60px; right: 20px; background: rgba(255,255,255,0.95); padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px; align-items: center; font-size: 14px;">
+            <button id="play-pause-btn" onclick="toggleAutoPlay()" style="background: #F7931E; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: 0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">⏸️ Pause</button>
+            <label style="margin: 0; color: #333;">Speed:</label>
+            <select id="speed-select" onchange="changeSpeed()" style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
+              <option value="2000">Fast (2s)</option>
+              <option value="5000" selected>Normal (5s)</option>
+              <option value="8000">Slow (8s)</option>
+            </select>
+          </div>
+          
+          <!-- Dots Indicator -->
+          <div class="carousel-dots" style="text-align: center; margin-top: 20px;">
+            {% for i in personalized_recommendations %}
+            <span class="dot" onclick="goToSlide({{ forloop.counter0 }})" style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #ddd; margin: 0 5px; cursor: pointer; transition: 0.2s;"></span>
+            {% endfor %}
           </div>
         </div>
-        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-2"
-     style="display:inline-block; vertical-align:top; margin:20px 22.5px;">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-2">
-            <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-2" src="{% static 'images/pexels-phamthe-13519138.jpg' %}" alt="" data-image-width="2726" data-image-height="4088">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-9">Hoang Kiem Lake </p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-10">Hanoi </p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-11"> ★★★☆☆ (837 reviews)</p>
-            <p class="u-text u-text-12"> “A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge glowing beautifully at night.”</p>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-2">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-13">Free of Charge</p>
-          </div>
-        </div>
-        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-3"
-     style="display:inline-block; vertical-align:top; margin:0 0 0 22.5px;">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-3">
-            <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-3" src="{% static 'images/cave-wallpaper-l.jpg' %}" alt="" data-image-width="1916" data-image-height="1400">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-14">Sung Sot Cave</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-15">Ha Long Bay</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-16"> ★★★★★ (3618 reviews)</p>
-            <p class="u-text u-text-17"> “The largest and most spectacular cave in Ha Long Bay, featuring massive chambers, dramatic rock formations, and colorful illuminated pathways.”</p>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-3">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-18">250.000<span style="text-decoration: underline !important;">đ</span>/Person
-            </p>
-          </div>
-        </div>
+        
+
       </div>
+    </section>
+    
+    <!-- Carousel JavaScript -->
+    <script>
+    let currentSlide = 0;
+    let totalSlides = 0;
+    const slidesToShow = 3; // Show 3 slides at a time
+    let maxSlide = 0;
+    let autoPlayInterval = null;
+    let isAutoPlaying = true;
+    let autoPlaySpeed = 5000; // Default 5 seconds
+    
+    function initializeCarousel() {
+      const track = document.getElementById('recommendations-track');
+      const slides = track.children;
+      totalSlides = slides.length;
+      maxSlide = Math.max(0, totalSlides - slidesToShow);
       
-      <section class="u-clearfix u-section-5" id="block-11">
-<div class="u-clearfix u-sheet u-sheet-1" style="background:#f0f0f0; border-radius:15px; padding:30px; display:flex; justify-content:space-around; text-align:center; flex-wrap:wrap; gap:20px; 
-    /* --- NEW WIDTH HERE --- */
-    width: 750px; 
-    min-height: 250px; 
-    /* ---------------------- */
-    margin: 40px auto; font-family: 'Montserrat', sans-serif;">  
-
-    <div class="u-column" style="flex:1; min-width:200px; padding: 10px;">
-      <span class="u-icon" style="display:block; margin:0 auto 15px; font-size:40px; color:#F7931E;">
-        <img src="{% static 'images/535188-3efc346f.png' %}" alt="" style="width:40px; height:40px;">
-      </span>
-      <h3 class="u-text u-text-bold" style="margin-bottom:10px; font-size:1.2rem; font-weight: bold;">Top Spots, Hotels & Dining</h3>
-      <p style="margin-bottom:15px; color:#666; font-size: 0.95rem;">Find top attractions with nearby hotels and restaurants tailored to your preferences.</p>
-      <a href="" class="u-btn" style="display:inline-block; padding:8px 25px; border:2px solid #F7931E; border-radius:25px; color:#F7931E; text-decoration:none; font-weight:bold; background-color:transparent; transition: all 0.3s;">Explore</a>
-    </div>
-
-    <div class="u-column" style="flex:1; min-width:200px; padding: 10px;">
-      <span class="u-icon" style="display:block; margin:0 auto 15px; font-size:40px; color:#F7931E;">
-        <img src="{% static 'images/3721843-2a83ae95.png' %}" alt="" style="width:40px; height:40px;">
-      </span>
-      <h3 class="u-text u-text-bold" style="margin-bottom:10px; font-size:1.2rem; font-weight: bold;">Ask. Explore. Connect</h3>
-      <p style="margin-bottom:15px; color:#666; font-size: 0.95rem;">Get insider tips and advices from locals in real-time chat forums for an epic journey.</p>
-      <a href="" class="u-btn" style="display:inline-block; padding:8px 25px; border:2px solid #F7931E; border-radius:25px; color:#F7931E; text-decoration:none; font-weight:bold; background-color:transparent; transition: all 0.3s;">Connect</a>
-    </div>
-
-    <div class="u-column" style="flex:1; min-width:200px; padding: 10px;">
-      <span class="u-icon" style="display:block; margin:0 auto 15px; font-size:40px; color:#F7931E;">
-        <img src="{% static 'images/4516627-672a4d01.png' %}" alt="" style="width:40px; height:40px;">
-      </span>
-      <h3 class="u-text u-text-bold" style="margin-bottom:10px; font-size:1.2rem; font-weight: bold;">Your trip, Your way</h3>
-      <p style="margin-bottom:15px; color:#666; font-size: 0.95rem;">Easily create your travel itinerary and organize every part of your journey.</p>
-      <a href="{% url 'trip_planner' %}" class="u-btn" style="display:inline-block; padding:8px 25px; border:2px solid #F7931E; border-radius:25px; color:#F7931E; text-decoration:none; font-weight:bold; background-color:transparent; transition: all 0.3s;">Schedule</a>
-    </div>
-
-  </div>
-</section>
-
-
-
-  <section class="u-align-center u-clearfix u-container-align-center u-white u-section-6" id="sec-e346">
-  <div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
-    <div style="position: relative; width: 100%; height: 400px;"> <!-- container for animation -->
-  <!-- Circle behind image -->
-  <div class="u-color-var u-preserve-proportions u-shape u-shape-circle u-shape-1"
-       style="background-color:#21ECE1; width:250px; height:250px; position:absolute; top:160px; left:250px;"
-       data-animation-name="customAnimationIn"
-       data-animation-duration="1000"
-       data-animation-delay="300">
-  </div>
-
-  <!-- Image -->
-  <img class="u-image u-image-circle u-preserve-proportions u-image-1"
-       src="{% static 'images/pexels-vlada-karpovich-7368310.jpg' %}"
-       style="width:280px; height:280px; object-fit:cover; border-radius:50%; position:absolute; top:180px; left:200px;"
-       alt=""
-       data-animation-name="customAnimationIn"
-       data-animation-duration="1000"
-       data-animation-delay="0">
-
-  <!-- Heading -->
-  <h2 class="u-custom-font u-font-montserrat u-text"
-      style="position:absolute; top:250px; left:780px; font-size:60px; font-weight:900; color:#040BC1;"
-      data-animation-name="customAnimationIn"
-      data-animation-duration="1000"
-      data-animation-delay="0">
-    INTRODU​CING:<br>TRIP PLANNER
-  </h2>
-</div>
-
-    <!-- Title moved out of layout row -->
-    <div style="position:absolute; top:500px; left:50px; width:700px;">
-      <h3 class="u-custom-font u-font-montserrat u-text u-text-custom-color-3 u-text-2"
-          data-animation-name="customAnimationIn"
-          data-animation-duration="1000"
-          data-animation-delay="0">
-        Have your trip planned with just the click of a button, the ​future of travelling
-      </h3>
-      <div class="u-border-4 u-border-custom-color-1 u-line u-line-horizontal u-expanded-width u-line-1"></div>
-    </div>
-
-    <!-- Paragraph -->
-    <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1" style="position:absolute; top:450px; left:775px;">
-  <div class="u-layout">
-    <div class="u-layout-row">
-      <div class="u-container-style u-layout-cell u-radius u-shape-round u-size-30 u-white u-layout-cell-2"
-           data-animation-name="customAnimationIn"
-           data-animation-duration="1000"
-           data-animation-delay="500">
-        <div class="u-border-2 u-border-black u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-2"
-             style="max-width:650px; padding:30px; border-radius:50px;">
-          <p class="u-align-left u-text u-text-3"
-             data-animation-name="customAnimationIn"
-             data-animation-duration="1000"
-             data-animation-delay="500">
-            Allow us to help schedule your vacation. ​We provide a flexible itinerary that maximizes your visits to attractions while allowing time to relax and enjoy local delicacies and landmarks.
-          </p>
-          <a href=""
-   class="u-align-left u-border-none u-btn u-btn-round u-button-style u-custom-color-3 u-custom-font u-font-montserrat u-hover-custom-color-2 u-radius u-text-active-white u-text-body-alt-color u-text-hover-white u-btn-1"
-   style="display:inline-block; margin-left:0;"
-   data-animation-name="customAnimationIn"
-   data-animation-duration="1000"
-   data-animation-delay="500">
-   READ MORE
-</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-  </div>
-</section>
-
-
-
-
-
-
-    <section class="u-align-center u-clearfix u-container-align-center u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-white u-section-7" id="sec-acc7">
-
-  <!-- Fixed-size image -->
-  <img class="u-image u-image-1"
-       src="{% static 'images/carl-tronders-3nSoYKQ_bqg-unsplash1.jpg' %}"
-       data-image-width="5472" data-image-height="3648"
-       data-animation-name="customAnimationIn"
-       data-animation-duration="1250"
-       style="width:1500px; height:600px; object-fit:cover; display:block; margin:0 auto 0 0;">
-
-  <div class="u-custom-color-7 u-expanded-height u-shape u-shape-rectangle u-shape-1"
-     data-animation-name="customAnimationIn"
-     data-animation-duration="1000"
-     data-animation-direction="Up"
-     data-animation-delay="0"
-     style="
-        position:absolute;
-        top:0;
-        left:0;
-        width:200px;         /* adjust: how wide you want the orange bar */
-        height:600px;        /* match image height */
-        background:#F7931E;  /* your orange color */
-        z-index:3;
-     ">
-</div>
-
-  <div class="u-align-center u-container-align-center u-container-style u-group u-group-1" 
-     data-animation-name="customAnimationIn" 
-     data-animation-duration="1300"
-     style="
-        position:absolute;
-        top:5px;
-        left:50px;
-        background-color:#292D33 !important;
-        background-image:none !important;
-        padding:40px 30px; 
-        width:350px;
-        height:500px;
-        box-sizing:border-box; 
-        text-align:left; 
-        border-radius:8px;
-        z-index:5;
-     ">
-  <div class="u-container-layout u-container-layout-1">
-
-    <!-- CENTERED TITLE -->
-    <h2 class="u-custom-font u-font-montserrat"
-        style="
-          color:white; 
-          font-size:48px; 
-          font-weight:900; 
-          margin-top:0;
-          margin-bottom:20px;
-          text-align:center;   /* ← CENTERED */
-        ">
-      LOCAL<br>GUIDE
-    </h2>
-
-    <!-- LEFT ALIGNED PARAGRAPH -->
-    <p class="u-custom-font u-font-montserrat"
-       style="
-          color:white !important; 
-          font-size:18px; 
-          font-weight:400; 
-          line-height:1.6; 
-          margin-top:50px;
-          max-width:280px;
-          word-wrap:break-word;
-          overflow-wrap:break-word;
-       ">
-      We are currently developing a new feature that allows you to have a direct chat with the local residents. Allowing you to discover attractions such as hidden sceneries, food vendors and cheap hotels.
-    </p>
-
-  </div>
-</div>
-
-</section>
+      // Set track width dynamically
+      const slideWidth = 320; // 300px card + 20px margin
+      track.style.width = `${totalSlides * slideWidth}px`;
       
+      updateCarousel();
+      startAutoPlay();
+    }
+    
+    function updateCarousel() {
+      const track = document.getElementById('recommendations-track');
+      const slideWidth = 320; // 300px card + 20px margin
+      track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
       
+      // Update dots
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        dot.style.background = index === currentSlide ? '#F7931E' : '#ddd';
+      });
       
+      // Update play/pause button text
+      const playPauseBtn = document.getElementById('play-pause-btn');
+      if (playPauseBtn) {
+        playPauseBtn.innerHTML = isAutoPlaying ? '⏸️ Pause' : '▶️ Play';
+      }
+    }
+    
+    function moveCarousel(direction) {
+      currentSlide = Math.max(0, Math.min(maxSlide, currentSlide + direction));
+      updateCarousel();
+    }
+    
+    function goToSlide(slideIndex) {
+      currentSlide = Math.max(0, Math.min(maxSlide, slideIndex));
+      updateCarousel();
+    }
+    
+    function startAutoPlay() {
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+      }
       
+      if (isAutoPlaying && totalSlides > slidesToShow) {
+        autoPlayInterval = setInterval(() => {
+          if (currentSlide >= maxSlide) {
+            currentSlide = 0;
+          } else {
+            currentSlide++;
+          }
+          updateCarousel();
+        }, autoPlaySpeed);
+      }
+    }
+    
+    function stopAutoPlay() {
+      if (autoPlayInterval) {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = null;
+      }
+    }
+    
+    function toggleAutoPlay() {
+      isAutoPlaying = !isAutoPlaying;
+      if (isAutoPlaying) {
+        startAutoPlay();
+      } else {
+        stopAutoPlay();
+      }
+      updateCarousel();
+    }
+    
+    function changeSpeed() {
+      const speedSelect = document.getElementById('speed-select');
+      autoPlaySpeed = parseInt(speedSelect.value);
+      
+      if (isAutoPlaying) {
+        startAutoPlay(); // Restart with new speed
+      }
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('recommendations-track')) {
+        initializeCarousel();
+      }
+    });
+    </script>
+    {% endif %}
+    
+    
     
     
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
         <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
           <div class="chat-container"><!-- Floating Button -->
-            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
+            <div class="chat-button" onclick="toggleChat()">💬</div><!-- Chat Box -->
             <div class="chat-box" id="chatBox">
               <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
               </div>
@@ -749,148 +757,110 @@
               </div>
             </div>
           </div>
-   <style>
-.chat-container { 
+          <style> .chat-container {
     position: fixed;
     bottom: 25px;
     right: 25px;
     z-index: 9999;
-    font-family: 'Poppins', sans-serif;
-}
+    font-family: sans-serif;
+  }
 
-/* Floating button */
-.chat-button {
+  /* Floating button */
+  .chat-button {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #00b4d8, #48cae4); /* gradient năng động */
+    background-color: #F7931E; /* orange like navbar buttons */
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     font-size: 28px;
-    color: #fff;
-    transition: transform 0.3s ease, background 0.3s ease;
-}
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    background: linear-gradient(90deg, #0ab1d9, #34c59d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-.chat-button:hover {
+  .chat-button:hover {
     transform: scale(1.1);
-    background: linear-gradient(135deg, #0096c7, #00b4d8);
-}
+    background-color: #C48300; /* darker orange */
+  }
 
-/* Chat box */
-.chat-box {
+  /* Chat box */
+  .chat-box {
     display: none;
     position: absolute;
     bottom: 75px;
     right: 0;
-    width: 360px;
-    height: 500px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    width: 350px;
+    height: 450px;
+    background: #eaf4f6; /* light blue-gray */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     overflow: hidden;
     flex-direction: column;
-    color: #000;
-    animation: fadeIn 0.3s ease;
-}
+    color: #000; /* black text */
+  }
 
-/* Header */
-.chat-header {
-    background-color: #00bcd4; 
-    color: #fff;
+  .chat-header {
+    background: linear-gradient(90deg, #0ab1d9, #34c59d); /* navbar gradient */
+    color: #000;
     padding: 12px;
     font-weight: bold;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
+  }
 
-/* Body */
-.chat-body {
-    padding: 12px;
+  .chat-body {
+    padding: 10px;
     flex: 1;
     overflow-y: auto;
-    background: #f0f8ff;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start; 
-}
+    background: #f5f8f9;
+  }
 
-.bot-msg {
-    background: #ade8f4;
-    padding: 10px 14px;
-    border-radius: 16px;
-    max-width: 80%;
-    color: #03045e;
-    font-size: 14px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    align-self: flex-start !important;  /* bám trái */
-    text-align: left !important;        /* nội dung text căn trái */
-}
+  .bot-msg {
+    background: #c8e3e8; /* pale teal bubble */
+    padding: 8px 12px;
+    border-radius: 10px;
+    width: fit-content;
+    color: #000;
+  }
 
-.user-msg {
-    background: #ffb703;
-    padding: 10px 14px;
-    border-radius: 16px;
-    max-width: 80%;
-    color: #023047;
-    font-size: 14px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    align-self: flex-end !important;    /* bám phải */
-    text-align: left !important;        /* nội dung text căn trái */
-}
-
-
-/* Input */
-.chat-input {
+  .chat-input {
     display: flex;
     border-top: 1px solid #ccc;
-    background: #fff;
-}
+  }
 
-.chat-input input {
+  .chat-input input {
     flex: 1;
-    padding: 12px;
+    padding: 10px;
     border: none;
     outline: none;
-    color: #03045e;
-    font-size: 14px;
-    background: #f8f9fa;
-}
+    color: #000;
+    background: #fff;
+  }
 
-.chat-input button {
-    background: #00b4d8;
+  .chat-input button {
+    background: #F7931E;
     border: none;
-    padding: 12px 18px;
+    padding: 10px 15px;
     cursor: pointer;
     color: #fff;
-    font-size: 16px;
-    transition: background 0.3s ease;
-}
+  }
 
-.chat-input button:hover {
-    background: #0096c7;
-}
+  .chat-input button:hover {
+    background: #C48300;
+  }
 
-/* Close button */
-.close-btn {
+  .close-btn {
     cursor: pointer;
     font-size: 20px;
-    font-weight: bold;
-}
-
-/* Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-} </style>
+    color: #fff;
+  } </style>
         </div>
         <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation">
           <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
@@ -901,7 +871,7 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a tabindex="-1" role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" aria-haspopup="true" style="padding: 10px 20px;">Home</a>
+            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" style="padding: 10px 20px;">Home</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
 </li></ul>
@@ -910,7 +880,7 @@
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a tabindex="-1" role="menuitem" class="u-button-style u-nav-link" href="./" aria-haspopup="true">Home</a>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="./">Home</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a>
 </li></ul>
@@ -919,10 +889,7 @@
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not be copied due to copyright law.<br>This project is for educational purposes only and is not intended for commercial use. 
-        </p>
+        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not by copied due to copyright law </p>
       </div></footer>
-    <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/one-page-template">One Page Template</a> was created with Nicepage Builder 
-    </section>
   
 </body></html>

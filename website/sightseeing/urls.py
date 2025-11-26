@@ -18,6 +18,8 @@ urlpatterns = [
     
     #Function pages
     path('Trip-planner/', views.trip_planner, name='trip_planner'),
+    path('input-trip-planner/', views.input_trip_planner, name='input_trip_planner'),
+    path('trip-form/', views.trip_form, name='trip_form'),
 
     # User pages
     path('profile/', views.user_profile, name='user_profile'),
@@ -26,8 +28,10 @@ urlpatterns = [
     path('recommend-result/', views.recommend_result, name='recommend_result'),
     path('destination/<int:destination_id>/', views.destination_detail, name='destination_detail'),
     path('destination/<int:destination_id>/add-trip/', views.add_to_trip, name='add_to_trip'),
+    path('hotel/<int:hotel_id>/add-trip/', views.add_hotel_to_trip, name='add_hotel_to_trip'),
     path('trip/', views.trip_list, name='trip_list'),
     path('trip/remove/<int:trip_item_id>/', views.remove_from_trip, name='remove_from_trip'),
+    path('trip/save-day-selections/', views.save_day_selections, name='save_day_selections'),
     path('destination/', views.user_profile, name='destination'),
     
     # Info pages
