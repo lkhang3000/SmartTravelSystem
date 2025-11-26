@@ -25,6 +25,9 @@ urlpatterns = [
     path('save-user-input/', views.save_user_input, name='save_user_input'),
     path('recommend-result/', views.recommend_result, name='recommend_result'),
     path('destination/<int:destination_id>/', views.destination_detail, name='destination_detail'),
+    path('destination/<int:destination_id>/add-trip/', views.add_to_trip, name='add_to_trip'),
+    path('trip/', views.trip_list, name='trip_list'),
+    path('trip/remove/<int:trip_item_id>/', views.remove_from_trip, name='remove_from_trip'),
     path('destination/', views.user_profile, name='destination'),
     
     # Info pages

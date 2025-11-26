@@ -178,6 +178,19 @@
     <div style="display:flex; gap:10px; align-items:center;">
 
         {% if user.is_authenticated %}
+        <!-- Trip List Icon -->
+        <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
+            <div style="background:#F7931E; border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; transition:0.2s;"
+                 onmouseover="this.style.background='#C48300'"
+                 onmouseout="this.style.background='#F7931E'">
+                🧳
+            </div>
+            {% if trip_count %}
+            <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold;">
+                {{ trip_count }}
+            </span>
+            {% endif %}
+        </a>
 
         <!-- User đã đăng nhập: hiển thị icon + dropdown -->
 
@@ -527,31 +540,15 @@
         {% endif %}
 
         <div class="btn-row" style="margin-top:25px; text-align:center;">
-            <button class="btn" onclick="addToTrip({{ destination.id }})" style="background: #4CAF50; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block;">➕ Add to Trip</button>
+            <form method="post" action="{% url 'add_to_trip' destination.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn" style="background: #4CAF50; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block;">➕ Add to Trip</button>
+            </form>
             <a href="{% url 'recommend_result' %}" class="btn" style="background:orange; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block;">← Back to Results</a>
             <a href="{% url 'home' %}" class="btn" style="background:orange; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block;">🏠 Home</a>
         </div>
     </div>
     
-    <script>
-    function addToTrip(destinationId) {
-        // Lưu vào localStorage
-        let trip = JSON.parse(localStorage.getItem('myTrip') || '[]');
-        
-        // Kiểm tra đã có chưa
-        if (trip.includes(destinationId)) {
-            alert('This destination is already in your trip!');
-            return;
-        }
-        
-        // Thêm vào trip
-        trip.push(destinationId);
-        localStorage.setItem('myTrip', JSON.stringify(trip));
-        
-        alert('Added to your trip! ✅');
-    }
-    </script>
-
     <script>
     function changeMainImage(src) {
     const mainImage = document.querySelector('.place-img');
