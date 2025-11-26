@@ -425,13 +425,28 @@
 
 </header>
 
-    <div class="u-clearfix u-sheet u-sheet-1 container" style="width:70%; margin:40px auto; background:white; padding:30px; border-radius:10px; box-shadow:0px 4px 20px rgba(0,0,0,0.15);">
-        <img src="{{ destination.image_url }}" class="u-expanded-width u-image place-img" alt="{{ destination.desName }}" 
-             onerror="this.src='https://picsum.photos/seed/{{ destination.id }}/800/600'" />
-        <h1 style="margin-top:20px; color:#003e91;">{{ destination.desName }}</h1>
+   <div style="display:flex; gap:40px; align-items:flex-start; margin-top:20px;">
 
+    <!-- LEFT COLUMN: Image -->
+    <div style="flex:1;">
+        <img src="{{ destination.image_url }}" 
+             class="u-expanded-width u-image place-img" 
+             alt="{{ destination.desName }}"
+             style="border-radius:10px;"
+             onerror="this.src='https://picsum.photos/seed/{{ destination.id }}/800/600'" />
+    </div>
+
+    <!-- RIGHT COLUMN: Content -->
+    <div style="flex:1.5;">   <!-- tăng flex để nội dung rộng hơn hình -->
+        
+        <h1 style="margin-top:0; color:#003e91;">{{ destination.desName }}</h1>
+
+        <!-- LOCATION -->
         <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
-            <div class="section-title" style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">📍 Location</div>
+            <div class="section-title" 
+                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
+                📍 Location
+            </div>
             <div class="info-row">
                 {% if destination.location %}
                     {{ destination.location.locationName }}, Vietnam
@@ -446,29 +461,55 @@
             {% endif %}
         </div>
 
-        {% if destination.description %}
+        <!-- DESCRIPTION -->
         {% if destination.description %}
         <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
-            <div class="section-title" style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">ℹ️ Description</div>
+            <div class="section-title" 
+                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
+                ℹ️ Description
+            </div>
             <p>{{ destination.description }}</p>
         </div>
         {% endif %}
-        {% endif %}
 
+        <!-- RATING & CATEGORY -->
         <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
-            <div class="section-title" style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">⭐ Rating & Category</div>
+            <div class="section-title" 
+                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
+                ⭐ Rating & Category
+            </div>
             <div class="info-row" style="margin-bottom:8px;">Rating: {{ destination.rating|default:"N/A" }} / 5.0</div>
             {% if destination.category %}
             <div class="info-row" style="margin-bottom:8px;">Category: {{ destination.category }}</div>
             {% endif %}
         </div>
 
+        <!-- PRICE RANGE -->
         {% if destination.price_range %}
-        <div class="section">
-            <div class="section-title">💲 Price Range</div>
+        <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
+            <div class="section-title" 
+                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
+                💲 Price Range
+            </div>
             <div class="info-row">{{ destination.price_range }}</div>
         </div>
         {% endif %}
+
+    </div>
+
+</div>
+    <!-- CAROUSEL -->
+    <div class="carousel-container" style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
+    <div style="font-weight:bold; color:#1a4fa3; margin-bottom:10px;">📸 More Images</div>
+    <div class="carousel" style="display:flex; gap:10px; overflow-x:auto; padding-bottom:10px;">
+        <img src="https://picsum.photos/seed/1/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
+        <img src="https://picsum.photos/seed/2/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
+        <img src="https://picsum.photos/seed/3/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
+        <img src="https://picsum.photos/seed/4/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
+        <img src="https://picsum.photos/seed/5/150/100" class="carousel-img" style="height:100px; width:150px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="changeMainImage(this.src)">
+    </div>
+    </div>
+
 
         {% if related_destinations %}
         <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
@@ -510,5 +551,13 @@
         alert('Added to your trip! ✅');
     }
     </script>
+
+    <script>
+    function changeMainImage(src) {
+    const mainImage = document.querySelector('.place-img');
+    mainImage.src = src;
+    }
+    </script>
+    
 </body>
 </html>

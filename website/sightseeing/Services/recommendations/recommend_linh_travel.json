@@ -1,15 +1,10 @@
 {
     "username": "linh_travel",
-    "recommendations": [
-        {
-            "spot": {
-                "name": "Bãi biển Mỹ Khê",
-                "location": "Đà Nẵng",
-                "category": "Biển",
-                "rating": 4.8,
-                "region": "miền Trung"
-            },
-            "relevance_score": 3.29
-        }
-    ]
+    "recommended_spot": {
+        "name": "Bãi biển Mỹ Khê",
+        "location": "Đà Nẵng",
+        "category": "Biển",
+        "rating": 4.8,
+        "region": "miền Trung"
+    }
 }

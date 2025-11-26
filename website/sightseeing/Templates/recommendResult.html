@@ -415,55 +415,55 @@
         </div>
     </section>
     
-    <section class="recommendation-section" id="block-1">
-      <div class="container">
-        <h2 class="section-title">Search Results</h2>
-
-        {% if selected_location or selected_category or selected_price or selected_rating %}
-        <div class="filter-info" style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
-          <strong>Active Filters:</strong>
-          {% if selected_location %}Location: {{ selected_location }}{% endif %}
-          {% if selected_category %} | Category: {{ selected_category }}{% endif %}
-          {% if selected_price %} | Price: {{ selected_price }}{% endif %}
-          {% if selected_rating %} | Rating: {{ selected_rating }}★+{% endif %}
-        </div>
+<section class="recommendation-section" id="block-1">
+  <div class="container">
+    <h2 class="section-title">Recommend Results{% if user_preferences %} for {{ user_preferences.user_info.username }}{% endif %}</h2>
+    
+    {% if user_preferences %}
+    <div class="preference-info">
+      <p>
+        <span class="info-item">Location: {{ user_preferences.trip_preferences.domestic_or_international.region|title }}</span>
+        <span class="info-separator">|</span>
+        <span class="info-item">Budget: {{ user_preferences.trip_preferences.budget|default:"Not specified" }} VND</span>
+        {% if user_preferences.trip_preferences.tags %}
+        <span class="info-separator">|</span>
+        <span class="info-item">Interests: {{ user_preferences.trip_preferences.tags|join:", " }}</span>
         {% endif %}
-
-        <div class="recommendation-grid">
-          {% if recommendations %}
-            {% for spot in recommendations %}
-            <div class="recommendation-card">
-              <div class="card-image">
-                <a href="{% url 'destination_detail' spot.id %}">
-                  <img src="{{ spot.image_url }}" alt="{{ spot.name }}"
-                       onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
-                </a>
-              </div>
-
-              <div class="card-content">
-                <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
-
-                <div class="card-info-row">
-                  <span class="rating-value">⭐ {{ spot.rating }}/5.0</span>
-                  <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
-                </div>
-
-                {% if spot.description %}
-                <p style="font-size: 14px; color: #666; margin: 8px 0 0 0; line-height: 1.4;">
-                  {{ spot.description|truncatechars:100 }}
-                </p>
-                {% endif %}
-              </div>
+      </p>
+    </div>
+    {% endif %}
+    <!khúc này để thêm ảnh nè, có gì sửa gì thì sửa chỗ này> 
+  <div class="recommendation-grid">
+      {% if recommendations %}
+        {% for spot in recommendations %}
+        <div class="recommendation-card">
+          <div class="card-image">
+            <a href="{% url 'destination_detail' spot.id %}">
+              <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
+                   onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
+            </a>
+          </div>
+          
+          <div class="card-content">
+            <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
+            
+            <div class="card-info-row">
+              <span class="rating-value">{{ spot.rating }}/5.0</span>
+              <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
             </div>
-            {% endfor %}
-          {% else %}
-            <div class="no-recommendations">
-              <p>No destinations found matching your criteria. Please try adjusting your filters.</p>
-            </div>
-          {% endif %}
+          </div>
         </div>
-      </div>
-    </section>    
+        {% endfor %}
+      {% else %}
+        <div class="no-recommendations">
+          <p>No recommendations available. Please submit your travel preferences first.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+    
+    
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="sec-6200"><div class="u-clearfix u-sheet u-sheet-1">
         <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
       </div></footer>

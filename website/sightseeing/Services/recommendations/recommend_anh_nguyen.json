@@ -1,25 +1,10 @@
 {
     "username": "anh_nguyen",
-    "recommendations": [
-        {
-            "spot": {
-                "name": "Đỉnh Fansipan",
-                "location": "Sa Pa",
-                "category": "Núi",
-                "rating": 4.9,
-                "region": "Tây Bắc"
-            },
-            "relevance_score": 2.41
-        },
-        {
-            "spot": {
-                "name": "Bản Cát Cát",
-                "location": "Sa Pa",
-                "category": "Làng văn hóa",
-                "rating": 4.6,
-                "region": "Tây Bắc"
-            },
-            "relevance_score": 2.29
-        }
-    ]
+    "recommended_spot": {
+        "name": "Đỉnh Fansipan",
+        "location": "Sa Pa",
+        "category": "Núi",
+        "rating": 4.9,
+        "region": "Tây Bắc"
+    }
 }
