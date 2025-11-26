@@ -10,6 +10,7 @@ class registerForm(UserCreationForm):
 
 class UsersProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False)
+    custom_user_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like user_001
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
 
@@ -25,6 +26,7 @@ class Location(models.Model):
 
 class Destinations(models.Model):
     desName = models.CharField(max_length=200, null=True)
+    destination_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like dest_001
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='destinations', null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     price_range = models.CharField(max_length=50, null=True, blank=True)
@@ -41,5 +43,30 @@ class Destinations(models.Model):
 
     def __str__(self):
         return self.desName
+
+class Hotel(models.Model):
+    name = models.CharField(max_length=200, null=True)
+    hotel_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like hotel_001
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='hotels', null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    rating = models.FloatField(default=0.0, null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)  # Giá phòng, có thể là VND
+    image_url = models.URLField(max_length=500, null=True, blank=True)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class SearchHistory(models.Model):
+    user_id = models.CharField(max_length=20)  # Custom user ID like user_001
+    destination_id = models.CharField(max_length=20)  # Custom destination ID like dest_001
+    rating = models.FloatField()
+    timestamp = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.user_id} - {self.destination_id} - {self.rating}"
     
 
