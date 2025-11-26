@@ -526,24 +526,6 @@
         </div>
         {% endif %}
 
-        {% if hotels %}
-        <div class="section" style="margin-top:20px; background:#fff3cd; padding:18px; border-radius:8px;">
-            <div class="section-title" style="font-size:18px; font-weight:bold; color:#856404; margin-bottom:10px;">🏨 Recommended Hotels in {{ destination.location.locationName }}</div>
-            {% for hotel in hotels %}
-            <div class="hotel-box" style="background:#fff; padding:12px; border-left:4px solid #ffc107; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <strong>{{ hotel.name }}</strong><br>
-                    <small>⭐ {{ hotel.rating|default:"N/A" }} • Price: {{ hotel.price|default:"Contact for pricing" }} VND</small><br>
-                    <small>{{ hotel.address }}</small>
-                </div>
-                {% if hotel.image_url %}
-                <img src="{{ hotel.image_url }}" style="height:60px; width:80px; object-fit:cover; border-radius:4px;" alt="{{ hotel.name }}">
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
         <div class="btn-row" style="margin-top:25px; text-align:center;">
             <button class="btn" onclick="addToTrip({{ destination.id }})" style="background: #4CAF50; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block;">➕ Add to Trip</button>
             <a href="{% url 'recommend_result' %}" class="btn" style="background:orange; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block;">← Back to Results</a>
