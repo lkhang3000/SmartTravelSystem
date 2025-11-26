@@ -5,16 +5,12 @@
     <meta charset="utf-8">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <title>Page 1</title>
+    <title>Smart Tour - Home</title>
     <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
   <link rel="stylesheet" href="{% static 'css/index.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
     <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
     <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
-    
-    
-    
-    
     
     
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
@@ -25,417 +21,66 @@
 		"logo": "{% static 'images/SmartTour11.png' %}"
 }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Page 1">
+    <meta property="og:title" content="Smart Tour">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-  <script>
-  function toggleChat() {
-    const chatBox = document.getElementById("chatBox");
-    chatBox.style.display =
-      chatBox.style.display === "flex" ? "none" : "flex";
-  }
-
-  // Initialize chatbot when page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    const chatInput = document.querySelector('.chat-input input');
-    const sendButton = document.querySelector('.chat-input button');
-    const chatBody = document.querySelector('.chat-body');
-
-    // Function to add message to chat
-    function addMessage(text, isUser = false) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = isUser ? 'user-msg' : 'bot-msg';
-      msgDiv.textContent = text;
-      chatBody.appendChild(msgDiv);
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    // Function to send message to Gemini API
-    async function sendMessage() {
-      const message = chatInput.value.trim();
-      if (!message) return;
-
-      // Add user message to chat
-      addMessage(message, true);
-      chatInput.value = '';
-
-      // Show typing indicator
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'bot-msg typing';
-      typingDiv.textContent = 'Typing...';
-      chatBody.appendChild(typingDiv);
-      chatBody.scrollTop = chatBody.scrollHeight;
-
-      try {
-        // Get CSRF token
-        const csrftoken = getCookie('csrftoken');
-        
-        console.log('Sending message:', message);
-        console.log('CSRF token:', csrftoken);
-
-        // Send to backend API
-        const response = await fetch('/api/chat/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken || ''
-          },
-          body: JSON.stringify({ message: message })
-        });
-
-        console.log('Response status:', response.status);
-        
-        // Remove typing indicator
-        typingDiv.remove();
-
-        const data = await response.json();
-        console.log('Response data:', data);
-        
-        if (data.reply) {
-          addMessage(data.reply);
-        } else if (data.error) {
-          addMessage('Error: ' + data.error);
-        } else {
-          addMessage('Unexpected response format');
-        }
-      } catch (error) {
-        typingDiv.remove();
-        addMessage('Network error. Please check console (F12).');
-        console.error('Chat error:', error);
-      }
-    }
-
-    // Helper function to get CSRF token from cookies
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    }
-
-    // Event listeners
-    sendButton.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    });
-  });
-</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
-
-        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
-
-
+  </head>
+  <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en">
+<header class="u-header" style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
     <!-- LEFT: Logo -->
-
-    <a href="{% url 'home' %}" 
-
-       class="u-logo" 
-
-       style="display:flex; align-items:center;">
-
-        <img src="{% static 'images/SmartTour11.png' %}" 
-
-             style="height:130px; width:130px; display:block;" 
-
-             alt="logo">
-
+    <a href="{% url 'home' %}" class="u-logo" style="display:flex; align-items:center;">
+        <img src="{% static 'images/SmartTour11.png' %}" style="height:130px; width:130px; display:block;" alt="logo">
     </a>
-
-
-
     <!-- MIDDLE: Title -->
-
     <a href="{% url 'home' %}" style="text-decoration:none;">
-
-    <p style="margin:0; 
-
-        font-size:60px; 
-
-        font-weight:800; 
-
-        color:white; 
-
-        letter-spacing:1px;
-
-        margin-left:40px;
-
-        text-shadow:0 3px 6px rgba(0,0,0,6);">
-
+    <p style="margin:0; font-size:60px; font-weight:800; color:white; letter-spacing:1px; margin-left:40px; text-shadow:0 3px 6px rgba(0,0,0,6);">
         SMART TOUR
-
     </p>
-
     </a>
-
     <!-- RIGHT: Buttons / User Menu -->
-
     <div style="display:flex; gap:10px; align-items:center;">
-
         {% if user.is_authenticated %}
-
         <!-- User đã đăng nhập: hiển thị icon + dropdown -->
-
         <div style="position:relative;">
-
-            <button id="userMenuBtn" style="
-
-              padding:8px 12px; 
-
-              background:#F7931E; 
-
-              border-radius:25px; 
-
-              color:white; 
-
-              font-weight:700;            
-
-              border:none;
-
-              cursor:pointer;
-
-              display:flex;
-
-              align-items:center;
-
-              gap:8px;
-
-              transition:0.2s;
-
-            "
-
-            onmouseover="this.style.background='#C48300'"
-
-            onmouseout="this.style.background='#F7931E'"
-
-            onclick="toggleUserMenu()">
-
+            <button id="userMenuBtn" style="padding:8px 12px; background:#F7931E; border-radius:25px; color:white; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; gap:8px; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'" onclick="toggleUserMenu()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-
                 </svg>
-
                 {{ user.username }}
-
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
-
                     <path d="M7 10l5 5 5-5z"/>
-
                 </svg>
-
             </button>
-
-            <div id="userDropdown" style="
-
-              display:none;
-
-              position:absolute;
-
-              top:110%;
-
-              right:0;
-
-              background:white;
-
-              border-radius:8px;
-
-              box-shadow:0 4px 12px rgba(0,0,0,0.15);
-
-              min-width:180px;
-
-              z-index:1000;
-
-            ">
-
-                <a href="{% url 'user_profile' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+            <div id="userDropdown" style="display:none; position:absolute; top:110%; right:0; background:white; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); min-width:180px; z-index:1000;">
+                <a href="{% url 'user_profile' %}" style="display:block; padding:12px 16px; color:#333; text-decoration:none; border-bottom:1px solid #eee; transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
                     👤 My Profile
-
                 </a>
-
-                <a href="{% url 'recommend_result' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+                <a href="{% url 'recommend_result' %}" style="display:block; padding:12px 16px; color:#333; text-decoration:none; border-bottom:1px solid #eee; transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
                     🗺️ My Destinations
-
                 </a>
-
-                <a href="/logout/" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#d32f2f;
-
-                  text-decoration:none;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+                <a href="/logout/" style="display:block; padding:12px 16px; color:#d32f2f; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
                     🚪 Logout
-
                 </a>
-
             </div>
-
         </div>
-
-        
-
-        <script>
-
-        function toggleUserMenu() {
-
-            var dropdown = document.getElementById('userDropdown');
-
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-
-        }
-
-
-        // Đóng dropdown khi click bên ngoài
-
-        window.onclick = function(event) {
-
-            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
-
-                var dropdown = document.getElementById('userDropdown');
-
-                if (dropdown && dropdown.style.display === 'block') {
-
-                    dropdown.style.display = 'none';
-
-                }
-
-            }
-
-        }
-
-        </script>
-
         {% else %}
-
         <!-- User chưa đăng nhập: hiển thị Login/Register -->
-
-        <a href="{% url 'login_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
+        <a href="{% url 'login_page' %}" style="padding:8px 18px; background:#F7931E; border-radius:25px; color:white; font-weight:700; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">
             Log in
-
         </a>
-
-        <a href="{% url 'signup_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
+        <a href="{% url 'signup_page' %}" style="padding:8px 18px; background:#F7931E; border-radius:25px; color:white; font-weight:700; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">
             Register
-
         </a>
-
         {% endif %}
-
     </div>
-
 </header>
 
-    <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-bdd5" data-interval="6000" data-u-ride="carousel" data-pause="false">
+    <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" data-interval="6000" data-u-ride="carousel" data-pause="false">
       <ol class="u-absolute-hcenter u-carousel-indicators u-hidden u-block-7160-2">
         <li data-u-target="#carousel-bdd5" class="u-active u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="0"></li>
-        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="1"></li>
-        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="2"></li>
-        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="3"></li>
+        <li data-u-target="#carousel-bdd5" data-u-slide-to="1" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;"></li>
+        <li data-u-target="#carousel-bdd5" data-u-slide-to="2" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;"></li>
+        <li data-u-target="#carousel-bdd5" data-u-slide-to="3" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;"></li>
       </ol>
       <div class="u-carousel-inner" role="listbox">
         <div class="u-active u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-1">
@@ -460,6 +105,7 @@
                     c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z"></path></svg></span><span class="sr-only">Next</span>
       </a>
     </section>
+
     <section class="u-clearfix u-section-2" id="block-8">
       <div class="u-clearfix u-sheet u-sheet-1">
         <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-radius u-white u-layout-wrap-1">
@@ -471,15 +117,12 @@
                     <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-1">
                         <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-1">Region</label>
-                        <!-- Location Filter -->
-                      <div style="flex: 1; min-width: 150px;">
                         <select name="location" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: white; cursor: pointer; transition: all 0.3s;">
                           <option value="">All Locations</option>
                           {% for loc in all_locations %}
                           <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
                           {% endfor %}
                         </select>
-                      </div>
                       </div>
                       <div class="u-align-right u-form-group u-form-submit u-label-none">
                         <input type="submit" value="submit" class="u-form-control-hidden">
@@ -501,15 +144,12 @@
                     <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-3">
                         <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-2">Region</label>
-                                    <!-- Category Filter -->
-                      <div style="flex: 1; min-width: 150px;">
                         <select name="category" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: white; cursor: pointer; transition: all 0.3s;">
                           <option value="">All Categories</option>
                           {% for cat in all_categories %}
                           <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
                           {% endfor %}
                         </select>
-                      </div>
                       </div>
                       <div class="u-align-right u-form-group u-form-submit u-label-none">
                         <input type="submit" value="submit" class="u-form-control-hidden">
@@ -529,17 +169,14 @@
                     <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-5">
                         <label for="select-ec63" class="u-custom-font u-font-montserrat u-label u-label-3">Region</label>
-                         <!-- Rating Filter with Icon -->
-                        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-                          <select name="rating" style="flex: 1; padding: 12px 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background: white; cursor: pointer; font-family: 'Montserrat', sans-serif;">
-                            <option value="">★☆☆☆☆ (1+)</option>
-                            <option value="4.5" {% if selected_rating == '4.5' %}selected{% endif %}>★★★★★ (4.5+)</option>
-                            <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
-                            <option value="3.5" {% if selected_rating == '3.5' %}selected{% endif %}>★★★☆☆ (3.5+)</option>
-                            <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>★★☆☆☆ (3.0+)</option>
-                            <option value="1.0" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
-                          </select>
-                        </div>
+                        <select name="rating" style="flex: 1; padding: 12px 20px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; background: white; cursor: pointer; font-family: 'Montserrat', sans-serif;">
+                          <option value="">★☆☆☆☆ (1+)</option>
+                          <option value="4.5" {% if selected_rating == '4.5' %}selected{% endif %}>★★★★★ (4.5+)</option>
+                          <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
+                          <option value="3.5" {% if selected_rating == '3.5' %}selected{% endif %}>★★★☆☆ (3.5+)</option>
+                          <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>★★☆☆☆ (3.0+)</option>
+                          <option value="1.0" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
+                        </select>
                       </div>
                       <div class="u-align-right u-form-group u-form-submit u-label-none">
                         <input type="submit" value="submit" class="u-form-control-hidden">
@@ -556,44 +193,66 @@
             </div>
           </div>
         </div>
-        <div class="u-clearfix u-group-elements u-group-elements-1"
-     style="display:flex; align-items:center; justify-content:center;">
-
-    <a href="{% url 'recommend_result' %}"
-       class="u-btn u-button-style u-custom-font u-font-montserrat"
-       style="
-           display:flex;
-           align-items:center;
-           justify-content:center;
-           width:700px;
-           height:50px;
-           background:#F7931E;        
-           border-radius:50px;
-           font-weight:700;           
-           font-size:20px;           
-           gap:12px;
-           text-transform:uppercase;
-           color:white;
-       ">
-
-        <span>SEARCH</span>
-
-        
-        <span class="u-icon u-text-white"
-              style="display:flex; align-items:center; justify-content:center; width:20px; height:20px;">
-            <svg viewBox="0 0 56.966 56.966" width="20" height="20">
-                <path fill="white" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786
+        <div class="u-clearfix u-group-elements u-group-elements-1" style="display:flex; align-items:center; justify-content:center;">
+          <form method="get" action="{% url 'recommend_result' %}" id="homepage-search-form" style="width:700px;display:flex;align-items:center;justify-content:center;height:50px;background:#F7931E;border-radius:50px;font-weight:700;font-size:20px;gap:12px;text-transform:uppercase;color:white;">
+            <input type="hidden" name="location" id="homepage_location_filter">
+            <input type="hidden" name="category" id="homepage_category_filter">
+            <input type="hidden" name="rating" id="homepage_rating_filter">
+            <button type="submit" style="background:none;border:none;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;gap:12px;width:100%;height:100%;cursor:pointer;">
+              <span>SEARCH</span>
+              <span class="u-icon u-text-white" style="display:flex; align-items:center; justify-content:center; width:20px; height:20px;">
+                <svg viewBox="0 0 56.966 56.966" width="20" height="20">
+                  <path fill="white" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786
                     c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208
-                    c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z 
-                    M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z"/>
-            </svg>
-        </span>
-
-    </a>
-</div>
-
-
+                    c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z"/>
+                </svg>
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
     </section>
+
+    <section class="u-clearfix u-section-4" id="block-10">
+      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
+        {% if has_filter_history %}
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Based on Your Search History</h6>
+        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Recommended For You</h2>
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0"> Discover places you'll love based on your previous searches<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
+        </h6>
+        {% else %}
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Explore the Country </h6>
+        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Popular Destinations</h2>
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0"> Discover amazing places and book your perfect stay<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
+        </h6>
+        {% endif %}
+
+        {% for rec in recommendations %}
+        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-{{ forloop.counter }}">
+          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-{{ forloop.counter }}">
+            <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-{{ forloop.counter }}" src="{{ rec.image_url }}" alt="" data-image-width="5820" data-image-height="3880">
+            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default">{{ rec.name }}</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default">{{ rec.location }}</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default">
+              {% for i in "12345" %}
+                {% if forloop.counter <= rec.rating|floatformat:0 %}
+                  ★
+                {% else %}
+                  ☆
+                {% endif %}
+              {% endfor %}
+              ({{ rec.rating }})
+            </p>
+            <p class="u-text">{{ rec.description|truncatechars:120 }}</p>
+            <a href="{% url 'destination_detail' rec.id %}" class="u-border-none u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-{{ forloop.counter }}">Details </a>
+            <p class="u-custom-font u-font-montserrat u-text">{{ rec.price_range }}
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
     <section class="u-clearfix u-container-align-center u-white u-section-3" id="sec-9086">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
         <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">Why should you choose us?</h2>
@@ -630,67 +289,14 @@
         </div>
       </div>
     </section>
-    <section class="u-clearfix u-section-4" id="block-10">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Explore the Country </h6>
-        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Popular Destinations</h2>
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0"> Discover amazing places and book your perfect stay<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
-        </h6>
-        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-1">
-            <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-1" src="{% static 'images/pexels-triduhi-youtuber-27418881.jpg' %}" alt="" data-image-width="5820" data-image-height="3880">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-4">Imperial Capital Hue</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-5">Hue City</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-6"> ★★★★☆ (9236 reviews)</p>
-            <p class="u-text u-text-7"> "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm that preserves Vietnam’s graceful royal heritage."</p>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-1">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-8">200.000<span style="text-decoration: underline !important;">đ</span>/Person
-            </p>
-          </div>
-        </div>
-        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-2">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-2">
-            <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-2" src="{% static 'images/pexels-phamthe-13519138.jpg' %}" alt="" data-image-width="2726" data-image-height="4088">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-9">Hoang Kiem Lake </p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-10">Hanoi </p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-11"> ★★★☆☆ (837 reviews)</p>
-            <p class="u-text u-text-12"> “A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge glowing beautifully at night.”</p>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-2">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-13">Free of Charge</p>
-          </div>
-        </div>
-        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-3">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-3">
-            <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-3" src="{% static 'images/cave-wallpaper-l.jpg' %}" alt="" data-image-width="1916" data-image-height="1400">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-14">Sung Sot Cave</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-15">Ha Long Bay</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-16"> ★★★★★ (3618 reviews)</p>
-            <p class="u-text u-text-17"> “The largest and most spectacular cave in Ha Long Bay, featuring massive chambers, dramatic rock formations, and colorful illuminated pathways.”</p>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-3">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-18">250.000<span style="text-decoration: underline !important;">đ</span>/Person
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-    </section>
-    
-    
-    
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
+
+    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer">
+      <div class="u-clearfix u-sheet u-sheet-1">
         <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
-          <div class="chat-container"><!-- Floating Button -->
-            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
+          <div class="chat-container">
+            <div class="chat-button" onclick="toggleChat()"> 💬 </div>
             <div class="chat-box" id="chatBox">
-              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
-              </div>
+              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span></div>
               <div class="chat-body">
                 <div class="bot-msg">Hello! How can I help you today?</div>
               </div>
@@ -700,137 +306,163 @@
               </div>
             </div>
           </div>
-          <style> .chat-container {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    z-index: 9999;
-    font-family: sans-serif;
-  }
-
-  /* Floating button */
-  .chat-button {
-    width: 60px;
-    height: 60px;
-    background-color: #1e5f74; /* darker ocean tone */
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    font-size: 28px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    color: #fff;
-  }
-
-  .chat-button:hover {
-    transform: scale(1.1);
-    background-color: #174c5c; /* slightly darker hover */
-  }
-
-  /* Chat box */
-  .chat-box {
-    display: none;
-    position: absolute;
-    bottom: 75px;
-    right: 0;
-    width: 350px;
-    height: 450px;
-    background: #eaf4f6; /* light blue-gray */
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    overflow: hidden;
-    flex-direction: column;
-    color: #000; /* black text */
-  }
-
-  .chat-header {
-    background-color: #1e5f74;
-    color: #000;
-    padding: 12px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .chat-body {
-    padding: 10px;
-    flex: 1;
-    overflow-y: auto;
-    background: #f5f8f9;
-  }
-
-  .bot-msg {
-    background: #c8e3e8; /* pale teal bubble */
-    padding: 8px 12px;
-    border-radius: 10px;
-    width: fit-content;
-    color: #000;
-  }
-
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #ccc;
-  }
-
-  .chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    color: #000;
-    background: #fff;
-  }
-
-  .chat-input button {
-    background: #1e5f74;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    color: #fff;
-  }
-
-  .chat-input button:hover {
-    background: #174c5c;
-  }
-
-  .close-btn {
-    cursor: pointer;
-    font-size: 20px;
-  } </style>
+          <style>
+            .chat-container { position: fixed; bottom: 25px; right: 25px; z-index: 9999; font-family: sans-serif; }
+            .chat-button { width: 60px; height: 60px; background-color: #1e5f74; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 28px; transition: transform 0.3s ease, background-color 0.3s ease; color: #fff; }
+            .chat-button:hover { transform: scale(1.1); background-color: #174c5c; }
+            .chat-box { display: none; position: absolute; bottom: 75px; right: 0; width: 350px; height: 450px; background: #eaf4f6; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); overflow: hidden; flex-direction: column; color: #000; }
+            .chat-header { background-color: #1e5f74; color: #000; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+            .chat-body { padding: 10px; flex: 1; overflow-y: auto; background: #f5f8f9; }
+            .bot-msg { background: #c8e3e8; padding: 8px 12px; border-radius: 10px; width: fit-content; color: #000; }
+            .chat-input { display: flex; border-top: 1px solid #ccc; }
+            .chat-input input { flex: 1; padding: 10px; border: none; outline: none; color: #000; background: #fff; }
+            .chat-input button { background: #1e5f74; border: none; padding: 10px 15px; cursor: pointer; color: #fff; }
+            .chat-input button:hover { background: #174c5c; }
+            .close-btn { cursor: pointer; font-size: 20px; }
+          </style>
         </div>
         <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation">
           <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
             <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
               <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
-              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
-</g></svg>
+              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect></g></svg>
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" style="padding: 10px 20px;">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
-</li></ul>
+            <ul class="u-nav u-unstyled u-nav-1" role="menubar">
+              <li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" style="padding: 10px 20px;">Home</a></li>
+              <li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a></li>
+              <li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a></li>
+            </ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse" id="4bf4" role="region" aria-label="Menu panel">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="./">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a>
-</li></ul>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar">
+                  <li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="./">Home</a></li>
+                  <li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a></li>
+                  <li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a></li>
+                </ul>
               </div>
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
         <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not by copied due to copyright law </p>
-      </div></footer>
-    <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/one-page-template">One Page Template</a> was created with Nicepage Builder 
+      </div>
+    </footer>
+
+    <section class="u-backlink u-clearfix u-grey-80">
+      This <a href="https://nicepage.com/one-page-template">One Page Template</a> was created with Nicepage Builder
     </section>
-  
-</body></html>
+
+    <script>
+      function toggleChat() {
+        const chatBox = document.getElementById("chatBox");
+        chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatInput = document.querySelector('.chat-input input');
+        const sendButton = document.querySelector('.chat-input button');
+        const chatBody = document.querySelector('.chat-body');
+
+        function addMessage(text, isUser = false) {
+          const msgDiv = document.createElement('div');
+          msgDiv.className = isUser ? 'user-msg' : 'bot-msg';
+          msgDiv.textContent = text;
+          chatBody.appendChild(msgDiv);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function sendMessage() {
+          const message = chatInput.value.trim();
+          if (!message) return;
+          addMessage(message, true);
+          chatInput.value = '';
+          const typingDiv = document.createElement('div');
+          typingDiv.className = 'bot-msg typing';
+          typingDiv.textContent = 'Typing...';
+          chatBody.appendChild(typingDiv);
+          chatBody.scrollTop = chatBody.scrollHeight;
+
+          try {
+            const csrftoken = getCookie('csrftoken');
+            console.log('Sending message:', message);
+            console.log('CSRF token:', csrftoken);
+
+            fetch('/api/chat/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken || ''
+              },
+              body: JSON.stringify({ message: message })
+            })
+            .then(response => {
+              console.log('Response status:', response.status);
+              typingDiv.remove();
+              return response.json();
+            })
+            .then(data => {
+              console.log('Response data:', data);
+              if (data.reply) {
+                addMessage(data.reply);
+              } else if (data.error) {
+                addMessage('Error: ' + data.error);
+              } else {
+                addMessage('Unexpected response format');
+              }
+            })
+            .catch(error => {
+              typingDiv.remove();
+              addMessage('Network error. Please check console (F12).');
+              console.error('Chat error:', error);
+            });
+          } catch (error) {
+            typingDiv.remove();
+            addMessage('Network error. Please check console (F12).');
+            console.error('Chat error:', error);
+          }
+        }
+
+        function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+              }
+            }
+          }
+          return cookieValue;
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendMessage();
+          }
+        });
+      });
+
+      function toggleUserMenu() {
+        var dropdown = document.getElementById('userDropdown');
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+      }
+
+      window.onclick = function(event) {
+        if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+          var dropdown = document.getElementById('userDropdown');
+          if (dropdown && dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

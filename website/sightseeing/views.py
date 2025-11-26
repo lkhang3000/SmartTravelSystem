@@ -8,7 +8,6 @@ from django.contrib import messages
 import json
 import os
 from datetime import datetime
-from .Services.recommender import SightseeingRecommender, SightseeingSpot
 
 @ensure_csrf_cookie
 def get_home(request):
@@ -17,9 +16,77 @@ def get_home(request):
     all_categories = Destinations.objects.values_list('category', flat=True).distinct().order_by('category')
     all_categories = [cat for cat in all_categories if cat]  # Remove None values
     
+    # Get personalized recommendations based on user's filter history
+    recommendations = []
+    filter_history = request.session.get('filter_history', [])
+    
+    if filter_history:
+        # Get the most recent filter preferences
+        latest_filters = filter_history[-1]  # Get last filter
+        
+        # Find destinations that match the user's filter history
+        destinations_query = Destinations.objects.all().select_related('location')
+        
+        # Apply location filter if used before
+        if latest_filters.get('location'):
+            try:
+                loc_id = int(latest_filters['location'])
+                destinations_query = destinations_query.filter(location_id=loc_id)
+            except (ValueError, TypeError):
+                pass
+        
+        # Apply category filter if used before
+        if latest_filters.get('category'):
+            destinations_query = destinations_query.filter(category__icontains=latest_filters['category'])
+        
+        # Apply rating filter if used before
+        if latest_filters.get('rating'):
+            try:
+                min_rating = float(latest_filters['rating'])
+                destinations_query = destinations_query.filter(rating__gte=min_rating)
+            except (ValueError, TypeError):
+                pass
+        
+        # Get top 3 recommendations based on rating
+        recommendations = destinations_query.order_by('-rating')[:3]
+        
+        # Convert to list of dicts for template
+        recommendations = [{
+            'id': dest.id,
+            'name': dest.desName,
+            'location': dest.location.locationName if dest.location else 'Unknown',
+            'category': dest.category or 'General',
+            'rating': dest.rating or 0.0,
+            'address': dest.address or '',
+            'description': dest.description or '',
+            'price_range': dest.price_range or 'Contact for pricing',
+            'image_url': dest.image_url or 'https://picsum.photos/seed/default/800/600',
+        } for dest in recommendations]
+    
+    # If no filter history, show default popular destinations
+    if not recommendations:
+        # Show some default popular destinations
+        default_destinations = Destinations.objects.filter(
+            rating__gte=4.0
+        ).select_related('location').order_by('-rating')[:3]
+        
+        recommendations = [{
+            'id': dest.id,
+            'name': dest.desName,
+            'location': dest.location.locationName if dest.location else 'Unknown',
+            'category': dest.category or 'General',
+            'rating': dest.rating or 0.0,
+            'address': dest.address or '',
+            'description': dest.description or '',
+            'price_range': dest.price_range or 'Contact for pricing',
+            'image_url': dest.image_url or 'https://picsum.photos/seed/default/800/600',
+        } for dest in default_destinations]
+    
     context = {
         'all_locations': all_locations,
         'all_categories': all_categories,
+        'recommendations': recommendations,
+        'has_filter_history': bool(filter_history),
     }
     return render(request, 'homepage.html', context)
 
@@ -145,47 +212,41 @@ def password_reset_complete(request):
     return render(request, 'password_reset_complete.html')
 
 def recommend_result(request):
-    """Display personalized recommendations based on user preferences and filters"""
+    """Display filtered search results"""
     from django.db.models import Q
-    
-    # Get user data from session or use default
-    user_data = request.session.get('user_preferences', None)
-    
-    # Start with all destinations from database
-    destinations_query = Destinations.objects.all().select_related('location')
-    
+
     # Get filter parameters from GET request
     selected_location = request.GET.get('location', '')
     selected_category = request.GET.get('category', '')
     selected_price = request.GET.get('price', '')
     selected_rating = request.GET.get('rating', '')
-    
-    # Apply filters from URL parameters (priority over session data)
+
+    # Save filter history to session for learning
+    if any([selected_location, selected_category, selected_price, selected_rating]):
+        filter_history = request.session.get('filter_history', [])
+        current_filter = {
+            'location': selected_location,
+            'category': selected_category,
+            'price': selected_price,
+            'rating': selected_rating,
+            'timestamp': datetime.now().isoformat()
+        }
+
+        # Keep only last 5 filter actions to avoid session bloat
+        filter_history.append(current_filter)
+        if len(filter_history) > 5:
+            filter_history = filter_history[-5:]
+
+        request.session['filter_history'] = filter_history
+
+    # Start with all destinations from database
+    destinations_query = Destinations.objects.all().select_related('location')
+
+    # Apply URL filters
     if selected_location:
         destinations_query = destinations_query.filter(location__id=selected_location)
-    elif user_data:
-        # Fall back to session data if no URL filter
-        preferences = user_data.get('trip_preferences', {})
-        location_name = preferences.get('domestic_or_international', {}).get('region', '')
-        if location_name:
-            destinations_query = destinations_query.filter(
-                location__locationName__icontains=location_name
-            )
-    
-    # Filter by category
     if selected_category:
         destinations_query = destinations_query.filter(category__icontains=selected_category)
-    elif user_data:
-        # Fall back to session tags
-        preferences = user_data.get('trip_preferences', {})
-        tags = [t.lower() for t in preferences.get('tags', [])]
-        if tags:
-            tag_filter = Q()
-            for tag in tags:
-                tag_filter |= Q(category__icontains=tag) | Q(desName__icontains=tag)
-            destinations_query = destinations_query.filter(tag_filter)
-    
-    # Filter by price range
     if selected_price:
         if selected_price == 'free':
             destinations_query = destinations_query.filter(
@@ -193,31 +254,29 @@ def recommend_result(request):
             )
         elif selected_price == 'budget':
             destinations_query = destinations_query.filter(
-                Q(price_range__icontains='50k') | Q(price_range__icontains='100k') | 
+                Q(price_range__icontains='50k') | Q(price_range__icontains='100k') |
                 Q(price_range__icontains='150k') | Q(price_range__icontains='budget')
             )
         elif selected_price == 'medium':
             destinations_query = destinations_query.filter(
-                Q(price_range__icontains='200k') | Q(price_range__icontains='300k') | 
+                Q(price_range__icontains='200k') | Q(price_range__icontains='300k') |
                 Q(price_range__icontains='400k') | Q(price_range__icontains='500k')
             )
         elif selected_price == 'premium':
             destinations_query = destinations_query.filter(
-                Q(price_range__icontains='600k') | Q(price_range__icontains='1000k') | 
+                Q(price_range__icontains='600k') | Q(price_range__icontains='1000k') |
                 Q(price_range__icontains='million') | Q(price_range__icontains='premium')
             )
-    
-    # Filter by rating
     if selected_rating:
         try:
             min_rating = float(selected_rating)
             destinations_query = destinations_query.filter(rating__gte=min_rating)
         except ValueError:
             pass
-    
+
     # Sort by rating (highest first)
     recommendations = destinations_query.order_by('-rating')
-    
+
     # Convert to list of dicts for template
     recommendations_list = []
     for dest in recommendations:
@@ -232,15 +291,14 @@ def recommend_result(request):
             'price_range': dest.price_range or 'Contact for pricing',
             'image_url': dest.image_url or 'https://picsum.photos/seed/default/800/600',
         })
-    
+
     # Get all locations and categories for filter dropdowns
     all_locations = Location.objects.all().order_by('locationName')
     all_categories = Destinations.objects.values_list('category', flat=True).distinct().order_by('category')
     all_categories = [cat for cat in all_categories if cat]  # Remove None values
-    
+
     context = {
         'recommendations': recommendations_list,
-        'user_preferences': user_data,
         'all_locations': all_locations,
         'all_categories': all_categories,
         'selected_location': selected_location,
@@ -249,7 +307,7 @@ def recommend_result(request):
         'selected_rating': selected_rating,
         'total_results': len(recommendations_list),
     }
-    
+
     return render(request, 'recommendResult.html', context)
 
 def user_profile(request):
@@ -258,8 +316,61 @@ def user_profile(request):
 def user_input(request):
     return render(request, 'userInput.html')
 
+def get_recommendations(request):
+    """API endpoint để lấy recommendations"""
+    if request.method == 'POST':
+        # Lấy user preferences từ request hoặc session
+        user_data = request.session.get('user_preferences')
+        if not user_data:
+            return JsonResponse({'error': 'No user preferences found. Please fill the form first.'})
+        
+        # Khởi tạo recommender
+        recommender = SightseeingRecommender(
+            os.path.join(os.path.dirname(__file__), 'Services', 'sightseeing_spots.json'),
+            os.path.join(os.path.dirname(__file__), 'Services', 'user_data.json')
+        )
+        
+        # Lấy recommendations
+        recommendations = recommender.recommend_for_user(user_data, top_k=5)
+        
+        return JsonResponse(recommendations)
+    
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+def test_recommendations(request):
+    """Trang test hệ thống gợi ý"""
+    return render(request, 'test_recommendations.html')
+
+def personalized_home(request):
+    """Trang homepage với recommendations cá nhân hóa"""
+    # Get all locations and categories for filter dropdowns
+    all_locations = Location.objects.all().order_by('locationName')
+    all_categories = Destinations.objects.values_list('category', flat=True).distinct().order_by('category')
+    all_categories = [cat for cat in all_categories if cat]  # Remove None values
+    
+    # Get personalized recommendations if user has preferences
+    recommendations = []
+    user_data = request.session.get('user_preferences')
+    if user_data:
+        try:
+            recommender = SightseeingRecommender(
+                os.path.join(os.path.dirname(__file__), 'Services', 'sightseeing_spots.json'),
+                os.path.join(os.path.dirname(__file__), 'Services', 'user_data.json')
+            )
+            result = recommender.recommend_for_user(user_data, top_k=3)
+            recommendations = result.get('recommendations', [])
+        except Exception as e:
+            print(f"Error getting recommendations: {e}")
+    
+    context = {
+        'all_locations': all_locations,
+        'all_categories': all_categories,
+        'recommendations': recommendations,
+    }
+    return render(request, 'personalized_home.html', context)
+
 def destination(request):
-    return render(request, 'destination,html')
+    return render(request, 'destination.html')
 
 def save_user_input(request):
     """Xử lý form và tạo file JSON cho recommender"""
