@@ -20,6 +20,7 @@ def get_home(request):
     context = {
         'all_locations': all_locations,
         'all_categories': all_categories,
+        'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
     }
     return render(request, 'homepage.html', context)
 
@@ -271,6 +272,7 @@ def recommend_result(request):
         'selected_price': selected_price,
         'selected_rating': selected_rating,
         'total_results': len(recommendations_list),
+        'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
     }
     
     return render(request, 'recommendResult.html', context)
@@ -372,6 +374,7 @@ def destination_detail(request, destination_id):
             'destination': destination,
             'related_destinations': related,
             'hotels': hotels,
+            'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
         }
         return render(request, 'detail_destination.html', context)
     except Destinations.DoesNotExist:
@@ -386,6 +389,52 @@ def contact_us(request):
 
 def trip_planner(request):
     return render(request, 'Trip-planner.html')
+
+def add_to_trip(request, destination_id):
+    """Add destination to user's trip list"""
+    if request.method == 'POST' and request.user.is_authenticated:
+        try:
+            destination = Destinations.objects.get(id=destination_id)
+            trip_item, created = TripItem.objects.get_or_create(
+                user=request.user,
+                destination=destination
+            )
+            if created:
+                messages.success(request, f'Added {destination.desName} to your trip!')
+            else:
+                messages.info(request, f'{destination.desName} is already in your trip.')
+        except Destinations.DoesNotExist:
+            messages.error(request, 'Destination not found.')
+    
+    return redirect('destination_detail', destination_id=destination_id)
+
+def remove_from_trip(request, trip_item_id):
+    """Remove destination from user's trip list"""
+    if request.user.is_authenticated:
+        try:
+            trip_item = TripItem.objects.get(id=trip_item_id, user=request.user)
+            destination_name = trip_item.destination.desName
+            trip_item.delete()
+            messages.success(request, f'Removed {destination_name} from your trip.')
+        except TripItem.DoesNotExist:
+            messages.error(request, 'Trip item not found.')
+    
+    return redirect('trip_list')
+
+def trip_list(request):
+    """Display user's trip list"""
+    if not request.user.is_authenticated:
+        messages.error(request, 'Please login to view your trip list.')
+        return redirect('login_page')
+    
+    trip_items = TripItem.objects.filter(user=request.user).select_related('destination')
+    
+    context = {
+        'trip_items': trip_items,
+        'total_items': trip_items.count(),
+    }
+    
+    return render(request, 'trip_list.html', context)
 
 
 
