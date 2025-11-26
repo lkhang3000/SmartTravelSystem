@@ -50,6 +50,29 @@ def signup_page(request):
         form = registerForm(request.POST)
         if form.is_valid():
             user = form.save()
+            
+            # Auto-create UsersProfile with custom_user_id
+            from .models import UsersProfile
+            # Generate next user ID
+            existing_profiles = UsersProfile.objects.all().order_by('-id')
+            next_id = 1
+            if existing_profiles:
+                # Extract number from last custom_user_id (format: user_XXX)
+                last_profile = existing_profiles.first()
+                if last_profile.custom_user_id and last_profile.custom_user_id.startswith('user_'):
+                    try:
+                        last_num = int(last_profile.custom_user_id.split('_')[1])
+                        next_id = last_num + 1
+                    except (ValueError, IndexError):
+                        next_id = existing_profiles.count() + 1
+            
+            UsersProfile.objects.create(
+                user=user,
+                name=form.cleaned_data.get('first_name', '') + ' ' + form.cleaned_data.get('last_name', ''),
+                email=form.cleaned_data.get('email'),
+                custom_user_id=f"user_{next_id:03d}"
+            )
+            
             # Tự động đăng nhập sau khi đăng ký
             login(request, user)
             username = form.cleaned_data.get('username')
@@ -318,14 +341,37 @@ def destination_detail(request, destination_id):
     try:
         destination = Destinations.objects.select_related('location').get(id=destination_id)
         
+        # Log search history if user is authenticated
+        if request.user.is_authenticated:
+            try:
+                user_profile = UsersProfile.objects.get(user=request.user)
+                SearchHistory.objects.create(
+                    user_id=user_profile.custom_user_id,
+                    destination_id=destination.destination_id,
+                    rating=destination.rating or 0.0,
+                    timestamp=datetime.now()
+                )
+                
+                # Auto-update CSV file after logging search history
+                from .Services.search_history_utils import generate_search_history_csv
+                generate_search_history_csv()
+                
+            except UsersProfile.DoesNotExist:
+                # User profile doesn't exist, skip logging
+                pass
+        
         # Get related destinations (same location or category)
         related = Destinations.objects.filter(
             location=destination.location
         ).exclude(id=destination_id)[:3]
         
+        # Get hotels in the same location
+        hotels = Hotel.objects.filter(location=destination.location).order_by('-rating')[:5]
+        
         context = {
             'destination': destination,
             'related_destinations': related,
+            'hotels': hotels,
         }
         return render(request, 'detail_destination.html', context)
     except Destinations.DoesNotExist:
@@ -340,6 +386,12 @@ def contact_us(request):
 
 def trip_planner(request):
     return render(request, 'Trip-planner.html')
+
+def input_trip_planner(request):
+    return render(request, 'inputTripPlanner.html')
+
+def tripplanner_overview(request):
+    return render(request, 'tripplanner_overview.html')
 
 
 
