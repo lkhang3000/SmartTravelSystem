@@ -33,310 +33,142 @@
     chatBox.style.display =
       chatBox.style.display === "flex" ? "none" : "flex";
   }
-</script><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
+</script><meta data-intl-tel-input-cdn-path="intlTelInput/">
+<header class="u-header" 
+    style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
 
-        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
+    <button onclick="history.back()" 
+            style="
+                line-height:1;
+                display:inline-flex;
+                align-items:center;
+                background:#F7931E;
+                color:white;
+                border:none;
+                border-radius:40px;
+                padding:10px 20px;
+                font-weight:700;
+                font-family:'Montserrat', sans-serif;
+                font-size:18px;
+                cursor:pointer;
+                transition:0.2s ease;
+            "
+            onmouseover="this.style.background='#E49900'"
+            onmouseout="this.style.background='#F7931E'">
+        RETURN
+    </button>
 
-
-    <!-- LEFT: Logo -->
-
-    <a href="{% url 'home' %}" 
-
-       class="u-logo" 
-
-       style="display:flex; align-items:center;">
-
+    <div style="display:flex; align-items:center; gap:20px;">
+    <a href="{% url 'home' %}" class="u-logo" style="display:flex; align-items:center;">
         <img src="{% static 'images/SmartTour11.png' %}" 
-
              style="height:130px; width:130px; display:block;" 
-
              alt="logo">
-
     </a>
-
-
-
-    <!-- MIDDLE: Title -->
 
     <a href="{% url 'home' %}" style="text-decoration:none;">
-
-    <p style="margin:0; 
-
-        font-size:60px; 
-
-        font-weight:800; 
-
-        color:white; 
-
-        letter-spacing:1px;
-
-        margin-left:40px;
-
-        text-shadow:0 3px 6px rgba(0,0,0,6);">
-
-        SMART TOUR
-
-    </p>
-
+        <p style="margin:0; font-size:60px; font-family:'Montserrat', sans-serif; font-weight:700; color:white; letter-spacing:1px; text-shadow:0 3px 6px rgba(0,0,0,0.6);">
+            SMART TOUR
+        </p>
     </a>
-
-    <!-- RIGHT: Buttons / User Menu -->
+</div>
 
     <div style="display:flex; gap:10px; align-items:center;">
 
         {% if user.is_authenticated %}
-
-        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
-
         <div style="position:relative;">
-
             <button id="userMenuBtn" style="
-
               padding:8px 12px; 
-
               background:#F7931E; 
-
               border-radius:25px; 
-
               color:white; 
-
-              font-weight:700;            
-
+              font-weight:700; 
+              font-family:'Montserrat', sans-serif; /* Added font to button for consistency */
               border:none;
-
               cursor:pointer;
-
               display:flex;
-
               align-items:center;
-
               gap:8px;
-
               transition:0.2s;
-
             "
-
             onmouseover="this.style.background='#C48300'"
-
             onmouseout="this.style.background='#F7931E'"
-
             onclick="toggleUserMenu()">
 
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-
                 </svg>
 
                 {{ user.username }}
 
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
-
                     <path d="M7 10l5 5 5-5z"/>
-
                 </svg>
-
             </button>
 
             <div id="userDropdown" style="
-
               display:none;
-
               position:absolute;
-
               top:110%;
-
               right:0;
-
               background:white;
-
               border-radius:8px;
-
               box-shadow:0 4px 12px rgba(0,0,0,0.15);
-
               min-width:180px;
-
               z-index:1000;
-
             ">
-
-                <a href="{% url 'user_profile' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+                <a href="{% url 'user_profile' %}" style="display:block; padding:12px 16px; color:#333; text-decoration:none; border-bottom:1px solid #eee; transition:0.2s;"
+                   onmouseover="this.style.background='#f5f5f5'"
+                   onmouseout="this.style.background='white'">
                     👤 My Profile
-
                 </a>
-
-                <a href="{% url 'recommend_result' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+                <a href="{% url 'recommend_result' %}" style="display:block; padding:12px 16px; color:#333; text-decoration:none; border-bottom:1px solid #eee; transition:0.2s;"
+                   onmouseover="this.style.background='#f5f5f5'"
+                   onmouseout="this.style.background='white'">
                     🗺️ My Destinations
-
                 </a>
-
-                <a href="/logout/" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#d32f2f;
-
-                  text-decoration:none;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+                <a href="/logout/" style="display:block; padding:12px 16px; color:#d32f2f; text-decoration:none; transition:0.2s;"
+                   onmouseover="this.style.background='#f5f5f5'"
+                   onmouseout="this.style.background='white'">
                     🚪 Logout
-
                 </a>
-
             </div>
-
         </div>
 
-        
-
         <script>
-
         function toggleUserMenu() {
-
             var dropdown = document.getElementById('userDropdown');
-
             dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-
         }
-
-
-        // Đóng dropdown khi click bên ngoài
 
         window.onclick = function(event) {
-
             if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
-
                 var dropdown = document.getElementById('userDropdown');
-
                 if (dropdown && dropdown.style.display === 'block') {
-
                     dropdown.style.display = 'none';
-
                 }
-
             }
-
         }
-
         </script>
 
         {% else %}
-
-        <!-- User chưa đăng nhập: hiển thị Login/Register -->
-
-        <a href="{% url 'login_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
+        <a href="{% url 'login_page' %}" style="padding:8px 18px; background:#F7931E; border-radius:25px; color:white; font-weight:700; font-family:'Montserrat', sans-serif; text-decoration:none; transition:0.2s;"
            onmouseover="this.style.background='#C48300'"
-
            onmouseout="this.style.background='#F7931E'">
-
             Log in
-
         </a>
-
-        <a href="{% url 'signup_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
+        <a href="{% url 'signup_page' %}" style="padding:8px 18px; background:#F7931E; border-radius:25px; color:white; font-weight:700; font-family:'Montserrat', sans-serif; text-decoration:none; transition:0.2s;"
            onmouseover="this.style.background='#C48300'"
-
            onmouseout="this.style.background='#F7931E'">
-
             Register
-
         </a>
-
         {% endif %}
-
     </div>
 
 </header>
     <section class="u-clearfix u-section-1" id="block-1">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
         <h1 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">Meet our team </h1>
-        <div class="u-list u-list-1">
+        <div class="u-list u-list-1" style="margin-left:225px;">
           <div class="u-repeater u-repeater-1">
             <div class="u-container-style u-custom-item u-list-item u-repeater-item u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0">
               <div class="u-container-layout u-similar-container u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-1">
