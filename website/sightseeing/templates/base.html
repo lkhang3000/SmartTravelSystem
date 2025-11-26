@@ -65,11 +65,9 @@
                  onmouseout="this.style.background='#F7931E'">
                 <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:24px; height:24px;">
             </div>
-            {% if trip_count %}
-            <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold;">
-                {{ trip_count }}
+            <span class="trip-count" style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; {% if not trip_count %}display:none;{% endif %}">
+                {{ trip_count|default:0 }}
             </span>
-            {% endif %}
         </a>
 
         <!-- User đã đăng nhập: hiển thị icon + dropdown -->

@@ -1,0 +1,154 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day Itinerary Template</title>
+    <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" media="screen">
+    <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
+    <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
+    <style>
+        .day-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .day-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .destination-list {
+            margin-bottom: 20px;
+        }
+        .destination-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        .destination-checkbox {
+            margin-right: 15px;
+        }
+        .destination-info {
+            flex: 1;
+        }
+        .destination-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .destination-description {
+            font-size: 14px;
+            color: #666;
+        }
+        .destination-cost {
+            font-weight: bold;
+            color: #F7931E;
+        }
+        .total-cost {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #F7931E;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        .add-destination-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #F7931E;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .add-destination-btn:hover {
+            background: #C48300;
+        }
+    </style>
+</head>
+<body>
+    <div class="day-container">
+        <div class="day-header">
+            Itinerary for {{ day_date|default:"Monday, November 17, 2025" }}
+        </div>
+
+        <div class="destination-list">
+            <h3>Select destinations to visit this day:</h3>
+
+            <!-- Sample destinations - in real app, this would be dynamic -->
+            <div class="destination-item">
+                <input type="checkbox" class="destination-checkbox" data-cost="50000" onchange="updateTotal()">
+                <div class="destination-info">
+                    <div class="destination-name">Imperial Capital Hue</div>
+                    <div class="destination-description">Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm.</div>
+                    <div class="destination-cost">Cost: 50,000 VND</div>
+                </div>
+            </div>
+
+            <div class="destination-item">
+                <input type="checkbox" class="destination-checkbox" data-cost="75000" onchange="updateTotal()">
+                <div class="destination-info">
+                    <div class="destination-name">Sung Sot Cave</div>
+                    <div class="destination-description">The largest and most spectacular cave in Ha Long Bay, featuring massive chambers and dramatic rock formations.</div>
+                    <div class="destination-cost">Cost: 75,000 VND</div>
+                </div>
+            </div>
+
+            <div class="destination-item">
+                <input type="checkbox" class="destination-checkbox" data-cost="30000" onchange="updateTotal()">
+                <div class="destination-info">
+                    <div class="destination-name">Hoang Kiem Lake</div>
+                    <div class="destination-description">A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge.</div>
+                    <div class="destination-cost">Cost: 30,000 VND</div>
+                </div>
+            </div>
+
+            <!-- Add more destinations as needed -->
+        </div>
+
+        <button class="add-destination-btn" onclick="addDestination()">Add More Destinations</button>
+
+        <div class="total-cost">
+            Total Cost for the Day: <span id="totalCost">0</span> VND
+        </div>
+    </div>
+
+    <script>
+        function updateTotal() {
+            let total = 0;
+            const checkboxes = document.querySelectorAll('.destination-checkbox:checked');
+            checkboxes.forEach(checkbox => {
+                total += parseInt(checkbox.getAttribute('data-cost'));
+            });
+            document.getElementById('totalCost').textContent = total.toLocaleString();
+        }
+
+        function addDestination() {
+            // Placeholder for adding more destinations
+            alert('Add destination functionality would be implemented here');
+        }
+
+        // Initialize total on page load
+        document.addEventListener('DOMContentLoaded', updateTotal);
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">d:\SmartTravel\website\sightseeing\Templates\day_template.html

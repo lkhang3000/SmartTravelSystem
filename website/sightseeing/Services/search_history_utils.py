@@ -44,7 +44,30 @@ def update_user_preference_score(user, destination):
     
     try:
         # Get user profile to get custom user ID
-        user_profile = UsersProfile.objects.get(user=user)
+        user_profile = UsersProfile.objects.filter(user=user).first()
+        if not user_profile:
+            # Create UsersProfile if it doesn't exist
+            # Generate next user ID
+            existing_profiles = UsersProfile.objects.all().order_by('-id')
+            next_id = 1
+            if existing_profiles:
+                # Extract number from last custom_user_id (format: user_XXX)
+                last_profile = existing_profiles.first()
+                if last_profile.custom_user_id and last_profile.custom_user_id.startswith('user_'):
+                    try:
+                        last_num = int(last_profile.custom_user_id.split('_')[1])
+                        next_id = last_num + 1
+                    except (ValueError, IndexError):
+                        next_id = existing_profiles.count() + 1
+            
+            user_profile = UsersProfile.objects.create(
+                user=user,
+                name=user.first_name + ' ' + user.last_name if user.first_name or user.last_name else user.username,
+                email=user.email,
+                custom_user_id=f"user_{next_id:03d}"
+            )
+            print(f"Created UsersProfile for user {user.username} with custom_user_id {user_profile.custom_user_id}")
+        
         user_id = user_profile.custom_user_id
         
         # Calculate preference score
@@ -64,13 +87,13 @@ def update_user_preference_score(user, destination):
             timestamp=datetime.now()
         )
         
-        # Regenerate CSV after updating score
+        # Regenerate CSV for recommender if needed
         generate_search_history_csv()
         
         return search_history, True
         
-    except UsersProfile.DoesNotExist:
-        # Skip if user profile doesn't exist
+    except Exception as e:
+        print(f"Error updating user preference score: {e}")
         return None, False
 
 def generate_search_history_csv():
@@ -87,25 +110,30 @@ def generate_search_history_csv():
     # CSV file path
     csv_file_path = os.path.join(services_dir, 'search_history.csv')
 
-    # Write CSV file
-    with open(csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.writer(csvfile)
+    try:
+        # Write CSV file
+        with open(csv_file_path, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
 
-        # Write header
-        writer.writerow(['user_id', 'destination_id', 'score', 'timestamp'])
+            # Write header
+            writer.writerow(['user_id', 'destination_id', 'score', 'timestamp'])
 
-        # Write data
-        search_history = SearchHistory.objects.all().order_by('timestamp')
-        for entry in search_history:
-            writer.writerow([
-                entry.user_id,
-                entry.destination_id,
-                entry.score,
-                entry.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-            ])
+            # Write data
+            search_history = SearchHistory.objects.all().order_by('timestamp')
+            print(f"Writing {search_history.count()} entries to CSV")
+            for entry in search_history:
+                writer.writerow([
+                    entry.user_id,
+                    entry.destination_id,
+                    entry.score,
+                    entry.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                ])
 
-    print(f"Generated search history CSV at: {csv_file_path}")
-    return csv_file_path
+        print(f"Generated search history CSV at: {csv_file_path}")
+        return csv_file_path
+    except Exception as e:
+        print(f"Error generating search history CSV: {e}")
+        return None
 
 def get_search_history_csv_path():
     """
