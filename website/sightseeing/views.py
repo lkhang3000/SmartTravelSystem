@@ -343,24 +343,27 @@ def destination_detail(request, destination_id):
     try:
         destination = Destinations.objects.select_related('location').get(id=destination_id)
         
-        # Log search history if user is authenticated
-        if request.user.is_authenticated:
-            try:
-                user_profile = UsersProfile.objects.get(user=request.user)
-                SearchHistory.objects.create(
-                    user_id=user_profile.custom_user_id,
-                    destination_id=destination.destination_id,
-                    rating=destination.rating or 0.0,
-                    timestamp=datetime.now()
+        # Handle comment submission
+        if request.method == 'POST' and request.user.is_authenticated:
+            content = request.POST.get('content', '').strip()
+            if content:
+                Comment.objects.create(
+                    user=request.user,
+                    destination=destination,
+                    content=content
                 )
-                
-                # Auto-update CSV file after logging search history
-                from .Services.search_history_utils import generate_search_history_csv
-                generate_search_history_csv()
-                
-            except UsersProfile.DoesNotExist:
-                # User profile doesn't exist, skip logging
-                pass
+                messages.success(request, 'Your comment has been added!')
+                # Update user preference score after commenting
+                from .Services.search_history_utils import update_user_preference_score
+                update_user_preference_score(request.user, destination)
+                return redirect('destination_detail', destination_id=destination_id)
+            else:
+                messages.error(request, 'Comment cannot be empty.')
+        
+        # Update user preference score based on actions (viewing destination)
+        if request.user.is_authenticated:
+            from .Services.search_history_utils import update_user_preference_score
+            update_user_preference_score(request.user, destination)
         
         # Get related destinations (same location or category)
         related = Destinations.objects.filter(
@@ -370,10 +373,14 @@ def destination_detail(request, destination_id):
         # Get hotels in the same location
         hotels = Hotel.objects.filter(location=destination.location).order_by('-rating')[:5]
         
+        # Get comments for this destination
+        comments = Comment.objects.filter(destination=destination).select_related('user')
+        
         context = {
             'destination': destination,
             'related_destinations': related,
             'hotels': hotels,
+            'comments': comments,
             'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
         }
         return render(request, 'detail_destination.html', context)
@@ -401,6 +408,9 @@ def add_to_trip(request, destination_id):
             )
             if created:
                 messages.success(request, f'Added {destination.desName} to your trip!')
+                # Update user preference score after adding to trip
+                from .Services.search_history_utils import update_user_preference_score
+                update_user_preference_score(request.user, destination)
             else:
                 messages.info(request, f'{destination.desName} is already in your trip.')
         except Destinations.DoesNotExist:
