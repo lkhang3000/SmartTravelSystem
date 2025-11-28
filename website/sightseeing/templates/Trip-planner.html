@@ -16,7 +16,7 @@
     
     
     
-    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
 		"@type": "Organization",
@@ -40,8 +40,6 @@
         style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
 
 
-    <!-- LEFT: Logo -->
-
     <a href="{% url 'home' %}" 
 
        class="u-logo" 
@@ -57,8 +55,6 @@
     </a>
 
 
-
-    <!-- MIDDLE: Title -->
 
     <a href="{% url 'home' %}" style="text-decoration:none;">
 
@@ -82,13 +78,9 @@
 
     </a>
 
-    <!-- RIGHT: Buttons / User Menu -->
-
     <div style="display:flex; gap:10px; align-items:center;">
 
         {% if user.is_authenticated %}
-
-        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
 
         <div style="position:relative;">
 
@@ -271,8 +263,6 @@
 
         {% else %}
 
-        <!-- User chưa đăng nhập: hiển thị Login/Register -->
-
         <a href="{% url 'login_page' %}" 
 
            style="
@@ -358,7 +348,6 @@
                         </a>
                         <div class="u-accordion-pane u-container-style u-accordion-pane-2" id="ee32" aria-labelledby="link-ee32" role="tabpanel">
                           <div class="u-container-layout u-container-layout-3">
-                            <!-- Table of Contents - Overview items -->
                             <ul style="list-style: none; padding: 0;">
                               <li style="padding: 5px 0; border-bottom: 1px solid #eee; cursor: pointer;" onclick="showExplore()">Explore</li>
                               <li style="padding: 5px 0; border-bottom: 1px solid #eee;">Places to visit</li>
@@ -374,7 +363,6 @@
                         </a>
                         <div class="u-accordion-pane u-container-style u-accordion-pane-3" id="cc09" aria-labelledby="link-cc09" role="tabpanel">
                           <div class="u-container-layout u-container-layout-4">
-                            <!-- Table of Contents - Itinerary days -->
                             <ul id="dayList" style="list-style: none; padding: 0;">
                             </ul>
                           </div>
@@ -391,7 +379,7 @@
                   <div class="u-container-layout u-container-layout-5">
                     <div class="u-absolute-hcenter u-expanded u-grey-light-2 u-map">
                       <div class="embed-responsive">
-                        <iframe class="embed-responsive-item" src="https://maps.google.com/maps?output=embed&amp;q=Ho%20Chi%20Minh%2C%20VietNam&amp;z=9&amp;t=m" data-map="JTdCJTIycG9zaXRpb25UeXBlJTIyJTNBJTIybWFwLWFkZHJlc3MlMjIlMkMlMjJhZGRyZXNzJTIyJTNBJTIySG8lMjBDaGklMjBNaW5oJTJDJTIwVmlldE5hbSUyMiUyQyUyMnpvb20lMjIlM0E5JTJDJTIydHlwZUlkJTIyJTNBJTIycm9hZCUyMiUyQyUyMmxhbmclMjIlM0FudWxsJTJDJTIyYXBpS2V5JTIyJTNBbnVsbCUyQyUyMm1hcmtlcnMlMjIlM0ElNUIlNUQlN0Q="></iframe>
+                        <iframe class="embed-responsive-item" src="https://maps.google.com/maps?output=embed&q=Ho%20Chi%20Minh%2C%20VietNam&z=9&t=m" data-map="JTdCJTIycG9zaXRpb25UeXBlJTIyJTNBJTIybWFwLWFkZHJlc3MlMjIlMkMlMjJhZGRyZXNzJTIyJTNBJTIySG8lMjBDaGklMjBNaW5oJTJDJTIwVmlldE5hbSUyMiUyQyUyMnpvb20lMjIlM0E5JTJDJTIydHlwZUlkJTIyJTNBJTIycm9hZCUyMiUyQyUyMmxhbmclMjIlM0FudWxsJTJDJTIyYXBpS2V5JTIyJTNBbnVsbCUyQyUyMm1hcmtlcnMlMjIlM0ElNUIlNUQlN0Q="></iframe>
                       </div>
                     </div>
                   </div>
@@ -400,8 +388,7 @@
                   <div class="u-container-layout u-container-layout-8">
                     <div class="u-container-layout u-valign-top u-container-layout-itinerary" style="padding: 20px;">
                       <div id="dayContent">
-                        <!-- Day content will be loaded here -->
-                      </div>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -417,9 +404,7 @@
     
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
         <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
-          <div class="chat-container"><!-- Floating Button -->
-            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
-            <div class="chat-box" id="chatBox">
+          <div class="chat-container"><div class="chat-button" onclick="toggleChat()"> 💬 </div><div class="chat-box" id="chatBox">
               <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
               </div>
               <div class="chat-body">
@@ -600,25 +585,44 @@
         // Load recommendations
         var recommendations = {{ recommendations_json|safe }};
         
+        function saveCheckedStateToLocal() {
+            localStorage.setItem('tripPlannerCheckedState', JSON.stringify(checkedState));
+        }
+        function showMessage(message, type) {
+            // Simple message display
+            alert(message);
+        }
+        function calculateDayTotalCost(day) {
+            let dayTotal = 0;
+            // Lấy cost từ tripItems và checkedState
+            Object.keys(checkedState[day] || {}).forEach(index => {
+                if (checkedState[day][index]) {
+                    // Dùng regex để loại bỏ tất cả ký tự không phải số
+                    const costString = tripItems[index].destination__price_range || '0';
+                    const cost = parseInt(costString.replace(/[^0-9]/g, '')) || 0;
+                    dayTotal += cost;
+                }
+            });
+            return dayTotal;
+        }
+        // ***************************************************************
+
         function updateTotal() {
             // Calculate total for each day from checkedState
             const days = {};
             
             Object.keys(checkedState).forEach(day => {
-                days[day] = 0;
-                Object.keys(checkedState[day]).forEach(index => {
-                    if (checkedState[day][index]) {
-                        const cost = tripItems[index].destination__price_range ? parseInt(tripItems[index].destination__price_range.replace(/,/g, '')) || 0 : 0;
-                        days[day] += cost;
-                    }
-                });
+                // Thay thế logic tính toán cũ bằng hàm mới để đảm bảo tính nhất quán và dễ bảo trì
+                days[day] = calculateDayTotalCost(day); 
             });
             
             // Update day totals
             Object.keys(days).forEach(day => {
                 const dayTotalElement = document.getElementById(`day${day}Total`);
                 if (dayTotalElement) {
-                    dayTotalElement.textContent = (days[day] / travelers).toLocaleString();
+                    // Chuyển đổi sang định dạng VND chuẩn (không dùng toLocaleString thô)
+                    const totalPerPerson = days[day] / travelers;
+                    dayTotalElement.textContent = Math.round(totalPerPerson).toLocaleString();
                 }
             });
             
@@ -654,7 +658,8 @@
             content += '<div class="day-itinerary" style="margin-bottom: 30px; border-bottom: 2px solid #ecf0f1; padding-bottom: 20px;"><h3 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 15px;">Day ' + day + '</h3>';
             
             tripItems.forEach((item, index) => {
-                const cost = item.destination__price_range ? parseInt(item.destination__price_range.replace(/,/g, '')) || 0 : 0;
+                // Cải thiện cách lấy cost để hiển thị (loại bỏ dấu phẩy trước khi parse)
+                const cost = item.destination__price_range ? parseInt(item.destination__price_range.replace(/[^0-9]/g, '')) || 0 : 0;
                 const name = item.destination__desName || 'Unknown';
                 const address = item.destination__address || 'Unknown';
                 const isChecked = checkedState[day] && checkedState[day][index] ? 'checked' : '';
@@ -685,7 +690,16 @@
             updateTotal();
         }
         
+        // ***************************************************************
+        // ********* PHẦN SỬA ĐỔI CHÍNH: HÀM saveDaySelections **********
+        // ***************************************************************
         function saveDaySelections(day) {
+            // 1. Tính toán chi phí an toàn dưới dạng số nguyên
+            const totalCostForAllTravelers = calculateDayTotalCost(day);
+            // Tính chi phí / người (Làm tròn thành số nguyên nếu cần)
+            const totalCostPerPersonValue = Math.round(totalCostForAllTravelers / travelers);
+            
+            // 2. Thu thập các mục đã chọn
             const selectedItems = [];
             Object.keys(checkedState[day] || {}).forEach(index => {
                 if (checkedState[day][index]) {
@@ -704,28 +718,37 @@
                 },
                 body: JSON.stringify({
                     day: day,
-                    selected_items: selectedItems
+                    selected_items: selectedItems,
+                    // THÊM TRƯỜNG CHI PHÍ THÔ VÀO ĐÂY
+                    total_cost_per_person: totalCostPerPersonValue 
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    // Xử lý lỗi server (ví dụ: status 500)
+                    return response.text().then(text => { throw new Error(`Server returned status ${response.status}: ${text}`); });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Clear localStorage for this day since saved to server
-                    if (checkedState[day]) {
-                        delete checkedState[day];
-                        saveCheckedStateToLocal();
-                    }
-                    showMessage(data.message, 'success');
+                    // Giữ lại hàm saveCheckedStateToLocal() gọi ở đây mặc dù logic xóa có thể không còn cần thiết 
+                    // nếu checkedState[day] được dùng để kiểm tra items đã lưu.
+                    saveCheckedStateToLocal(); 
+                    showMessage(data.message || `Đã lưu Ngày ${day} thành công!`, 'success');
                 } else {
-                    showMessage(data.message, 'error');
+                    showMessage(data.message || 'Đã xảy ra lỗi khi lưu ngày.', 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showMessage('An error occurred while saving.', 'error');
+                // Cải thiện thông báo lỗi
+                showMessage('An error occurred while saving: ' + error.message, 'error');
             });
         }
-        
+        // ***************************************************************
+
         function showMessage(message, type) {
             // Simple message display
             alert(message);
@@ -743,13 +766,16 @@
             content += '<div class="recommendations-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">';
             
             recommendations.forEach(dest => {
+                // Đảm bảo chi phí được làm sạch trước khi hiển thị nếu cần
+                const cleanPriceRange = dest.price_range ? dest.price_range.replace(/[^0-9]/g, '') : '0';
+                
                 content += `
                     <div class="recommendation-card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                         <img src="${dest.image_url}" alt="${dest.name}" style="width: 100%; height: 150px; object-fit: cover;">
                         <div style="padding: 15px;">
                             <h4 style="margin: 0 0 5px 0; color: #34495e;">${dest.name}</h4>
                             <p style="margin: 0 0 5px 0; color: #7f8c8d; font-size: 0.9em;">${dest.location} • ${dest.category}</p>
-                            <p style="margin: 0 0 10px 0; color: #f39c12;">⭐ ${dest.rating} • ${dest.price_range} VND</p>
+                            <p style="margin: 0 0 10px 0; color: #f39c12;">⭐ ${dest.rating} • ${cleanPriceRange.toLocaleString()} VND</p>
                             <div style="display: flex; gap: 10px;">
                                 <button onclick="viewDetail(${dest.id})" style="flex: 1; padding: 8px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Detail</button>
                                 <button onclick="addToCurrentDay(${dest.id})" style="flex: 1; padding: 8px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">Add to Day ${currentDay}</button>
