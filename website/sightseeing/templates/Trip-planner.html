@@ -379,7 +379,14 @@
                   <div class="u-container-layout u-container-layout-5">
                     <div class="u-absolute-hcenter u-expanded u-grey-light-2 u-map">
                       <div class="embed-responsive">
-                        <iframe class="embed-responsive-item" src="https://maps.google.com/maps?output=embed&q=Ho%20Chi%20Minh%2C%20VietNam&z=9&t=m" data-map="JTdCJTIycG9zaXRpb25UeXBlJTIyJTNBJTIybWFwLWFkZHJlc3MlMjIlMkMlMjJhZGRyZXNzJTIyJTNBJTIySG8lMjBDaGklMjBNaW5oJTJDJTIwVmlldE5hbSUyMiUyQyUyMnpvb20lMjIlM0E5JTJDJTIydHlwZUlkJTIyJTNBJTIycm9hZCUyMiUyQyUyMmxhbmclMjIlM0FudWxsJTJDJTIyYXBpS2V5JTIyJTNBbnVsbCUyQyUyMm1hcmtlcnMlMjIlM0ElNUIlNUQlN0Q="></iframe>
+                       
+                      {% if request.session.trip_map_url %}
+                      <iframe 
+                          src="{{ request.session.trip_map_url }}"
+                          style="width:100%; height:400px; border:0; border-radius: 10px;">
+                      </iframe>
+                      {% endif %}
+
                       </div>
                     </div>
                   </div>
@@ -583,7 +590,6 @@
         }
         
         // Load recommendations
-        var recommendations = {{ recommendations_json|safe }};
         
         function saveCheckedStateToLocal() {
             localStorage.setItem('tripPlannerCheckedState', JSON.stringify(checkedState));
@@ -754,6 +760,8 @@
             alert(message);
         }
         
+        const recommendations = {{ explore_recommendations_json|safe }};
+
         function showExplore() {
             const dayContent = document.getElementById('dayContent');
             
