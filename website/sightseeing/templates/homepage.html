@@ -5,11 +5,12 @@
     <meta charset="utf-8">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <title>Page 1</title>
+    <title>Homepage</title>
     <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
   <link rel="stylesheet" href="{% static 'css/index.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
     <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
+
     <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
     
     
@@ -17,15 +18,16 @@
     
     
     
-    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
+    
+    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Lobster:wght@400">
     <script type="application/ld+json">{
 		"@context": "http://schema.org",
 		"@type": "Organization",
 		"name": "SmartTour",
-		"logo": "{% static 'images/SmartTour11.png' %}"
+		"logo": "{% static 'images/Odyscape.png' %}"
 }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Page 1">
+    <meta property="og:title" content="Homepage">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
   <script>
@@ -34,8 +36,7 @@
     chatBox.style.display =
       chatBox.style.display === "flex" ? "none" : "flex";
   }
-
-  // Initialize chatbot when page loads
+// Initialize chatbot when page loads
   document.addEventListener('DOMContentLoaded', function() {
     const chatInput = document.querySelector('.chat-input input');
     const sendButton = document.querySelector('.chat-input button');
@@ -129,622 +130,359 @@
       }
     });
   });
-</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
+</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/">
+</head>
+  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en"><header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
+        id="header" style="position: absolute; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
 
-        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
-
-
-    <!-- LEFT: Logo -->
-
-    <a href="{% url 'home' %}" 
-
-       class="u-logo" 
-
-       style="display:flex; align-items:center;">
-
-        <img src="{% static 'images/SmartTour11.png' %}" 
-
-             style="height:130px; width:130px; display:block;" 
-
-             alt="logo">
-
-    </a>
-
-
-
-    <!-- MIDDLE: Title -->
-
-    <a href="{% url 'home' %}" style="text-decoration:none;">
-
-    <p style="margin:0; 
-
-        font-size:60px; 
-
-        font-weight:800; 
-
-        color:white; 
-
-        letter-spacing:1px;
-
-        margin-left:40px;
-
-        text-shadow:0 3px 6px rgba(0,0,0,6);">
-
-        SMART TOUR
-
-    </p>
-
-    </a>
-
-    <!-- RIGHT: Buttons / User Menu -->
-
-    <div style="display:flex; gap:10px; align-items:center;">
-
-        {% if user.is_authenticated %}
-        <!-- Trip List Icon -->
-        <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
-            <div style="background:#F7931E; border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; transition:0.2s;"
-                 onmouseover="this.style.background='#C48300'"
-                 onmouseout="this.style.background='#F7931E'">
-                <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px;" alt="Trip List">
-            </div>
-            <span class="trip-count" style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; {% if not trip_count %}display:none;{% endif %}">
-                {{ trip_count|default:0 }}
-            </span>
+    <!-- Logo (left) -->
+    <div style="flex: 0 0 auto;">
+        <a href="./" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
+            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home">
         </a>
-
-        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
-
-        <div style="position:relative;">
-
-            <button id="userMenuBtn" style="
-
-              padding:8px 12px; 
-
-              background:#F7931E; 
-
-              border-radius:25px; 
-
-              color:white; 
-
-              font-weight:700;            
-
-              border:none;
-
-              cursor:pointer;
-
-              display:flex;
-
-              align-items:center;
-
-              gap:8px;
-
-              transition:0.2s;
-
-            "
-
-            onmouseover="this.style.background='#C48300'"
-
-            onmouseout="this.style.background='#F7931E'"
-
-            onclick="toggleUserMenu()">
-
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-
-                </svg>
-
-                {{ user.username }}
-
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
-
-                    <path d="M7 10l5 5 5-5z"/>
-
-                </svg>
-
-            </button>
-
-            <div id="userDropdown" style="
-
-              display:none;
-
-              position:absolute;
-
-              top:110%;
-
-              right:0;
-
-              background:white;
-
-              border-radius:8px;
-
-              box-shadow:0 4px 12px rgba(0,0,0,0.15);
-
-              min-width:180px;
-
-              z-index:1000;
-
-            ">
-
-                <a href="{% url 'user_profile' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
-                    👤 My Profile
-
-                </a>
-
-                <a href="{% url 'recommend_result' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
-                    🗺️ My Destinations
-
-                </a>
-
-                <a href="/logout/" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#d32f2f;
-
-                  text-decoration:none;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
-                    🚪 Logout
-
-                </a>
-
-            </div>
-
-        </div>
-
-        
-
-        <script>
-
-        function toggleUserMenu() {
-
-            var dropdown = document.getElementById('userDropdown');
-
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-
-        }
-
-
-        // Đóng dropdown khi click bên ngoài
-
-        window.onclick = function(event) {
-
-            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
-
-                var dropdown = document.getElementById('userDropdown');
-
-                if (dropdown && dropdown.style.display === 'block') {
-
-                    dropdown.style.display = 'none';
-
-                }
-
-            }
-
-        }
-
-        </script>
-
-        {% else %}
-
-        <!-- User chưa đăng nhập: hiển thị Login/Register -->
-
-        <a href="{% url 'login_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
-            Log in
-
-        </a>
-
-        <a href="{% url 'signup_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
-            Register
-
-        </a>
-
-        {% endif %}
-
     </div>
 
+    <!-- Nav + language (center) -->
+    <div style="flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; min-width: 0;">
+        <!-- Navigation -->
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" style="position: relative; top: 35px; left: 150px;">
+            <div class="menu-collapse u-custom-font u-font-montserrat" style="font-size: 1rem; letter-spacing: 0px;">
+                <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-hover-custom-color-7" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
+                    <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#svg-ec46"></use></svg>
+                    <svg class="u-svg-content" version="1.1" id="svg-ec46" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <rect y="1" width="16" height="2"></rect>
+                            <rect y="7" width="16" height="2"></rect>
+                            <rect y="13" width="16" height="2"></rect>
+                        </g>
+                    </svg>
+                </a>
+            </div>
+            <div class="u-custom-menu u-nav-container" style="min-width: 0;">
+                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="./">Home</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}">Trip Planner</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link">LocalGuide</a></li>
+                </ul>
+            </div>
+        </nav>
+
+       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
+     style="display: flex; align-items: center; gap: 5px; visibility: visible; margin-right: 70px; margin-top: 10px;">
+
+    <!-- Vietnamese flag -->
+    <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
+        <span style="display: inline-block; width: 30px; height: 30px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                <defs>
+                    <clipPath id="vn-a">
+                        <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
+                    </clipPath>
+                </defs>
+                <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
+                    <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
+                    <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
+                </g>
+            </svg>
+        </span>
+    </a>
+
+    <!-- UK flag -->
+    <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
+        <span style="display: inline-block; width: 30px; height: 30px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                <path fill="#012169" d="M0 0h512v512H0z"/>
+                <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
+                <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
+                <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
+                <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
+            </svg>
+        </span>
+    </a>
+
+</div>
+
+
+
+
+
+
+
+
+    <!-- Buttons (right) -->
+    <div style="display: flex; gap: 10px; align-items: center;">
+    <a href=""
+   class="u-btn u-button-style u-custom-font u-font-montserrat"
+   style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
+   Log in
+</a>
+
+<a href=""
+   class="u-btn u-button-style u-custom-font u-font-montserrat"
+   style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
+   Register
+</a>
+</div>
 </header>
 
-    <section class="u-carousel u-carousel-duration-1000 u-slide u-block-7160-1" id="carousel-bdd5" data-interval="6000" data-u-ride="carousel" data-pause="false">
-      <ol class="u-absolute-hcenter u-carousel-indicators u-hidden u-block-7160-2">
-        <li data-u-target="#carousel-bdd5" class="u-active u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="0"></li>
-        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="1"></li>
-        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="2"></li>
-        <li data-u-target="#carousel-bdd5" class="u-grey-30 u-shape-circle" style="width: 10px; height: 10px;" data-u-slide-to="3"></li>
-      </ol>
-      <div class="u-carousel-inner" role="listbox">
-        <div class="u-active u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-1">
-          <img class="u-absolute-hcenter u-expanded u-image u-image-1" src="{% static 'images/HP5.png' %}" data-image-width="1140" data-image-height="550">
-        </div>
-        <div class="u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-2">
-          <img class="u-absolute-hcenter u-expanded u-image u-image-default" src="{% static 'images/HP32.png' %}" alt="" data-image-width="1140" data-image-height="550">
-        </div>
-        <div class="u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-3">
-          <img class="u-absolute-hcenter u-expanded u-image u-image-default" src="{% static 'images/HP12.png' %}" alt="" data-image-width="1140" data-image-height="550">
-        </div>
-        <div class="u-carousel-item u-clearfix u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1-4">
-          <img class="u-absolute-hcenter u-expanded u-image u-image-default" src="{% static 'images/HP22.png' %}" alt="" data-image-width="1140" data-image-height="550">
-        </div>
-      </div>
-      <a class="u-absolute-vcenter u-carousel-control u-carousel-control-prev u-hidden u-text-grey-30 u-block-7160-3" href="#carousel-bdd5" role="button" data-u-slide="prev"><span aria-hidden="true">
-          <svg class="u-svg-link" viewBox="0 0 477.175 477.175"><path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
-                    c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"></path></svg></span><span class="sr-only">Previous</span>
-      </a>
-      <a class="u-absolute-vcenter u-carousel-control u-carousel-control-next u-hidden u-text-grey-30 u-block-7160-4" href="#carousel-bdd5" role="button" data-u-slide="next"><span aria-hidden="true">
-          <svg class="u-svg-link" viewBox="0 0 477.175 477.175"><path d="M360.731,229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1l215.5,215.5l-215.5,215.5
-                    c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z"></path></svg></span><span class="sr-only">Next</span>
-      </a>
-    </section>
-    <section class="u-clearfix u-section-2" id="block-8" style="padding: 60px 0; display: flex; justify-content: center; align-items: center;">
-      <div style="width: 100%; max-width: 1400px; padding: 0 20px;">
-          <form method="GET" action="{% url 'recommend_result' %}" id="searchForm">
-              <div style="display: flex; gap: 0; justify-content: center; align-items: stretch; background: #fff; padding: 0; border-radius: 60px; box-shadow: 0 4px 20px rgba(0,0,0,0.10); overflow: hidden; margin: 0 auto;">
-                  <!-- Location Filter with Icon -->
-                  <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px 24px 40px;">
-                      <span class="u-icon u-text-custom-color-7 u-icon-1" style="margin-top: 20px;">
-                          <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 54.757 54.757" style="width: 35px; height: 35px;">
-                              <path fill="#F7931E" d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7S31.416,26,27.557,26z"></path>
-                          </svg>
-                      </span>
-                      <select name="location" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
-                          <option value="">All Locations</option>
-                          {% for loc in all_locations %}
-                          <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
-                          {% endfor %}
-                      </select>
+
+    <section class="u-clearfix u-image u-shading u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-section-1"
+         style="background-image: url('{% static 'images/cristina-gottardi-CSpjU6hYo_0-unsplash.jpg' %}'); background-position: 50% 50%;"
+         id="block-12"
+         data-image-width="4896"
+         data-image-height="3264">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <p class="u-align-center u-custom-font u-font-lobster u-text u-text-default u-text-1">Venture far<br>Rediscover yourself
+        </p>
+        <div class="custom-expanded data-layout-selected u-clearfix u-layout-wrap u-radius u-layout-wrap-1">
+          <div class="u-layout">
+            <div class="u-layout-row">
+              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
+                <div class="u-container-layout u-valign-top u-container-layout-1">
+                  <div class="custom-expanded u-form u-form-1">
+                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-1">
+                        <label class="u-custom-font u-font-montserrat u-label u-label-1">Region</label>
+                        <div class="u-form-select-wrapper">
+                          <select id="select-ec63" name="select" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-1">
+                            <option value="All regions" data-calc="">All regions</option>
+                            <option value="Ho Chi Minh" data-calc="">Ho Chi Minh</option>
+                            <option value="Ha Long Bay" data-calc="">Ha Long Bay</option>
+                            <option value="Ha Noi" data-calc="">Ha Noi</option>
+                            <option value="Hue" data-calc="">Hue</option>
+                          </select>
+                          <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
+                        </div>
+                      </div>
+                      <div class="u-align-right u-form-group u-form-submit u-label-none">
+                        <input type="submit" value="submit" class="u-form-control-hidden">
+                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-2"></a>
+                      </div>
+                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
+                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
+                      <input type="hidden" value="" name="recaptchaResponse">
+                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
+                    </form>
                   </div>
-          <!-- Category Filter with Icon (img from homepage) -->
-          <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px;">
-            <span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2" style="margin-top: 20px;"><img src="{% static 'images/617418-fb032591.png' %}" alt="" style="width: 35px; height: 35px;"></span>
-            <select name="category" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
-              <option value="">All Categories</option>
-              {% for cat in all_categories %}
-              <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <!-- Rating Filter with Icon (img from homepage) -->
-          <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px;">
-            <span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3" style="margin-top: 20px;"><img src="{% static 'images/471709-0c33d784.png' %}" alt="" style="width: 35px; height: 35px;"></span>
-            <select name="rating" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
-              <option value="">★☆☆☆☆ (1+)</option>
-              <option value="4.5" {% if selected_rating == '4.5' %}selected{% endif %}>★★★★★ (4.5+)</option>
-              <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
-              <option value="3.5" {% if selected_rating == '3.5' %}selected{% endif %}>★★★☆☆ (3.5+)</option>
-              <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>★★☆☆☆ (3.0+)</option>
-              <option value="1.0" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
-            </select>
-          </div>
-          <button type="submit" style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      min-width: 160px;
-                      background: #F7931E;
-                      border-radius: 0 60px 60px 0;
-                      font-weight: 700;
-                      font-size: 18px;
-                      gap: 10px;
-                      text-transform: uppercase;
-                      color: white;
-                      border: none;
-                      cursor: pointer;
-                      padding: 20px 30px;
-                      transition: all 0.3s;
-                      flex-shrink: 0;
-                  "
-                  onmouseover="this.style.background='#E67E22'"
-                  onmouseout="this.style.background='#F7931E'">
-                      <span>SEARCH</span>
-                      <span style="display: flex; align-items: center; justify-content: center;">
-                          <svg viewBox="0 0 56.966 56.966" width="20" height="20">
-                              <path fill="white" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786
-                                  c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208
-                                  c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z 
-                                  M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z"/>
-                          </svg>
-                      </span>
-                  </button>
+                </div>
               </div>
-          </form>
-      </div>
-  </section>
-    <section class="u-clearfix u-container-align-center u-white u-section-3" id="sec-9086">
-      <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
-        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">Why should you choose us?</h2>
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2" data-animation-name="customAnimationIn" data-animation-duration="600" data-animation-delay="0">What we offer<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
-        </h6>
-        <div class="u-expanded-width u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
-            <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1"><span class="u-file-icon u-icon u-text-white u-icon-1"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/74742-16735a4c.png' %}" alt=""></span>
-                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-3">offers best prices&nbsp;&nbsp;</h5>
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-4">Not only will we give you a reasonable pricing, our personalization allow you to fit your budget.<span style="font-style: normal;"></span>
-                </p>
+              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
+                <div class="u-container-layout u-valign-top u-container-layout-2">
+                  <div class="custom-expanded u-form u-form-2">
+                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-3">
+                        <label class="u-custom-font u-font-montserrat u-label u-label-2">Region</label>
+                        <div class="u-form-select-wrapper">
+                          <select id="select-ec63" name="select" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-white u-input-2">
+                            <option value="All locations" data-calc="">All locations</option>
+                            <option value="Landmark" data-calc="">Landmark</option>
+                            <option value="Scenery" data-calc="">Scenery</option>
+                            <option value="Sanctuary" data-calc="">Sanctuary</option>
+                            <option value="Museum" data-calc="">Museum</option>
+                            <option value="Attraction" data-calc="">Attraction</option>
+                          </select>
+                          <svg class="u-caret u-caret-svg u-text-white" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
+                        </div>
+                      </div>
+                      <div class="u-align-right u-form-group u-form-submit u-label-none">
+                        <input type="submit" value="submit" class="u-form-control-hidden">
+                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-3"></a>
+                      </div>
+                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
+                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
+                      <input type="hidden" value="" name="recaptchaResponse">
+                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
+                    </form>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-2" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-2"><span class="u-file-icon u-icon u-text-white u-icon-3"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-4"><img src="{% static 'images/1895474-7d0e8707.png' %}" alt=""></span>
-                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-5">Trustworthy reviews </h5>
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-6">We made sure that all of our reviews come from authentic travelers who have used our service. </p>
-              </div>
-            </div>
-            <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-3" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-3"><span class="u-file-icon u-icon u-text-white u-icon-5"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-6"><img src="{% static 'images/2077502-dd3c7421.png' %}" alt=""></span>
-                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-7">satisfaction guaranteed </h5>
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-8">We are extremely dedicated to our craft. You won't leave dissatisfied with our services.</p>
-              </div>
-            </div>
-            <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-4" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-4"><span class="u-file-icon u-icon u-text-white u-icon-7"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-8"><img src="{% static 'images/27130-0e966e31.png' %}" alt=""></span>
-                <h5 class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-9">24/7 customer support </h5>
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-custom-font u-font-montserrat u-text u-text-10">Our team is ready to help you with any problems at anytime. Give up a call and we'll fix it right away. </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    {% if personalized_recommendations %}
-    <section class="u-clearfix u-section-5" id="personalized-recommendations">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Recommended Destinations</h2>
-        </h6>
-        
-        <!-- Carousel Container -->
-        <div class="recommendations-carousel" style="position: relative; max-width: 1200px; margin: 40px auto; overflow: hidden;">
-          <!-- Carousel Track -->
-          <div class="carousel-track" id="recommendations-track" style="display: flex; transition: transform 0.5s ease;">
-            {% for rec in personalized_recommendations %}
-            <div class="carousel-slide" style="flex: 0 0 300px; margin: 0 10px;">
-              <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1" style="width: 300px; height: 350px; position: relative;">
-                <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-1">
-                  <img class="u-expanded-width u-hover-feature u-image u-image-round u-radius u-image-1" src="{{ rec.image_url }}" alt="{{ rec.name }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px 10px 0 0;">
-                  <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-4" style="margin: 10px 0; font-weight: bold; font-size: 16px;">{{ rec.name }}</p>
-                  <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-5" style="margin: 5px 0; color: #666; font-size: 14px;">{{ rec.location }}</p>
-                  <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-6" style="margin: 5px 0; color: #666; font-size: 14px;">{{ rec.category }} •  {{ rec.rating|floatformat:1 }}/5.0</p>
-                  <a href="{% url 'destination_detail' rec.id %}" class="u-border-none u-btn u-btn-round u-button-style u-radius u-btn-1" style="position: absolute !important; bottom: -10px !important; left: 50% !important; transform: translateX(-50%) !important; background: #F7931E !important; color: white !important; padding: 8px 20px !important; border-radius: 25px !important; text-decoration: none !important; font-weight: bold !important; transition: 0.2s !important;" onmouseover="this.style.background='#C48300' !important" onmouseout="this.style.background='#F7931E' !important">View Details</a>
+              <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
+                <div class="u-container-layout u-valign-top u-container-layout-3">
+                  <div class="custom-expanded u-form u-form-3">
+                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-5">
+                        <label class="u-custom-font u-font-montserrat u-label u-label-3">Region</label>
+                        <div class="u-form-select-wrapper">
+                          <select id="select-ec63" name="select" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-3">
+                            <option value="All ratings" data-calc="">All ratings</option>
+                            <option value="★☆☆☆☆ (1+)" data-calc="">★☆☆☆☆ (1+)</option>
+                            <option value="★★☆☆☆ (2+)" data-calc="">★★☆☆☆ (2+)</option>
+                            <option value="★★★☆☆ (3+)" data-calc="">★★★☆☆ (3+)</option>
+                            <option value="★★★★☆ (4+)" data-calc="">★★★★☆ (4+)</option>
+                            <option value="★★★★★" data-calc="">★★★★★</option>
+                          </select>
+                          <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
+                        </div>
+                      </div>
+                      <div class="u-align-right u-form-group u-form-submit u-label-none">
+                        <input type="submit" value="submit" class="u-form-control-hidden">
+                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-4"></a>
+                      </div>
+                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
+                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
+                      <input type="hidden" value="" name="recaptchaResponse">
+                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
-            {% endfor %}
-          </div>
-          
-          <!-- Navigation Buttons -->
-          <button class="carousel-nav carousel-prev" onclick="moveCarousel(-1)" style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%); background: #F7931E; border: none; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 24px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='#C48300'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='#F7931E'; this.style.transform='translateY(-50%) scale(1)'">‹</button>
-          <button class="carousel-nav carousel-next" onclick="moveCarousel(1)" style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%); background: #F7931E; border: none; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 24px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='#C48300'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='#F7931E'; this.style.transform='translateY(-50%) scale(1)'">›</button>
-          
-          <!-- Carousel Controls Panel -->
-          <div class="carousel-controls" style="position: absolute; top: -60px; right: 20px; background: rgba(255,255,255,0.95); padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px; align-items: center; font-size: 14px;">
-            <button id="play-pause-btn" onclick="toggleAutoPlay()" style="background: #F7931E; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: 0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">⏸️ Pause</button>
-            <label style="margin: 0; color: #333;">Speed:</label>
-            <select id="speed-select" onchange="changeSpeed()" style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
-              <option value="2000">Fast (2s)</option>
-              <option value="5000" selected>Normal (5s)</option>
-              <option value="8000">Slow (8s)</option>
-            </select>
-          </div>
-          
-          <!-- Dots Indicator -->
-          <div class="carousel-dots" style="text-align: center; margin-top: 20px;">
-            {% for i in personalized_recommendations %}
-            <span class="dot" onclick="goToSlide({{ forloop.counter0 }})" style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #ddd; margin: 0 5px; cursor: pointer; transition: 0.2s;"></span>
-            {% endfor %}
           </div>
         </div>
-        
-
       </div>
     </section>
-    
-    <!-- Carousel JavaScript -->
-    <script>
-    let currentSlide = 0;
-    let totalSlides = 0;
-    const slidesToShow = 3; // Show 3 slides at a time
-    let maxSlide = 0;
-    let autoPlayInterval = null;
-    let isAutoPlaying = true;
-    let autoPlaySpeed = 5000; // Default 5 seconds
-    
-    function initializeCarousel() {
-      const track = document.getElementById('recommendations-track');
-      const slides = track.children;
-      totalSlides = slides.length;
-      maxSlide = Math.max(0, totalSlides - slidesToShow);
+    <section class="u-clearfix u-container-align-center u-white u-section-2" id="sec-9086">
+      <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-sheet-1">
+        <a href="{% url 'input_trip_planner' %}" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">Start Your Journey </a>
+        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">Why should you choose us?</h2>
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2" data-animation-name="customAnimationIn" data-animation-duration="600" data-animation-delay="0">What we offer<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
+        </h6>
+        <div class="u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-list u-list-1">
+          <div class="u-repeater u-repeater-1">
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
+              <div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-file-icon u-icon u-text-white u-icon-1"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/74742-16735a4c.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-3">offers best prices&nbsp;&nbsp;</h5>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-4">Not only will we give you a reasonable pricing, our personalization allow you to fit your budget. A good vacation is where finance isn't a concern.<span style="font-style: normal;"></span>
+                </p>
+              </div>
+            </div>
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-2" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
+              <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-file-icon u-icon u-text-white u-icon-3"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-4"><img src="{% static 'images/1895474-7d0e8707.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-5">Trustworthy reviews </h5>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-6">We made sure that all of our reviews come from authentic travelers who have used our service and will monitor for any bots that may appear. </p>
+              </div>
+            </div>
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-3" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
+              <div class="u-container-layout u-similar-container u-container-layout-3"><span class="u-file-icon u-icon u-text-white u-icon-5"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-6"><img src="{% static 'images/2077502-dd3c7421.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-7">satisfaction guaranteed </h5>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-8">We are extremely dedicated to our craft, focusing on your personalization. You won't leave dissatisfied with our services.</p>
+              </div>
+            </div>
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-4" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
+              <div class="u-container-layout u-similar-container u-container-layout-4"><span class="u-file-icon u-icon u-text-white u-icon-7"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-8"><img src="{% static 'images/4516627-672a4d01.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-9"> Navigation and suggestion<br>
+                </h5>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-10">We provide routes&nbsp; to nearby attractions, curated based on your previous preferences and plans your trip for easy scheduling.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="u-clearfix u-section-3" id="block-11">
+      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
+        <div class="u-container-style u-expanded-width u-grey-10 u-group u-hidden-xs u-radius u-shape-round u-group-1">
+          <div class="u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1"><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-1"><img src="{% static 'images/535188-3efc346f.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/3721843-2a83ae95.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/4516627-672a4d01.png' %}" alt=""></span>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-1"> Ask. Explore. Connect</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-2">Your trip, Your way</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-3"> Top Spots, Hotels &amp; Dining</p>
+            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-4"> Get insider tips and advices from locals in real-time chat forums for an epic journey.</p>
+            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-5"> Find top attractions with nearby hotels and restaurants tailored to your preferences.</p>
+            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-6"> Easily create your travel itinerary and organize every part of your journey.</p>
+            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-1">Explore </a>
+            <a href="{% url 'input_trip_planner' %}" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-2">Schedule </a>
+            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-3">Connect </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="u-clearfix u-section-4" id="block-10">
+      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-sheet-1">
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Explore the Country </h6>
+        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Popular Destinations</h2>
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0"> Discover amazing places and book your perfect stay<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
+        </h6>
+        <div class="u-border-1 u-border-black u-container-style u-expanded-width-xs u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1">
+          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-container-layout-1">
+            <img class="custom-expanded u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-hover-feature u-image u-image-round u-radius u-image-1" src="{% static 'images/pexels-triduhi-youtuber-27418881.jpg' %}" alt="" data-image-width="5820" data-image-height="3880">
+            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-4">Imperial Capital Hue</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-5">Hue City</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-6"> ★★★★☆ (9236 reviews)</p>
+            <p class="u-text u-text-7"> "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm that preserves Vietnam’s graceful royal heritage."</p>
+            <a href="" class="u-border-2 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-1">Details </a>
+            <p class="u-custom-font u-font-montserrat u-text u-text-8">200.000<span style="text-decoration: underline !important;">đ</span>/Person
+            </p>
+          </div>
+        </div>
+        <div class="u-border-1 u-border-black u-container-style u-expanded-width-xs u-gradient u-group u-hover-feature u-radius u-shape-round u-group-2">
+          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-container-layout-2">
+            <img class="custom-expanded u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-hover-feature u-image u-image-round u-radius u-image-2" src="{% static 'images/pexels-phamthe-13519138.jpg' %}" alt="" data-image-width="2726" data-image-height="4088">
+            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-9">Hoang Kiem Lake </p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-10">Hanoi </p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-11"> ★★★☆☆ (837 reviews)</p>
+            <p class="u-text u-text-12"> “A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge glowing beautifully at night.”</p>
+            <a href="" class="u-border-2 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-2">Details </a>
+            <p class="u-custom-font u-font-montserrat u-text u-text-13">Free of Charge</p>
+          </div>
+        </div>
+        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-3">
+          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-container-layout-3">
+            <img class="custom-expanded u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-hover-feature u-image u-image-round u-radius u-image-3" src="{% static 'images/cave-wallpaper-l.jpg' %}" alt="" data-image-width="1916" data-image-height="1400">
+            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-14">Sung Sot Cave</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-15">Ha Long Bay</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-16"> ★★★★★ (3618 reviews)</p>
+            <p class="u-text u-text-17"> “The largest and most spectacular cave in Ha Long Bay, featuring massive chambers, dramatic rock formations, and colorful illuminated pathways.”</p>
+            <a href="" class="u-border-2 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-3">Details </a>
+            <p class="u-custom-font u-font-montserrat u-text u-text-18">250.000<span style="text-decoration: underline !important;">đ</span>/Person
+            </p>
+          </div>
+        </div>
+      </div>
       
-      // Set track width dynamically
-      const slideWidth = 320; // 300px card + 20px margin
-      track.style.width = `${totalSlides * slideWidth}px`;
       
-      updateCarousel();
-      startAutoPlay();
-    }
-    
-    function updateCarousel() {
-      const track = document.getElementById('recommendations-track');
-      const slideWidth = 320; // 300px card + 20px margin
-      track.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
       
-      // Update dots
-      const dots = document.querySelectorAll('.dot');
-      dots.forEach((dot, index) => {
-        dot.style.background = index === currentSlide ? '#F7931E' : '#ddd';
-      });
       
-      // Update play/pause button text
-      const playPauseBtn = document.getElementById('play-pause-btn');
-      if (playPauseBtn) {
-        playPauseBtn.innerHTML = isAutoPlaying ? '⏸️ Pause' : '▶️ Play';
-      }
-    }
-    
-    function moveCarousel(direction) {
-      currentSlide = Math.max(0, Math.min(maxSlide, currentSlide + direction));
-      updateCarousel();
-    }
-    
-    function goToSlide(slideIndex) {
-      currentSlide = Math.max(0, Math.min(maxSlide, slideIndex));
-      updateCarousel();
-    }
-    
-    function startAutoPlay() {
-      if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-      }
       
-      if (isAutoPlaying && totalSlides > slidesToShow) {
-        autoPlayInterval = setInterval(() => {
-          if (currentSlide >= maxSlide) {
-            currentSlide = 0;
-          } else {
-            currentSlide++;
-          }
-          updateCarousel();
-        }, autoPlaySpeed);
-      }
-    }
-    
-    function stopAutoPlay() {
-      if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-        autoPlayInterval = null;
-      }
-    }
-    
-    function toggleAutoPlay() {
-      isAutoPlaying = !isAutoPlaying;
-      if (isAutoPlaying) {
-        startAutoPlay();
-      } else {
-        stopAutoPlay();
-      }
-      updateCarousel();
-    }
-    
-    function changeSpeed() {
-      const speedSelect = document.getElementById('speed-select');
-      autoPlaySpeed = parseInt(speedSelect.value);
       
-      if (isAutoPlaying) {
-        startAutoPlay(); // Restart with new speed
-      }
-    }
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-      if (document.getElementById('recommendations-track')) {
-        initializeCarousel();
-      }
-    });
-    </script>
-    {% endif %}
-    
+      
+      
+    </section>
+    <section class="u-align-center u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-sm u-container-align-center-xl u-white u-section-5" id="sec-e346">
+      <div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-sheet-1">
+        <div class="u-custom-color-7 u-preserve-proportions u-shape u-shape-circle u-shape-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="300"></div>
+        <img class="u-image u-image-circle u-preserve-proportions u-image-1" src="{% static 'images/pexels-vlada-karpovich-7368310.jpg' %}" alt="" data-image-width="6720" data-image-height="4480" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">
+        <h2 class="u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">INTRODU​CING:<br>TRIP PLANNER<br>
+        </h2>
+        <div class="data-layout-selected u-clearfix u-expanded-width-xs u-layout-wrap u-layout-wrap-1">
+          <div class="u-layout">
+            <div class="u-layout-row">
+              <div class="u-align-left u-container-align-left-lg u-container-align-left-md u-container-align-left-sm u-container-align-left-xl u-container-style u-layout-cell u-size-30 u-white u-layout-cell-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">
+                <div class="u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1">
+                  <h3 class="u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-2">Have your trip planned with just the click of a button, the ​future of travelling </h3>
+                  <div class="custom-expanded u-border-4 u-border-custom-color-6 u-line u-line-horizontal u-line-1"></div>
+                </div>
+              </div>
+              <div class="u-align-center-xs u-container-style u-layout-cell u-radius u-shape-round u-size-30 u-white u-layout-cell-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="500">
+                <div class="u-border-2 u-border-black u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-container-layout-2">
+                  <p class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-text u-text-3">Allow us to help schedule your vacation. ​We provide a flexible itinerary that maximizes your visits to attractions while allowing time to relax and enjoy local delicacies and landmarks.</p>
+                  <a href="" class="u-align-left u-border-none u-btn u-btn-round u-button-style u-custom-color-7 u-custom-font u-font-montserrat u-hover-color-var u-radius u-text-active-white u-text-body-alt-color u-text-hover-white u-btn-1">READ MORE </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="u-align-center u-clearfix u-container-align-center-lg u-container-align-center-md u-container-align-center-sm u-container-align-center-xl u-valign-top-lg u-valign-top-md u-valign-top-sm u-white u-section-6" id="sec-acc7">
+      <img class="u-absolute-hcenter u-expanded u-image u-image-1" src="{% static 'images/carl-tronders-3nSoYKQ_bqg-unsplash1.jpg' %}" data-image-width="5472" data-image-height="3648" data-animation-name="customAnimationIn" data-animation-duration="1250">
+      <div class="u-custom-color-7 u-expanded-height u-shape u-shape-rectangle u-shape-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-direction="Up" data-animation-delay="0"></div>
+      <div class="u-align-center u-container-align-center u-container-style u-group u-palette-5-dark-3 u-group-1" data-animation-name="customAnimationIn" data-animation-duration="1300">
+        <div class="u-container-layout u-container-layout-1">
+          <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">LOCAL<br>GUIDE
+          </h2>
+          <p class="u-custom-font u-font-montserrat u-text u-text-body-alt-color u-text-2">We are currently developing a new feature that allows you to have a direct chat with the local residents. Allowing you to discover attractions such as hidden sceneries, food vendors and hotels.</p>
+        </div>
+      </div>
+    </section>
     
     
     
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
         <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
           <div class="chat-container"><!-- Floating Button -->
-            <div class="chat-button" onclick="toggleChat()">💬</div><!-- Chat Box -->
+            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
             <div class="chat-box" id="chatBox">
               <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
               </div>
@@ -752,7 +490,7 @@
                 <div class="bot-msg">Hello! How can I help you today?</div>
               </div>
               <div class="chat-input">
-                <input type="text" placeholder="Typing message...">
+                <input type="text" placeholder="Type a message...">
                 <button>➤</button>
               </div>
             </div>
@@ -769,7 +507,7 @@
   .chat-button {
     width: 60px;
     height: 60px;
-    background-color: #F7931E; /* orange like navbar buttons */
+    background-color: #1e5f74; /* darker ocean tone */
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -778,15 +516,12 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     font-size: 28px;
     transition: transform 0.3s ease, background-color 0.3s ease;
-    background: linear-gradient(90deg, #0ab1d9, #34c59d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #fff;
   }
 
   .chat-button:hover {
     transform: scale(1.1);
-    background-color: #C48300; /* darker orange */
+    background-color: #174c5c; /* slightly darker hover */
   }
 
   /* Chat box */
@@ -806,7 +541,7 @@
   }
 
   .chat-header {
-    background: linear-gradient(90deg, #0ab1d9, #34c59d); /* navbar gradient */
+    background-color: #1e5f74;
     color: #000;
     padding: 12px;
     font-weight: bold;
@@ -845,7 +580,7 @@
   }
 
   .chat-input button {
-    background: #F7931E;
+    background: #1e5f74;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
@@ -853,13 +588,12 @@
   }
 
   .chat-input button:hover {
-    background: #C48300;
+    background: #174c5c;
   }
 
   .close-btn {
     cursor: pointer;
     font-size: 20px;
-    color: #fff;
   } </style>
         </div>
         <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation">
@@ -889,7 +623,10 @@
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not by copied due to copyright law </p>
+        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not be copied due to copyright law.<br>This project is for educational purposes only and is not intended for commercial use. 
+        </p>
       </div></footer>
+    <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/one-page-template">One Page Template</a> was created with Nicepage Builder 
+    </section>
   
 </body></html>
