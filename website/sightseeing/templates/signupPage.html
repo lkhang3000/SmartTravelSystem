@@ -52,14 +52,6 @@
           <form action="{% url 'signup_page' %}" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
             {% csrf_token %}
             
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background: {% if 'error' in message.tags %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if 'error' in message.tags %}#721c24{% else %}#155724{% endif %};">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-            
             <div class="u-carousel-inner" role="listbox">
               <div class="u-carousel-item u-form-step u-slide u-active">
                 <div class="u-form-group u-form-name u-label-top u-form-group-1">
@@ -94,11 +86,18 @@
               </div>
               <div class="u-carousel-item u-form-step u-slide"></div>
             </div>
-            <div class="u-align-center u-form-group u-form-submit u-label-top">
-              <button type="submit" class="u-border-none u-btn u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-btn-3">CREATE ACCOUNT</button>
+            <div class="u-align-center u-form-group u-form-submit u-label-top" style="display:flex; justify-content:center; align-items:center; margin:-15px auto 10px; width:100%;">
+              <button type="submit" class="u-border-none u-btn u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-btn-3" style="min-width:220px; padding:12px 24px;">CREATE ACCOUNT</button>
             </div>
           </form>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+              <div class="alert" style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background: {% if 'error' in message.tags or 'info' in message.tags %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if 'error' in message.tags or 'info' in message.tags %}#721c24{% else %}#155724{% endif %}; word-wrap: break-word; overflow-wrap: break-word; width: 100%; box-sizing: border-box;">
+                {{ message }}
+              </div>
+            {% endfor %}
+        {% endif %}
       </div>
     </section>
   
