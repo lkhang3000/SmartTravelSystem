@@ -350,7 +350,7 @@
                           <div class="u-container-layout u-container-layout-3">
                             <ul style="list-style: none; padding: 0;">
                               <li style="padding: 5px 0; border-bottom: 1px solid #eee; cursor: pointer;" onclick="showExplore()">Explore</li>
-                              <li style="padding: 5px 0; border-bottom: 1px solid #eee;">Places to visit</li>
+                              <li style="padding: 5px 0; border-bottom: 1px solid #eee; cursor: pointer;" onclick="inputPlaces()">Places to visit</li>
                               <li style="padding: 5px 0; border-bottom: 1px solid #eee;">Notes</li>
                               <li style="padding: 5px 0;">Map</li>
                             </ul>
@@ -380,12 +380,11 @@
                     <div class="u-absolute-hcenter u-expanded u-grey-light-2 u-map">
                       <div class="embed-responsive">
                        
-                      {% if request.session.trip_map_url %}
-                      <iframe 
-                          src="{{ request.session.trip_map_url }}"
-                          style="width:100%; height:400px; border:0; border-radius: 10px;">
+                      
+                      <iframe id="tripMapIframe" 
+                              src="{{ request.session.trip_map_url }}" 
+                              style="width:100%; height:400px; border:0; border-radius: 10px;">
                       </iframe>
-                      {% endif %}
 
                       </div>
                     </div>
@@ -797,6 +796,49 @@
             dayContent.innerHTML = content;
         }
         
+        function inputPlaces() {
+          const dayContent = document.getElementById('dayContent');
+
+          // Tạo HTML
+          let content = '<div class="input-places-section" style="padding: 20px;">';
+          content += '<h3 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 20px;">Add New Place to Visit</h3>';
+
+          // Khu vực tìm kiếm địa điểm
+          content += '<div class="place-search-area" style="margin-bottom: 20px;">';
+          content += '<input type="text" id="placeSearchInput" placeholder="Enter place name or address..." style="width: 70%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px;">';
+          content += '<button onclick="searchPlaces()" style="padding: 10px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>';
+          content += '</div>';
+
+          // Chèn HTML vào DOM
+          dayContent.innerHTML = content;
+        }
+
+        
+        function searchPlaces() {
+          const query = document.getElementById('placeSearchInput').value.trim();
+          if (!query) {
+              alert("Please enter a place to search.");
+              return;
+          }
+
+          const iframe = document.getElementById('tripMapIframe');
+          if (!iframe) {
+              console.error("No map iframe found!");
+              return;
+          }
+
+          // Lấy URL map gốc từ session
+          let baseUrl = "{{ request.session.trip_map_url|escapejs }}";
+
+          // Cập nhật query mà không tạo iframe mới
+          if (baseUrl.includes("q=")) {
+              iframe.src = baseUrl.replace(/q=[^&]*/, `q=${encodeURIComponent(query)}`);
+          } else {
+              iframe.src = baseUrl + `&q=${encodeURIComponent(query)}`;
+          }
+        }
+
+
         function viewDetail(destId) {
             // Redirect to destination detail page
             window.location.href = `/destination/${destId}/`;
