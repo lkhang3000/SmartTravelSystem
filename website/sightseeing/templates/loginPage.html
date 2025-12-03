@@ -53,13 +53,7 @@
           <form action="{% url 'login_page' %}" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
             {% csrf_token %}
             
-            {% if messages %}
-              {% for message in messages %}
-                <div class="alert" style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background: {% if 'error' in message.tags or 'info' in message.tags %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if 'error' in message.tags or 'info' in message.tags %}#721c24{% else %}#155724{% endif %};">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
+            
             
             <div class="u-form-email u-form-group u-label-top">
               <label for="username" class="u-label">Username or Email</label>
@@ -77,6 +71,13 @@
             </div>
           </form>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+              <div class="alert" style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background: {% if 'error' in message.tags or 'info' in message.tags %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if 'error' in message.tags or 'info' in message.tags %}#721c24{% else %}#155724{% endif %}; word-wrap: break-word; overflow-wrap: break-word; width: 100%; box-sizing: border-box; max-height: 100px; overflow-y: auto;">
+                {{ message }}
+              </div>
+            {% endfor %}
+        {% endif %}
       </div>
     </section>
    
