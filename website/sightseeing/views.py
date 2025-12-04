@@ -536,6 +536,8 @@ def trip_planner(request):
     travelers = request.session.get('trip_travelers', 1)
     price_per_person = request.session.get('trip_price_per_person', '')
     
+    recommendations = Destinations.objects.filter(location__locationName__icontains=destination)
+
     # Calculate number of days
     num_days = 7  # default
     if departure_date and arrival_date:
@@ -644,6 +646,18 @@ def trip_planner(request):
     checked_state_json = json.dumps(checked_state)
     recommendations_json = json.dumps(personalized_recommendations)
     
+    recommended_list = []
+    for d in recommendations:
+        recommended_list.append({
+            "id": d.id,
+            "name": d.desName,
+            "location": d.location.locationName if d.location else "Unknown",
+            "category": d.category or "General",
+            "rating": d.rating or 0.0,
+            "image_url": d.image_url or "https://picsum.photos/seed/default/400/300",
+            "price_range": d.price_range or ""
+        })
+
     context = {
         'destination': destination,
         'departure_date': departure_date,
@@ -656,6 +670,8 @@ def trip_planner(request):
         'trip_items_json': trip_items_json,
         'checked_state_json': checked_state_json,
         'recommendations_json': recommendations_json,
+        'explore_recommendations': recommended_list,
+        'explore_recommendations_json': json.dumps(recommended_list),
     }
     
     return render(request, 'Trip-planner.html', context)
@@ -727,6 +743,10 @@ def trip_form(request):
             request.session['trip_budget'] = budget
             request.session['trip_travelers'] = travelers
             request.session['trip_price_per_person'] = price_per_person
+
+            request.session['trip_map_url'] = (
+                f"https://maps.google.com/maps?output=embed&q={destination}&z=12"
+            )
             
             messages.success(request, f'Trip to {destination} has been created successfully!')
             return redirect('trip_planner')
@@ -894,6 +914,7 @@ def save_day_selections(request):
             return JsonResponse({'success': False, 'message': 'An error occurred while saving.'})
     
     return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
 
 
 
