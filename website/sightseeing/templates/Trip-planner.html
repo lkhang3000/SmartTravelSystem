@@ -1,918 +1,332 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <title>Page 2</title>
-    <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
-  <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" media="screen">
-    <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
-    <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
-
-    <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
-    
-    
-    
-    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
-    <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "SmartTour",
-		"logo": "{% static 'images/SmartTour11.png' %}"
-}</script>
-    <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Page 2">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="website">
-  <script>
-  function toggleChat() {
-    const chatBox = document.getElementById("chatBox");
-    chatBox.style.display =
-      chatBox.style.display === "flex" ? "none" : "flex";
-  }
-</script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en">
-  {% csrf_token %}<header class="u-header" 
-
-        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
-
-
-    <a href="{% url 'home' %}" 
-
-       class="u-logo" 
-
-       style="display:flex; align-items:center;">
-
-        <img src="{% static 'images/SmartTour11.png' %}" 
-
-             style="height:130px; width:130px; display:block;" 
-
-             alt="logo">
-
-    </a>
-
-
-
-    <a href="{% url 'home' %}" style="text-decoration:none;">
-
-    <p style="margin:0; 
-
-        font-size:60px; 
-
-        font-weight:800; 
-
-        color:white; 
-
-        letter-spacing:1px;
-
-        margin-left:40px;
-
-        text-shadow:0 3px 6px rgba(0,0,0,6);">
-
-        SMART TOUR
-
-    </p>
-
-    </a>
-
-    <div style="display:flex; gap:10px; align-items:center;">
-
-        {% if user.is_authenticated %}
-
-        <div style="position:relative;">
-
-            <button id="userMenuBtn" style="
-
-              padding:8px 12px; 
-
-              background:#F7931E; 
-
-              border-radius:25px; 
-
-              color:white; 
-
-              font-weight:700;            
-
-              border:none;
-
-              cursor:pointer;
-
-              display:flex;
-
-              align-items:center;
-
-              gap:8px;
-
-              transition:0.2s;
-
-            "
-
-            onmouseover="this.style.background='#C48300'"
-
-            onmouseout="this.style.background='#F7931E'"
-
-            onclick="toggleUserMenu()">
-
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-
-                </svg>
-
-                {{ user.username }}
-
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
-
-                    <path d="M7 10l5 5 5-5z"/>
-
-                </svg>
-
-            </button>
-
-            <div id="userDropdown" style="
-
-              display:none;
-
-              position:absolute;
-
-              top:110%;
-
-              right:0;
-
-              background:white;
-
-              border-radius:8px;
-
-              box-shadow:0 4px 12px rgba(0,0,0,0.15);
-
-              min-width:180px;
-
-              z-index:1000;
-
-            ">
-
-                <a href="{% url 'user_profile' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
-                    👤 My Profile
-
-                </a>
-
-                <a href="{% url 'recommend_result' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
-                    🗺️ My Destinations
-
-                </a>
-
-                <a href="/logout/" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#d32f2f;
-
-                  text-decoration:none;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
-                    🚪 Logout
-
-                </a>
-
-            </div>
-
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trip Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar__top">
+        <div class="brand">
+          <div class="brand__logo">
+           <img src="{% static 'images/SmartTour11.png' %}" alt="SmartTour Logo" class="sidebar-logo">
+          </div>
+          <div class="brand__text">
+            <span class="brand__title">SmartTour</span>
+          </div>
         </div>
 
+        <button class="ai-chip">
+          <span class="ai-chip__icon">✨</span>
+          <span>AI Assistant</span>
+        </button>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="nav-section">
+          <button class="nav-item nav-item--active" data-section="overview-section">
+            <span>Overview</span>
+          </button>
+        </div>
+
+        <div class="nav-section">
+          <p class="nav-section__title">Explore</p>
+          <button class="nav-item" data-section="explore-section">Recommended places</button>
+          <button class="nav-item" data-section="explore-section">Saved destination</button>
+        </div>
+
+        <div class="nav-section">
+          <p class="nav-section__title">Itinerary</p>
+          <button class="nav-item" data-section="itinerary-section">
+            <span>Mon 12/1</span>
+            <span class="nav-item__pill">3 stops</span>
+          </button>
+          <button class="nav-item" data-section="itinerary-section">
+            <span>Tue 12/2</span>
+            <span class="nav-item__pill">2 stops</span>
+          </button>
+        </div>
+      </nav>
+    </aside>
+    
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- Overview / hero -->
+      <header class="hero-card" id="overview-section">
         
+        <div class="hero-card__image">
+          <div class="hero-card__overlay"></div>
+        </div>
 
-        <script>
+        <div class="hero-card__content">
+          <div class="hero-card__top-row">
+            <div>
+              <h1 class="hero-card__title">Trip to Paris</h1>
+              <div class="hero-card__meta">
+                <span class="meta-pill">
+                  <span class="meta-pill__icon">📅</span>
+                  12/1 – 12/2
+                </span>
+                <span class="meta-pill">
+                  <span class="meta-pill__icon">👥</span>
+                  2 travelers
+                </span>
+              </div>
+            </div>
+            <div class="hero-card__actions">
+              <button class="icon-button" aria-label="Share trip">🔗</button>
+              <button class="icon-button" aria-label="Settings">⚙️</button>
+            </div>
+          </div>
+        </div>
+      </header>
 
-        function toggleUserMenu() {
+      <!-- Explore -->
+      <section class="section" id="explore-section">
+        <div class="section__header">
+          <h2>Explore</h2>
+          <button class="btn btn--primary">
+            <span class="btn__icon">🔍</span>
+            Browse all
+          </button>
+        </div> 
+      </section>
 
-            var dropdown = document.getElementById('userDropdown');
+      <!-- Recommended Places -->
+      <div class="explore-subsection">
+  <h3 class="explore-subtitle">Recommended places</h3>
 
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+  <div class="card-grid">
+    <article class="explore-card">
+      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1543340713-8a9f6d7f1cec?auto=format&fit=crop&w=900&q=80');"></div>
+      <div class="explore-card__body">
+        <h3 class="explore-card__title">Top museums in Paris</h3>
+        <p class="explore-card__subtitle">Iconic culture & exhibitions</p>
+        <p class="explore-card__meta">Suggested for your trip</p>
+      </div>
+    </article>
 
-        }
+    <article class="explore-card">
+      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80');"></div>
+      <div class="explore-card__body">
+        <h3 class="explore-card__title">Paris local markets</h3>
+        <p class="explore-card__subtitle">Food, crafts & hidden gems</p>
+        <p class="explore-card__meta">Recommended</p>
+      </div>
+    </article>
 
+    <article class="explore-card">
+      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80');"></div>
+      <div class="explore-card__body">
+        <h3 class="explore-card__title">Historic neighborhoods</h3>
+        <p class="explore-card__subtitle">Walkable routes & viewpoints</p>
+        <p class="explore-card__meta">Perfect for day 1</p>
+      </div>
+    </article>
+  </div>
+      </div>
 
-        // Đóng dropdown khi click bên ngoài
+<!-- Saved Destinations -->
+      <div class="explore-subsection">
+  <h3 class="explore-subtitle">Saved destinations</h3>
 
-        window.onclick = function(event) {
+  <div class="card-grid">
+    <article class="explore-card">
+      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80');"></div>
+      <div class="explore-card__body">
+        <h3 class="explore-card__title">Louvre Museum</h3>
+        <p class="explore-card__subtitle">Art, culture & iconic exhibits</p>
+        <p class="explore-card__meta">Saved on your trip plan</p>
+      </div>
+    </article>
 
-            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+    <article class="explore-card">
+      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80');"></div>
+      <div class="explore-card__body">
+        <h3 class="explore-card__title">Eiffel Tower</h3>
+        <p class="explore-card__subtitle">Best views in Paris</p>
+        <p class="explore-card__meta">Previously saved</p>
+      </div>
+    </article>
 
-                var dropdown = document.getElementById('userDropdown');
+    <article class="explore-card">
+      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506146829809-ecf6d57a1f02?auto=format&fit=crop&w=900&q=80');"></div>
+      <div class="explore-card__body">
+        <h3 class="explore-card__title">Montmartre & Sacré-Cœur</h3>
+        <p class="explore-card__subtitle">Artistic streets & classic views</p>
+        <p class="explore-card__meta">Saved earlier</p>
+      </div>
+    </article>
+  </div>
+      </div>
+      <!-- BIG ITINERARY -->
+      <section class="section itinerary-section" id="itinerary-section">
+        <div class="section__header">
+          <h2>Itinerary</h2>
+          <button class="meta-pill meta-pill--big">
+            <span class="meta-pill__icon">📅</span>
+            12/1 – 12/2
+          </button>
+        </div>
 
-                if (dropdown && dropdown.style.display === 'block') {
+        <!-- Day 1 -->
+        <div class="itinerary-day-full">
+          <div class="itinerary-day-full__head">
+            <div>
+              <h3>Monday, December 1st</h3>
+              <button class="link-button">Add subheading</button>
+            </div>
+            <div class="itinerary-day-full__actions">
+              <button class="tiny-link">
+                ✨ Auto-fill day
+              </button>
+              <span class="dot-separator">·</span>
+              <button class="tiny-link">
+                📍 Optimize route
+              </button>
+              <button class="icon-button icon-button--ghost">⋯</button>
+            </div>
+          </div>
 
-                    dropdown.style.display = 'none';
+          <!-- Add a place bar -->
+          <div class="place-input-row">
+            <div class="place-input">
+              <span class="place-input__icon">📍</span>
+              <span class="place-input__placeholder">Add a place</span>
+            </div>
+          </div>
 
-                }
+          <!-- Recommended places -->
+          <div class="recommended-row">
+            <div class="recommended-row__header">
+              <span class="chevron">⌄</span>
+              <span class="recommended-row__title">Recommended places</span>
+            </div>
 
-            }
+            <div class="recommended-row__scroller">
+              <div class="recommended-card">
+                <div class="recommended-card__image recommended-card__image--eiffel"></div>
+                <div class="recommended-card__body">
+                  <span class="recommended-card__name">Eiffel Tower</span>
+                  <button class="recommended-card__add">＋</button>
+                </div>
+              </div>
 
-        }
+              <div class="recommended-card">
+                <div class="recommended-card__image recommended-card__image--louvre"></div>
+                <div class="recommended-card__body">
+                  <span class="recommended-card__name">Louvre Museum</span>
+                  <button class="recommended-card__add">＋</button>
+                </div>
+              </div>
 
-        </script>
+              <div class="recommended-card">
+                <div class="recommended-card__image recommended-card__image--notre"></div>
+                <div class="recommended-card__body">
+                  <span class="recommended-card__name">Notre-Dame Cathedral</span>
+                  <button class="recommended-card__add">＋</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {% else %}
+        <!-- Day 2 -->
+        <div class="itinerary-day-full">
+          <div class="itinerary-day-full__head">
+            <div>
+              <h3>Tuesday, December 2nd</h3>
+              <button class="link-button">Add subheading</button>
+            </div>
+            <div class="itinerary-day-full__actions">
+              <button class="tiny-link">
+                ✨ Auto-fill day
+              </button>
+              <span class="dot-separator">·</span>
+              <button class="tiny-link">
+                📍 Optimize route
+              </button>
+              <button class="icon-button icon-button--ghost">⋯</button>
+            </div>
+          </div>
 
-        <a href="{% url 'login_page' %}" 
+          <div class="place-input-row">
+            <div class="place-input">
+              <span class="place-input__icon">📍</span>
+              <span class="place-input__placeholder">Add a place</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-           style="
+    </main>
 
-             padding:8px 18px; 
+    <!-- RIGHT MAP PANEL -->
+    <aside class="map-pane">
+      <header class="map-pane__header">
+        <span class="map-pane__title">Map</span>
+        <button class="chip chip--ghost chip--small">Export</button>
+      </header>
 
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
-            Log in
-
-        </a>
-
-        <a href="{% url 'signup_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
-            Register
-
-        </a>
-
-        {% endif %}
-
+    <div class="map-pane__body">
+    <div id="smarttour-map"></div>
     </div>
+    </aside>
 
-</header>
+  </div>
 
-    <section class="u-clearfix u-valign-middle-xl u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-section-1" id="block-2">
-      <div class="data-layout-selected u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
-        <div class="u-layout">
-          <div class="u-layout-row">
-            <div class="u-size-11">
-              <div class="u-layout-col">
-                <div class="u-container-style u-layout-cell u-shape-rectangle u-size-60 u-layout-cell-1">
-                  <div class="u-container-layout u-container-layout-1">
-                    <div class="u-accordion u-expanded-width u-accordion-1" role="tablist">
-                      <div class="u-accordion-item">
-                        <a class="active u-accordion-link u-button-style u-custom-font u-font-montserrat u-hover-grey-10 u-text-custom-color-7 u-accordion-link-1" id="link-2c92" aria-controls="2c92" aria-selected="true" role="tab"><span class="u-accordion-link-text">AI ASSISTANT</span><span class="u-accordion-link-icon u-icon u-icon-rectangle u-text-custom-color-7 u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 16 16" style=""><use xlink:href="#svg-baeb"></use></svg><svg class="u-svg-content" viewBox="0 0 16 16" x="0px" y="0px" id="svg-baeb"><path d="M8,10.7L1.6,5.3c-0.4-0.4-1-0.4-1.3,0c-0.4,0.4-0.4,0.9,0,1.3l7.2,6.1c0.1,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l7.1-6
-	c0.4-0.4,0.4-0.9,0-1.3c-0.4-0.4-1-0.4-1.3,0L8,10.7z"></path></svg></span>
-                        </a>
-                        <div class="u-accordion-active u-accordion-pane u-container-style u-accordion-pane-1" id="2c92" aria-labelledby="link-2c92" role="tabpanel">
-                          <div class="u-container-layout u-container-layout-2"></div>
-                        </div>
-                      </div>
-                      <div class="u-accordion-item">
-                        <a class="u-accordion-link u-button-style u-custom-font u-font-montserrat u-hover-grey-10 u-text-custom-color-7 u-accordion-link-2" id="link-ee32" aria-controls="ee32" aria-selected="false" role="tab"><span class="u-accordion-link-text">Overview </span><span class="u-accordion-link-icon u-icon u-icon-rectangle u-text-custom-color-7 u-icon-2"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 16 16" style=""><use xlink:href="#svg-53f3"></use></svg><svg class="u-svg-content" viewBox="0 0 16 16" x="0px" y="0px" id="svg-53f3"><path d="M8,10.7L1.6,5.3c-0.4-0.4-1-0.4-1.3,0c-0.4,0.4-0.4,0.9,0,1.3l7.2,6.1c0.1,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l7.1-6
-	c0.4-0.4,0.4-0.9,0-1.3c-0.4-0.4-1-0.4-1.3,0L8,10.7z"></path></svg></span>
-                        </a>
-                        <div class="u-accordion-pane u-container-style u-accordion-pane-2" id="ee32" aria-labelledby="link-ee32" role="tabpanel">
-                          <div class="u-container-layout u-container-layout-3">
-                            <ul style="list-style: none; padding: 0;">
-                              <li style="padding: 5px 0; border-bottom: 1px solid #eee; cursor: pointer;" onclick="showExplore()">Explore</li>
-                              <li style="padding: 5px 0; border-bottom: 1px solid #eee; cursor: pointer;" onclick="inputPlaces()">Places to visit</li>
-                              <li style="padding: 5px 0; border-bottom: 1px solid #eee;">Notes</li>
-                              <li style="padding: 5px 0;">Map</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="u-accordion-item">
-                        <a class="u-accordion-link u-button-style u-custom-font u-font-montserrat u-hover-grey-10 u-text-custom-color-7 u-accordion-link-3" id="link-cc09" aria-controls="cc09" aria-selected="false" role="tab"><span class="u-accordion-link-text">Itinerary </span><span class="u-accordion-link-icon u-icon u-icon-rectangle u-text-custom-color-7 u-icon-3"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 16 16" style=""><use xlink:href="#svg-1b36"></use></svg><svg class="u-svg-content" viewBox="0 0 16 16" x="0px" y="0px" id="svg-1b36"><path d="M8,10.7L1.6,5.3c-0.4-0.4-1-0.4-1.3,0c-0.4,0.4-0.4,0.9,0,1.3l7.2,6.1c0.1,0.1,0.4,0.2,0.6,0.2s0.4-0.1,0.6-0.2l7.1-6
-	c0.4-0.4,0.4-0.9,0-1.3c-0.4-0.4-1-0.4-1.3,0L8,10.7z"></path></svg></span>
-                        </a>
-                        <div class="u-accordion-pane u-container-style u-accordion-pane-3" id="cc09" aria-labelledby="link-cc09" role="tabpanel">
-                          <div class="u-container-layout u-container-layout-4">
-                            <ul id="dayList" style="list-style: none; padding: 0;">
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="u-size-49">
-              <div class="u-layout-col">
-                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-2">
-                  <div class="u-container-layout u-container-layout-5">
-                    <div class="u-absolute-hcenter u-expanded u-grey-light-2 u-map">
-                      <div class="embed-responsive">
-                       
-                      
-                      <iframe id="tripMapIframe" 
-                              src="{{ request.session.trip_map_url }}" 
-                              style="width:100%; height:400px; border:0; border-radius: 10px;">
-                      </iframe>
+  <!-- Smooth scroll + active menu -->
+  <script>
+    const navItems = document.querySelectorAll('.nav-item[data-section]');
 
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-4">
-                  <div class="u-container-layout u-container-layout-8">
-                    <div class="u-container-layout u-valign-top u-container-layout-itinerary" style="padding: 20px;">
-                      <div id="dayContent">
-                        </div>
-                    </div>
-                  </div>
-                </div>
-               
-      
-      
-      
-      
-      
-    </section>
-    
-    
-    
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
-        <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
-          <div class="chat-container"><div class="chat-button" onclick="toggleChat()"> 💬 </div><div class="chat-box" id="chatBox">
-              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
-              </div>
-              <div class="chat-body">
-                <div class="bot-msg">Hello! How can I help you today?</div>
-              </div>
-              <div class="chat-input">
-                <input type="text" placeholder="Type a message...">
-                <button>➤</button>
-              </div>
-            </div>
-          </div>
-          <style> .chat-container {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    z-index: 9999;
-    font-family: sans-serif;
-  }
+    navItems.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.section;
+        const target = document.getElementById(id);
+        if (!target) return;
 
-  /* Floating button */
-  .chat-button {
-    width: 60px;
-    height: 60px;
-    background-color: #0ab1d9; /* navbar color */
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    font-size: 28px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    color: #fff;
-  }
+        // Cuộn mượt đến section
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  .chat-button:hover {
-    transform: scale(1.1);
-    background-color: #34c59d; /* navbar hover */
-  }
+        // Đổi highlight cho menu
+        navItems.forEach(b => b.classList.remove('nav-item--active'));
+        btn.classList.add('nav-item--active');
+      });
+    });
+  </script>
+  <!-- Leaflet map script -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
 
-  /* Chat box */
-  .chat-box {
-    display: none;
-    position: absolute;
-    bottom: 75px;
-    right: 0;
-    width: 350px;
-    height: 450px;
-    background: #eaf4f6; /* light blue-gray */
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    overflow: hidden;
-    flex-direction: column;
-    color: #000; /* black text */
-  }
+    // Tọa độ trung tâm Paris
+    const defaultCenter = [48.8566, 2.3522];
 
-  .chat-header {
-    background-color: #0ab1d9;
-    color: #000;
-    padding: 12px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    // 1. Tạo bản đồ
+    const map = L.map('smarttour-map').setView(defaultCenter, 13);
 
-  .chat-body {
-    padding: 10px;
-    flex: 1;
-    overflow-y: auto;
-    background: #f5f8f9;
-  }
+    // 2. Load layer từ OpenStreetMap (miễn phí)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
-  .bot-msg {
-    background: #c8e3e8; /* pale teal bubble */
-    padding: 8px 12px;
-    border-radius: 10px;
-    width: fit-content;
-    color: #000;
-  }
+    // 3. Thêm marker mẫu tại Eiffel Tower
+    L.marker([48.8584, 2.2945])
+      .addTo(map)
+      .bindPopup("<b>Eiffel Tower</b><br>Iconic landmark in Paris.")
+      .openPopup();
 
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #ccc;
-  }
-
-  .chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    color: #000;
-    background: #fff;
-  }
-
-  .chat-input button {
-    background: #0ab1d9;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    color: #fff;
-  }
-
-  .chat-input button:hover {
-    background: #34c59d;
-  }
-
-  .close-btn {
-    cursor: pointer;
-    font-size: 20px;
-  } </style>
-        </div>
-        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation">
-          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
-            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
-              <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
-              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
-</g></svg>
-            </a>
-          </div>
-          <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" style="padding: 10px 20px;">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
-</li></ul>
-          </div>
-          <div class="u-custom-menu u-nav-container-collapse" id="4bf4" role="region" aria-label="Menu panel">
-            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
-              <div class="u-inner-container-layout u-sidenav-overflow">
-                <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="./">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a>
-</li></ul>
-              </div>
-            </div>
-            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
-          </div>
-        </nav>
-        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not by copied due to copyright law </p>
-      </div></footer>
-    <section class="u-backlink u-clearfix u-grey-80"></section>
-    
-    <script>
-        var tripItems = {{ trip_items_json|safe }};
-        var budget = {{ budget|default:0 }};
-        var travelers = {{ travelers|default:1 }};
-        var pricePerPerson = "{{ price_per_person|default:'' }}";
-        var numDays = {{ num_days|default:7 }};
-        
-        // Load checked state from server
-        var checkedState = {{ checked_state_json|safe }};
-        
-        // Load from localStorage if available
-        const savedCheckedState = localStorage.getItem('tripPlannerCheckedState');
-        if (savedCheckedState) {
-            const localCheckedState = JSON.parse(savedCheckedState);
-            // Merge: prefer local changes over server
-            checkedState = { ...checkedState, ...localCheckedState };
-        }
-        
-        // Function to get cookie
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        
-        // Load recommendations
-        
-        function saveCheckedStateToLocal() {
-            localStorage.setItem('tripPlannerCheckedState', JSON.stringify(checkedState));
-        }
-        function showMessage(message, type) {
-            // Simple message display
-            alert(message);
-        }
-        function calculateDayTotalCost(day) {
-            let dayTotal = 0;
-            // Lấy cost từ tripItems và checkedState
-            Object.keys(checkedState[day] || {}).forEach(index => {
-                if (checkedState[day][index]) {
-                    // Dùng regex để loại bỏ tất cả ký tự không phải số
-                    const costString = tripItems[index].destination__price_range || '0';
-                    const cost = parseInt(costString.replace(/[^0-9]/g, '')) || 0;
-                    dayTotal += cost;
-                }
-            });
-            return dayTotal;
-        }
-        // ***************************************************************
-
-        function updateTotal() {
-            // Calculate total for each day from checkedState
-            const days = {};
-            
-            Object.keys(checkedState).forEach(day => {
-                // Thay thế logic tính toán cũ bằng hàm mới để đảm bảo tính nhất quán và dễ bảo trì
-                days[day] = calculateDayTotalCost(day); 
-            });
-            
-            // Update day totals
-            Object.keys(days).forEach(day => {
-                const dayTotalElement = document.getElementById(`day${day}Total`);
-                if (dayTotalElement) {
-                    // Chuyển đổi sang định dạng VND chuẩn (không dùng toLocaleString thô)
-                    const totalPerPerson = days[day] / travelers;
-                    dayTotalElement.textContent = Math.round(totalPerPerson).toLocaleString();
-                }
-            });
-            
-            // Calculate and update itinerary total
-            let itineraryTotal = 0;
-            Object.values(days).forEach(dayTotal => {
-                itineraryTotal += dayTotal;
-            });
-            
-            document.getElementById('itineraryTotal').textContent = itineraryTotal.toLocaleString();
-            
-            // Compare with budget
-            const comparison = document.getElementById('budgetComparison');
-            if (budget > 0) {
-                const budgetAmount = budget * 1000000; // Convert million to VND
-                if (itineraryTotal <= budgetAmount) {
-                    comparison.textContent = `Within budget (${budgetAmount.toLocaleString()} VND)`;
-                    comparison.style.color = 'green';
-                } else {
-                    comparison.textContent = `Over budget by ${(itineraryTotal - budgetAmount).toLocaleString()} VND`;
-                    comparison.style.color = 'red';
-                }
-            }
-        }
-        
-        var currentDay = 1; // Track current day
-        
-        function showDay(day) {
-            currentDay = day;
-            const dayContent = document.getElementById('dayContent');
-            let content = '';
-            
-            content += '<div class="day-itinerary" style="margin-bottom: 30px; border-bottom: 2px solid #ecf0f1; padding-bottom: 20px;"><h3 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 15px;">Day ' + day + '</h3>';
-            
-            tripItems.forEach((item, index) => {
-                // Cải thiện cách lấy cost để hiển thị (loại bỏ dấu phẩy trước khi parse)
-                const cost = item.destination__price_range ? parseInt(item.destination__price_range.replace(/[^0-9]/g, '')) || 0 : 0;
-                const name = item.destination__desName || 'Unknown';
-                const address = item.destination__address || 'Unknown';
-                const isChecked = checkedState[day] && checkedState[day][index] ? 'checked' : '';
-                content += '<div class="destination-item" style="display: flex; align-items: center; margin-bottom: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px;"><input type="checkbox" class="destination-checkbox" data-day="' + day + '" data-cost="' + cost + '" data-index="' + index + '" style="margin-right: 15px; transform: scale(1.2);" onchange="updateCheckedState(this)" ' + isChecked + '><div><strong style="color: #34495e;">' + name + '</strong> - ' + address + '<span style="color: #7f8c8d; font-size: 0.9em;"> (' + cost.toLocaleString() + ' VND)</span></div></div>';
-            });
-            
-            content += '<div style="text-align: center; margin-top: 20px;"><button onclick="saveDaySelections(' + day + ')" style="background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1em;">Save Day ' + day + '</button></div>';
-            
-            content += '<div style="text-align: right; margin-top: 10px;"><strong>Day ' + day + ' Total per person: <span id="day' + day + 'Total" style="color: #e74c3c;">0</span> VND</strong></div></div>';
-            
-            // Add total budget section
-            content += '<div class="total-budget" style="background: linear-gradient(90deg, #0ab1d9, #34c59d); color: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 4px 15px rgba(10,177,217,0.3);"><h3 style="margin: 0 0 10px 0; font-size: 1.8em;">Total Trip Budget</h3><div style="font-size: 2em; font-weight: bold;"><span id="itineraryTotal">0</span> VND</div><p id="budgetComparison" style="margin: 10px 0 0 0; opacity: 0.9;">Select destinations to see your budget status</p></div>';
-            
-            dayContent.innerHTML = content;
-            updateTotal();
-        }
-        
-        function updateCheckedState(checkbox) {
-            const day = checkbox.getAttribute('data-day');
-            const index = checkbox.getAttribute('data-index');
-            
-            if (!checkedState[day]) {
-                checkedState[day] = {};
-            }
-            
-            checkedState[day][index] = checkbox.checked;
-            saveCheckedStateToLocal();
-            updateTotal();
-        }
-        
-        // ***************************************************************
-        // ********* PHẦN SỬA ĐỔI CHÍNH: HÀM saveDaySelections **********
-        // ***************************************************************
-        function saveDaySelections(day) {
-            // 1. Tính toán chi phí an toàn dưới dạng số nguyên
-            const totalCostForAllTravelers = calculateDayTotalCost(day);
-            // Tính chi phí / người (Làm tròn thành số nguyên nếu cần)
-            const totalCostPerPersonValue = Math.round(totalCostForAllTravelers / travelers);
-            
-            // 2. Thu thập các mục đã chọn
-            const selectedItems = [];
-            Object.keys(checkedState[day] || {}).forEach(index => {
-                if (checkedState[day][index]) {
-                    selectedItems.push(tripItems[index].id);
-                }
-            });
-            
-            // Get CSRF token from cookie
-            const csrftoken = getCookie('csrftoken');
-            
-            fetch('/trip/save-day-selections/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
-                },
-                body: JSON.stringify({
-                    day: day,
-                    selected_items: selectedItems,
-                    // THÊM TRƯỜNG CHI PHÍ THÔ VÀO ĐÂY
-                    total_cost_per_person: totalCostPerPersonValue 
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    // Xử lý lỗi server (ví dụ: status 500)
-                    return response.text().then(text => { throw new Error(`Server returned status ${response.status}: ${text}`); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Clear localStorage for this day since saved to server
-                    // Giữ lại hàm saveCheckedStateToLocal() gọi ở đây mặc dù logic xóa có thể không còn cần thiết 
-                    // nếu checkedState[day] được dùng để kiểm tra items đã lưu.
-                    saveCheckedStateToLocal(); 
-                    showMessage(data.message || `Đã lưu Ngày ${day} thành công!`, 'success');
-                } else {
-                    showMessage(data.message || 'Đã xảy ra lỗi khi lưu ngày.', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Cải thiện thông báo lỗi
-                showMessage('An error occurred while saving: ' + error.message, 'error');
-            });
-        }
-        // ***************************************************************
-
-        function showMessage(message, type) {
-            // Simple message display
-            alert(message);
-        }
-        
-        const recommendations = {{ explore_recommendations_json|safe }};
-
-        function showExplore() {
-            const dayContent = document.getElementById('dayContent');
-            
-            let content = '<div class="explore-section" style="padding: 20px;"><h3 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 20px;">Explore Destinations</h3>';
-            if (recommendations.length === 0) {
-                content += '<p>No recommendations available.</p></div>';
-                dayContent.innerHTML = content;
-                return;
-            }
-            content += '<div class="recommendations-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">';
-            
-            recommendations.forEach(dest => {
-                // Đảm bảo chi phí được làm sạch trước khi hiển thị nếu cần
-                const cleanPriceRange = dest.price_range ? dest.price_range.replace(/[^0-9]/g, '') : '0';
-                
-                content += `
-                    <div class="recommendation-card" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                        <img src="${dest.image_url}" alt="${dest.name}" style="width: 100%; height: 150px; object-fit: cover;">
-                        <div style="padding: 15px;">
-                            <h4 style="margin: 0 0 5px 0; color: #34495e;">${dest.name}</h4>
-                            <p style="margin: 0 0 5px 0; color: #7f8c8d; font-size: 0.9em;">${dest.location} • ${dest.category}</p>
-                            <p style="margin: 0 0 10px 0; color: #f39c12;">⭐ ${dest.rating} • ${cleanPriceRange.toLocaleString()} VND</p>
-                            <div style="display: flex; gap: 10px;">
-                                <button onclick="viewDetail(${dest.id})" style="flex: 1; padding: 8px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Detail</button>
-                                <button onclick="addToCurrentDay(${dest.id})" style="flex: 1; padding: 8px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">Add to Day ${currentDay}</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            content += '</div></div>';
-            dayContent.innerHTML = content;
-        }
-        
-        function inputPlaces() {
-          const dayContent = document.getElementById('dayContent');
-
-          // Tạo HTML
-          let content = '<div class="input-places-section" style="padding: 20px;">';
-          content += '<h3 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 20px;">Add New Place to Visit</h3>';
-
-          // Khu vực tìm kiếm địa điểm
-          content += '<div class="place-search-area" style="margin-bottom: 20px;">';
-          content += '<input type="text" id="placeSearchInput" placeholder="Enter place name or address..." style="width: 70%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px;">';
-          content += '<button onclick="searchPlaces()" style="padding: 10px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>';
-          content += '</div>';
-
-          // Chèn HTML vào DOM
-          dayContent.innerHTML = content;
-        }
-
-        
-        function searchPlaces() {
-          const query = document.getElementById('placeSearchInput').value.trim();
-          if (!query) {
-              alert("Please enter a place to search.");
-              return;
-          }
-
-          const iframe = document.getElementById('tripMapIframe');
-          if (!iframe) {
-              console.error("No map iframe found!");
-              return;
-          }
-
-          // Lấy URL map gốc từ session
-          let baseUrl = "{{ request.session.trip_map_url|escapejs }}";
-
-          // Cập nhật query mà không tạo iframe mới
-          if (baseUrl.includes("q=")) {
-              iframe.src = baseUrl.replace(/q=[^&]*/, `q=${encodeURIComponent(query)}`);
-          } else {
-              iframe.src = baseUrl + `&q=${encodeURIComponent(query)}`;
-          }
-        }
-
-
-        function viewDetail(destId) {
-            // Redirect to destination detail page
-            window.location.href = `/destination/${destId}/`;
-        }
-        
-        function addToCurrentDay(destId) {
-            console.log('destId:', destId);
-            // Get CSRF token from cookie
-            const csrftoken = getCookie('csrftoken');
-            // Add destination to trip and set to current day
-            fetch(`/destination/${destId}/add-trip/`, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': csrftoken
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('HTTP error! status: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    // Add to tripItems array
-                    const newItem = {
-                        id: data.item_id,
-                        destination__desName: data.name || 'Unknown',
-                        destination__address: data.address || '',
-                        destination__price_range: data.price_range || ''
-                    };
-                    tripItems.push(newItem);
-                    
-                    // Set checked for current day
-                    if (!checkedState[currentDay]) {
-                        checkedState[currentDay] = {};
-                    }
-                    checkedState[currentDay][tripItems.length - 1] = true;
-                    saveCheckedStateToLocal();
-                    updateTotal();
-                    showMessage(`Added to Day ${currentDay}!`, 'success');
-                    // Refresh the day view
-                    showDay(currentDay);
-                } else {
-                    showMessage(data.message, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessage('An error occurred while adding.', 'error');
-            });
-        }
-        
-        // Initialize with day 1
-        document.addEventListener('DOMContentLoaded', function() {
-            // Generate day list
-            const dayList = document.getElementById('dayList');
-            for (let day = 1; day <= numDays; day++) {
-                const li = document.createElement('li');
-                li.style.padding = '5px 0';
-                li.style.borderBottom = '1px solid #eee';
-                li.style.cursor = 'pointer';
-                li.textContent = 'Day ' + day;
-                li.onclick = function() { showDay(day); };
-                dayList.appendChild(li);
-            }
-            
-            if (tripItems.length > 0) {
-                showDay(1);
-            } else {
-                document.getElementById('dayContent').innerHTML = '<p style="text-align: center; color: #7f8c8d;">No destinations in your trip list. Please add some destinations first.</p>';
-            }
-        });
-    </script>
-  
-</body></html>
+  });
+  </script>
+</body>
+</html>
