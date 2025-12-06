@@ -267,4 +267,25 @@
       setupTitleEditor();
     });
 
+    document.addEventListener("DOMContentLoaded", () => {
+      const prevBtns = document.querySelectorAll(".carousel-btn.prev-btn");
+      const nextBtns = document.querySelectorAll(".carousel-btn.next-btn");
+
+      prevBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const track = btn.nextElementSibling; // assumes button -> track
+          const cardWidth = track.querySelector(".explore-card").offsetWidth + 16; // margin/padding
+          track.scrollBy({ left: -cardWidth, behavior: "smooth" });
+        });
+      });
+
+      nextBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const track = btn.previousElementSibling; // assumes track -> button
+          const cardWidth = track.querySelector(".explore-card").offsetWidth + 16;
+          track.scrollBy({ left: cardWidth, behavior: "smooth" });
+        });
+      });
+    });
+
 })();
