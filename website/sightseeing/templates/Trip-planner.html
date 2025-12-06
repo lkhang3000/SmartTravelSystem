@@ -5,11 +5,8 @@
   <meta charset="UTF-8" />
   <title>Trip Planner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" />
   <script src="{% static 'js/TripPlanner.js' %}"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -70,14 +67,16 @@
       <!-- Overview / hero -->
       <header class="hero-card" id="overview-section">
         
-        <div class="hero-card__image">
+        <div class="hero-card__image" 
+            style="background-image: url('{{ request.session.trip_image_url }}'); background-size: cover; background-position: center;">
           <div class="hero-card__overlay"></div>
         </div>
+
 
         <div class="hero-card__content">
           <div class="hero-card__top-row">
             <div>
-              <h1 class="hero-card__title">Trip to Paris</h1>
+              <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
               <div class="hero-card__meta">
                 <span class="meta-pill">
                   12/1 – 12/2
@@ -272,8 +271,20 @@
 
     <!-- RIGHT MAP PANEL -->
       <div class="map-pane__body">
-        <div id="smarttour-map"></div>
+          {% if request.session.trip_map_url %}
+          <iframe 
+              width="100%" 
+              height="100%" 
+              style="border:0; border-radius:10px;" 
+              loading="lazy" 
+              allowfullscreen
+              src="{{ request.session.trip_map_url }}">
+          </iframe>
+          {% else %}
+          <p>No map available. Please create a trip first.</p>
+          {% endif %}
       </div>
+
     </aside>
 
   </div>
@@ -292,7 +303,8 @@
           <h4>Trip Information</h4>
           <div class="form-group">
             <label for="trip-name">Trip Name</label>
-            <input type="text" id="trip-name" placeholder="e.g., Paris Adventure" value="Trip to Paris">
+            <input type="text" id="trip-name" placeholder="e.g., Paris Adventure" value="Trip to {{ request.session.trip_destination }}"disabled>
+
           </div>
           
           <div class="form-row">
