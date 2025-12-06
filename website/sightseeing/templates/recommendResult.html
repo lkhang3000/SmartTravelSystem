@@ -67,395 +67,315 @@
       margin-top: 5px;
     }
   </style>
-  </head>
-  <body data-home-page="https://website6582903.nicepage.io/recommendResult.html?version=2ce9cce8-d49a-414b-1d6b-4d543ae463a6" data-home-page-title="recommendResult" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-xl-mode" data-lang="en"><header class="u-header" 
-
-        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
-
-
-    <!-- LEFT: Logo -->
-
-    <a href="{% url 'home' %}" 
-
-       class="u-logo" 
-
-       style="display:flex; align-items:center;">
-
-        <img src="{% static 'images/SmartTour11.png' %}" 
-
-             style="height:130px; width:130px; display:block;" 
-
-             alt="logo">
-
-    </a>
-
-
-
-    <!-- MIDDLE: Title -->
-
-    <a href="{% url 'home' %}" style="text-decoration:none;">
-
-    <p style="margin:0; 
-
-        font-size:60px; 
-
-        font-weight:800; 
-
-        color:white; 
-
-        letter-spacing:1px;
-
-        margin-left:40px;
-
-        text-shadow:0 3px 6px rgba(0,0,0,6);">
-
-        SMART TOUR
-
-    </p>
-
-    </a>
-
-    <!-- RIGHT: Buttons / User Menu -->
-
-    <div style="display:flex; gap:10px; align-items:center;">
-
-        {% if user.is_authenticated %}
-        <!-- Trip List Icon -->
-        <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
-            <div style="background:#F7931E; border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; transition:0.2s;"
-                 onmouseover="this.style.background='#C48300'"
-                 onmouseout="this.style.background='#F7931E'">
-                <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px;" alt="Trip List">
+  <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
+        id="header"
+        style="position: relative; width: 100%; z-index: 2000; height: 100px; min-height: 100px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
+    <div style="flex: 0 0 auto;">
+        <a href="{% url 'home' %}" class="u-image u-logo u-image-1">
+            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home" style="height:100px; width:auto; display:block; margin-top:30px">
+        </a>
+    </div>
+    <div style="flex:1 1 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:20px;min-width:0;">
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" style="position:relative;top:0;left:0;">
+            <div class="menu-collapse u-custom-font u-font-montserrat" style="font-size:1rem;letter-spacing:0px;">
+                <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-hover-custom-color-7" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
+                    <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#svg-ec46"></use></svg>
+                    <svg class="u-svg-content" version="1.1" id="svg-ec46" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <rect y="1" width="16" height="2"></rect>
+                            <rect y="7" width="16" height="2"></rect>
+                            <rect y="13" width="16" height="2"></rect>
+                        </g>
+                    </svg>
+                </a>
             </div>
-            <span class="trip-count" style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; {% if not trip_count %}display:none;{% endif %}">
+            <div class="u-custom-menu u-nav-container" style="min-width:0;">
+                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap:wrap;justify-content:center;">
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color:#000;">Home</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color:#000;">About us</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color:#000;">Contact us</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color:#000;">Trip Planner</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1" style="display:flex;align-items:center;gap:5px;visibility:visible;margin-right:0;margin-top:0;">
+            <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
+                <span style="display:inline-block;width:30px;height:30px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                        <defs>
+                            <clipPath id="vn-a">
+                                <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
+                            </clipPath>
+                        </defs>
+                        <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
+                            <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
+                            <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
+                        </g>
+                    </svg>
+                </span>
+            </a>
+            <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
+                <span style="display:inline-block;width:30px;height:30px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                        <path fill="#012169" d="M0 0h512v512H0z"/>
+                        <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
+                        <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
+                        <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
+                        <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
+                    </svg>
+                </span>
+            </a>
+        </div>
+    </div>
+    <div style="display:flex;gap:15px;align-items:center;">
+        {% if user.is_authenticated %}
+        <a href="{% url 'trip_list' %}" style="position:relative;text-decoration:none;">
+            <div style="background:#F7931E;border-radius:50%;width:45px;height:45px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">
+                <img src="{% static 'images/list_icon.png' %}" style="width:20px;height:20px;" alt="Trip List">
+            </div>
+            <span class="trip-count" style="position:absolute;top:-8px;right:-8px;background:red;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;{% if not trip_count %}display:none;{% endif %}">
                 {{ trip_count|default:0 }}
             </span>
         </a>
-
-        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
-
         <div style="position:relative;">
-
-            <button id="userMenuBtn" style="
-
-              padding:8px 12px; 
-
-              background:#F7931E; 
-
-              border-radius:25px; 
-
-              color:white; 
-
-              font-weight:700;            
-
-              border:none;
-
-              cursor:pointer;
-
-              display:flex;
-
-              align-items:center;
-
-              gap:8px;
-
-              transition:0.2s;
-
-            "
-
-            onmouseover="this.style.background='#C48300'"
-
-            onmouseout="this.style.background='#F7931E'"
-
-            onclick="toggleUserMenu()">
-
+            <button id="userMenuBtn" style="padding:8px 12px;background:#F7931E;border-radius:25px;color:white;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'" onclick="toggleUserMenu()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-
                 </svg>
-
                 {{ user.username }}
-
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
-
                     <path d="M7 10l5 5 5-5z"/>
-
                 </svg>
-
             </button>
-
-            <div id="userDropdown" style="
-
-              display:none;
-
-              position:absolute;
-
-              top:110%;
-
-              right:0;
-
-              background:white;
-
-              border-radius:8px;
-
-              box-shadow:0 4px 12px rgba(0,0,0,0.15);
-
-              min-width:180px;
-
-              z-index:1000;
-
-            ">
-
-                <a href="{% url 'user_profile' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+            <div id="userDropdown" style="display:none;position:absolute;top:110%;right:0;background:white;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:180px;z-index:1000;">
+                <a href="{% url 'user_profile' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
                     👤 My Profile
-
                 </a>
-
-                <a href="{% url 'recommend_result' %}" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#333;
-
-                  text-decoration:none;
-
-                  border-bottom:1px solid #eee;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+                <a href="{% url 'recommend_result' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
                     🗺️ My Destinations
-
                 </a>
-
-                <a href="/logout/" style="
-
-                  display:block;
-
-                  padding:12px 16px;
-
-                  color:#d32f2f;
-
-                  text-decoration:none;
-
-                  transition:0.2s;
-
-                "
-
-                onmouseover="this.style.background='#f5f5f5'"
-
-                onmouseout="this.style.background='white'">
-
+                <a href="/logout/" style="display:block;padding:12px 16px;color:#d32f2f;text-decoration:none;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
                     🚪 Logout
-
                 </a>
-
             </div>
-
         </div>
-
-        
-
-        <script>
-
-        function toggleUserMenu() {
-
-            var dropdown = document.getElementById('userDropdown');
-
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-
-        }
-
-
-        // Đóng dropdown khi click bên ngoài
-
-        window.onclick = function(event) {
-
-            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
-
-                var dropdown = document.getElementById('userDropdown');
-
-                if (dropdown && dropdown.style.display === 'block') {
-
-                    dropdown.style.display = 'none';
-
-                }
-
-            }
-
-        }
-
-        </script>
-
-        {% else %}
-
-        <!-- User chưa đăng nhập: hiển thị Login/Register -->
-
-        <a href="{% url 'login_page' %}" 
-
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
-            Log in
-
-        </a>
-
-        <a href="{% url 'signup_page' %}" 
-           style="
-
-             padding:8px 18px; 
-
-             background:#F7931E; 
-
-             border-radius:25px; 
-
-             color:white; 
-
-             font-weight:700;            
-
-             text-decoration:none;
-
-             transition:0.2s;
-
-           "
-
-           onmouseover="this.style.background='#C48300'"
-
-           onmouseout="this.style.background='#F7931E'">
-
-            Register
-
-        </a>
-
         {% endif %}
-
     </div>
-
+    <script>
+    function toggleUserMenu() {
+        var dropdown = document.getElementById('userDropdown');
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    }
+    window.onclick = function(event) {
+        if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+            var dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        }
+    }
+    </script>
 </header>
-    <!-- Search Form Section -->
-      <section class="u-clearfix u-section-2" id="block-8" style="padding: 60px 0; display: flex; justify-content: center; align-items: center;">
-        <div style="width: 100%; max-width: 1400px; padding: 0 20px;">
-            <form method="GET" action="" id="searchForm">
-                <div style="display: flex; gap: 0; justify-content: center; align-items: stretch; background: #fff; padding: 0; border-radius: 60px; box-shadow: 0 4px 20px rgba(0,0,0,0.10); overflow: hidden; margin: 0 auto;">
-                    <!-- Location Filter with Icon -->
-                    <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px 24px 40px;">
-                        <span class="u-icon u-text-custom-color-7 u-icon-1">
-                            <svg class="u-svg-link" preserveAspectRatio=xMidYMin slice" viewBox="0 0 54.757 54.757" style="width: 36px; height: 36px;">
-                                <path fill="#F7931E" d="M40.94,5.617C37.318,1.995,32.502,0,27.38,0c-5.123,0-9.938,1.995-13.56,5.617c-6.703,6.702-7.536,19.312-1.804,26.952L27.38,54.757L42.721,32.6C48.476,24.929,47.643,12.319,40.94,5.617z M27.557,26c-3.859,0-7-3.141-7-7s3.141-7,7-7s7,3.141,7,7S31.416,26,27.557,26z"></path>
-                            </svg>
-                        </span>
-                        <select name="location" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
-                            <option value="">All Locations</option>
-                            {% for loc in all_locations %}
-                            <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-            <!-- Category Filter with Icon (img from homepage) -->
-            <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px;">
-              <span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/617418-fb032591.png' %}" alt="" style="width: 36px; height: 36px;"></span>
-              <select name="category" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
-                <option value="">All Categories</option>
-                {% for cat in all_categories %}
-                <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <!-- Rating Filter with Icon (img from homepage) -->
-            <div style="display: flex; align-items: center; gap: 18px; flex: 1; min-width: 320px; padding: 24px 28px;">
-              <span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/471709-0c33d784.png' %}" alt="" style="width: 36px; height: 36px;"></span>
-              <select name="rating" class="filter-select" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; background: white; cursor: pointer; transition: all 0.3s;">
-                <option value="">★☆☆☆☆ (1+)</option>
-                <option value="4.5" {% if selected_rating == '4.5' %}selected{% endif %}>★★★★★ (4.5+)</option>
-                <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
-                <option value="3.5" {% if selected_rating == '3.5' %}selected{% endif %}>★★★☆☆ (3.5+)</option>
-                <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>★★☆☆☆ (3.0+)</option>
-                <option value="1.0" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
-              </select>
-            </div>
-            <button type="submit" style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        min-width: 160px;
-                        background: #F7931E;
-                        border-radius: 0 60px 60px 0;
-                        font-weight: 700;
-                        font-size: 18px;
-                        gap: 10px;
-                        text-transform: uppercase;
-                        color: white;
-                        border: none;
-                        cursor: pointer;
-                        padding: 20px 30px;
-                        transition: all 0.3s;
-                        flex-shrink: 0;
-                    "
-                    onmouseover="this.style.background='#E67E22'"
-                    onmouseout="this.style.background='#F7931E'">
-                        <span>SEARCH</span>
-                        <span style="display: flex; align-items: center; justify-content: center;">
-                            <svg viewBox="0 0 56.966 56.966" width="20" height="20">
-                                <path fill="white" d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786
-                                    c0-12.682-10.318-23-23-23s-23,10.318-23,23s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208
-                                    c0.571,0.593,1.339,0.92,2.162,0.92c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z 
-                                    M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17s-17-7.626-17-17S14.61,6,23.984,6z"/>
-                            </svg>
-                        </span>
-                    </button>
-                </div>
-            </form>
+
+     <!-- Search Form Section -->
+<section class="u-clearfix u-section-2" id="block-8"
+  style="padding: 60px 0; display:flex; justify-content:center; align-items:center;
+         /* lighter overlay: increase alpha for more whiteness, decrease for darker */
+         background: linear-gradient(135deg, rgba(200, 200, 200, 0.9), rgba(200, 200, 200, 0.9)), url('https://source.unsplash.com/1600x900/?mountain,landscape');
+         background-size: cover; background-position: center; background-blend-mode: lighten;">
+  <div style="width: 100%; max-width: 1400px; padding: 0 20px;">
+    <form method="GET" action="" id="searchForm">
+      <div style="display: flex; gap: 20px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 0 auto;">
+        
+        <!-- Location Filter -->
+        <div style="flex: 1; min-width: 250px; max-width: 350px;">
+          <select name="location" class="filter-select" style="
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #F7931E;
+            border-radius: 30px;
+            font-size: 16px;
+            background: #F7931E;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 24px;
+            padding-right: 45px;
+          ">
+            <option value="" style="background: #333; color: white;">All regions</option>
+            {% for loc in all_locations %}
+            <option value="{{ loc.id }}" style="background: #333; color: white;" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
+            {% endfor %}
+          </select>
         </div>
-    </section>
+
+        <!-- Category Filter -->
+        <div style="flex: 1; min-width: 250px; max-width: 350px;">
+          <select name="category" class="filter-select" style="
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #F7931E;
+            border-radius: 30px;
+            font-size: 16px;
+            background: #F7931E;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 24px;
+            padding-right: 45px;
+          ">
+            <option value="" style="background: #333; color: white;">All locations</option>
+            {% for cat in all_categories %}
+            <option value="{{ cat }}" style="background: #333; color: white;" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Rating Filter -->
+        <div style="flex: 1; min-width: 250px; max-width: 350px;">
+          <select name="rating" class="filter-select" style="
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #F7931E;
+            border-radius: 30px;
+            font-size: 16px;
+            background: #F7931E;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 24px;
+            padding-right: 45px;
+          ">
+            <option value="" style="background: #333; color: white;">All ratings</option>
+            <option value="5.0" style="background: #333; color: white;" {% if selected_rating == '5.0' %}selected{% endif %}>★★★★★ (5.0)</option>
+            <option value="4.0" style="background: #333; color: white;" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
+            <option value="3.0" style="background: #333; color: white;" {% if selected_rating == '3.0' %}selected{% endif %}>★★★☆☆ (3.0+)</option>
+            <option value="2.0" style="background: #333; color: white;" {% if selected_rating == '2.0' %}selected{% endif %}>★★☆☆☆ (2.0+)</option>
+            <option value="1.0" style="background: #333; color: white;" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
+          </select>
+        </div>
+
+        <!-- Search Button -->
+        <div style="flex: 0 0 auto;">
+          <button type="submit" style="
+            padding: 16px 40px;
+            background: #F7931E;
+            color: white;
+            border: 2px solid #F7931E;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+          "
+          onmouseover="this.style.background='#E67E22'; this.style.borderColor='#E67E22';"
+          onmouseout="this.style.background='#F7931E'; this.style.borderColor='#F7931E';">
+            SEARCH
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .filter-select:hover {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(247, 147, 30, 0.4) !important;
+  }
+  
+  .filter-select:focus {
+    outline: none;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(247, 147, 30, 0.6) !important;
+  }
+  
+  .filter-select option {
+    background:white;
+    color: white;
+  }
+</style>
     
 <section class="recommendation-section" id="block-1">
+  
+{% comment %}Top results: prefers a view-provided `top_results` list. Falls back to sorting `search_results` by rating (works if search_results is list/dict-like).{% endcomment %}
+
+{% if top_results %}
+  {% with top=top_results %}
+    <div class="top-results-section" style="margin-bottom:24px;text-align:center;">
+      <h3 style="color:#F7931E;font-size:22px;margin-bottom:16px;">Top results</h3>
+      <div class="recommendation-grid">
+        {% for spot in top|slice:":3" %}
+          <div class="recommendation-card">
+            <div class="card-image">
+              <a href="{% url 'destination_detail' spot.id %}">
+                <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
+              </a>
+            </div>
+            <div class="card-content">
+              <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
+              <div class="card-info-row">
+                <span class="rating-value" style="color:#F7931E;font-weight:bold;">{{ spot.rating }}/5.0</span>
+                <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endwith %}
+
+{% elif search_results %}
+  {# Fallback: try to pick top 3 by rating using dictsortreversed (works if items are dict-like) #}
+  {% with top=search_results|dictsortreversed:"rating"|slice:":3" %}
+    {% if top %}
+      <div class="top-results-section" style="margin-bottom:24px;text-align:center;">
+        <h3 style="color:#F7931E;font-size:60px;margin-bottom:16px;font-weight: 900;">Top results</h3>
+        <div class="recommendation-grid">
+          {% for spot in top %}
+            <div class="recommendation-card">
+              <div class="card-image">
+                <a href="{% url 'destination_detail' spot.id %}">
+                  <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
+                </a>
+              </div>
+              <div class="card-content">
+                <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
+                <div class="card-info-row">
+                  <span class="rating-value" style="color:#F7931E;font-weight:bold;">{{ spot.rating }}/5.0</span>
+                  <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endif %}
+
   <div class="container">
-    <h2 class="section-title">Recommend result</h2>
+    <h2 class="section-title">Recommended results</h2>
     
     <!khúc này để thêm ảnh nè, có gì sửa gì thì sửa chỗ này> 
   {% if collaborative_recommendations and not filters_applied %}
