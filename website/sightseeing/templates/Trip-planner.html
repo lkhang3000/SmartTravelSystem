@@ -38,8 +38,11 @@
 
           <!-- Submenu -->
           <div class="nav-submenu" id="overview-submenu" style="display: none;">
+            <button class="nav-item nav-sub" data-section="explore-section">
+              Explore
+            </button>
             <button class="nav-item nav-sub" data-section="recommended-section">
-              Recommended places
+              Places to visit
             </button>
             <button class="nav-item nav-sub" data-section="saved-section">
               Saved destination
@@ -103,57 +106,36 @@
           <button class="btn btn--primary">
             Browse all
           </button>
-        </div> 
-      </section>
+        </div>
 
-      <!-- Recommended Places -->
-      <div class="explore-subsection" id="recommended-section">
-        <h3 class="explore-subtitle">Recommended places</h3>
-
+        <!-- Carousel showing destinations for selected location -->
         <div class="carousel-wrapper">
           <button class="carousel-btn prev-btn">❮</button>
 
-          <div class="carousel-track" id="recommended-carousel">
+          <div class="carousel-track" id="explore-carousel">
+            {% for dest in destinations %}
             <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1543340713-8a9f6d7f1cec?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__image" style="background-image: url('{{ dest.image_url }}');"></div>
               <div class="explore-card__body">
-                <h3 class="explore-card__title">Top museums in Paris</h3>
-                <p class="explore-card__subtitle">Iconic culture & exhibitions</p>
-                <p class="explore-card__meta">Suggested for your trip</p>
+                <h3 class="explore-card__title">{{ dest.desName }}</h3>
+                <p class="explore-card__subtitle">{{ dest.category }} | {{ dest.ratings }}⭐</p>
+                <p class="explore-card__meta">{{ dest.address }} - {{ dest.location.locationName }}</p>
+                <p class="explore-card__description">{{ dest.description|truncatewords:20 }}</p>
+                <button class="btn btn--small btn--primary add-to-trip-btn" 
+                        data-destination-id="{{ dest.id }}">
+                  Add to Trip
+                </button>
               </div>
             </article>
-
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Paris local markets</h3>
-                <p class="explore-card__subtitle">Food, crafts & hidden gems</p>
-                <p class="explore-card__meta">Recommended</p>
-              </div>
-            </article>
-
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Historic neighborhoods</h3>
-                <p class="explore-card__subtitle">Walkable routes & viewpoints</p>
-                <p class="explore-card__meta">Perfect for day 1</p>
-              </div>
-            </article>
-
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1461749677997-440d88acda25?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Arc de Triomphe</h3>
-                <p class="explore-card__subtitle">Iconic monument & views</p>
-                <p class="explore-card__meta">Must-see landmark</p>
-              </div>
-            </article>
+            {% empty %}
+            <p>No destinations found for "{{ trip_destination }}".</p>
+            {% endfor %}
           </div>
 
           <button class="carousel-btn next-btn">❯</button>
         </div>
-      </div>
+      </section>
+
 
       <!-- Saved Destinations -->
       <div class="explore-subsection" id="saved-section">
