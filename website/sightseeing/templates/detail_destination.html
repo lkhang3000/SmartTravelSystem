@@ -8,7 +8,8 @@
         <meta name="description" content="">
         <title>{{ destination.desName }} - Smart Tour</title>
         <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
-    <link rel="stylesheet" href="{% static 'css/index.css' %}" media="screen">
+        <link rel="stylesheet" href="{% static 'css/index.css' %}" media="screen">
+        <link rel="stylesheet" href="{% static 'css/DetailDestination.css' %}">
         <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
         <script class="u-script" type="text/javascript" src="{% static 'js/nicepage.js' %}" defer=""></script>
         <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
@@ -126,7 +127,9 @@
     });
 </script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/">
 </head>
+
 <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en">
+    {% comment %} 
     <header class="u-header" 
 
         style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
@@ -434,30 +437,151 @@
 
     </div>
 
+</header> {% endcomment %}
+
+{% load static %}
+<header class="u-header"
+    id="header"
+    style="/* Container chính: Đảm bảo căn chỉnh các khối Left và Right */
+           position:sticky; 
+           top:0; 
+           z-index:1000;
+           height:100px; 
+           display:flex; 
+           align-items:center; 
+           justify-content:space-between; /* Giữ Logo/Tên và User Menu xa nhau */
+           padding:0 30px; 
+           background: rgba(138, 213, 234, 0.85);
+           backdrop-filter: blur(10px); 
+           -webkit-backdrop-filter: blur(10px);
+           ">
+
+    <div style="display: flex; align-items: center; gap: 30px;"> 
+        
+        <a href="{% url 'recommend_result' %}" 
+           class="smart-btn"
+           style="
+                /* Style tương tự smart-btn nhưng căn chỉnh trong Header */
+                background:#F7931E; 
+                color:white; 
+                padding:10px 20px; 
+                border-radius:25px; 
+                text-decoration:none; 
+                font-weight:bold;
+                font-size:16px;
+                display:flex; align-items:center;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+           ">
+            <span style="font-size: 18px; margin-right: 5px;">&#x2190;</span> Back to Results
+        </a>
+        
+        <a href="{% url 'home' %}" style="display:flex; align-items:center; text-decoration: none;">
+            <img src="{% static 'images/Odyscape.png' %}"
+                 style="height: 80px; width: 80px; display:block; margin-right: 10px;" 
+                 alt="logo"> 
+            
+            <span style="
+                font-size: 32px; 
+                font-weight: 800; 
+                color: white; 
+                letter-spacing: 1px;
+                user-select: none;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.5); 
+            ">
+                ODYSCAPE
+            </span>
+        </a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 15px;">
+        {% if user.is_authenticated %}
+
+        <a href="{% url 'trip_list' %}" style="position: relative; text-decoration: none;">
+            <div style="background:#F7931E; border-radius:50%; width:45px; height:45px;
+                         display:flex; align-items:center; justify-content:center;">
+                <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px;">
+            </div>
+            <span class="trip-count"
+                  style="position:absolute; top:-8px; right:-8px; background:red; color:white;
+                         border-radius:50%; width:20px; height:20px; display:flex;
+                         align-items:center; justify-content:center; font-size:12px; font-weight:bold;
+                         {% if not trip_count %}display:none;{% endif %}">
+                {{ trip_count|default:0 }}
+            </span>
+        </a>
+
+        <div style="position:relative;">
+            <button id="userMenuBtn"
+                    style="padding: 8px 12px; background: #F7931E; border-radius: 25px;
+                           color: white; font-weight: 700; border: none; cursor: pointer;
+                           display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                {{ user.username }}
+            </button>
+
+            <div id="userDropdown"
+                 style="display:none; position:absolute; top:110%; right:0; background:white;
+                         border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); min-width:180px;">
+                <a href="{% url 'user_profile' %}" class="dropdown-item"
+                   style="display:block; padding:12px 16px; border-bottom:1px solid #eee;">
+                    👤 My Profile
+                </a>
+                <a href="{% url 'recommend_result' %}" class="dropdown-item"
+                   style="display:block; padding:12px 16px; border-bottom:1px solid #eee;">
+                    🗺️ My Destinations
+                </a>
+                <a href="/logout/" class="dropdown-item"
+                   style="display:block; padding:12px 16px; color:#d32f2f;">
+                    🚪 Logout
+                </a>
+            </div>
+        </div>
+
+        <script>
+            // ... JavaScript cho User Dropdown ...
+        </script>
+
+        {% else %}
+
+        <a href="{% url 'login_page' %}"
+           style="font-weight:bold; padding:10px 20px; border:2px solid white;
+                   border-radius:25px; color:white; text-decoration:none;">
+            Log in
+        </a>
+
+        <a href="{% url 'signup_page' %}"
+           style="font-weight:bold; padding:10px 20px; background:white; color:black;
+                   border-radius:25px; text-decoration:none;">
+            Register
+        </a>
+
+        {% endif %}
+    </div>
 </header>
 
-   <div style="display:flex; gap:40px; align-items:flex-start; margin-top:20px;">
+
+
+
+
+   <div class="layout-row">
 
     <!-- LEFT COLUMN: Image -->
-    <div style="flex:1.0;">
+    <div class="left-column">
         <img src="{{ destination.image_url }}" 
              class="u-expanded-width u-image place-img" 
              alt="{{ destination.desName }}"
              style="border-radius:10px;"
              onerror="this.src='https://picsum.photos/seed/{{ destination.id }}/800/600'" />
     <!-- CAROUSEL -->
-    <div class="carousel-container" style="margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:10px;">
+    <div class="carousel-container">
 
-    <div class="carousel-wrapper" style="position:relative; width:90%; max-width:800px;">
+    <div class="carousel-wrapper">
         <!-- Left Button -->
         <button class="carousel-btn left" onclick="scrollCarousel(-1)">&#10094;</button>
 
-        <div class="carousel" id="carousel" style="
-            display:flex;
-            gap:10px;
-            overflow:hidden;
-            scroll-behavior:smooth;
-        ">
+        <div class="carousel" id="carousel">
             <img src="https://picsum.photos/seed/1/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
             <img src="https://picsum.photos/seed/2/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
             <img src="https://picsum.photos/seed/3/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
@@ -472,54 +596,126 @@
     </div>
 
     <!-- RIGHT COLUMN: Content -->
-    <div style="flex:1.5;">   <!-- tăng flex để nội dung rộng hơn hình -->
+    <div style="flex:1;">   <!-- tăng flex để nội dung rộng hơn hình -->
         
-        <h1 style="margin-top:0; color:#003e91;">{{ destination.desName }}</h1>
+        <h1 style="margin-top:0; color:#003e91;font-size:54px">{{ destination.desName }}</h1>
 
-        <!-- LOCATION -->
         <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
-            <div class="section-title" 
-                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
-                Location
-            </div>
-            <div class="info-row">
-                {% if destination.location %}
-                    {{ destination.location.locationName }}, Vietnam
-                {% else %}
-                    Vietnam
-                {% endif %}
-            </div>
-            {% if destination.address %}
-            <div class="info-row" style="font-size: 14px; color: #666;">
-                Address: {{ destination.address }}
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- DESCRIPTION -->
-        {% if destination.description %}
-        <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
-            <div class="section-title" 
-                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
-                    Description
-            </div>
-            <p>{{ destination.description }}</p>
-        </div>
+    
+    <div class="section-title" 
+         style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
+        Location
+    </div>
+    
+    <div class="info-row" style="margin-bottom: 8px;">
+        {% if destination.location %}
+            {{ destination.location.locationName }}, Vietnam
+        {% else %}
+            Vietnam
         {% endif %}
+    </div>
+    
+    {% if destination.address %}
+    <div class="info-row" style="font-size: 14px; color: #666; margin-bottom: 15px;">
+        Address: {{ destination.address }}
+    </div>
+    {% endif %}
+
+    {% if destination.description %}
+        <hr style="border: none; border-top: 1px solid #c8d8ff; margin: 15px 0;"> 
+        
+        <div class="section-title" 
+             style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
+            Description
+        </div>
+        
+        <p style="margin: 0;">{{ destination.description }}</p>
+    {% endif %}
+    
+</div>
 
         <!-- RATING & CATEGORY -->
-        <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
-            <div class="section-title" 
-                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
-                    Rating & Category
-            </div>
-            <div class="info-row" style="margin-bottom:8px;">Rating: {{ destination.rating|default:"N/A" }} / 5.0</div>
-            {% if destination.category %}
-            <div class="info-row" style="margin-bottom:8px;">Category: {{ destination.category }}</div>
-            {% endif %}
+        <div class="two-column-layout" 
+     style="display: flex; 
+            gap: 20px; 
+            flex-wrap: wrap; 
+            margin-top: 20px;"> 
+    
+    <div class="rating-box" 
+         style="flex: 1; 
+                min-width: 150px; 
+                background: #e9f1ff; 
+                padding: 15px; 
+                border-radius: 12px; 
+                text-align: center;">
+        
+        <div style="font-size: 20px; 
+                    font-weight: bold; 
+                    margin-bottom: 5px;
+                    color:#1a4fa3;">
+            Rating
         </div>
+        
+        <div class="star-rating-container" 
+             style="display: inline-block; 
+                    position: relative; 
+                    /* KÍCH THƯỚC SAO ĐÃ TĂNG */
+                    font-size: 50px; 
+                    margin-bottom: 10px;">
+            
+            <div class="stars-empty" style="color: #ccc; z-index: 1;">
+                ★★★★★
+            </div>
+            
+            <div class="stars-fill" 
+                 style="position: absolute; 
+                        top: 0; 
+                        left: 0; 
+                        overflow: hidden; 
+                        color: gold; 
+                        z-index: 2;
+                        /* LOGIC FILL SAO VẪN GIỮ NGUYÊN */
+                        width: calc( ({{ destination.rating|default:0 }} / 5) * 100% );">
+                ★★★★★
+            </div>
+            
+        </div>
+        
+        <div style="/* KÍCH THƯỚC ĐIỂM SỐ ĐÃ GIẢM */
+                    font-size: 24px; 
+                    font-weight: medium; 
+                    color: black;">
+            {{ destination.rating|default:"N/A" }}
+        </div>
+    </div>
 
-        <!-- PRICE RANGE -->
+    {% if destination.category %}
+    <div class="category-box" 
+         style="flex: 1; 
+                min-width: 150px; 
+                background: #e9f1ff; 
+                padding: 15px; 
+
+                border-radius: 12px; 
+                text-align: center;">
+        <div style="font-size: 20px; 
+                    font-weight: bold; 
+                    margin-bottom: 20px;
+                    color: #1a4fa3;"
+                    >
+            Category
+        </div>
+        <div style="font-size: 36px; 
+                    font-weight: semi-bold; 
+                    color: black;">
+            {{ destination.category }}
+        </div>
+    </div>
+    {% endif %}
+    
+</div>
+
+        {% comment %} <!-- PRICE RANGE -->
         {% if destination.price_range %}
         <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
             <div class="section-title" 
@@ -528,175 +724,259 @@
             </div>
             <div class="info-row">{{ destination.price_range }}</div>
         </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
+
+        
+
+        <div class="btn-row" style="margin-top:40px; display:flex; gap:25px; flex-wrap:wrap;">
+    <button class="add-to-trip-btn"
+            onclick="animateTripButton(this); addToTrip({{ destination.id }});">
+        <span class="add-to-trip-icon">
+            <svg class="plus-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+                <polyline points="5 12 10 17 19 7"></polyline>
+            </svg>
+        </span>
+        Add to Trip
+    </button>
+    
+</div>
+
 
     </div>
 
 </div>
     
-<style>
-    .carousel-img {
-    height: 120px;
-    width: 180px;
-    object-fit: cover;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform .3s, border .3s;
-}
+        {% comment %} <!-- DESCRIPTION -->
+        {% if destination.description %}
+        <div class="section" style="margin-top:20px; margin-left:10px; background:#e9f1ff; padding:18px; border-radius:8px;">
+            <div class="section-title" 
+                 style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">
+                    Description
+            </div>
+            <p>{{ destination.description }}</p>
+        </div>
+        {% endif %}   {% endcomment %}
 
-.carousel-img:hover {
-    transform: scale(1.1);
-    border: 3px solid #F7931E;
-}
-
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #F7931E;
-    border: none;
-    color: white;
-    font-size: 22px;
-    padding: 8px 12px;
-    border-radius: 50%;
-    cursor: pointer;
-    opacity: 0.8;
-}
-
-.carousel-btn:hover {
-    opacity: 1;
-}
-
-.carousel-btn.left { left: -35px; }
-.carousel-btn.right { right: -35px; }
-
-.hotel-carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #F7931E;
-    border: none;
-    color: white;
-    font-size: 22px;
-    padding: 8px 12px;
-    border-radius: 50%;
-    cursor: pointer;
-    opacity: 0.8;
-    z-index: 10;
-}
-
-.hotel-carousel-btn:hover {
-    opacity: 1;
-}
-
-.hotel-carousel-btn.left { left: -35px; }
-.hotel-carousel-btn.right { right: -35px; }
-
-</style>
 
         {% if hotels %}
-        <div class="section" style="margin-top:20px; background:#e9f1ff; padding:18px; border-radius:8px;">
-            <div class="section-title" style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">Hotels in {{ destination.location.locationName }}</div>
-            
-            <!-- Hotel Carousel -->
-            <div class="hotel-carousel-container" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-                <div class="hotel-carousel-wrapper" style="position:relative; width:90%; max-width:1500px;">
-                    <!-- Left Button -->
-                    <button class="hotel-carousel-btn left" onclick="scrollHotelCarousel(-1)">&#10094;</button>
+<div class="section" style="margin-top:40px; margin-left:10px; background:#e9f1ff; padding:18px; border-radius:8px;">
+    <div class="section-title" style="font-size:18px; font-weight:bold; color:#1a4fa3; margin-bottom:10px;">Hotels in {{ destination.location.locationName }}</div>
+    
+    <div class="hotel-carousel-container" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+        <div class="hotel-carousel-wrapper" style="position:relative; width:90%; max-width:1500px;">
+            <button class="hotel-carousel-btn left" onclick="scrollHotelCarousel(-1)">&#10094;</button>
 
-                    <div class="hotel-carousel" id="hotel-carousel" style="
-                        display:flex;
-                        gap:15px;
-                        overflow:hidden;
-                        scroll-behavior:smooth;
-                        padding:10px 0;
-                    ">
-                        {% for hotel in hotels %}
-                        <div class="hotel-card" style="
-                            min-width:280px;
-                            background:#fff;
-                            padding:15px;
-                            border-radius:8px;
-                            box-shadow:0 2px 8px rgba(0,0,0,0.1);
-                            border:1px solid #e0e0e0;
-                            transition:transform 0.3s;
-                        "
-                        onmouseover="this.style.transform='translateY(-5px)'"
-                        onmouseout="this.style.transform='translateY(0)'">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
-                                <div style="flex:1;">
-                                    <h4 style="margin:0 0 5px 0; font-size:16px; color:#333;">{{ hotel.name }}</h4>
-                                    <div style="font-size:14px; color:#666; margin-bottom:5px;">
-                                        {{ hotel.rating|default:"N/A" }}/5.0
-                                    </div>
-                                    {% if hotel.price %}
-                                    <div style="font-size:14px; color:#28a745; font-weight:500;">
-                                        {{ hotel.price|floatformat:0 }} VND/night
-                                    </div>
-                                    {% endif %}
+            <div class="hotel-carousel" id="hotel-carousel" style="
+                display:flex;
+                gap:15px;
+                overflow:hidden;
+                scroll-behavior:smooth;
+                padding:10px 0;
+            ">
+                {% for hotel in hotels %}
+                <div class="hotel-card" style="
+                    /* ======================================= */
+                    /* THAY ĐỔI QUAN TRỌNG: SỬ DỤNG FLEXBOX */
+                    display: flex;
+                    flex-direction: column; /* Xếp chồng nội dung */
+                    justify-content: space-between; /* Đẩy nút xuống cuối */
+                    /* ======================================= */
+                    min-width:280px;
+                    background:#fff;
+                    padding:15px;
+                    border-radius:8px;
+                    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+                    border:1px solid #e0e0e0;
+                    transition:transform 0.3s;
+                    min-height: 250px; /* Thêm min-height để đảm bảo không quá ngắn */
+                "
+                onmouseover="this.style.transform='translateY(-5px)'"
+                onmouseout="this.style.transform='translateY(0)'">
+                    
+                    <div style="flex: 1; /* Đảm bảo khối này chiếm hết không gian trống */
+                                margin-bottom: 15px; /* Khoảng cách trước nút */">
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                            <div style="flex:1;">
+                                <h4 style="margin:0 0 5px 0; font-size:16px; color:#333;">{{ hotel.name }}</h4>
+                                <div style="font-size:14px; color:#666; margin-bottom:5px;">
+                                    {{ hotel.rating|default:"N/A" }}/5.0
                                 </div>
-                                {% if hotel.image_url %}
-                                <img src="{{ hotel.image_url }}" 
-                                     style="width:60px; height:60px; object-fit:cover; border-radius:4px; margin-left:10px;"
-                                     onerror="this.src='https://picsum.photos/seed/hotel{{ hotel.id }}/60/60'">
+                                {% if hotel.price %}
+                                <div style="font-size:14px; color:#28a745; font-weight:500;">
+                                    {{ hotel.price|floatformat:0 }} VND/night
+                                </div>
                                 {% endif %}
                             </div>
-                            {% if hotel.address %}
-                            <div style="font-size:12px; color:#777; margin-bottom:10px; line-height:1.3;">
-                                {{ hotel.address|truncatechars:50 }}
-                            </div>
+                            {% if hotel.image_url %}
+                            <img src="{{ hotel.image_url }}" 
+                                    style="width:60px; height:60px; object-fit:cover; border-radius:4px; margin-left:10px;"
+                                    onerror="this.src='https://picsum.photos/seed/hotel{{ hotel.id }}/60/60'">
                             {% endif %}
-                            <button onclick="addHotelToTrip({{ hotel.id }})" 
-                                    style="width:100%; background:#F7931E; color:white; padding:8px; border-radius:4px; text-decoration:none; font-size:14px; transition:0.2s; border:none; cursor:pointer;" 
-                                    onmouseover="this.style.background='#C48300'" 
-                                    onmouseout="this.style.background='#F7931E'">
-                                Add to Trip
-                            </button>
                         </div>
-                        {% endfor %}
+
+                        {% if hotel.address %}
+                        <div style="font-size:12px; color:#777; line-height:1.3;">
+                            {{ hotel.address|truncatechars:50 }}
+                        </div>
+                        {% endif %}
+
                     </div>
-
-                    <!-- Right Button -->
-                    <button class="hotel-carousel-btn right" onclick="scrollHotelCarousel(1)">&#10095;</button>
+                    
+                    <button class="add-to-trip-btn"
+            onclick="animateTripButton(this); addHotelToTrip({{ hotel.id }});"style="
+           display: inline-flex !important;
+           justify-content: center !important;">
+        <span class="add-to-trip-icon">
+            <svg class="plus-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+                <polyline points="5 12 10 17 19 7"></polyline>
+            </svg>
+        </span>
+        Add to Trip
+    </button>
+                    
                 </div>
+                {% endfor %}
             </div>
-        </div>
-        {% endif %}
 
-        <div class="btn-row" style="margin-top:25px; text-align:center;">
-            <button class="btn" onclick="addToTrip({{ destination.id }})" style="background:#F7931E; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">Add to Trip</button>
-            <a href="{% url 'recommend_result' %}" class="btn" style="background:#F7931E; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">Back to Results</a>
-            <a href="{% url 'home' %}" class="btn" style="background:#F7931E; border:none; padding:12px 24px; border-radius:6px; cursor:pointer; color:white; font-size:16px; font-weight:bold; margin:0 10px; text-decoration:none; display:inline-block; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">Home</a>
+            <button class="hotel-carousel-btn right" onclick="scrollHotelCarousel(1)">&#10095;</button>
         </div>
     </div>
+</div>
+{% endif %}
     
     <!-- COMMENTS SECTION -->
     <div class="section" style="margin-top:30px; background:#f8f9fa; padding:20px; border-radius:8px; border:1px solid #dee2e6;">
-        <div class="section-title" style="font-size:20px; font-weight:bold; color:#1a4fa3; margin-bottom:20px;">
-            💬 Comments ({{ comments|length }})
+    <div class="section-title" style="font-size:20px; font-weight:bold; color:#1a4fa3; margin-bottom:20px;">
+        💬 Comments ({{ comments|length }})
+    </div>
+    
+    {% if user.is_authenticated %}
+    <form method="post" id="comment-form" style="margin-bottom:30px;">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="comment-content" style="display:block; margin-bottom:5px; font-weight:500;">Share your thoughts about this destination:</label>
+            <textarea id="comment-content" name="content" rows="3" 
+                      style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; resize:vertical; font-family:inherit;" 
+                      placeholder="Write your comment here..." required></textarea>
         </div>
-        
-        {% if user.is_authenticated %}
-        <!-- Comment Form -->
-        <form method="post" style="margin-bottom:30px;">
-            {% csrf_token %}
-            <div style="display:flex; gap:10px; align-items:flex-end;">
-                <div style="flex:1;">
-                    <label for="comment-content" style="display:block; margin-bottom:5px; font-weight:500;">Share your thoughts about this destination:</label>
-                    <textarea id="comment-content" name="content" rows="3" 
-                              style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px; resize:vertical; font-family:inherit;" 
-                              placeholder="Write your comment here..." required></textarea>
-                </div>
-                <button type="submit" style="background:#F7931E; color:white; border:none; padding:10px 20px; border-radius:4px; cursor:pointer; font-weight:500; height:fit-content; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">
-                    Post Comment
-                </button>
+
+        <div style="margin-bottom: 30px; text-align: center;">
+            <div id="rating-container" 
+                 data-selected-rating="0" 
+                 style="/* 3. TĂNG KÍCH THƯỚC SAO LÊN 60PX */
+                        font-size: 60px; 
+                        color: #ccc; 
+                        /* CĂN GIỮA STARS */
+                        display: inline-flex; 
+                        cursor: pointer;">
+                
+                <span class="star" data-value="1" style="transition: color 0.2s; margin: 0 5px;">☆</span>
+                <span class="star" data-value="2" style="transition: color 0.2s; margin: 0 5px;">☆</span>
+                <span class="star" data-value="3" style="transition: color 0.2s; margin: 0 5px;">☆</span>
+                <span class="star" data-value="4" style="transition: color 0.2s; margin: 0 5px;">☆</span>
+                <span class="star" data-value="5" style="transition: color 0.2s; margin: 0 5px;">☆</span>
             </div>
-        </form>
-        {% else %}
-        <div style="background:#fff3cd; border:1px solid #ffeaa7; padding:15px; border-radius:4px; margin-bottom:20px;">
-            <strong>💡 Tip:</strong> <a href="{% url 'login_page' %}" style="color:#856404;">Log in</a> to share your comments and experiences about this destination!
+            <input type="hidden" name="rating" id="rating-value" value="0">
         </div>
-        {% endif %}
+
+        <div style="text-align: center;">
+            <button type="submit" 
+                    style="background:#F7931E; 
+                           color:white; 
+                           border:none; 
+                           padding:12px 25px; 
+                           border-radius:25px; 
+                           cursor:pointer; 
+                           font-weight:600; 
+                           font-size:16px; 
+                           transition:0.2s;" 
+                    onmouseover="this.style.background='#C48300'" 
+                    onmouseout="this.style.background='#F7931E'">
+                Post Comment
+            </button>
+        </div>
+    </form>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ratingContainer = document.getElementById('rating-container');
+            if (!ratingContainer) return; 
+
+            const stars = ratingContainer.querySelectorAll('.star');
+            let selectedRating = 0; 
+
+            function updateStars(rating) {
+                const finalRating = Math.max(0, rating); 
+                document.getElementById('rating-value').value = finalRating; 
+
+                stars.forEach(star => {
+                    const starValue = parseInt(star.getAttribute('data-value'));
+                    if (starValue <= finalRating) {
+                        star.innerHTML = '★'; 
+                        star.style.color = 'gold'; 
+                    } else {
+                        star.innerHTML = '☆'; 
+                        star.style.color = '#ccc'; 
+                    }
+                });
+            }
+
+            // HOVER
+            stars.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    const hoverRating = parseInt(this.getAttribute('data-value'));
+                    updateStars(hoverRating);
+                });
+            });
+
+            // MOUSEOUT
+            ratingContainer.addEventListener('mouseout', function() {
+                updateStars(selectedRating); 
+            });
+
+            // CLICK
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    let clickedRating = parseInt(this.getAttribute('data-value'));
+                    
+                    if (clickedRating === selectedRating) {
+                        if (clickedRating > 1) { 
+                            selectedRating = 0; 
+                        }
+                    } else {
+                        selectedRating = clickedRating;
+                    }
+                    
+                    if (selectedRating === 0) selectedRating = 1;
+
+                    updateStars(selectedRating);
+                    ratingContainer.setAttribute('data-selected-rating', selectedRating);
+                });
+            });
+            
+            // Khởi tạo: Mức sao thấp nhất là 1
+            selectedRating = 1;
+            updateStars(selectedRating);
+        });
+    </script>
+
+    {% else %}
+    <div style="background:#fff3cd; border:1px solid #ffeaa7; padding:15px; border-radius:4px; margin-bottom:20px;">
+        <strong>💡 Tip:</strong> <a href="{% url 'login_page' %}" style="color:#856404;">Log in</a> to share your comments and experiences about this destination!
+    </div>
+    {% endif %}
+    
+    </div>
         
         <!-- Comments List -->
         {% if comments %}
@@ -913,7 +1193,15 @@ if (hotelCarousel && hotelCards.length) {
         hotelCarousel.scrollLeft = cardWidth * hotelCurrentIndex;
     }
 }
+
+function animateTripButton(btn) {
+    btn.classList.add("active");
+
+    setTimeout(() => {
+        btn.classList.remove("active");
+    }, 1200);
+}
+
 </script>
-    
 </body>
 </html>
