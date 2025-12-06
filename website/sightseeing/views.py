@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from .Services.recommender import get_recommender
 from django.core.paginator import Paginator
 
@@ -543,6 +543,8 @@ def trip_planner(request):
 
     # Calculate number of days
     num_days = 7  # default
+    days = []
+    date_range = ''
     if departure_date and arrival_date:
         try:
             dep = datetime.strptime(departure_date, '%d/%m/%Y').date()
@@ -550,6 +552,18 @@ def trip_planner(request):
             num_days = (arr - dep).days + 1
             if num_days < 1:
                 num_days = 1
+            date_range = f"{dep.strftime('%m/%d')} – {arr.strftime('%m/%d')}"
+            for i in range(num_days):
+                day_date = dep + timedelta(days=i)
+                day_name = day_date.strftime('%A')
+                day_short = day_date.strftime('%m/%d')
+                full_name = f"{day_name}, {day_date.strftime('%B %d')}"
+                days.append({
+                    'date': day_date,
+                    'day_name': day_name,
+                    'day_short': day_short,
+                    'full_name': full_name
+                })
         except:
             num_days = 7
     
@@ -669,6 +683,8 @@ def trip_planner(request):
         'travelers': travelers,
         'price_per_person': price_per_person,
         'num_days': num_days,
+        'days': days,
+        'date_range': date_range,
         'trip_items': trip_items,
         'trip_items_json': trip_items_json,
         'checked_state_json': checked_state_json,
@@ -684,7 +700,7 @@ def trip_planner(request):
         # Lọc destination theo tên user chọn
         destinations = Destinations.objects.filter(location__locationName=destination_name)
 
-    return render(request, 'Trip-planner.html', {
+    context.update({
         'destinations': destinations,
         'trip_destination': destination_name,
         'trip_map_url': request.session.get('trip_map_url', None),
@@ -693,6 +709,8 @@ def trip_planner(request):
         'trip_travelers': request.session.get('trip_travelers', None),
         'trip_price_per_person': request.session.get('trip_price_per_person', None)
     })
+
+    return render(request, 'Trip-planner.html', context)
 
 def input_trip_planner(request):
     # Get all locations for destination dropdown
@@ -788,6 +806,27 @@ def trip_form(request):
     
     # GET request - redirect to input form
     return redirect('input_trip_planner')
+
+
+@csrf_exempt
+def update_trip_settings(request):
+    """Update trip settings via AJAX"""
+    if request.method == 'POST' and request.user.is_authenticated:
+        try:
+            travelers = request.POST.get('travelers')
+            budget = request.POST.get('budget')
+            
+            # Update session
+            if travelers:
+                request.session['trip_travelers'] = int(travelers)
+            if budget:
+                request.session['trip_budget'] = int(budget)
+            
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 @csrf_exempt
