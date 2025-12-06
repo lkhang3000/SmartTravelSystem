@@ -14,6 +14,28 @@ from django.core.paginator import Paginator
 from sightseeing.models import Destinations, Hotel
 import random
 
+from django.http import JsonResponse
+from datetime import datetime
+
+def update_trip(request):
+    if request.method == "POST":
+        start = request.POST.get("start_date")
+        end = request.POST.get("end_date")
+        travelers = request.POST.get("travelers")
+        budget = request.POST.get("budget")
+
+        # Lưu vào session — hoặc database nếu bạn muốn
+        request.session["trip_start"] = start
+        request.session["trip_end"] = end
+        request.session["trip_travelers"] = travelers
+        request.session["trip_budget"] = budget
+        request.session.modified = True
+
+        return JsonResponse({"status": "ok"})
+
+    return JsonResponse({"status": "invalid"}, status=400)
+
+
 @ensure_csrf_cookie
 def get_home(request):
     # Get all locations and categories for filter dropdowns
@@ -700,8 +722,15 @@ def trip_planner(request):
         # Lọc destination theo tên user chọn
         destinations = Destinations.objects.filter(location__locationName=destination_name)
 
+<<<<<<< HEAD
     context.update({
+=======
+    trip_items = TripItem.objects.filter(user=request.user)
+
+    return render(request, 'Trip-planner.html', {
+>>>>>>> Frontend
         'destinations': destinations,
+        "trip_items": trip_items,
         'trip_destination': destination_name,
         'trip_map_url': request.session.get('trip_map_url', None),
         'trip_image_url': request.session.get('trip_image_url', None),
@@ -774,8 +803,8 @@ def trip_form(request):
             
             # Store trip data in session for trip planner
             request.session['trip_destination'] = destination
-            request.session['trip_departure'] = departure_date
-            request.session['trip_arrival'] = arrival_date
+            request.session["trip_start"] = request.POST.get("start_date")
+            request.session["trip_end"] = request.POST.get("end_date")
             request.session['trip_budget'] = budget
             request.session['trip_travelers'] = travelers
             request.session['trip_price_per_person'] = price_per_person
@@ -985,3 +1014,4 @@ def save_day_selections(request):
             return JsonResponse({'success': False, 'message': 'An error occurred while saving.'})
     
     return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
