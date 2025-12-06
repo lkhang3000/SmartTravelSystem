@@ -96,19 +96,32 @@
   }
 
   function setupMap() {
-    if (typeof L === 'undefined') return;
-    const defaultCenter = [48.8566, 2.3522];
-    const map = L.map('smarttour-map').setView(defaultCenter, 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+  const mapElement = document.getElementById('smarttour-map');
+  if (!mapElement) return;
 
-    L.marker([48.8584, 2.2945])
-      .addTo(map)
-      .bindPopup('<b>Eiffel Tower</b><br>Iconic landmark in Paris.')
-      .openPopup();
-  }
+  // Lấy destination từ session (Django render vào HTML)
+  const destination = mapElement.getAttribute('data-destination');
+
+  // Nếu chưa có destination thì set mặc định Paris
+  const defaultDestination = "Paris, France";
+  const dest = destination && destination.trim() !== "" ? destination : defaultDestination;
+
+  console.log("Setting map for destination:", dest);
+
+  // Chuyển đổi tên destination thành URL Google Maps
+  const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(dest)}&output=embed`;
+
+  // Thêm iframe vào mapElement
+  mapElement.innerHTML = `<iframe 
+      width="100%" 
+      height="100%" 
+      style="border:0;" 
+      loading="lazy" 
+      allowfullscreen
+      src="${mapsUrl}">
+    </iframe>`;
+}
+
 
   function setupSettingsModal() {
     // Debug: Kiểm tra xem script có chạy không
@@ -243,7 +256,7 @@
       });
     });
   }
-
+  
   // Initialize all behaviors after DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
       setupNavigation();
