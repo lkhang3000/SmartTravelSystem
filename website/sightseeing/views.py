@@ -11,6 +11,9 @@ from datetime import datetime
 from .Services.recommender import get_recommender
 from django.core.paginator import Paginator
 
+from sightseeing.models import Destinations, Hotel
+import random
+
 @ensure_csrf_cookie
 def get_home(request):
     # Get all locations and categories for filter dropdowns
@@ -743,11 +746,24 @@ def trip_form(request):
             request.session['trip_budget'] = budget
             request.session['trip_travelers'] = travelers
             request.session['trip_price_per_person'] = price_per_person
-
-            request.session['trip_map_url'] = (
-                f"https://maps.google.com/maps?output=embed&q={destination}&z=12"
-            )
             
+            # Google Map URL
+            request.session['trip_map_url'] = f"https://maps.google.com/maps?output=embed&q={destination}&z=12"
+
+            # Lấy hình ảnh ngẫu nhiên cho location
+            destinations_for_location = Destinations.objects.filter(location__locationName=destination)
+            hotels_for_location = Hotel.objects.filter(location__locationName=destination)
+
+            all_images = list(destinations_for_location.values_list('image_url', flat=True)) + \
+                        list(hotels_for_location.values_list('image_url', flat=True))
+
+            if all_images:
+                trip_image = random.choice(all_images)
+            else:
+                trip_image = '/static/images/default_trip_image.png'
+
+            request.session['trip_image_url'] = trip_image
+
             messages.success(request, f'Trip to {destination} has been created successfully!')
             return redirect('trip_planner')
             
@@ -757,6 +773,7 @@ def trip_form(request):
     
     # GET request - redirect to input form
     return redirect('input_trip_planner')
+
 
 @csrf_exempt
 def add_to_trip(request, destination_id):

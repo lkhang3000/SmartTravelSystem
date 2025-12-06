@@ -5,10 +5,8 @@
   <meta charset="UTF-8" />
   <title>Trip Planner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="{% static 'js/TripPlanner.js' %}"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -18,10 +16,10 @@
       <div class="sidebar__top">
         <div class="brand">
           <div class="brand__logo">
-           <img src="{% static 'images/SmartTour11.png' %}" alt="SmartTour Logo" class="sidebar-logo">
+           <img src="{% static 'images/Odyscape.png' %}" alt="SmartTour Logo" class="sidebar-logo">
           </div>
           <div class="brand__text">
-            <span class="brand__title">SmartTour</span>
+            <span class="brand__title">Odyscape</span>
           </div>
         </div>
 
@@ -33,15 +31,20 @@
 
       <nav class="sidebar__nav">
         <div class="nav-section">
-          <button class="nav-item nav-item--active" data-section="overview-section">
+          <button class="nav-item nav-item--active" id="overview-btn" data-section="overview-section" aria-expanded="false">
             <span>Overview</span>
+            <span class="nav-item__chev" aria-hidden="true">▾</span>
           </button>
-        </div>
 
-        <div class="nav-section">
-          <p class="nav-section__title">Explore</p>
-          <button class="nav-item" data-section="explore-section">Recommended places</button>
-          <button class="nav-item" data-section="explore-section">Saved destination</button>
+          <!-- Submenu -->
+          <div class="nav-submenu" id="overview-submenu" style="display: none;">
+            <button class="nav-item nav-sub" data-section="recommended-section">
+              Recommended places
+            </button>
+            <button class="nav-item nav-sub" data-section="saved-section">
+              Saved destination
+            </button>
+          </div>
         </div>
 
         <div class="nav-section">
@@ -64,17 +67,18 @@
       <!-- Overview / hero -->
       <header class="hero-card" id="overview-section">
         
-        <div class="hero-card__image">
+        <div class="hero-card__image" 
+            style="background-image: url('{{ request.session.trip_image_url }}'); background-size: cover; background-position: center;">
           <div class="hero-card__overlay"></div>
         </div>
+
 
         <div class="hero-card__content">
           <div class="hero-card__top-row">
             <div>
-              <h1 class="hero-card__title">Trip to Paris</h1>
+              <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
               <div class="hero-card__meta">
                 <span class="meta-pill">
-                  <span class="meta-pill__icon">📅</span>
                   12/1 – 12/2
                 </span>
                 <span class="meta-pill">
@@ -84,8 +88,9 @@
               </div>
             </div>
             <div class="hero-card__actions">
-              <button class="icon-button" aria-label="Share trip">🔗</button>
-              <button class="icon-button" aria-label="Settings">⚙️</button>
+              <button id="edit-title-btn" class="icon-button" aria-label="Edit trip">✎</button>
+             <button class="icon-button" id="settings-btn" aria-label="Settings">⚙️</button>
+              
             </div>
           </div>
         </div>
@@ -96,78 +101,107 @@
         <div class="section__header">
           <h2>Explore</h2>
           <button class="btn btn--primary">
-            <span class="btn__icon">🔍</span>
             Browse all
           </button>
         </div> 
       </section>
 
       <!-- Recommended Places -->
-      <div class="explore-subsection">
-  <h3 class="explore-subtitle">Recommended places</h3>
+      <div class="explore-subsection" id="recommended-section">
+        <h3 class="explore-subtitle">Recommended places</h3>
 
-  <div class="card-grid">
-    <article class="explore-card">
-      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1543340713-8a9f6d7f1cec?auto=format&fit=crop&w=900&q=80');"></div>
-      <div class="explore-card__body">
-        <h3 class="explore-card__title">Top museums in Paris</h3>
-        <p class="explore-card__subtitle">Iconic culture & exhibitions</p>
-        <p class="explore-card__meta">Suggested for your trip</p>
-      </div>
-    </article>
+        <div class="carousel-wrapper">
+          <button class="carousel-btn prev-btn">❮</button>
 
-    <article class="explore-card">
-      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80');"></div>
-      <div class="explore-card__body">
-        <h3 class="explore-card__title">Paris local markets</h3>
-        <p class="explore-card__subtitle">Food, crafts & hidden gems</p>
-        <p class="explore-card__meta">Recommended</p>
-      </div>
-    </article>
+          <div class="carousel-track" id="recommended-carousel">
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1543340713-8a9f6d7f1cec?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Top museums in Paris</h3>
+                <p class="explore-card__subtitle">Iconic culture & exhibitions</p>
+                <p class="explore-card__meta">Suggested for your trip</p>
+              </div>
+            </article>
 
-    <article class="explore-card">
-      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80');"></div>
-      <div class="explore-card__body">
-        <h3 class="explore-card__title">Historic neighborhoods</h3>
-        <p class="explore-card__subtitle">Walkable routes & viewpoints</p>
-        <p class="explore-card__meta">Perfect for day 1</p>
-      </div>
-    </article>
-  </div>
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Paris local markets</h3>
+                <p class="explore-card__subtitle">Food, crafts & hidden gems</p>
+                <p class="explore-card__meta">Recommended</p>
+              </div>
+            </article>
+
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Historic neighborhoods</h3>
+                <p class="explore-card__subtitle">Walkable routes & viewpoints</p>
+                <p class="explore-card__meta">Perfect for day 1</p>
+              </div>
+            </article>
+
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1461749677997-440d88acda25?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Arc de Triomphe</h3>
+                <p class="explore-card__subtitle">Iconic monument & views</p>
+                <p class="explore-card__meta">Must-see landmark</p>
+              </div>
+            </article>
+          </div>
+
+          <button class="carousel-btn next-btn">❯</button>
+        </div>
       </div>
 
-<!-- Saved Destinations -->
-      <div class="explore-subsection">
-  <h3 class="explore-subtitle">Saved destinations</h3>
+      <!-- Saved Destinations -->
+      <div class="explore-subsection" id="saved-section">
+        <h3 class="explore-subtitle">Saved destinations</h3>
 
-  <div class="card-grid">
-    <article class="explore-card">
-      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80');"></div>
-      <div class="explore-card__body">
-        <h3 class="explore-card__title">Louvre Museum</h3>
-        <p class="explore-card__subtitle">Art, culture & iconic exhibits</p>
-        <p class="explore-card__meta">Saved on your trip plan</p>
-      </div>
-    </article>
+        <div class="carousel-wrapper">
+          <button class="carousel-btn prev-btn">❮</button>
 
-    <article class="explore-card">
-      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80');"></div>
-      <div class="explore-card__body">
-        <h3 class="explore-card__title">Eiffel Tower</h3>
-        <p class="explore-card__subtitle">Best views in Paris</p>
-        <p class="explore-card__meta">Previously saved</p>
-      </div>
-    </article>
+          <div class="carousel-track" id="saved-carousel">
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Louvre Museum</h3>
+                <p class="explore-card__subtitle">Art, culture & iconic exhibits</p>
+                <p class="explore-card__meta">Saved on your trip plan</p>
+              </div>
+            </article>
 
-    <article class="explore-card">
-      <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506146829809-ecf6d57a1f02?auto=format&fit=crop&w=900&q=80');"></div>
-      <div class="explore-card__body">
-        <h3 class="explore-card__title">Montmartre & Sacré-Cœur</h3>
-        <p class="explore-card__subtitle">Artistic streets & classic views</p>
-        <p class="explore-card__meta">Saved earlier</p>
-      </div>
-    </article>
-  </div>
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Eiffel Tower</h3>
+                <p class="explore-card__subtitle">Best views in Paris</p>
+                <p class="explore-card__meta">Previously saved</p>
+              </div>
+            </article>
+
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506146829809-ecf6d57a1f02?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Montmartre & Sacré-Cœur</h3>
+                <p class="explore-card__subtitle">Artistic streets & classic views</p>
+                <p class="explore-card__meta">Saved earlier</p>
+              </div>
+            </article>
+
+            <article class="explore-card">
+              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69b13d835?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__body">
+                <h3 class="explore-card__title">Latin Quarter</h3>
+                <p class="explore-card__subtitle">Historic streets & universities</p>
+                <p class="explore-card__meta">Bookworm's paradise</p>
+              </div>
+            </article>
+          </div>
+
+          <button class="carousel-btn next-btn">❯</button>
+        </div>
       </div>
       <!-- BIG ITINERARY -->
       <section class="section itinerary-section" id="itinerary-section">
@@ -188,11 +222,11 @@
             </div>
             <div class="itinerary-day-full__actions">
               <button class="tiny-link">
-                ✨ Auto-fill day
+                Auto-fill day
               </button>
               <span class="dot-separator">·</span>
               <button class="tiny-link">
-                📍 Optimize route
+                Optimize route
               </button>
               <button class="icon-button icon-button--ghost">⋯</button>
             </div>
@@ -201,42 +235,7 @@
           <!-- Add a place bar -->
           <div class="place-input-row">
             <div class="place-input">
-              <span class="place-input__icon">📍</span>
               <span class="place-input__placeholder">Add a place</span>
-            </div>
-          </div>
-
-          <!-- Recommended places -->
-          <div class="recommended-row">
-            <div class="recommended-row__header">
-              <span class="chevron">⌄</span>
-              <span class="recommended-row__title">Recommended places</span>
-            </div>
-
-            <div class="recommended-row__scroller">
-              <div class="recommended-card">
-                <div class="recommended-card__image recommended-card__image--eiffel"></div>
-                <div class="recommended-card__body">
-                  <span class="recommended-card__name">Eiffel Tower</span>
-                  <button class="recommended-card__add">＋</button>
-                </div>
-              </div>
-
-              <div class="recommended-card">
-                <div class="recommended-card__image recommended-card__image--louvre"></div>
-                <div class="recommended-card__body">
-                  <span class="recommended-card__name">Louvre Museum</span>
-                  <button class="recommended-card__add">＋</button>
-                </div>
-              </div>
-
-              <div class="recommended-card">
-                <div class="recommended-card__image recommended-card__image--notre"></div>
-                <div class="recommended-card__body">
-                  <span class="recommended-card__name">Notre-Dame Cathedral</span>
-                  <button class="recommended-card__add">＋</button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -250,11 +249,11 @@
             </div>
             <div class="itinerary-day-full__actions">
               <button class="tiny-link">
-                ✨ Auto-fill day
+                Auto-fill day
               </button>
               <span class="dot-separator">·</span>
               <button class="tiny-link">
-                📍 Optimize route
+                Optimize route
               </button>
               <button class="icon-button icon-button--ghost">⋯</button>
             </div>
@@ -262,7 +261,6 @@
 
           <div class="place-input-row">
             <div class="place-input">
-              <span class="place-input__icon">📍</span>
               <span class="place-input__placeholder">Add a place</span>
             </div>
           </div>
@@ -272,61 +270,116 @@
     </main>
 
     <!-- RIGHT MAP PANEL -->
-    <aside class="map-pane">
-      <header class="map-pane__header">
-        <span class="map-pane__title">Map</span>
-        <button class="chip chip--ghost chip--small">Export</button>
-      </header>
+      <div class="map-pane__body">
+          {% if request.session.trip_map_url %}
+          <iframe 
+              width="100%" 
+              height="100%" 
+              style="border:0; border-radius:10px;" 
+              loading="lazy" 
+              allowfullscreen
+              src="{{ request.session.trip_map_url }}">
+          </iframe>
+          {% else %}
+          <p>No map available. Please create a trip first.</p>
+          {% endif %}
+      </div>
 
-    <div class="map-pane__body">
-    <div id="smarttour-map"></div>
-    </div>
     </aside>
 
   </div>
+  <!-- Settings Modal -->
+<div class="modal-overlay" id="settings-modal" style="display: none;">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3>Trip Settings</h3>
+      <button class="modal-close" id="close-settings">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <form id="trip-settings-form">
+        <!-- Trip Information -->
+        <div class="form-section">
+          <h4>Trip Information</h4>
+          <div class="form-group">
+            <label for="trip-name">Trip Name</label>
+            <input type="text" id="trip-name" placeholder="e.g., Paris Adventure" value="Trip to {{ request.session.trip_destination }}"disabled>
 
-  <!-- Smooth scroll + active menu -->
-  <script>
-    const navItems = document.querySelectorAll('.nav-item[data-section]');
-
-    navItems.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.section;
-        const target = document.getElementById(id);
-        if (!target) return;
-
-        // Cuộn mượt đến section
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        // Đổi highlight cho menu
-        navItems.forEach(b => b.classList.remove('nav-item--active'));
-        btn.classList.add('nav-item--active');
-      });
-    });
-  </script>
-  <!-- Leaflet map script -->
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
-
-    // Tọa độ trung tâm Paris
-    const defaultCenter = [48.8566, 2.3522];
-
-    // 1. Tạo bản đồ
-    const map = L.map('smarttour-map').setView(defaultCenter, 13);
-
-    // 2. Load layer từ OpenStreetMap (miễn phí)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-
-    // 3. Thêm marker mẫu tại Eiffel Tower
-    L.marker([48.8584, 2.2945])
-      .addTo(map)
-      .bindPopup("<b>Eiffel Tower</b><br>Iconic landmark in Paris.")
-      .openPopup();
-
-  });
-  </script>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="start-date">Start Date</label>
+              <input type="date" id="start-date" value="2024-12-01">
+            </div>
+            <div class="form-group">
+              <label for="end-date">End Date</label>
+              <input type="date" id="end-date" value="2024-12-02">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Travelers -->
+        <div class="form-section">
+          <h4>Travelers</h4>
+          <div class="form-group">
+            <label for="travelers-count">Number of Travelers</label>
+            <div class="counter-control">
+              <button type="button" class="counter-btn" id="decrease-travelers">-</button>
+              <input type="number" id="travelers-count" min="1" max="20" value="2" readonly>
+              <button type="button" class="counter-btn" id="increase-travelers">+</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Budget -->
+        <div class="form-section">
+          <h4>Budget (Million VND)</h4>
+          <div class="form-group">
+            <label for="budget">Total Budget</label>
+            <div class="budget-input">
+              <input type="range" id="budget-slider" min="0" max="100" value="50" step="5">
+              <div class="budget-display">
+                <span id="budget-value">50</span>
+                <span>Million VND</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Trip Type -->
+        <div class="form-section">
+          <h4>Trip Type</h4>
+          <div class="trip-type-options">
+            <label class="trip-type-option">
+              <input type="radio" name="trip-type" value="leisure" checked>
+              <span>Landmark</span>
+            </label>
+            <label class="trip-type-option">
+              <input type="radio" name="trip-type" value="business">
+              <span>Scenery</span>
+            </label>
+            <label class="trip-type-option">
+              <input type="radio" name="trip-type" value="adventure">
+              <span>Sanctuary</span>
+            </label>
+            <label class="trip-type-option">
+              <input type="radio" name="trip-type" value="family">
+              <span>Museum</span>
+            </label>
+            <label class="trip-type-option">
+              <input type="radio" name="trip-type" value="family">
+              <span>Attraction</span>
+            </label>
+          </div>
+        </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn btn--ghost" id="cancel-settings">Cancel</button>
+      <button class="btn btn--primary" id="save-settings">Save Changes</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
