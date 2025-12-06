@@ -2,6 +2,21 @@
 (function () {
   'use strict';
 
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
   function setupNavigation() {
     const navItems = document.querySelectorAll('.nav-item[data-section]');
     const navSubItems = document.querySelectorAll('.nav-sub[data-section]');
@@ -96,19 +111,32 @@
   }
 
   function setupMap() {
-    if (typeof L === 'undefined') return;
-    const defaultCenter = [48.8566, 2.3522];
-    const map = L.map('smarttour-map').setView(defaultCenter, 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+  const mapElement = document.getElementById('smarttour-map');
+  if (!mapElement) return;
 
-    L.marker([48.8584, 2.2945])
-      .addTo(map)
-      .bindPopup('<b>Eiffel Tower</b><br>Iconic landmark in Paris.')
-      .openPopup();
-  }
+  // Lấy destination từ session (Django render vào HTML)
+  const destination = mapElement.getAttribute('data-destination');
+
+  // Nếu chưa có destination thì set mặc định Paris
+  const defaultDestination = "Paris, France";
+  const dest = destination && destination.trim() !== "" ? destination : defaultDestination;
+
+  console.log("Setting map for destination:", dest);
+
+  // Chuyển đổi tên destination thành URL Google Maps
+  const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(dest)}&output=embed`;
+
+  // Thêm iframe vào mapElement
+  mapElement.innerHTML = `<iframe 
+      width="100%" 
+      height="100%" 
+      style="border:0;" 
+      loading="lazy" 
+      allowfullscreen
+      src="${mapsUrl}">
+    </iframe>`;
+}
+
 
   function setupSettingsModal() {
     // Debug: Kiểm tra xem script có chạy không
@@ -181,13 +209,65 @@
     // Save settings
     const saveSettingsBtn = document.getElementById('save-settings');
     if (saveSettingsBtn) {
-      saveSettingsBtn.addEventListener('click', function () {
-        settingsModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        // Simple notification
-        alert('Settings saved!');
-      });
-    }
+      saveSettingsBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const start = document.getElementById("start-date").value;
+          const end = document.getElementById("end-date").value;
+          const travelers = document.getElementById("travelers-count").value;
+          const budget = document.getElementById("budget-slider").value;
+
+          const payload = new FormData();
+          payload.append("start_date", start);
+          payload.append("end_date", end);
+          payload.append("travelers", travelers);
+          payload.append("budget", budget);
+
+          // ⭐ Cập nhật Hero Card ngay lập tức
+          const heroDates = document.getElementById("hero-trip-dates");
+          
+          if (heroDates) {
+              function fmt(dateStr) {
+                  const d = new Date(dateStr);
+                  return `${d.getMonth() + 1}/${d.getDate()}`;
+              }
+              heroDates.textContent = `${fmt(start)} – ${fmt(end)}`;
+          }
+
+          // UPDATE TRAVELERS COUNT IN HERO CARD
+          // ⭐ Cập nhật Travelers trên Hero Card
+              const travelersValue = document.getElementById("travelers-count").value;
+              const travelersDisplay = document.getElementById("hero-travelers");
+
+              if (travelersDisplay) {
+                  travelersDisplay.innerHTML = `
+                      <span class="meta-pill__icon">👥</span>
+                      ${travelersValue} traveler${travelersValue > 1 ? "s" : ""}
+                  `;
+              }
+
+              const tripType = document.querySelector('input[name="trip-type"]:checked').value;
+              payload.append("trip_type", tripType);
+
+          // ⭐ Gửi lên Django mà KHÔNG reload trang
+          fetch("/update-trip/", {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: payload,
+          })
+              .then(res => res.json())
+              .then(data => {
+                  if (data.status === "ok") {
+                      settingsModal.style.display = "none";
+                      document.body.style.overflow = "auto";
+                      alert("Saved successfully!");
+                  }
+            });
+    });
+}
+
 
     // Escape key to close
     document.addEventListener('keydown', function (e) {
@@ -243,6 +323,19 @@
       });
     });
   }
+  
+  document.querySelectorAll(".collapsible-header").forEach(header => {
+      header.addEventListener("click", () => {
+          const content = header.nextElementSibling;
+          header.classList.toggle("collapsed");
+
+          if (content.style.display === "none") {
+              content.style.display = "block";
+          } else {
+              content.style.display = "none";
+          }
+      });
+});
 
   // Initialize all behaviors after DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
@@ -252,6 +345,28 @@
       setupMap();
       setupSettingsModal();
       setupTitleEditor();
+      setupSectionToggles();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const prevBtns = document.querySelectorAll(".carousel-btn.prev-btn");
+      const nextBtns = document.querySelectorAll(".carousel-btn.next-btn");
+
+      prevBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const track = btn.nextElementSibling; // assumes button -> track
+          const cardWidth = track.querySelector(".explore-card").offsetWidth + 16; // margin/padding
+          track.scrollBy({ left: -cardWidth, behavior: "smooth" });
+        });
+      });
+
+      nextBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const track = btn.previousElementSibling; // assumes track -> button
+          const cardWidth = track.querySelector(".explore-card").offsetWidth + 16;
+          track.scrollBy({ left: cardWidth, behavior: "smooth" });
+        });
+      });
     });
 
 })();
