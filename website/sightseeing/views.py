@@ -11,6 +11,31 @@ from datetime import datetime
 from .Services.recommender import get_recommender
 from django.core.paginator import Paginator
 
+from sightseeing.models import Destinations, Hotel
+import random
+
+from django.http import JsonResponse
+from datetime import datetime
+
+def update_trip(request):
+    if request.method == "POST":
+        start = request.POST.get("start_date")
+        end = request.POST.get("end_date")
+        travelers = request.POST.get("travelers")
+        budget = request.POST.get("budget")
+
+        # Lưu vào session — hoặc database nếu bạn muốn
+        request.session["trip_start"] = start
+        request.session["trip_end"] = end
+        request.session["trip_travelers"] = travelers
+        request.session["trip_budget"] = budget
+        request.session.modified = True
+
+        return JsonResponse({"status": "ok"})
+
+    return JsonResponse({"status": "invalid"}, status=400)
+
+
 @ensure_csrf_cookie
 def get_home(request):
     # Get all locations and categories for filter dropdowns
@@ -674,7 +699,25 @@ def trip_planner(request):
         'explore_recommendations_json': json.dumps(recommended_list),
     }
     
-    return render(request, 'Trip-planner.html', context)
+    destination_name = request.session.get('trip_destination', None)
+    
+    destinations = []
+    if destination_name:
+        # Lọc destination theo tên user chọn
+        destinations = Destinations.objects.filter(location__locationName=destination_name)
+
+    trip_items = TripItem.objects.filter(user=request.user)
+
+    return render(request, 'Trip-planner.html', {
+        'destinations': destinations,
+        "trip_items": trip_items,
+        'trip_destination': destination_name,
+        'trip_map_url': request.session.get('trip_map_url', None),
+        'trip_image_url': request.session.get('trip_image_url', None),
+        'trip_budget': request.session.get('trip_budget', None),
+        'trip_travelers': request.session.get('trip_travelers', None),
+        'trip_price_per_person': request.session.get('trip_price_per_person', None)
+    })
 
 def input_trip_planner(request):
     # Get all locations for destination dropdown
@@ -738,16 +781,29 @@ def trip_form(request):
             
             # Store trip data in session for trip planner
             request.session['trip_destination'] = destination
-            request.session['trip_departure'] = departure_date
-            request.session['trip_arrival'] = arrival_date
+            request.session["trip_start"] = request.POST.get("start_date")
+            request.session["trip_end"] = request.POST.get("end_date")
             request.session['trip_budget'] = budget
             request.session['trip_travelers'] = travelers
             request.session['trip_price_per_person'] = price_per_person
-
-            request.session['trip_map_url'] = (
-                f"https://maps.google.com/maps?output=embed&q={destination}&z=12"
-            )
             
+            # Google Map URL
+            request.session['trip_map_url'] = f"https://maps.google.com/maps?output=embed&q={destination}&z=12"
+
+            # Lấy hình ảnh ngẫu nhiên cho location
+            destinations_for_location = Destinations.objects.filter(location__locationName=destination)
+            hotels_for_location = Hotel.objects.filter(location__locationName=destination)
+
+            all_images = list(destinations_for_location.values_list('image_url', flat=True)) + \
+                        list(hotels_for_location.values_list('image_url', flat=True))
+
+            if all_images:
+                trip_image = random.choice(all_images)
+            else:
+                trip_image = '/static/images/default_trip_image.png'
+
+            request.session['trip_image_url'] = trip_image
+
             messages.success(request, f'Trip to {destination} has been created successfully!')
             return redirect('trip_planner')
             
@@ -757,6 +813,7 @@ def trip_form(request):
     
     # GET request - redirect to input form
     return redirect('input_trip_planner')
+
 
 @csrf_exempt
 def add_to_trip(request, destination_id):
@@ -914,13 +971,4 @@ def save_day_selections(request):
             return JsonResponse({'success': False, 'message': 'An error occurred while saving.'})
     
     return JsonResponse({'success': False, 'message': 'Invalid request method.'})
-
-
-
-
-
-
-
-
-
 
