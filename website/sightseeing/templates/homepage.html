@@ -242,16 +242,15 @@
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
                 <div class="u-container-layout u-valign-top u-container-layout-1">
                   <div class="custom-expanded u-form u-form-1">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-1">
-                        <label class="u-custom-font u-font-montserrat u-label u-label-1">Region</label>
+                        <label class="u-custom-font u-font-montserrat u-label u-label-1">Location</label>
                         <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-1">
-                            <option value="All regions" data-calc="">All regions</option>
-                            <option value="Ho Chi Minh" data-calc="">Ho Chi Minh</option>
-                            <option value="Ha Long Bay" data-calc="">Ha Long Bay</option>
-                            <option value="Ha Noi" data-calc="">Ha Noi</option>
-                            <option value="Hue" data-calc="">Hue</option>
+                          <select id="location-filter" name="location" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-1">
+                            <option value="">All locations</option>
+                            {% for location in all_locations %}
+                            <option value="{{ location.id }}">{{ location.locationName }}</option>
+                            {% endfor %}
                           </select>
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
@@ -271,17 +270,15 @@
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
                 <div class="u-container-layout u-valign-top u-container-layout-2">
                   <div class="custom-expanded u-form u-form-2">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-3">
-                        <label class="u-custom-font u-font-montserrat u-label u-label-2">Region</label>
+                        <label class="u-custom-font u-font-montserrat u-label u-label-2">Category</label>
                         <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-white u-input-2">
-                            <option value="All locations" data-calc="">All locations</option>
-                            <option value="Landmark" data-calc="">Landmark</option>
-                            <option value="Scenery" data-calc="">Scenery</option>
-                            <option value="Sanctuary" data-calc="">Sanctuary</option>
-                            <option value="Museum" data-calc="">Museum</option>
-                            <option value="Attraction" data-calc="">Attraction</option>
+                          <select id="category-filter" name="category" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-white u-input-2">
+                            <option value="">All categories</option>
+                            {% for category in all_categories %}
+                            <option value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
                           </select>
                           <svg class="u-caret u-caret-svg u-text-white" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
@@ -301,17 +298,17 @@
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
                 <div class="u-container-layout u-valign-top u-container-layout-3">
                   <div class="custom-expanded u-form u-form-3">
-                    <form action="https://service.nicepagesrv.com/form/v4/form-process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
+                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">
                       <div class="u-form-group u-form-select u-label-none u-form-group-5">
-                        <label class="u-custom-font u-font-montserrat u-label u-label-3">Region</label>
+                        <label class="u-custom-font u-font-montserrat u-label u-label-3">Rating</label>
                         <div class="u-form-select-wrapper">
-                          <select id="select-ec63" name="select" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-3">
-                            <option value="All ratings" data-calc="">All ratings</option>
-                            <option value="★☆☆☆☆ (1+)" data-calc="">★☆☆☆☆ (1+)</option>
-                            <option value="★★☆☆☆ (2+)" data-calc="">★★☆☆☆ (2+)</option>
-                            <option value="★★★☆☆ (3+)" data-calc="">★★★☆☆ (3+)</option>
-                            <option value="★★★★☆ (4+)" data-calc="">★★★★☆ (4+)</option>
-                            <option value="★★★★★" data-calc="">★★★★★</option>
+                          <select id="rating-filter" name="rating" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-3">
+                            <option value="">All ratings</option>
+                            <option value="1">★☆☆☆☆ (1+)</option>
+                            <option value="2">★★☆☆☆ (2+)</option>
+                            <option value="3">★★★☆☆ (3+)</option>
+                            <option value="4">★★★★☆ (4+)</option>
+                            <option value="5">★★★★★</option>
                           </select>
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
@@ -335,7 +332,7 @@
     </section>
     <section class="u-clearfix u-container-align-center u-white u-section-2" id="sec-9086">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-sheet-1">
-        <a href="{% url 'input_trip_planner' %}" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">Start Your Journey </a>
+        <a href="{% url 'recommend_result' %}" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">Start Your Journey </a>
         <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">Why should you choose us?</h2>
         <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2" data-animation-name="customAnimationIn" data-animation-duration="600" data-animation-delay="0">What we offer<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
         </h6>
