@@ -1,0 +1,236 @@
+.blank {
+    height: 35px;
+}
+
+.btn-row {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.add-to-trip-btn,
+.add-to-trip-btn.active {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    justify-content: center !important; 
+    background: #F7931E !important;
+    color: #fff !important;
+    padding: 14px 28px !important;
+    border: none !important;
+    border-radius: 50px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 12px rgba(247, 147, 30, 0.35) !important;
+}
+
+.add-to-trip-btn:hover {
+    background: #FFA93D !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(247, 147, 30, 0.45);
+}
+
+.add-to-trip-btn:active {
+    transform: translateY(-1px) scale(0.96);
+}
+
+.add-to-trip-icon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* icon chung */
+.add-to-trip-icon svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    transform-origin: center center; /* quan trọng */
+    transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+/* plus icon khi active */
+.add-to-trip-btn.active .plus-icon {
+    transform: rotate(360deg);
+    opacity: 0;
+}
+
+/* check icon xuất hiện */
+.check-icon {
+    opacity: 0;
+}
+
+.add-to-trip-btn.active .check-icon {
+    opacity: 1;
+    transform: rotate(360deg);
+}
+
+.smart-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    background: #F7931E;
+    color: #fff !important;
+
+    padding: 14px 28px;
+    border: none;
+    border-radius: 50px;
+
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+
+    text-decoration: none;
+    transition: all 0.25s ease;
+
+    box-shadow: 0 4px 12px rgba(247, 147, 30, 0.35);
+}
+
+.smart-btn:hover {
+    background: #FFA93D;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(247, 147, 30, 0.45);
+}
+
+.smart-btn:active {
+    transform: translateY(-1px) scale(0.97);
+}
+
+.layout-row {
+    display: flex;
+    align-items: stretch;   /* bắt 2 cột cao bằng nhau */
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 10px;
+    gap: 15px;
+}
+
+/* Ảnh chính tự chiếm phần còn lại */
+.left-column .place-img {
+    height: 450px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Carousel KHÔNG được flex giãn chiều cao */
+.left-column .carousel-container {
+    height: 120px;
+    flex: 0 0 auto;
+    margin-top: 20px;
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+}
+
+.carousel {
+    display: flex;
+    flex-wrap: nowrap;     /* không cho xuống hàng */
+    gap: 10px;
+    overflow-x: auto;      /* cho scroll ngang (carousel hoạt động) */
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Kích thước từng ảnh */
+.carousel-img {
+    height: 80px;
+    width: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .3s, border .3s;
+}
+
+.carousel-img:hover {
+    transform: scale(1.1);
+    border: 3px solid #F7931E;
+}
+
+/* Nút điều hướng */
+.carousel-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Nút điều hướng Carousel (General/Recommended) */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    /* ĐỒNG BỘ: Sử dụng style TRẮNG */
+    background: white; 
+    border: 1px solid #ccc; 
+    color: #333; 
+    
+    font-size: 18px;
+    padding: 6px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 1; /* Loại bỏ opacity 0.8 cũ */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Thêm shadow nhẹ */
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+/* Thêm hover để tăng trải nghiệm */
+.carousel-btn:hover {
+    background: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.carousel-btn.left { left: -35px; }
+.carousel-btn.right { right: -35px; }
+
+
+/* Nút Hotel Carousel (ĐỒNG BỘ) */
+.hotel-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* ĐỒNG BỘ: Sử dụng style TRẮNG */
+    background: white;
+    border: 1px solid #ccc; 
+    color: #333;
+    
+    font-size: 22px;
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 1; /* Loại bỏ opacity cũ */
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+
+.hotel-carousel-btn:hover {
+    background: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.hotel-carousel-btn.left { left: -35px; }
+.hotel-carousel-btn.right { right: -35px; }
