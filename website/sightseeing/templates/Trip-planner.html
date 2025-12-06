@@ -5,11 +5,8 @@
   <meta charset="UTF-8" />
   <title>Trip Planner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" />
   <script src="{% static 'js/TripPlanner.js' %}"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -41,8 +38,11 @@
 
           <!-- Submenu -->
           <div class="nav-submenu" id="overview-submenu" style="display: none;">
+            <button class="nav-item nav-sub" data-section="explore-section">
+              Explore
+            </button>
             <button class="nav-item nav-sub" data-section="recommended-section">
-              Recommended places
+              Places to visit
             </button>
             <button class="nav-item nav-sub" data-section="saved-section">
               Saved destination
@@ -50,17 +50,11 @@
           </div>
         </div>
 
-        <div class="nav-section">
+        <div class="nav-section" id="itinerary-nav">
           <p class="nav-section__title">Itinerary</p>
-          <button class="nav-item" data-section="itinerary-section">
-            <span>Mon 12/1</span>
-            <span class="nav-item__pill">3 stops</span>
-          </button>
-          <button class="nav-item" data-section="itinerary-section">
-            <span>Tue 12/2</span>
-            <span class="nav-item__pill">2 stops</span>
-          </button>
+          <div id="itinerary-days"></div>
         </div>
+
       </nav>
     </aside>
     
@@ -70,21 +64,23 @@
       <!-- Overview / hero -->
       <header class="hero-card" id="overview-section">
         
-        <div class="hero-card__image">
+        <div class="hero-card__image" 
+            style="background-image: url('{{ request.session.trip_image_url }}'); background-size: cover; background-position: center;">
           <div class="hero-card__overlay"></div>
         </div>
+
 
         <div class="hero-card__content">
           <div class="hero-card__top-row">
             <div>
-              <h1 class="hero-card__title">Trip to Paris</h1>
+              <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
               <div class="hero-card__meta">
-                <span class="meta-pill">
+                <span class="meta-pill" id="hero-trip-dates">
                   12/1 – 12/2
                 </span>
-                <span class="meta-pill">
+                <span class="meta-pill" id="hero-travelers">
                   <span class="meta-pill__icon">👥</span>
-                  2 travelers
+                  <span id="hero-travelers-count">2 travelers</span>
                 </span>
               </div>
             </div>
@@ -101,60 +97,36 @@
       <section class="section" id="explore-section">
         <div class="section__header">
           <h2>Explore</h2>
-          <button class="btn btn--primary">
-            Browse all
-          </button>
-        </div> 
-      </section>
+        </div>
 
-      <!-- Recommended Places -->
-      <div class="explore-subsection" id="recommended-section">
-        <h3 class="explore-subtitle">Recommended places</h3>
-
+        <!-- Carousel showing destinations for selected location -->
         <div class="carousel-wrapper">
           <button class="carousel-btn prev-btn">❮</button>
 
-          <div class="carousel-track" id="recommended-carousel">
+          <div class="carousel-track" id="explore-carousel">
+            {% for dest in destinations %}
             <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1543340713-8a9f6d7f1cec?auto=format&fit=crop&w=900&q=80');"></div>
+              <div class="explore-card__image" style="background-image: url('{{ dest.image_url }}');"></div>
               <div class="explore-card__body">
-                <h3 class="explore-card__title">Top museums in Paris</h3>
-                <p class="explore-card__subtitle">Iconic culture & exhibitions</p>
-                <p class="explore-card__meta">Suggested for your trip</p>
+                <h3 class="explore-card__title">{{ dest.desName }}</h3>
+                <p class="explore-card__subtitle">{{ dest.category }} | {{ dest.ratings }}⭐</p>
+                <p class="explore-card__meta">{{ dest.address }} - {{ dest.location.locationName }}</p>
+                <p class="explore-card__description">{{ dest.description|truncatewords:20 }}</p>
+                <button class="btn btn--small btn--primary add-to-trip-btn" 
+                        data-destination-id="{{ dest.id }}">
+                  Add to Trip
+                </button>
               </div>
             </article>
-
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Paris local markets</h3>
-                <p class="explore-card__subtitle">Food, crafts & hidden gems</p>
-                <p class="explore-card__meta">Recommended</p>
-              </div>
-            </article>
-
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Historic neighborhoods</h3>
-                <p class="explore-card__subtitle">Walkable routes & viewpoints</p>
-                <p class="explore-card__meta">Perfect for day 1</p>
-              </div>
-            </article>
-
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1461749677997-440d88acda25?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Arc de Triomphe</h3>
-                <p class="explore-card__subtitle">Iconic monument & views</p>
-                <p class="explore-card__meta">Must-see landmark</p>
-              </div>
-            </article>
+            {% empty %}
+            <p>No destinations found for "{{ trip_destination }}".</p>
+            {% endfor %}
           </div>
 
           <button class="carousel-btn next-btn">❯</button>
         </div>
-      </div>
+      </section>
+
 
       <!-- Saved Destinations -->
       <div class="explore-subsection" id="saved-section">
@@ -164,51 +136,89 @@
           <button class="carousel-btn prev-btn">❮</button>
 
           <div class="carousel-track" id="saved-carousel">
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Louvre Museum</h3>
-                <p class="explore-card__subtitle">Art, culture & iconic exhibits</p>
-                <p class="explore-card__meta">Saved on your trip plan</p>
-              </div>
-            </article>
 
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Eiffel Tower</h3>
-                <p class="explore-card__subtitle">Best views in Paris</p>
-                <p class="explore-card__meta">Previously saved</p>
-              </div>
-            </article>
+            {% if trip_items %}
+              {% for item in trip_items %}
 
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506146829809-ecf6d57a1f02?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Montmartre & Sacré-Cœur</h3>
-                <p class="explore-card__subtitle">Artistic streets & classic views</p>
-                <p class="explore-card__meta">Saved earlier</p>
-              </div>
-            </article>
+                {% if item.destination %}
+                <article class="explore-card">
+                  <div class="explore-card__image"
+                      style="background-image: url('{{ item.destination.image_url|default:"https://picsum.photos/400/200" }}');">
+                  </div>
 
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69b13d835?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Latin Quarter</h3>
-                <p class="explore-card__subtitle">Historic streets & universities</p>
-                <p class="explore-card__meta">Bookworm's paradise</p>
-              </div>
-            </article>
+                  <div class="explore-card__body">
+                    <h3 class="explore-card__title">{{ item.destination.desName }}</h3>
+                    <p class="explore-card__subtitle">{{ item.destination.category }} | {{ item.destination.ratings }}⭐</p>
+                    <p class="explore-card__meta">Saved on {{ item.added_at|date:"M d, Y" }}</p>
+
+                    <div class="saved-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+
+                      <!-- View Details -->
+                      <button class="btn btn--small btn--primary"
+                              onclick="location.href='{% url 'destination_detail' item.destination.id %}'">
+                        View Details
+                      </button>
+
+                      <!-- Remove button -->
+                      <form method="post" action="{% url 'remove_from_trip' item.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn--small btn--danger"
+                                onclick="return confirm('Remove this destination from your trip?')">
+                          Remove
+                        </button>
+                      </form>
+
+                    </div>
+                  </div>
+                </article>
+                {% endif %}
+
+
+                {% if item.hotel %}
+                <article class="explore-card">
+                  <div class="explore-card__image"
+                      style="background-image: url('{{ item.hotel.image_url|default:"https://picsum.photos/400/200" }}');">
+                  </div>
+
+                  <div class="explore-card__body">
+                    <h3 class="explore-card__title">{{ item.hotel.name }}</h3>
+                    <p class="explore-card__subtitle">{{ item.hotel.address }}</p>
+                    <p class="explore-card__meta">Hotel added on {{ item.added_at|date:"M d, Y" }}</p>
+
+                    <div class="saved-actions">
+
+                      <span class="badge bg-info">Hotel</span>
+
+                      <!-- Remove button -->
+                      <form method="post" action="{% url 'remove_from_trip' item.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn--small btn--danger"
+                                onclick="return confirm('Remove this hotel from your trip?')">
+                          Remove
+                        </button>
+                      </form>
+
+                    </div>
+                  </div>
+                </article>
+                {% endif %}
+
+              {% endfor %}
+            {% else %}
+              <p>No saved destinations yet.</p>
+            {% endif %}
+
           </div>
 
           <button class="carousel-btn next-btn">❯</button>
         </div>
       </div>
+
       <!-- BIG ITINERARY -->
       <section class="section itinerary-section" id="itinerary-section">
         <div class="section__header">
           <h2>Itinerary</h2>
-          <button class="meta-pill meta-pill--big">
+          <button class="meta-pill meta-pill--big" id="itinerary-date-range">
             <span class="meta-pill__icon">📅</span>
             12/1 – 12/2
           </button>
@@ -272,8 +282,20 @@
 
     <!-- RIGHT MAP PANEL -->
       <div class="map-pane__body">
-        <div id="smarttour-map"></div>
+          {% if request.session.trip_map_url %}
+          <iframe 
+              width="100%" 
+              height="100%" 
+              style="border:0; border-radius:10px;" 
+              loading="lazy" 
+              allowfullscreen
+              src="{{ request.session.trip_map_url }}">
+          </iframe>
+          {% else %}
+          <p>No map available. Please create a trip first.</p>
+          {% endif %}
       </div>
+
     </aside>
 
   </div>
@@ -292,7 +314,8 @@
           <h4>Trip Information</h4>
           <div class="form-group">
             <label for="trip-name">Trip Name</label>
-            <input type="text" id="trip-name" placeholder="e.g., Paris Adventure" value="Trip to Paris">
+            <input type="text" id="trip-name" placeholder="e.g., Paris Adventure" value="Trip to {{ request.session.trip_destination }}"disabled>
+
           </div>
           
           <div class="form-row">
@@ -365,9 +388,61 @@
     
     <div class="modal-footer">
       <button class="btn btn--ghost" id="cancel-settings">Cancel</button>
-      <button class="btn btn--primary" id="save-settings">Save Changes</button>
+      <button class="btn btn--primary" id="save-settings" type="button">Save Changes</button>
     </div>
   </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const startInput = document.getElementById("start-date");
+    const endInput = document.getElementById("end-date");
+
+    const daysContainer = document.getElementById("itinerary-days");
+
+    function formatDate(date) {
+        const options = { weekday: 'short', month: 'numeric', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    function generateDays() {
+        daysContainer.innerHTML = "";
+
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+
+        if (isNaN(start) || isNaN(end) || start > end) {
+            daysContainer.innerHTML = "<p style='color:#999;'>Invalid date range</p>";
+            return;
+        }
+
+        let current = new Date(start);
+
+        while (current <= end) {
+            const formatted = formatDate(current); // e.g., "Mon 12/1"
+
+            const btn = document.createElement("button");
+            btn.classList.add("nav-item");
+            btn.setAttribute("data-section", "itinerary-section");
+
+            btn.innerHTML = `
+                <span>${formatted}</span>
+                <span class="nav-item__pill">0 stops</span>
+            `;
+
+            daysContainer.appendChild(btn);
+
+            current.setDate(current.getDate() + 1);
+        }
+    }
+
+    startInput.addEventListener("change", generateDays);
+    endInput.addEventListener("change", generateDays);
+
+    // generate on page load
+    generateDays();
+});
+</script>
+
 </body>
 </html>
