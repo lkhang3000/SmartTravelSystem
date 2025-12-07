@@ -2,6 +2,21 @@
 (function () {
   'use strict';
 
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
   function setupNavigation() {
     const navItems = document.querySelectorAll('.nav-item[data-section]');
     const navSubItems = document.querySelectorAll('.nav-sub[data-section]');
@@ -352,6 +367,19 @@
     });
   }
   
+  document.querySelectorAll(".collapsible-header").forEach(header => {
+      header.addEventListener("click", () => {
+          const content = header.nextElementSibling;
+          header.classList.toggle("collapsed");
+
+          if (content.style.display === "none") {
+              content.style.display = "block";
+          } else {
+              content.style.display = "none";
+          }
+      });
+});
+
   // Initialize all behaviors after DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
       setupNavigation();
@@ -360,6 +388,7 @@
       setupMap();
       setupSettingsModal();
       setupTitleEditor();
+      setupSectionToggles();
     });
 
     document.addEventListener("DOMContentLoaded", () => {

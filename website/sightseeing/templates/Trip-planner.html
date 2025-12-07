@@ -54,13 +54,16 @@
 
         <div class="nav-section">
           <p class="nav-section__title">Itinerary</p>
-          {% for day in days %}
           <button class="nav-item" data-section="itinerary-section">
-            <span>{{ day.day_short }}</span>
-            <span class="nav-item__pill">0 stops</span>
+            <span>Mon 12/1</span>
+            <span class="nav-item__pill">3 stops</span>
           </button>
-          {% endfor %}
+          <button class="nav-item" data-section="itinerary-section">
+            <span>Tue 12/2</span>
+            <span class="nav-item__pill">2 stops</span>
+          </button>
         </div>
+
       </nav>
     </aside>
     
@@ -82,7 +85,7 @@
               <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
               <div class="hero-card__meta">
                 <span class="meta-pill">
-                  {{ date_range|default:"12/1 – 12/2" }}
+                  12/1 – 12/2
                 </span>
                 <span class="meta-pill">
                   {{ trip_travelers|default:2 }} travelers
@@ -104,9 +107,6 @@
       <section class="section" id="explore-section">
         <div class="section__header">
           <h2>Explore</h2>
-          <button class="btn btn--primary">
-            Browse all
-          </button>
         </div>
 
         <!-- Carousel showing destinations for selected location -->
@@ -146,62 +146,99 @@
           <button class="carousel-btn prev-btn">❮</button>
 
           <div class="carousel-track" id="saved-carousel">
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Louvre Museum</h3>
-                <p class="explore-card__subtitle">Art, culture & iconic exhibits</p>
-                <p class="explore-card__meta">Saved on your trip plan</p>
-              </div>
-            </article>
 
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Eiffel Tower</h3>
-                <p class="explore-card__subtitle">Best views in Paris</p>
-                <p class="explore-card__meta">Previously saved</p>
-              </div>
-            </article>
+            {% if trip_items %}
+              {% for item in trip_items %}
 
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1506146829809-ecf6d57a1f02?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Montmartre & Sacré-Cœur</h3>
-                <p class="explore-card__subtitle">Artistic streets & classic views</p>
-                <p class="explore-card__meta">Saved earlier</p>
-              </div>
-            </article>
+                {% if item.destination %}
+                <article class="explore-card">
+                  <div class="explore-card__image"
+                      style="background-image: url('{{ item.destination.image_url|default:"https://picsum.photos/400/200" }}');">
+                  </div>
 
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69b13d835?auto=format&fit=crop&w=900&q=80');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">Latin Quarter</h3>
-                <p class="explore-card__subtitle">Historic streets & universities</p>
-                <p class="explore-card__meta">Bookworm's paradise</p>
-              </div>
-            </article>
+                  <div class="explore-card__body">
+                    <h3 class="explore-card__title">{{ item.destination.desName }}</h3>
+                    <p class="explore-card__subtitle">{{ item.destination.category }} | {{ item.destination.ratings }}⭐</p>
+                    <p class="explore-card__meta">Saved on {{ item.added_at|date:"M d, Y" }}</p>
+
+                    <div class="saved-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+
+                      <!-- View Details -->
+                      <button class="btn btn--small btn--primary"
+                              onclick="location.href='{% url 'destination_detail' item.destination.id %}'">
+                        View Details
+                      </button>
+
+                      <!-- Remove button -->
+                      <form method="post" action="{% url 'remove_from_trip' item.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn--small btn--danger"
+                                onclick="return confirm('Remove this destination from your trip?')">
+                          Remove
+                        </button>
+                      </form>
+
+                    </div>
+                  </div>
+                </article>
+                {% endif %}
+
+
+                {% if item.hotel %}
+                <article class="explore-card">
+                  <div class="explore-card__image"
+                      style="background-image: url('{{ item.hotel.image_url|default:"https://picsum.photos/400/200" }}');">
+                  </div>
+
+                  <div class="explore-card__body">
+                    <h3 class="explore-card__title">{{ item.hotel.name }}</h3>
+                    <p class="explore-card__subtitle">{{ item.hotel.address }}</p>
+                    <p class="explore-card__meta">Hotel added on {{ item.added_at|date:"M d, Y" }}</p>
+
+                    <div class="saved-actions">
+
+                      <span class="badge bg-info">Hotel</span>
+
+                      <!-- Remove button -->
+                      <form method="post" action="{% url 'remove_from_trip' item.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn--small btn--danger"
+                                onclick="return confirm('Remove this hotel from your trip?')">
+                          Remove
+                        </button>
+                      </form>
+
+                    </div>
+                  </div>
+                </article>
+                {% endif %}
+
+              {% endfor %}
+            {% else %}
+              <p>No saved destinations yet.</p>
+            {% endif %}
+
           </div>
 
           <button class="carousel-btn next-btn">❯</button>
         </div>
       </div>
+
       <!-- BIG ITINERARY -->
       <section class="section itinerary-section" id="itinerary-section">
         <div class="section__header">
           <h2>Itinerary</h2>
           <button class="meta-pill meta-pill--big">
             <span class="meta-pill__icon">📅</span>
-            {{ date_range|default:"12/1 – 12/2" }}
+            12/1 – 12/2
           </button>
         </div>
 
-        {% for day in days %}
-        <!-- Day {{ forloop.counter }} -->
+        <!-- Day 1 -->
         <div class="itinerary-day-full">
           <div class="itinerary-day-full__head">
             <div>
-              <h3>{{ day.full_name }}</h3>
+              <h3>Monday, December 1st</h3>
               <button class="link-button">Add subheading</button>
             </div>
             <div class="itinerary-day-full__actions">
@@ -223,7 +260,32 @@
             </div>
           </div>
         </div>
-        {% endfor %}
+
+        <!-- Day 2 -->
+        <div class="itinerary-day-full">
+          <div class="itinerary-day-full__head">
+            <div>
+              <h3>Tuesday, December 2nd</h3>
+              <button class="link-button">Add subheading</button>
+            </div>
+            <div class="itinerary-day-full__actions">
+              <button class="tiny-link">
+                Auto-fill day
+              </button>
+              <span class="dot-separator">·</span>
+              <button class="tiny-link">
+                Optimize route
+              </button>
+              <button class="icon-button icon-button--ghost">⋯</button>
+            </div>
+          </div>
+
+          <div class="place-input-row">
+            <div class="place-input">
+              <span class="place-input__placeholder">Add a place</span>
+            </div>
+          </div>
+        </div>
       </section>
 
     </main>
@@ -329,9 +391,61 @@
     
     <div class="modal-footer">
       <button class="btn btn--ghost" id="cancel-settings">Cancel</button>
-      <button class="btn btn--primary" id="save-settings">Save Changes</button>
+      <button class="btn btn--primary" id="save-settings" type="button">Save Changes</button>
     </div>
   </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const startInput = document.getElementById("start-date");
+    const endInput = document.getElementById("end-date");
+
+    const daysContainer = document.getElementById("itinerary-days");
+
+    function formatDate(date) {
+        const options = { weekday: 'short', month: 'numeric', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    function generateDays() {
+        daysContainer.innerHTML = "";
+
+        const start = new Date(startInput.value);
+        const end = new Date(endInput.value);
+
+        if (isNaN(start) || isNaN(end) || start > end) {
+            daysContainer.innerHTML = "<p style='color:#999;'>Invalid date range</p>";
+            return;
+        }
+
+        let current = new Date(start);
+
+        while (current <= end) {
+            const formatted = formatDate(current); // e.g., "Mon 12/1"
+
+            const btn = document.createElement("button");
+            btn.classList.add("nav-item");
+            btn.setAttribute("data-section", "itinerary-section");
+
+            btn.innerHTML = `
+                <span>${formatted}</span>
+                <span class="nav-item__pill">0 stops</span>
+            `;
+
+            daysContainer.appendChild(btn);
+
+            current.setDate(current.getDate() + 1);
+        }
+    }
+
+    startInput.addEventListener("change", generateDays);
+    endInput.addEventListener("change", generateDays);
+
+    // generate on page load
+    generateDays();
+});
+</script>
+
 </body>
 </html>
