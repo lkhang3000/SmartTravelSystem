@@ -140,7 +140,7 @@ dmypy.json
 Thumbs.db
 
 # Database
-*.sqlite3
+db.sqlite3
 *.db
 
 # Media files
@@ -150,3 +150,6 @@ staticfiles/
 # Secrets
 secrets.json
 config/secrets.json
+
+# Generated CSV files
+search_history.csv
