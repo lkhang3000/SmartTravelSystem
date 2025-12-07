@@ -52,18 +52,16 @@
           </div>
         </div>
 
-        <div class="nav-section" id="itinerary-nav">
+        <div class="nav-section">
           <p class="nav-section__title">Itinerary</p>
-<<<<<<< HEAD
-          {% for day in days %}
           <button class="nav-item" data-section="itinerary-section">
-            <span>{{ day.day_short }}</span>
-            <span class="nav-item__pill">0 stops</span>
+            <span>Mon 12/1</span>
+            <span class="nav-item__pill">3 stops</span>
           </button>
-          {% endfor %}
-=======
-          <div id="itinerary-days"></div>
->>>>>>> Frontend
+          <button class="nav-item" data-section="itinerary-section">
+            <span>Tue 12/2</span>
+            <span class="nav-item__pill">2 stops</span>
+          </button>
         </div>
 
       </nav>
@@ -86,20 +84,11 @@
             <div>
               <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
               <div class="hero-card__meta">
-<<<<<<< HEAD
                 <span class="meta-pill">
-                  {{ date_range|default:"12/1 – 12/2" }}
+                  12/1 – 12/2
                 </span>
                 <span class="meta-pill">
                   {{ trip_travelers|default:2 }} travelers
-=======
-                <span class="meta-pill" id="hero-trip-dates">
-                  12/1 – 12/2
-                </span>
-                <span class="meta-pill" id="hero-travelers">
-                  <span class="meta-pill__icon">👥</span>
-                  <span id="hero-travelers-count">2 travelers</span>
->>>>>>> Frontend
                 </span>
               </div>
             </div>
@@ -239,18 +228,17 @@
       <section class="section itinerary-section" id="itinerary-section">
         <div class="section__header">
           <h2>Itinerary</h2>
-          <button class="meta-pill meta-pill--big" id="itinerary-date-range">
+          <button class="meta-pill meta-pill--big">
             <span class="meta-pill__icon">📅</span>
-            {{ date_range|default:"12/1 – 12/2" }}
+            12/1 – 12/2
           </button>
         </div>
 
-        {% for day in days %}
-        <!-- Day {{ forloop.counter }} -->
+        <!-- Day 1 -->
         <div class="itinerary-day-full">
           <div class="itinerary-day-full__head">
             <div>
-              <h3>{{ day.full_name }}</h3>
+              <h3>Monday, December 1st</h3>
               <button class="link-button">Add subheading</button>
             </div>
             <div class="itinerary-day-full__actions">
@@ -272,7 +260,32 @@
             </div>
           </div>
         </div>
-        {% endfor %}
+
+        <!-- Day 2 -->
+        <div class="itinerary-day-full">
+          <div class="itinerary-day-full__head">
+            <div>
+              <h3>Tuesday, December 2nd</h3>
+              <button class="link-button">Add subheading</button>
+            </div>
+            <div class="itinerary-day-full__actions">
+              <button class="tiny-link">
+                Auto-fill day
+              </button>
+              <span class="dot-separator">·</span>
+              <button class="tiny-link">
+                Optimize route
+              </button>
+              <button class="icon-button icon-button--ghost">⋯</button>
+            </div>
+          </div>
+
+          <div class="place-input-row">
+            <div class="place-input">
+              <span class="place-input__placeholder">Add a place</span>
+            </div>
+          </div>
+        </div>
       </section>
 
     </main>
