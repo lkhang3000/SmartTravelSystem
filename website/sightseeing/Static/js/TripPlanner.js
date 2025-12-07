@@ -142,6 +142,50 @@
     // Debug: Kiểm tra xem script có chạy không
     console.log('TripPlanner: setupSettingsModal');
 
+    // Function to show toast notification
+    function showToast(message, type = 'success') {
+      // Create toast element
+      const toast = document.createElement('div');
+      toast.className = `toast toast--${type}`;
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 6px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 10002;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        opacity: 0;
+        transition: all 0.2s ease;
+        pointer-events: none;
+      `;
+      
+      document.body.appendChild(toast);
+      
+      // Animate in
+      setTimeout(() => {
+        toast.style.opacity = '1';
+      }, 10);
+      
+      // Auto remove after 1 seconds
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 300);
+      }, 1000);
+    }
+
     const settingsButton = document.getElementById('settings-btn') || document.querySelector('.hero-card__actions .icon-button[aria-label="Settings"]');
     const settingsModal = document.getElementById('settings-modal');
 
@@ -153,6 +197,20 @@
     // Open modal
     settingsButton.addEventListener('click', function (e) {
       e.stopPropagation();
+      // Populate inputs with current values
+      const metaPills = document.querySelectorAll('.meta-pill');
+      metaPills.forEach(pill => {
+        const icon = pill.querySelector('.meta-pill__icon');
+        if (icon && icon.textContent.includes('👥')) {
+          const textNode = Array.from(pill.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+          if (textNode) {
+            const match = textNode.textContent.trim().match(/(\d+) travelers/);
+            if (match && travelersCountInput) {
+              travelersCountInput.value = match[1];
+            }
+          }
+        }
+      });
       settingsModal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     });
@@ -209,65 +267,50 @@
     // Save settings
     const saveSettingsBtn = document.getElementById('save-settings');
     if (saveSettingsBtn) {
-      saveSettingsBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-
-          const start = document.getElementById("start-date").value;
-          const end = document.getElementById("end-date").value;
-          const travelers = document.getElementById("travelers-count").value;
-          const budget = document.getElementById("budget-slider").value;
-
-          const payload = new FormData();
-          payload.append("start_date", start);
-          payload.append("end_date", end);
-          payload.append("travelers", travelers);
-          payload.append("budget", budget);
-
-          // ⭐ Cập nhật Hero Card ngay lập tức
-          const heroDates = document.getElementById("hero-trip-dates");
-          
-          if (heroDates) {
-              function fmt(dateStr) {
-                  const d = new Date(dateStr);
-                  return `${d.getMonth() + 1}/${d.getDate()}`;
-              }
-              heroDates.textContent = `${fmt(start)} – ${fmt(end)}`;
-          }
-
-          // UPDATE TRAVELERS COUNT IN HERO CARD
-          // ⭐ Cập nhật Travelers trên Hero Card
-              const travelersValue = document.getElementById("travelers-count").value;
-              const travelersDisplay = document.getElementById("hero-travelers");
-
-              if (travelersDisplay) {
-                  travelersDisplay.innerHTML = `
-                      <span class="meta-pill__icon">👥</span>
-                      ${travelersValue} traveler${travelersValue > 1 ? "s" : ""}
-                  `;
-              }
-
-              const tripType = document.querySelector('input[name="trip-type"]:checked').value;
-              payload.append("trip_type", tripType);
-
-          // ⭐ Gửi lên Django mà KHÔNG reload trang
-          fetch("/update-trip/", {
-              method: "POST",
-              headers: {
-                  "X-CSRFToken": getCookie("csrftoken"),
-              },
-              body: payload,
+      saveSettingsBtn.addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent form submission
+        
+        // Get current values
+        const travelers = travelersCountInput ? travelersCountInput.value : null;
+        const budget = budgetSlider ? budgetSlider.value : null;
+        
+        // Send AJAX request
+        fetch('/update-trip-settings/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+          },
+          body: new URLSearchParams({
+            travelers: travelers,
+            budget: budget
           })
-              .then(res => res.json())
-              .then(data => {
-                  if (data.status === "ok") {
-                      settingsModal.style.display = "none";
-                      document.body.style.overflow = "auto";
-                      alert("Saved successfully!");
-                  }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Update the display
+            const metaPills = document.querySelectorAll('.meta-pill');
+            metaPills.forEach(pill => {
+              const icon = pill.querySelector('.meta-pill__icon');
+              if (icon && icon.textContent.includes('👥')) {
+                const textNode = Array.from(pill.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+                if (textNode && travelers) {
+                  textNode.textContent = ` ${travelers} travelers`;
+                }
+              }
             });
-    });
-}
-
+            showToast('Settings saved successfully!');
+          } else {
+            showToast('Error saving settings: ' + (data.error || 'Unknown error'), 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showToast('Error saving settings', 'error');
+        });
+      });
+    }
 
     // Escape key to close
     document.addEventListener('keydown', function (e) {

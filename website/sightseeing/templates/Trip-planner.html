@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" />
   <script src="{% static 'js/TripPlanner.js' %}"></script>
+  {% csrf_token %}
 </head>
 <body>
   <div class="app-shell">
@@ -14,17 +15,18 @@
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar__top">
-        <div class="brand">
-          <div class="brand__logo">
-           <img src="{% static 'images/Odyscape.png' %}" alt="SmartTour Logo" class="sidebar-logo">
-          </div>
-          <div class="brand__text">
-            <span class="brand__title">Odyscape</span>
-          </div>
+        <div class="brand" style="display: flex; align-items: center;">
+          <a href="{% url 'home' %}" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <div class="brand__logo">
+             <img src="{% static 'images/Odyscape.png' %}" alt="SmartTour Logo" class="sidebar-logo">
+            </div>
+            <div class="brand__text">
+              <span class="brand__title">Odyscape</span>
+            </div>
+          </a>
         </div>
 
         <button class="ai-chip">
-          <span class="ai-chip__icon">✨</span>
           <span>AI Assistant</span>
         </button>
       </div>
@@ -50,9 +52,16 @@
           </div>
         </div>
 
-        <div class="nav-section" id="itinerary-nav">
+        <div class="nav-section">
           <p class="nav-section__title">Itinerary</p>
-          <div id="itinerary-days"></div>
+          <button class="nav-item" data-section="itinerary-section">
+            <span>Mon 12/1</span>
+            <span class="nav-item__pill">3 stops</span>
+          </button>
+          <button class="nav-item" data-section="itinerary-section">
+            <span>Tue 12/2</span>
+            <span class="nav-item__pill">2 stops</span>
+          </button>
         </div>
 
       </nav>
@@ -75,18 +84,19 @@
             <div>
               <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
               <div class="hero-card__meta">
-                <span class="meta-pill" id="hero-trip-dates">
+                <span class="meta-pill">
                   12/1 – 12/2
                 </span>
-                <span class="meta-pill" id="hero-travelers">
-                  <span class="meta-pill__icon">👥</span>
-                  <span id="hero-travelers-count">2 travelers</span>
+                <span class="meta-pill">
+                  {{ trip_travelers|default:2 }} travelers
                 </span>
               </div>
             </div>
             <div class="hero-card__actions">
               <button id="edit-title-btn" class="icon-button" aria-label="Edit trip">✎</button>
-             <button class="icon-button" id="settings-btn" aria-label="Settings">⚙️</button>
+             <button class="icon-button" id="settings-btn" aria-label="Settings">
+               <img src="{% static 'images/setting_icon.png' %}" alt="Settings" style="width: 20px; height: 20px;">
+             </button>
               
             </div>
           </div>
@@ -218,7 +228,7 @@
       <section class="section itinerary-section" id="itinerary-section">
         <div class="section__header">
           <h2>Itinerary</h2>
-          <button class="meta-pill meta-pill--big" id="itinerary-date-range">
+          <button class="meta-pill meta-pill--big">
             <span class="meta-pill__icon">📅</span>
             12/1 – 12/2
           </button>
@@ -311,13 +321,6 @@
       <form id="trip-settings-form">
         <!-- Trip Information -->
         <div class="form-section">
-          <h4>Trip Information</h4>
-          <div class="form-group">
-            <label for="trip-name">Trip Name</label>
-            <input type="text" id="trip-name" placeholder="e.g., Paris Adventure" value="Trip to {{ request.session.trip_destination }}"disabled>
-
-          </div>
-          
           <div class="form-row">
             <div class="form-group">
               <label for="start-date">Start Date</label>
