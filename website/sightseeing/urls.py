@@ -20,6 +20,7 @@ urlpatterns = [
     path('Trip-planner/', views.trip_planner, name='trip_planner'),
     path('input-trip-planner/', views.input_trip_planner, name='input_trip_planner'),
     path('trip-form/', views.trip_form, name='trip_form'),
+    path('update-trip-settings/', views.update_trip_settings, name='update_trip_settings'),
 
     # User pages
     path('profile/', views.user_profile, name='user_profile'),
