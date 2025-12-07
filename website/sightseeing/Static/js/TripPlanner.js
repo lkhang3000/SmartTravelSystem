@@ -267,7 +267,6 @@
     // Save settings
     const saveSettingsBtn = document.getElementById('save-settings');
     if (saveSettingsBtn) {
-<<<<<<< HEAD
       saveSettingsBtn.addEventListener('click', function (e) {
         e.preventDefault(); // Prevent form submission
         
@@ -312,67 +311,6 @@
         });
       });
     }
-=======
-      saveSettingsBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-
-          const start = document.getElementById("start-date").value;
-          const end = document.getElementById("end-date").value;
-          const travelers = document.getElementById("travelers-count").value;
-          const budget = document.getElementById("budget-slider").value;
-
-          const payload = new FormData();
-          payload.append("start_date", start);
-          payload.append("end_date", end);
-          payload.append("travelers", travelers);
-          payload.append("budget", budget);
-
-          // ⭐ Cập nhật Hero Card ngay lập tức
-          const heroDates = document.getElementById("hero-trip-dates");
-          
-          if (heroDates) {
-              function fmt(dateStr) {
-                  const d = new Date(dateStr);
-                  return `${d.getMonth() + 1}/${d.getDate()}`;
-              }
-              heroDates.textContent = `${fmt(start)} – ${fmt(end)}`;
-          }
-
-          // UPDATE TRAVELERS COUNT IN HERO CARD
-          // ⭐ Cập nhật Travelers trên Hero Card
-              const travelersValue = document.getElementById("travelers-count").value;
-              const travelersDisplay = document.getElementById("hero-travelers");
-
-              if (travelersDisplay) {
-                  travelersDisplay.innerHTML = `
-                      <span class="meta-pill__icon">👥</span>
-                      ${travelersValue} traveler${travelersValue > 1 ? "s" : ""}
-                  `;
-              }
-
-              const tripType = document.querySelector('input[name="trip-type"]:checked').value;
-              payload.append("trip_type", tripType);
-
-          // ⭐ Gửi lên Django mà KHÔNG reload trang
-          fetch("/update-trip/", {
-              method: "POST",
-              headers: {
-                  "X-CSRFToken": getCookie("csrftoken"),
-              },
-              body: payload,
-          })
-              .then(res => res.json())
-              .then(data => {
-                  if (data.status === "ok") {
-                      settingsModal.style.display = "none";
-                      document.body.style.overflow = "auto";
-                      alert("Saved successfully!");
-                  }
-            });
-    });
-}
-
->>>>>>> Frontend
 
     // Escape key to close
     document.addEventListener('keydown', function (e) {

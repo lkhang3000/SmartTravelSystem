@@ -722,15 +722,8 @@ def trip_planner(request):
         # Lọc destination theo tên user chọn
         destinations = Destinations.objects.filter(location__locationName=destination_name)
 
-<<<<<<< HEAD
-    context.update({
-=======
-    trip_items = TripItem.objects.filter(user=request.user)
-
     return render(request, 'Trip-planner.html', {
->>>>>>> Frontend
         'destinations': destinations,
-        "trip_items": trip_items,
         'trip_destination': destination_name,
         'trip_map_url': request.session.get('trip_map_url', None),
         'trip_image_url': request.session.get('trip_image_url', None),
@@ -738,8 +731,6 @@ def trip_planner(request):
         'trip_travelers': request.session.get('trip_travelers', None),
         'trip_price_per_person': request.session.get('trip_price_per_person', None)
     })
-
-    return render(request, 'Trip-planner.html', context)
 
 def input_trip_planner(request):
     # Get all locations for destination dropdown
