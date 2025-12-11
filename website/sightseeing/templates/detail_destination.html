@@ -1021,19 +1021,22 @@
             }
         }
         return cookieValue;
-    }
-
-    function addToTrip(destinationId) {
+    }    function addToTrip(destinationId) {
         // Check if user is authenticated
         {% if user.is_authenticated %}
+            // Get current language from URL
+            const currentLang = window.location.pathname.split('/')[1] || 'en';
+            
             console.log('Adding destination to trip:', destinationId);
+            console.log('Language:', currentLang);
             console.log('CSRF token:', getCookie('csrftoken'));
+            
             // Use AJAX to add to trip without page reload
-            fetch('/destination/' + destinationId + '/add-trip/', {
+            fetch(`/${currentLang}/add-to-trip/${destinationId}/`, {
                 method: 'POST',
                 headers: {
-                    'x-csrftoken': getCookie('csrftoken'),
-                    'x-requested-with': 'XMLHttpRequest'
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
             .then(response => {
@@ -1069,16 +1072,26 @@
     function addHotelToTrip(hotelId) {
         // Check if user is authenticated
         {% if user.is_authenticated %}
+            // Get current language from URL
+            const currentLang = window.location.pathname.split('/')[1] || 'en';
+            
+            console.log('Adding hotel to trip:', hotelId);
+            console.log('Language:', currentLang);
+            
             // Use AJAX to add hotel to trip without page reload
-            fetch('/hotel/' + hotelId + '/add-trip/', {
+            fetch(`/${currentLang}/hotel/${hotelId}/add-trip/`, {
                 method: 'POST',
                 headers: {
-                    'x-csrftoken': getCookie('csrftoken'),
-                    'x-requested-with': 'XMLHttpRequest'
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.success) {
                     // Update trip count badge
                     const tripCountElement = document.querySelector('.trip-count');
