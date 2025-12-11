@@ -157,8 +157,6 @@ msgstr "Miễn phí"
 msgid "INTRODUCING:"
 msgstr "GIỚI THIỆU:"
 
-msgid "TRIP PLANNER"
-msgstr "LẬP KẾ HOẠCH CHUYẾN ĐI"
 
 msgid "Have your trip planned with just the click of a button, the future of travelling"
 msgstr "Lập kế hoạch chuyến đi chỉ bằng một cú nhấp chuột, tương lai của du lịch"
@@ -412,9 +410,6 @@ msgstr "Bắt đầu lập kế hoạch"
 msgid "Added on"
 msgstr "Đã thêm vào"
 
-msgid "View Details"
-msgstr "Xem chi tiết"
-
 msgid "Remove this destination from your trip?"
 msgstr "Xóa điểm đến này khỏi chuyến đi của bạn?"
 
@@ -456,12 +451,6 @@ msgstr "Tổng Chi phí trong Ngày:"
 msgid "Details"
 msgstr "Chi tiết"
 
-msgid "Explore"
-msgstr "Khám phá"
-
-msgid "Remove"
-msgstr "Xóa"
-
 msgid "Save"
 msgstr "Lưu"
 
@@ -482,3 +471,95 @@ msgstr "Gửi"
 
 msgid "Search"
 msgstr "Tìm kiếm"
+
+# Trip Planner Page - Additional translations
+msgid "No destinations found for"
+msgstr "Không tìm thấy địa điểm cho"
+
+msgid "Hotel added on"
+msgstr "Khách sạn đã thêm vào"
+
+msgid "No saved destinations yet."
+msgstr "Chưa có địa điểm nào được lưu."
+
+msgid "Monday, December 1st"
+msgstr "Thứ Hai, 1 tháng 12"
+
+msgid "Tuesday, December 2nd"
+msgstr "Thứ Ba, 2 tháng 12"
+
+msgid "Add subheading"
+msgstr "Thêm tiêu đề phụ"
+
+msgid "Auto-fill day"
+msgstr "Tự động điền ngày"
+
+msgid "Optimize route"
+msgstr "Tối ưu hóa lộ trình"
+
+msgid "Add a place"
+msgstr "Thêm địa điểm"
+
+msgid "Add to Trip"
+msgstr "Thêm vào chuyến đi"
+
+msgid "View Details"
+msgstr "Chi tiết"
+
+msgid "Overview"
+msgstr "Tổng quan"
+
+msgid "Explore"
+msgstr "Khám phá"
+
+msgid "Places to visit"
+msgstr "Địa điểm tham quan"
+
+msgid "Saved destination"
+msgstr "Địa điểm đã lưu"
+
+# Recommend Result Page
+msgid "Recommend Result"
+msgstr "Kết quả đề xuất"
+
+msgid "SEARCH"
+msgstr "TÌM KIẾM"
+
+msgid "Top results"
+msgstr "Kết quả hàng đầu"
+
+msgid "Recommended for You"
+msgstr "Đề xuất cho bạn"
+
+msgid "Collaborative"
+msgstr "Cá nhân hóa"
+
+msgid "Search Results"
+msgstr "Kết quả tìm kiếm"
+
+msgid "No search results found. Try adjusting your filters."
+msgstr "Không tìm thấy kết quả. Hãy thử điều chỉnh bộ lọc."
+
+msgid "Page"
+msgstr "Trang"
+
+msgid "of"
+msgstr "trong số"
+
+msgid "total results"
+msgstr "tổng kết quả"
+
+msgid "Previous"
+msgstr "Trước"
+
+msgid "Next"
+msgstr "Tiếp"
+
+msgid "Showing"
+msgstr "Hiển thị"
+
+msgid "filtered results"
+msgstr "kết quả đã lọc"
+
+msgid "Itinerary"
+msgstr "Lịch trình"
