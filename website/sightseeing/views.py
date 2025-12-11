@@ -554,30 +554,40 @@ def contact_us(request):
 
 def trip_planner(request):
     # Lấy thông tin trip từ session
-    destination_name = request.session.get('trip_destination', '')
+    destination_name = request.session.get('trip_destination', 'Your Destination')
     departure_date = request.session.get('trip_start', '')
     arrival_date = request.session.get('trip_end', '')
     budget = request.session.get('trip_budget', 0)
-    travelers = request.session.get('trip_travelers', 1)
+    travelers = request.session.get('trip_travelers', 2)
     price_per_person = request.session.get('trip_price_per_person', '')
     trip_map_url = request.session.get('trip_map_url', None)
     trip_image_url = request.session.get('trip_image_url', None)
 
     # Lấy danh sách địa điểm theo location
-    if destination_name:
-        destinations = Destinations.objects.filter(location__locationName__icontains=destination_name)
+    destinations = Destinations.objects.none()  # Empty queryset by default
+    
+    if destination_name and destination_name != 'Your Destination':
+        # Try to find destinations by location name
+        try:
+            destinations = Destinations.objects.filter(
+                location__locationName__icontains=destination_name
+            )[:20]  # Limit to 20 results
+        except Exception as e:
+            print(f"Error loading destinations: {e}")
+            destinations = Destinations.objects.all()[:10]
     else:
-        destinations = Destinations.objects.all()
+        # Show random destinations if no trip destination set
+        destinations = Destinations.objects.all().order_by('?')[:10]
 
     # Lấy các địa điểm đã lưu trong trip
-    trip_items = TripItem.objects.filter(user=request.user).select_related('destination', 'hotel') if request.user.is_authenticated else []
+    trip_items = []
+    if request.user.is_authenticated:
+        trip_items = TripItem.objects.filter(user=request.user).select_related('destination', 'hotel')
 
     # Tính số ngày
     days = []
     num_days = 0
     date_range = ''
-    departure_date = request.session.get('trip_start', '')
-    arrival_date = request.session.get('trip_end', '')
     
     if departure_date and arrival_date:
         try:
@@ -593,7 +603,8 @@ def trip_planner(request):
                     'day_short': day_date.strftime('%a %m/%d'),
                     'full_name': f"{day_date.strftime('%A')}, {day_date.strftime('%B %d')}"
                 })
-        except:
+        except Exception as e:
+            print(f"Error parsing dates: {e}")
             num_days = 0
             days = []
     
@@ -714,22 +725,34 @@ def trip_form(request):
 @csrf_exempt
 def update_trip_settings(request):
     """Update trip settings via AJAX"""
-    if request.method == 'POST' and request.user.is_authenticated:
+    if request.method == 'POST':
         try:
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
             travelers = request.POST.get('travelers')
             budget = request.POST.get('budget')
+            trip_type = request.POST.get('trip_type')
             
             # Update session
+            if start_date:
+                request.session['trip_start'] = start_date
+            if end_date:
+                request.session['trip_end'] = end_date
             if travelers:
                 request.session['trip_travelers'] = int(travelers)
             if budget:
                 request.session['trip_budget'] = int(budget)
+            if trip_type:
+                request.session['trip_type'] = trip_type
             
-            return JsonResponse({'success': True})
+            request.session.modified = True
+            
+            return JsonResponse({'success': True, 'message': 'Settings updated successfully'})
         except Exception as e:
+            print(f"Error updating trip settings: {e}")
             return JsonResponse({'success': False, 'error': str(e)})
     
-    return JsonResponse({'success': False, 'error': 'Invalid request'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
 @csrf_exempt
