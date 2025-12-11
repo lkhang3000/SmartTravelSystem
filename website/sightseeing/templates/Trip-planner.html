@@ -10,6 +10,7 @@
   {% csrf_token %}
 </head>
 <body>
+  {% csrf_token %}
   <div class="app-shell">
 
     <!-- LEFT SIDEBAR -->
@@ -444,6 +445,84 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // generate on page load
     generateDays();
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add to Trip
+  document.querySelectorAll('.add-to-trip-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const destId = btn.getAttribute('data-destination-id');
+      fetch(`/add-to-trip/${destId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.reload(); // reload để cập nhật saved destinations
+        } else {
+          alert(data.message || 'Error adding to trip');
+        }
+      });
+  });
+
+  // Auto-fill day
+  document.querySelectorAll('.itinerary-day-full__actions .tiny-link').forEach(function(btn) {
+    if (btn.textContent.trim() === 'Auto-fill day') {
+      btn.addEventListener('click', function() {
+        const dayName = btn.closest('.itinerary-day-full__head').querySelector('h3').textContent;
+        fetch('/auto-fill-day/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ day: dayName })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Auto-filled: ' + data.suggested.map(i => i.name).join(', '));
+            window.location.reload();
+          } else {
+            alert(data.message || 'Error auto-filling day');
+          }
+        });
+      });
+    }
+  });
+
+  // Optimize route
+  document.querySelectorAll('.itinerary-day-full__actions .tiny-link').forEach(function(btn) {
+    if (btn.textContent.trim() === 'Optimize route') {
+      btn.addEventListener('click', function() {
+        const dayName = btn.closest('.itinerary-day-full__head').querySelector('h3').textContent;
+        fetch('/optimize-route/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ day: dayName })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Optimized order: ' + data.optimized.map(i => i.name).join(', '));
+            window.location.reload();
+          } else {
+            alert(data.message || 'Error optimizing route');
+          }
+        });
+      });
+    }
+  });
 });
 </script>
 

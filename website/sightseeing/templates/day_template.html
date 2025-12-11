@@ -1,11 +1,12 @@
 {% load static %}
+{% load i18n %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day Itinerary Template</title>
+    <title>{% trans "Day Itinerary Template" %}</title>
     <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
     <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
@@ -87,47 +88,47 @@
 <body>
     <div class="day-container">
         <div class="day-header">
-            Itinerary for {{ day_date|default:"Monday, November 17, 2025" }}
+            {% trans "Itinerary for" %} {{ day_date|default:"Monday, November 17, 2025" }}
         </div>
 
         <div class="destination-list">
-            <h3>Select destinations to visit this day:</h3>
+            <h3>{% trans "Select destinations to visit this day:" %}</h3>
 
             <!-- Sample destinations - in real app, this would be dynamic -->
             <div class="destination-item">
                 <input type="checkbox" class="destination-checkbox" data-cost="50000" onchange="updateTotal()">
                 <div class="destination-info">
-                    <div class="destination-name">Imperial Capital Hue</div>
-                    <div class="destination-description">Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm.</div>
-                    <div class="destination-cost">Cost: 50,000 VND</div>
+                    <div class="destination-name">{% trans "Imperial Capital Hue" %}</div>
+                    <div class="destination-description">{% trans "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm." %}</div>
+                    <div class="destination-cost">{% trans "Cost:" %} 50,000 VND</div>
                 </div>
             </div>
 
             <div class="destination-item">
                 <input type="checkbox" class="destination-checkbox" data-cost="75000" onchange="updateTotal()">
                 <div class="destination-info">
-                    <div class="destination-name">Sung Sot Cave</div>
-                    <div class="destination-description">The largest and most spectacular cave in Ha Long Bay, featuring massive chambers and dramatic rock formations.</div>
-                    <div class="destination-cost">Cost: 75,000 VND</div>
+                    <div class="destination-name">{% trans "Sung Sot Cave" %}</div>
+                    <div class="destination-description">{% trans "The largest and most spectacular cave in Ha Long Bay, featuring massive chambers and dramatic rock formations." %}</div>
+                    <div class="destination-cost">{% trans "Cost:" %} 75,000 VND</div>
                 </div>
             </div>
 
             <div class="destination-item">
                 <input type="checkbox" class="destination-checkbox" data-cost="30000" onchange="updateTotal()">
                 <div class="destination-info">
-                    <div class="destination-name">Hoang Kiem Lake</div>
-                    <div class="destination-description">A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge.</div>
-                    <div class="destination-cost">Cost: 30,000 VND</div>
+                    <div class="destination-name">{% trans "Hoang Kiem Lake" %}</div>
+                    <div class="destination-description">{% trans "A peaceful lake in Hanoi's Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge." %}</div>
+                    <div class="destination-cost">{% trans "Cost:" %} 30,000 VND</div>
                 </div>
             </div>
 
             <!-- Add more destinations as needed -->
         </div>
 
-        <button class="add-destination-btn" onclick="addDestination()">Add More Destinations</button>
+        <button class="add-destination-btn" onclick="addDestination()">{% trans "Add More Destinations" %}</button>
 
         <div class="total-cost">
-            Total Cost for the Day: <span id="totalCost">0</span> VND
+            {% trans "Total Cost for the Day:" %} <span id="totalCost">0</span> VND
         </div>
     </div>
 
@@ -150,5 +151,4 @@
         document.addEventListener('DOMContentLoaded', updateTotal);
     </script>
 </body>
-</html></content>
-<parameter name="filePath">d:\SmartTravel\website\sightseeing\Templates\day_template.html
+</html>
