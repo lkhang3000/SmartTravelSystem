@@ -1,6 +1,7 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
+<html style="font-size: 16px;" lang="{{ LANGUAGE_CODE }}"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="Trending destinations">
@@ -61,71 +62,88 @@
                     </svg>
                 </a>
             </div>
-            <div class="u-custom-menu u-nav-container" style="min-width: 0;">
-    <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color: #000;">Home</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color: #000;">About us</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color: #000;">Contact us</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color: #000;">Trip Planner</a></li>
+            <div class="u-custom-menu u-nav-container" style="min-width: 0;">    <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color: #000;">{% trans "Home" %}</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color: #000;">{% trans "About us" %}</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color: #000;">{% trans "Contact us" %}</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color: #000;">{% trans "Trip Planner" %}</a></li>
     </ul>
 </div>
-        </nav>
-
-       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
+        </nav>       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
      style="display: flex; align-items: center; gap: 5px; visibility: visible; margin-right: 70px; margin-top: 0px;">
 
     <!-- Vietnamese flag -->
-    <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
-        <span style="display: inline-block; width: 30px; height: 30px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                <defs>
-                    <clipPath id="vn-a">
-                        <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
-                    </clipPath>
-                </defs>
-                <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
-                    <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
-                    <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
-                </g>
-            </svg>
-        </span>
-    </a>
+    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input name="language" type="hidden" value="vi">
+        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="Tiếng Việt">
+            <span style="display: inline-block; width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                    <defs>
+                        <clipPath id="vn-a">
+                            <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
+                        </clipPath>
+                    </defs>
+                    <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
+                        <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
+                        <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
+                    </g>
+                </svg>
+            </span>
+        </button>
+    </form>
 
     <!-- UK flag -->
-    <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
-        <span style="display: inline-block; width: 30px; height: 30px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                <path fill="#012169" d="M0 0h512v512H0z"/>
-                <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
-                <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
-                <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
-            </svg>
-        </span>
-    </a>
+    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input name="language" type="hidden" value="en">
+        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="English">
+            <span style="display: inline-block; width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                    <path fill="#012169" d="M0 0h512v512H0z"/>
+                    <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
+                    <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
+                    <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
+                    <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
+                </svg>
+            </span>
+        </button>
+    </form>
 
 </div>
-
-
 
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
-    <a href="{% url 'login_page' %}"
-   class="u-btn u-button-style u-custom-font u-font-montserrat"
-   style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
-   Log in
-</a>
-
-<a href="{% url 'signup_page' %}"
-   class="u-btn u-button-style u-custom-font u-font-montserrat"
-   style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
-   Register
-</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
+           <img src="{% static 'images/list_icon.png' %}" alt="{% trans 'My Trips' %}" style="width: 32px; height: 32px;">
+           {% if trip_count > 0 %}
+           <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
+           {% endif %}
+        </a>
+        <a href="{% url 'user_profile' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
+           {{ user.first_name|default:user.username }}
+        </a>
+    {% else %}
+        <a href="{% url 'login_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
+           {% trans "Log in" %}
+        </a>
+        <a href="{% url 'signup_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
+           {% trans "Register" %}
+        </a>
+    {% endif %}
 </div>
-</header>
-    <section class="u-clearfix u-section-1" id="block-1">
+</header>    <section class="u-clearfix u-section-1" id="block-1">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
-        <h1 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">Meet our team </h1>
+        <h1 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">{% trans "Meet our team" %}</h1>
         <div class="u-list u-list-1" style="margin-left:0px;">
           <div class="u-repeater u-repeater-1">
             <div class="u-container-style u-custom-item u-list-item u-repeater-item u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="2000" data-animation-delay="0">
@@ -182,24 +200,22 @@
               <div class="u-layout-row">
                 <div class="u-container-style u-image u-image-round u-layout-cell u-radius u-size-30 u-image-1" data-image-width="3862" data-image-height="5785" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0" data-animation-direction="">
                   <div class="u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1"></div>
-                </div>
-                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
+                </div>                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
                   <div class="u-container-layout u-container-layout-2">
-                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">Problem and Solution </h2>
-                    <p class="u-custom-font u-font-montserrat u-text u-text-2"> Many travelers are excited to go on vacation but struggle to plan their trips—especially when visiting unfamiliar or overseas destinations.<br>
-                      <br>Our website acts as your personal travel planner, using smart AI filtering to curate destinations, activities, and accommodations tailored perfectly to your preferences.<br>
+                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{% trans "Problem and Solution" %}</h2>
+                    <p class="u-custom-font u-font-montserrat u-text u-text-2">{% trans "Many travelers are excited to go on vacation but struggle to plan their trips—especially when visiting unfamiliar or overseas destinations." %}<br>
+                      <br>{% trans "Our website acts as your personal travel planner, using smart AI filtering to curate destinations, activities, and accommodations tailored perfectly to your preferences." %}<br>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="u-size-30" style="">
-              <div class="u-layout-row" style="">
-                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-3" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
+              <div class="u-layout-row" style="">                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-3" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
                   <div class="u-container-layout u-container-layout-3">
-                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-3">How it works </h2>
-                    <p class="u-custom-font u-font-montserrat u-text u-text-4">By filling out the search bar with the specified tags, our AI model will sort out predetermined places for your choosing. These tags range from varieties such as​ distance, budget, themes and ratings.<br>
-                      <br>That's not all, you can also converse with our personally designed chatbot for further advice and inquiries about subjects such as our team or your plans.
+                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-3">{% trans "How it works" %}</h2>
+                    <p class="u-custom-font u-font-montserrat u-text u-text-4">{% trans "By filling out the search bar with the specified tags, our AI model will sort out predetermined places for your choosing. These tags range from varieties such as distance, budget, themes and ratings." %}<br>
+                      <br>{% trans "That's not all, you can also converse with our personally designed chatbot for further advice and inquiries about subjects such as our team or your plans." %}
                     </p>
                   </div>
                 </div>
@@ -220,24 +236,22 @@
               <div class="u-layout-row">
                 <div class="u-container-style u-image u-image-round u-layout-cell u-radius u-size-30 u-image-1" data-image-width="4608" data-image-height="3456" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
                   <div class="u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1"></div>
-                </div>
-                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
+                </div>                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
                   <div class="u-container-layout u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-2">
-                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">Challenges </h2>
-                    <p class="u-custom-font u-font-montserrat u-text u-text-2">As you expected, we have faced many difficulties during developments (with AI models, GUI, designs,...) and it's certainly not going to disappear but we hope to strive forward and guaranteed your satisfaction.<br>
-                      <br>As the saying goes "What doesn't stop you makes you stronger" and that couldn't describe our team better. With each step back we only move farther towards our goals .
+                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{% trans "Challenges" %}</h2>
+                    <p class="u-custom-font u-font-montserrat u-text u-text-2">{% trans "As you expected, we have faced many difficulties during developments (with AI models, GUI, designs,...) and it's certainly not going to disappear but we hope to strive forward and guaranteed your satisfaction." %}<br>
+                      <br>{% trans "As the saying goes 'What doesn't stop you makes you stronger' and that couldn't describe our team better. With each step back we only move farther towards our goals." %}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="u-size-30">
-              <div class="u-layout-row">
-                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-3" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
+              <div class="u-layout-row">                <div class="u-container-style u-layout-cell u-size-30 u-layout-cell-3" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">
                   <div class="u-container-layout u-valign-bottom-xl u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-container-layout-3">
-                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-3">Future Features</h2>
-                    <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-4">It's a known fact that there are many apps and sites with the same premise like us. That's why we're currently developing a feature that will provide a live Q&amp;A with the local resident of the place that you're visiting.<br>
-                      <br>So far it's only a concept​ but it's one we hope to make reality. You can contact us to suggest any ideas to improve out website, we couldn't be more grateful dear customers.
+                    <h2 class="u-custom-font u-font-montserrat u-text u-text-default u-text-3">{% trans "Future Features" %}</h2>
+                    <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-4">{% trans "It's a known fact that there are many apps and sites with the same premise like us. That's why we're currently developing a feature that will provide a live Q&A with the local resident of the place that you're visiting." %}<br>
+                      <br>{% trans "So far it's only a concept but it's one we hope to make reality. You can contact us to suggest any ideas to improve our website, we couldn't be more grateful dear customers." %}
                     </p>
                   </div>
                 </div>
