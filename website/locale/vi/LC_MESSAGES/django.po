@@ -500,6 +500,49 @@ msgstr "Tối ưu hóa lộ trình"
 msgid "Add a place"
 msgstr "Thêm địa điểm"
 
+# Trip Settings Modal
+msgid "Trip Settings"
+msgstr "Cài đặt chuyến đi"
+
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+msgid "Travelers"
+msgstr "Khách du lịch"
+
+msgid "Number of Travelers"
+msgstr "Số lượng khách"
+
+msgid "Budget"
+msgstr "Ngân sách"
+
+msgid "Million VND"
+msgstr "Triệu VNĐ"
+
+msgid "Total Budget"
+msgstr "Tổng ngân sách"
+
+msgid "Trip Type"
+msgstr "Loại chuyến đi"
+
+msgid "travelers"
+msgstr "khách"
+
+msgid "Trip to"
+msgstr "Chuyến đi đến"
+
+msgid "Settings saved successfully!"
+msgstr "Đã lưu cài đặt thành công!"
+
+msgid "Error saving settings"
+msgstr "Lỗi khi lưu cài đặt"
+
+msgid "Network error"
+msgstr "Lỗi mạng"
+
 msgid "Add to Trip"
 msgstr "Thêm vào chuyến đi"
 

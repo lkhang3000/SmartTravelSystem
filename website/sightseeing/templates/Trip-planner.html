@@ -74,19 +74,16 @@
         <div class="hero-card__image" 
             style="background-image: url('{{ request.session.trip_image_url }}'); background-size: cover; background-position: center;">
           <div class="hero-card__overlay"></div>
-        </div>
-
-
-        <div class="hero-card__content">
+        </div>        <div class="hero-card__content">
           <div class="hero-card__top-row">
             <div>
-              <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
+              <h1 class="hero-card__title" id="trip-title">{% trans "Trip to" %} {{ trip_destination|default:"Your Destination" }}</h1>
               <div class="hero-card__meta">
                 <span class="meta-pill">
-                  12/1 – 12/2
+                  {{ date_range|default:"12/1 – 12/2" }}
                 </span>
                 <span class="meta-pill">
-                  {{ trip_travelers|default:2 }} travelers
+                  {{ trip_travelers|default:2 }} {% trans "travelers" %}
                 </span>
               </div>
             </div>
@@ -293,12 +290,11 @@
 
     </aside>
 
-  </div>
-  <!-- Settings Modal -->
+  </div>  <!-- Settings Modal -->
 <div class="modal-overlay" id="settings-modal" style="display: none;">
   <div class="modal-container">
     <div class="modal-header">
-      <h3>Trip Settings</h3>
+      <h3>{% trans "Trip Settings" %}</h3>
       <button class="modal-close" id="close-settings">&times;</button>
     </div>
     
@@ -308,24 +304,24 @@
         <div class="form-section">
           <div class="form-row">
             <div class="form-group">
-              <label for="start-date">Start Date</label>
-              <input type="date" id="start-date" value="2024-12-01">
+              <label for="start-date">{% trans "Start Date" %}</label>
+              <input type="date" id="start-date" value="{{ departure_date|default:'2024-12-01' }}">
             </div>
             <div class="form-group">
-              <label for="end-date">End Date</label>
-              <input type="date" id="end-date" value="2024-12-02">
+              <label for="end-date">{% trans "End Date" %}</label>
+              <input type="date" id="end-date" value="{{ arrival_date|default:'2024-12-02' }}">
             </div>
           </div>
         </div>
         
         <!-- Travelers -->
         <div class="form-section">
-          <h4>Travelers</h4>
+          <h4>{% trans "Travelers" %}</h4>
           <div class="form-group">
-            <label for="travelers-count">Number of Travelers</label>
+            <label for="travelers-count">{% trans "Number of Travelers" %}</label>
             <div class="counter-control">
               <button type="button" class="counter-btn" id="decrease-travelers">-</button>
-              <input type="number" id="travelers-count" min="1" max="20" value="2" readonly>
+              <input type="number" id="travelers-count" min="1" max="20" value="{{ travelers|default:2 }}" readonly>
               <button type="button" class="counter-btn" id="increase-travelers">+</button>
             </div>
           </div>
@@ -333,14 +329,14 @@
         
         <!-- Budget -->
         <div class="form-section">
-          <h4>Budget (Million VND)</h4>
+          <h4>{% trans "Budget" %} ({% trans "Million VND" %})</h4>
           <div class="form-group">
-            <label for="budget">Total Budget</label>
+            <label for="budget">{% trans "Total Budget" %}</label>
             <div class="budget-input">
-              <input type="range" id="budget-slider" min="0" max="100" value="50" step="5">
+              <input type="range" id="budget-slider" min="0" max="100" value="{{ budget|default:50 }}" step="5">
               <div class="budget-display">
-                <span id="budget-value">50</span>
-                <span>Million VND</span>
+                <span id="budget-value">{{ budget|default:50 }}</span>
+                <span>{% trans "Million VND" %}</span>
               </div>
             </div>
           </div>
@@ -348,35 +344,35 @@
         
         <!-- Trip Type -->
         <div class="form-section">
-          <h4>Trip Type</h4>
+          <h4>{% trans "Trip Type" %}</h4>
           <div class="trip-type-options">
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="leisure" checked>
-              <span>Landmark</span>
+              <input type="radio" name="trip-type" value="landmark" checked>
+              <span>{% trans "Landmark" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="business">
-              <span>Scenery</span>
+              <input type="radio" name="trip-type" value="scenery">
+              <span>{% trans "Scenery" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="adventure">
-              <span>Sanctuary</span>
+              <input type="radio" name="trip-type" value="sanctuary">
+              <span>{% trans "Sanctuary" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="family">
-              <span>Museum</span>
+              <input type="radio" name="trip-type" value="museum">
+              <span>{% trans "Museum" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="family">
-              <span>Attraction</span>
+              <input type="radio" name="trip-type" value="attraction">
+              <span>{% trans "Attraction" %}</span>
             </label>
           </div>
         </div>
     </div>
     
     <div class="modal-footer">
-      <button class="btn btn--ghost" id="cancel-settings">Cancel</button>
-      <button class="btn btn--primary" id="save-settings" type="button">Save Changes</button>
+      <button class="btn btn--ghost" id="cancel-settings">{% trans "Cancel" %}</button>
+      <button class="btn btn--primary" id="save-settings" type="button">{% trans "Save Changes" %}</button>
     </div>
   </div>
 </div>
@@ -619,7 +615,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
-
   // Optimize route
   document.querySelectorAll('.itinerary-day-full__actions .tiny-link').forEach(function(btn) {
     if (btn.textContent.trim() === 'Optimize route') {
@@ -651,6 +646,112 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   });
+
+  // === TRIP SETTINGS MODAL ===
+  const settingsBtn = document.getElementById('settings-btn');
+  const settingsModal = document.getElementById('settings-modal');
+  const closeSettingsBtn = document.getElementById('close-settings');
+  const cancelSettingsBtn = document.getElementById('cancel-settings');
+  const saveSettingsBtn = document.getElementById('save-settings');
+  
+  // Open modal
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', function() {
+      settingsModal.style.display = 'flex';
+    });
+  }
+  
+  // Close modal
+  function closeModal() {
+    settingsModal.style.display = 'none';
+  }
+  
+  if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener('click', closeModal);
+  }
+  
+  if (cancelSettingsBtn) {
+    cancelSettingsBtn.addEventListener('click', closeModal);
+  }
+  
+  // Close on outside click
+  settingsModal.addEventListener('click', function(e) {
+    if (e.target === settingsModal) {
+      closeModal();
+    }
+  });
+  
+  // Travelers counter
+  const decreaseBtn = document.getElementById('decrease-travelers');
+  const increaseBtn = document.getElementById('increase-travelers');
+  const travelersInput = document.getElementById('travelers-count');
+  
+  if (decreaseBtn) {
+    decreaseBtn.addEventListener('click', function() {
+      let value = parseInt(travelersInput.value);
+      if (value > 1) {
+        travelersInput.value = value - 1;
+      }
+    });
+  }
+  
+  if (increaseBtn) {
+    increaseBtn.addEventListener('click', function() {
+      let value = parseInt(travelersInput.value);
+      if (value < 20) {
+        travelersInput.value = value + 1;
+      }
+    });
+  }
+  
+  // Budget slider
+  const budgetSlider = document.getElementById('budget-slider');
+  const budgetValue = document.getElementById('budget-value');
+  
+  if (budgetSlider) {
+    budgetSlider.addEventListener('input', function() {
+      budgetValue.textContent = budgetSlider.value;
+    });
+  }
+  
+  // Save settings
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', function() {
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      const travelers = document.getElementById('travelers-count').value;
+      const budget = document.getElementById('budget-slider').value;
+      const tripType = document.querySelector('input[name="trip-type"]:checked').value;
+      
+      console.log('Saving trip settings:', {startDate, endDate, travelers, budget, tripType});
+      
+      // Send to backend
+      fetch(`/${currentLang}/update-trip-settings/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `start_date=${startDate}&end_date=${endDate}&travelers=${travelers}&budget=${budget}&trip_type=${tripType}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Response:', data);
+        if (data.success) {
+          alert('{% trans "Settings saved successfully!" %}');
+          closeModal();
+          window.location.reload();
+        } else {
+          alert('{% trans "Error saving settings" %}');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('{% trans "Network error" %}');
+      });
+    });
+  }
 });
 </script>
 
