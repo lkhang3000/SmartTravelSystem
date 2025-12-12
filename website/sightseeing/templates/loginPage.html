@@ -1,84 +1,239 @@
 {% load static %}
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
+<html style="font-size: 16px;" lang="en">
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="​Easy Way to Find a Perfect Property, ​Properties For Rent, ​Let’s Find The Right Selling Option, 20k, 14k, 2m, ​​Explore Apartment Types, ​Trusted By Best Exclusive Agents, ​Get Your Dream House">
-    <meta name="description" content="">
-    <title>loginPage</title>
+    <title>Login - Odyscape</title>
+    
     <link rel="stylesheet" href="{% static 'css/nicepageForLoginPage.css' %}" media="screen">
-<link rel="stylesheet" href="{% static 'css/indexForLoginPage.css' %}" media="screen">
-    <script class="u-script" type="text/javascript" src="{% static 'js/jqueryForLoginPage.css' %}" defer=""></script>
-    <script class="u-script" type="text/javascript" src="{% static 'js/nicepageForLoginPage.css' %}" defer=""></script>
-    <meta name="generator" content="Nicepage 8.0.4, nicepage.com">
     
-    
-    
-    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
-    <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "recommendResult",
-		"url": "/"
-}</script>
-    <meta name="theme-color" content="#6f66ee">
-    <meta property="og:title" content="loginPage">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="website">
-    <link rel="canonical" href="/">
-  <meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-home-page="https://recommendresult.nicepage.io/loginPage.html?version=fe931b71-2483-56db-5ead-ef3e18d3ce1b" data-home-page-title="loginPage" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-overlap u-xl-mode" data-lang="en">
-    <section class="u-clearfix u-gradient u-section-1" id="block-1">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <div class="custom-expanded u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
-            <div class="u-border-2 u-border-grey-75 u-container-style u-list-item u-radius u-repeater-item u-white u-list-item-1">
-              <div class="u-container-layout u-similar-container u-container-layout-1">
+    <link href="https://fonts.googleapis.com/css2?display=swap&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@400;500;600;700;800" rel="stylesheet">
+
+    <style>
+        /* RESET & GLOBAL STYLES */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            /* Dùng Open Sans làm font chính giống trang Signup */
+            font-family: 'Open Sans', sans-serif; 
+        }
+
+        /* BỐ CỤC CHIA ĐÔI (SPLIT SCREEN) */
+        .split-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* CỘT TRÁI: HÌNH ẢNH */
+        .split-image-side {
+            flex: 1.2; 
+            /* Ảnh Vịnh Hạ Long */
+            background-image: url('https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .split-image-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+        }
+
+        /* CỘT PHẢI: FORM ĐĂNG NHẬP */
+        .split-form-side {
+            flex: 0.8;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        /* LOGO & TEXT - ĐÃ ĐỒNG BỘ FONT VỚI SIGNUP */
+        .login-logo {
+            width: 120px; /* Chỉnh size bằng trang Signup (120px) */
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .login-title {
+            /* Font Montserrat, size 2.5rem giống trang Signup */
+            font-family: 'Montserrat', sans-serif; 
+            font-size: 2.5rem; 
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .login-subtitle {
+            /* Font Roboto, size 1.1rem giống trang Signup */
+            font-family: 'Roboto', sans-serif; 
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        /* FORM STYLING */
+        .custom-input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .custom-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444; /* Màu xám đậm giống Signup */
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .custom-input:focus {
+            border-color: #e06703;
+            outline: none;
+        }
+
+        /* BUTTONS & LINKS */
+        .forgot-pass-link {
+            display: block;
+            text-align: right;
+            color: #e06703;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #e06703;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem; /* Size 1rem giống Signup */
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            background-color: #c95a00;
+        }
+
+        .signup-text {
+            margin-top: 20px;
+            font-size: 0.95rem;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .signup-text a {
+            color: #e06703;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* MESSAGE ALERT */
+        .alert-box {
+            padding: 10px; 
+            margin-bottom: 15px; 
+            border-radius: 5px; 
+            font-size: 0.9rem;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .split-image-side {
+                flex: none;
+                height: 200px;
+            }
+            .split-form-side {
+                flex: 1;
+                padding: 20px;
+                padding-top: 40px;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="split-container">
+        <div class="split-image-side">
+            <div class="split-image-overlay"></div>
+        </div>
+
+        <div class="split-form-side">
+            <div class="login-wrapper">
                 <a href="{% url 'home' %}">
-                <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-1" src="{% static 'images/SmartTour11.png' %}" alt="" data-image-width="750" data-image-height="750">
+                    <img src="{% static 'images/Odyscape.png' %}" alt="Odyscape" class="login-logo">
                 </a>
-                <h1 class="u-text u-text-default u-text-1">Welcome Back<span style="font-weight: 700;"></span>
-                </h1>
-                <h1 class="u-text u-text-2"><span style="font-weight: 700;">Login to your Smart Tour account </span>
-                </h1>
-                <p class="u-custom-font u-font-ubuntu u-text u-text-3">Don't have an account?</p>
-                <p class="u-custom-font u-font-ubuntu u-text u-text-4">
-                  <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-custom-color-4 u-btn-1" href="{% url 'signup_page' %}">Sign up</a>
+
+                <h1 class="login-title">Welcome Back</h1>
+                <p class="login-subtitle">Login to your Odyscape account</p>
+
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert-box" style="background: {% if 'error' in message.tags %}#ffebee{% else %}#e8f5e9{% endif %}; color: {% if 'error' in message.tags %}#c62828{% else %}#2e7d32{% endif %};">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form action="{% url 'login_page' %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="custom-input-group">
+                        <label for="username" class="custom-label">Username or Email</label>
+                        <input type="text" id="username" name="username" class="custom-input" placeholder="Enter your username or email" required>
+                    </div>
+
+                    <div class="custom-input-group">
+                        <label for="password" class="custom-label">Password</label>
+                        <input type="password" id="password" name="password" class="custom-input" placeholder="Enter your password" required>
+                    </div>
+
+                    <a href="{% url 'password_reset' %}" class="forgot-pass-link">Forgot password?</a>
+
+                    <button type="submit" class="submit-btn">SUBMIT</button>
+                </form>
+
+                <p class="signup-text">
+                    Don't have an account? <a href="{% url 'signup_page' %}">Sign up</a>
                 </p>
-              </div>
             </div>
-          </div>
         </div>
-        <div class="u-form u-form-1">
-          <form action="{% url 'login_page' %}" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
-            {% csrf_token %}
-            
-            
-            
-            <div class="u-form-email u-form-group u-label-top">
-              <label for="username" class="u-label">Username or Email</label>
-              <input type="text" placeholder="Enter your username or email" id="username" name="username" class="u-input u-input-rectangle" required="required">
-            </div>
-            <div class="u-form-group u-label-top">
-              <label for="password" class="u-label">Password</label>
-              <input type="password" placeholder="Enter your password" id="password" name="password" class="u-input u-input-rectangle" required="required">
-            </div>
-            <p class="u-align-right u-custom-font u-font-ubuntu u-form-group u-form-text u-label-top u-text u-text-white u-text-5">
-              <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-custom-font u-font-ubuntu u-hover-none u-none u-text-custom-color-4 u-btn-2" href="{% url 'password_reset' %}"> Forgot password? </a>
-            </p>
-            <div class="u-align-center u-form-group u-form-submit u-label-top">
-              <button type="submit" class="u-border-none u-btn u-btn-submit u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-btn-3">SUBMIT</button>
-            </div>
-          </form>
-        </div>
-        {% if messages %}
-            {% for message in messages %}
-              <div class="alert" style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background: {% if 'error' in message.tags or 'info' in message.tags %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if 'error' in message.tags or 'info' in message.tags %}#721c24{% else %}#155724{% endif %}; word-wrap: break-word; overflow-wrap: break-word; width: 100%; box-sizing: border-box; max-height: 100px; overflow-y: auto;">
-                {{ message }}
-              </div>
-            {% endfor %}
-        {% endif %}
-      </div>
     </section>
-   
-</body></html>
+
+</body>
+</html>
