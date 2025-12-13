@@ -570,11 +570,12 @@
 
     <!-- LEFT COLUMN: Image -->
     <div class="left-column">
-        <img src="{{ destination.image_url }}" 
+        <img src="{% if destination.image_url %}{{ destination.image_url }}{% else %}https://picsum.photos/seed/{{ destination.id }}/800/600{% endif %}" 
              class="u-expanded-width u-image place-img" 
              alt="{{ destination.desName }}"
              style="border-radius:10px;"
-             onerror="this.src='https://picsum.photos/seed/{{ destination.id }}/800/600'" />
+             onerror="this.src='https://picsum.photos/seed/{{ destination.id }}/800/600'" 
+             id="mainImage" />
     <!-- CAROUSEL -->
     <div class="carousel-container">
 
@@ -583,11 +584,15 @@
         <button class="carousel-btn left" onclick="scrollCarousel(-1)">&#10094;</button>
 
         <div class="carousel" id="carousel">
+            {% for img_url in destination.get_image_list %}
+            <img src="{{ img_url }}" class="carousel-img" onclick="changeMainImage(this.src)" onerror="this.style.display='none'">
+            {% empty %}
             <img src="https://picsum.photos/seed/1/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
             <img src="https://picsum.photos/seed/2/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
             <img src="https://picsum.photos/seed/3/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
             <img src="https://picsum.photos/seed/4/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
             <img src="https://picsum.photos/seed/5/300/200" class="carousel-img" onclick="changeMainImage(this.src)">
+            {% endfor %}
         </div>
 
         <!-- Right Button -->
