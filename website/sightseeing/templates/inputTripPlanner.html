@@ -1,129 +1,270 @@
 {% load static %}
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
+<html style="font-size: 16px;" lang="en">
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="​Easy Way to Find a Perfect Property, ​Properties For Rent, ​Let’s Find The Right Selling Option, 20k, 14k, 2m, ​​Explore Apartment Types, ​Trusted By Best Exclusive Agents, ​Get Your Dream House">
-    <meta name="description" content="">
-    <title>registerPage</title>
+    <title>Plan Your Trip - Odyscape</title>
+    
     <link rel="stylesheet" href="{% static 'css/nicepageForInputTripPlanner.css' %}" media="screen">
-<link rel="stylesheet" href="{% static 'css/indexForInputTripPlanner.css' %}" media="screen">
-    <script class="u-script" type="text/javascript" src="{% static 'js/jqueryForInputTripPlanner.css' %}" defer=""></script>
-    <script class="u-script" type="text/javascript" src="{% static 'js/nicepageForInputTripPlanner.css' %}" defer=""></script>
-    <meta name="generator" content="Nicepage 8.0.6, nicepage.com">
-    
+    <link rel="stylesheet" href="{% static 'css/indexForInputTripPlanner.css' %}" media="screen">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    
-    <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
-    <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "registerPage",
-		"url": "/"
-}</script>
-    <meta name="theme-color" content="#6f66ee">
-    <meta property="og:title" content="registerPage">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="website">
-    <link rel="canonical" href="/">
-  <meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-home-page="https://registerpage.nicepage.io/registerPage.html?version=be6e8a32-5efb-7c29-9e20-2920997da6a2" data-home-page-title="registerPage" data-path-to-root="./" data-include-products="false" class="u-body u-clearfix u-overlap u-xl-mode" data-lang="en">
-    <section class="u-clearfix u-gradient u-section-1" id="block-1">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <div class="custom-expanded u-list u-list-1">
-          <div class="u-repeater u-repeater-1">
-            <div class="u-border-2 u-border-grey-75 u-container-style u-list-item u-radius u-repeater-item u-white u-list-item-1">
-              <div class="u-container-layout u-similar-container u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-container-layout-1">
-                <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-1" src="{% static 'images/SmartTour11.png' %}" alt="" data-image-width="750" data-image-height="750">
-                <h1 class="u-text u-text-default u-text-1">Plan a new trip</h1>
-                <p class="u-custom-font u-heading-font u-text u-text-custom-color-4 u-text-default u-text-2">
-                  <a class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-custom-color-4 u-btn-1" href="#">Or write a new guide</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="u-carousel u-carousel-duration-250 u-carousel-fade u-form u-progress-text-hidden-sm u-progress-text-hidden-xs u-form-1" data-interval="0" data-u-ride="false" id="carousel-7b63">
-          <form action="{% url 'trip_form' %}" method="POST" 
-                class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" style="padding: 10px;">
-              {% csrf_token %}
-            <div class="u-carousel-inner" role="listbox">
-              <div class="u-carousel-item u-form-step u-slide u-active">
-                <div class="u-form-group u-label-top u-form-group-1">
-                  <label for="destination" class="u-custom-font u-heading-font u-label u-label-1">Destination</label>
-                  <div style="display: flex; align-items: center; gap: 18px; padding: 10px; border: 2px solid #e0e0e0; border-radius: 10px; background: white; transition: all 0.3s;">
-                    <span class="u-icon u-text-custom-color-7 u-icon-1">
-                      
-                    </span>
-                    <select id="destination" name="destination" class="u-input u-input-rectangle" style="width: 100%; border: none; outline: none; background: transparent; font-size: 16px; cursor: pointer;" required>
-                      <option value="">Select destination</option>
-                      {% for loc in all_locations %}
-                      <option value="{{ loc.locationName }}">{{ loc.locationName }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-                <div class="u-form-date u-form-group u-form-partition-factor-2 u-label-top u-form-group-2">
-                  <label for="date-f047" class="u-custom-font u-heading-font u-label u-label-2"> Departure (optional)</label>
-                  <input type="text" placeholder="DD/MM/YYYY" id="date-f047" name="departure" class="u-input u-input-rectangle" data-date-format="dd/mm/yyyy">
-                </div>
-                <div class="u-form-date u-form-group u-form-partition-factor-2 u-label-top u-form-group-3">
-                  <label for="date-60f4" class="u-custom-font u-heading-font u-label u-label-3"> Arrival (optional)</label>
-                  <input type="text" placeholder="DD/MM/YYYY" id="date-60f4" name="arrival" class="u-input u-input-rectangle" data-date-format="dd/mm/yyyy">
-                </div>
-                <div class="u-form-group u-form-number u-form-number-layout-range-number u-form-partition-factor-2 u-label-top u-form-group-4">
-                  <label for="number-8726" class="u-custom-font u-heading-font u-label u-label-4">Budget (Million VND)</label>
-                  <div class="u-input-row" data-value="0">
-                    <input value="0" min="1" step="1" type="range" placeholder="" id="number-8726" name="budget" class="u-input u-input-rectangle u-range" max="100">
-                    <input type="number" placeholder="" id="number-number-8726" class="u-input u-input-rectangle" min="1" step="1" value="0" max="100" name="budget">
-                  </div>
-                </div>
-                <div class="u-form-group u-form-partition-factor-2 u-form-select u-label-top u-form-group-5">
-                  <label for="select-f433" class="u-custom-font u-heading-font u-label u-label-5">Travelers</label>
-                  <div class="u-form-select-wrapper">
-                    <select id="select-f433" name="travelers" class="u-input u-input-rectangle">
-                      <option value="1" data-calc="1">1</option>
-                      <option value="2" data-calc="2">2</option>
-                      <option value="3" data-calc="3">3</option>
-                      <option data-calc="4" value="4">4</option>
-                      <option data-calc="5" value="5">5</option>
-                      <option data-calc="6" value="6">6</option>
-                      <option data-calc="7" value="7">7</option>
-                      <option data-calc="8" value="8">8</option>
-                      <option data-calc="9" value="9">9</option>
-                      <option data-calc="10" value="10">10</option>
-                    </select>
-                    <svg class="u-caret u-caret-svg" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
-                  </div>
-                </div>
-                <div class="u-form-group u-label-top u-form-group-1">
-                  <label for="price_per_person" class="u-custom-font u-heading-font u-label u-label-1">Price per person (đ)</label>
-                  <input type="text" id="price_per_person" name="price_per_person" placeholder="Enter price per person"
-                        class="u-input u-input-rectangle" required>
-                </div>
-              <div class="u-carousel-item u-form-step u-slide"></div>
-            </div>
-            <div class="u-align-center u-form-group u-form-submit u-label-top">
-              <a href="#" class="u-border-none u-btn u-btn-step u-btn-step-prev u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-hidden u-btn-2">Back</a>
-              <button type="submit"
-                      class="u-border-none u-btn u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-btn-2">
-                  Start planning
-              </button>
+    <style>
+        /* --- 1. GLOBAL STYLES --- */
+        .u-section-1 {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            font-family: 'Montserrat', sans-serif !important;
+        }
 
-              <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-custom-font u-font-ubuntu u-palette-3-base u-hidden u-btn-2">Submit</a>
-              <input type="submit" value="submit" class="u-form-control-hidden">
+        .u-section-1 .u-list-item-1 {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-radius: 20px !important;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
+            border: none !important;
+            padding: 25px 30px !important;
+            max-width: 550px;
+            margin: 0 auto !important;
+        }
+
+        .side-image { display: none !important; }
+
+        .u-section-1 .u-image-1 {
+            width: 100px !important;
+            height: auto !important;
+            margin-bottom: 5px !important;
+        }
+
+        /* --- 2. INPUT FIELDS --- */
+        .u-input-rectangle {
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 8px !important;
+            padding: 10px 12px !important;
+            background-color: #f9f9f9 !important;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .u-input-rectangle:focus {
+            background-color: #fff !important;
+            border-color: #FB8700 !important;
+            box-shadow: 0 0 0 3px rgba(251, 135, 0, 0.1) !important;
+            outline: none;
+        }
+        .u-label {
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            color: #444 !important;
+            margin-bottom: 6px !important;
+            display: block;
+        }
+
+        /* --- 3. LINK "WRITE A NEW GUIDE" --- */
+        .link-new-guide {
+            color: #FB8700 !important;
+            text-decoration: underline !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem !important;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .link-new-guide:hover {
+            color: #d84315 !important;
+            transform: translateY(-1px);
+        }
+
+        /* --- 4. BUDGET SLIDER --- */
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type=range] {
+            flex-grow: 1;
+            accent-color: #FB8700;
+            height: 4px;
+            cursor: pointer;
+        }
+        .budget-display {
+            font-weight: 700;
+            color: #FB8700;
+            width: 60px;
+            text-align: center;
+            padding: 5px !important;
+        }
+
+        /* --- 5. PRICE BOX (Đã chỉnh sửa khoảng cách) --- */
+        .price-result-box {
+            display: flex;
+            justify-content: center; /* Canh giữa nội dung */
+            align-items: center;
+            gap: 10px; /* TẠO KHOẢNG CÁCH GIỮA CHỮ VÀ SỐ Ở ĐÂY */
+            
+            background: rgba(251, 135, 0, 0.06);
+            border: 1px dashed #FB8700;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-top: 15px;
+        }
+        
+        .price-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        .price-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #E65100;
+            margin: 0;
+        }
+
+        /* --- 6. BUTTON --- */
+        button[type="submit"] {
+            background: #FB8700 !important;
+            color: white !important;
+            font-weight: 600 !important;
+            border-radius: 50px !important;
+            padding: 12px 30px !important;
+            box-shadow: 0 4px 15px rgba(251, 135, 0, 0.25) !important;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background: #f57c00 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 135, 0, 0.35) !important;
+        }
+
+        .u-repeater-1 { grid-template-columns: 1fr !important; }
+    </style>
+</head>
+
+<body class="u-body u-xl-mode">
+    <section class="u-clearfix u-section-1">
+        <div class="u-clearfix u-sheet u-sheet-1" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+            
+            <div class="u-list-item-1">
+                <div class="u-container-layout-1" style="text-align: center;">
+                    <img class="u-image u-image-1" src="{% static 'images/Odyscape.png' %}" alt="Odyscape Logo">
+                    
+                    <h1 class="u-text-1" style="font-size: 1.8rem; margin: 5px 0 10px;">Plan a new trip</h1>
+                    
+                    <a href="#" class="link-new-guide">Or write a new guide</a>
+
+                    <form action="{% url 'trip_form' %}" method="POST" class="u-form-vertical" style="margin-top: 15px; text-align: left;">
+                        {% csrf_token %}
+                        
+                        <div class="u-form-group">
+                            <label for="destination" class="u-label">Destination</label>
+                            <select id="destination" name="destination" class="u-input-rectangle" style="width: 100%;" required>
+                                <option value="">Where do you want to go?</option>
+                                {% for loc in all_locations %}
+                                <option value="{{ loc.locationName }}">{{ loc.locationName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; margin-top: 15px;">
+                            <div class="u-form-group" style="flex: 1;">
+                                <label class="u-label">Start Date</label>
+                                <input type="text" name="departure" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                            <div class="u-form-group" style="flex: 1;">
+                                <label class="u-label">End Date</label>
+                                <input type="text" name="arrival" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+
+                        <div class="u-form-group" style="margin-top: 15px;">
+                            <label for="travelers" class="u-label">Travelers</label>
+                            <input type="number" id="travelers" name="travelers" 
+                                   class="u-input-rectangle" style="width: 100%;" 
+                                   min="1" step="1" value="1" placeholder="Enter number of people" required>
+                        </div>
+
+                        <div class="u-form-group" style="margin-top: 15px;">
+                            <label class="u-label">Total Budget (Million VND)</label>
+                            <div class="range-container">
+                                <span style="font-size: 0.8rem; color: #777;">0</span>
+                                <input type="range" id="budgetRange" name="budget" min="0" max="100" value="0" step="1">
+                                <span style="font-size: 0.8rem; color: #777;">100</span>
+                                <input type="number" id="budgetInput" class="u-input-rectangle budget-display" value="0" min="0" max="100">
+                            </div>
+                        </div>
+
+                        <div class="price-result-box">
+                            <span class="price-label">Price / Person:</span>
+                            <span class="price-value" id="priceDisplay">0 ₫</span>
+                            <input type="hidden" name="price_per_person" id="hiddenPricePerPerson">
+                        </div>
+
+                        <button type="submit">START PLANNING</button>
+                    </form>
+                </div>
             </div>
-            <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-            <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-          </form>
+
         </div>
-      </div>
     </section>
-    
-    
-    
-    
-    <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/templates">Template</a> was created with Nicepage 
-    </section>
-  
-</body></html>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datepicker", {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                disableMobile: "true"
+            });
+
+            const budgetRange = document.getElementById("budgetRange");
+            const budgetInput = document.getElementById("budgetInput");
+            const travelersInput = document.getElementById("travelers");
+            const priceDisplay = document.getElementById("priceDisplay");
+            const hiddenInput = document.getElementById("hiddenPricePerPerson");
+
+            const formatCurrency = (amount) => {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+            };
+
+            function updateCalculation() {
+                let budgetMillion = parseFloat(budgetRange.value) || 0;
+                let totalBudgetVND = budgetMillion * 1000000;
+                let people = parseInt(travelersInput.value) || 1; 
+                if (people < 1) people = 1;
+
+                let perPerson = totalBudgetVND / people;
+
+                priceDisplay.textContent = formatCurrency(perPerson);
+                hiddenInput.value = perPerson;
+            }
+
+            budgetRange.addEventListener("input", () => {
+                budgetInput.value = budgetRange.value;
+                updateCalculation();
+            });
+
+            budgetInput.addEventListener("input", () => {
+                if(parseInt(budgetInput.value) > 100) budgetInput.value = 100;
+                budgetRange.value = budgetInput.value;
+                updateCalculation();
+            });
+
+            travelersInput.addEventListener("input", updateCalculation);
+            
+            updateCalculation();
+        });
+    </script>
+</body>
+</html>

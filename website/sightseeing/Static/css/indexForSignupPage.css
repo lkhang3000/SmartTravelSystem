@@ -1,9 +1,10 @@
- .u-section-1 {
+.u-section-1 {
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  background-image: linear-gradient(20deg, #0a73e1, #09d1dd);
+  background-image: linear-gradient(135deg, #ffde00, #e06703);
   background-size: cover;
 }
+
 
 .u-section-1 .u-sheet-1 {
   min-height: 998px;

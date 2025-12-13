@@ -18,6 +18,7 @@ mysql_conn = mysql.connector.connect(
     user=config('DB_USER', default='root'),
     password=config('DB_PASSWORD', default=''),
     database=config('DB_NAME', default='smarttravel_db'),
+    port=int(config('DB_PORT', default='3306')),
     charset='utf8mb4'
 )
 mysql_cursor = mysql_conn.cursor()
