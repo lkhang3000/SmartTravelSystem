@@ -1,13 +1,13 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="UTF-8" />
-  <title>Trip Planner</title>
+  <title>{% trans "Trip Planner" %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}" />
   <script src="{% static 'js/TripPlanner.js' %}"></script>
-  {% csrf_token %}
 </head>
 <body>
   <div class="app-shell">
@@ -24,36 +24,34 @@
               <span class="brand__title">Odyscape</span>
             </div>
           </a>
-        </div>
-
-        <button class="ai-chip">
-          <span>AI Assistant</span>
+        </div>        <button class="ai-chip">
+          <span>{% trans "AI Assistant" %}</span>
         </button>
       </div>
 
       <nav class="sidebar__nav">
         <div class="nav-section">
           <button class="nav-item nav-item--active" id="overview-btn" data-section="overview-section" aria-expanded="false">
-            <span>Overview</span>
+            <span>{% trans "Overview" %}</span>
             <span class="nav-item__chev" aria-hidden="true">▾</span>
           </button>
 
           <!-- Submenu -->
           <div class="nav-submenu" id="overview-submenu" style="display: none;">
             <button class="nav-item nav-sub" data-section="explore-section">
-              Explore
+              {% trans "Explore" %}
             </button>
             <button class="nav-item nav-sub" data-section="recommended-section">
-              Places to visit
+              {% trans "Places to visit" %}
             </button>
             <button class="nav-item nav-sub" data-section="saved-section">
-              Saved destination
+              {% trans "Saved destination" %}
             </button>
           </div>
         </div>
 
         <div class="nav-section">
-          <p class="nav-section__title">Itinerary</p>
+          <p class="nav-section__title">{% trans "Itinerary" %}</p>
           <button class="nav-item" data-section="itinerary-section">
             <span>Mon 12/1</span>
             <span class="nav-item__pill">3 stops</span>
@@ -76,19 +74,16 @@
         <div class="hero-card__image" 
             style="background-image: url('{{ request.session.trip_image_url }}'); background-size: cover; background-position: center;">
           <div class="hero-card__overlay"></div>
-        </div>
-
-
-        <div class="hero-card__content">
+        </div>        <div class="hero-card__content">
           <div class="hero-card__top-row">
             <div>
-              <h1 class="hero-card__title" id="trip-title">Trip to {{ request.session.trip_destination }}</h1>
+              <h1 class="hero-card__title" id="trip-title">{% trans "Trip to" %} {{ trip_destination|default:"Your Destination" }}</h1>
               <div class="hero-card__meta">
                 <span class="meta-pill">
-                  12/1 – 12/2
+                  {{ date_range|default:"12/1 – 12/2" }}
                 </span>
                 <span class="meta-pill">
-                  {{ trip_travelers|default:2 }} travelers
+                  {{ trip_travelers|default:2 }} {% trans "travelers" %}
                 </span>
               </div>
             </div>
@@ -101,12 +96,10 @@
             </div>
           </div>
         </div>
-      </header>
-
-      <!-- Explore -->
+      </header>      <!-- Explore -->
       <section class="section" id="explore-section">
         <div class="section__header">
-          <h2>Explore</h2>
+          <h2>{% trans "Explore" %}</h2>
         </div>
 
         <!-- Carousel showing destinations for selected location -->
@@ -124,23 +117,20 @@
                 <p class="explore-card__description">{{ dest.description|truncatewords:20 }}</p>
                 <button class="btn btn--small btn--primary add-to-trip-btn" 
                         data-destination-id="{{ dest.id }}">
-                  Add to Trip
+                  {% trans "Add to Trip" %}
                 </button>
               </div>
             </article>
             {% empty %}
-            <p>No destinations found for "{{ trip_destination }}".</p>
+            <p>{% trans "No destinations found for" %} "{{ trip_destination }}".</p>
             {% endfor %}
           </div>
 
           <button class="carousel-btn next-btn">❯</button>
         </div>
-      </section>
-
-
-      <!-- Saved Destinations -->
+      </section>      <!-- Saved Destinations -->
       <div class="explore-subsection" id="saved-section">
-        <h3 class="explore-subtitle">Saved destinations</h3>
+        <h3 class="explore-subtitle">{% trans "Saved destinations" %}</h3>
 
         <div class="carousel-wrapper">
           <button class="carousel-btn prev-btn">❮</button>
@@ -159,24 +149,21 @@
                   <div class="explore-card__body">
                     <h3 class="explore-card__title">{{ item.destination.desName }}</h3>
                     <p class="explore-card__subtitle">{{ item.destination.category }} | {{ item.destination.ratings }}⭐</p>
-                    <p class="explore-card__meta">Saved on {{ item.added_at|date:"M d, Y" }}</p>
+                    <p class="explore-card__meta">{% trans "Saved on" %} {{ item.added_at|date:"M d, Y" }}</p>
 
                     <div class="saved-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
 
                       <!-- View Details -->
                       <button class="btn btn--small btn--primary"
                               onclick="location.href='{% url 'destination_detail' item.destination.id %}'">
-                        View Details
+                        {% trans "View Details" %}
+                      </button>                      <!-- Remove button -->
+                      <button type="button" class="btn btn--small btn--danger remove-trip-item-btn"
+                              data-item-id="{{ item.id }}"
+                              data-item-name="{{ item.destination.desName }}"
+                              data-confirm-msg="{% trans 'Remove this destination from your trip?' %}">
+                        {% trans "Remove" %}
                       </button>
-
-                      <!-- Remove button -->
-                      <form method="post" action="{% url 'remove_from_trip' item.id %}" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn--small btn--danger"
-                                onclick="return confirm('Remove this destination from your trip?')">
-                          Remove
-                        </button>
-                      </form>
 
                     </div>
                   </div>
@@ -193,20 +180,17 @@
                   <div class="explore-card__body">
                     <h3 class="explore-card__title">{{ item.hotel.name }}</h3>
                     <p class="explore-card__subtitle">{{ item.hotel.address }}</p>
-                    <p class="explore-card__meta">Hotel added on {{ item.added_at|date:"M d, Y" }}</p>
+                    <p class="explore-card__meta">{% trans "Hotel added on" %} {{ item.added_at|date:"M d, Y" }}</p>
 
                     <div class="saved-actions">
 
-                      <span class="badge bg-info">Hotel</span>
-
-                      <!-- Remove button -->
-                      <form method="post" action="{% url 'remove_from_trip' item.id %}" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn--small btn--danger"
-                                onclick="return confirm('Remove this hotel from your trip?')">
-                          Remove
-                        </button>
-                      </form>
+                      <span class="badge bg-info">{% trans "Hotel" %}</span>                      <!-- Remove button -->
+                      <button type="button" class="btn btn--small btn--danger remove-trip-item-btn"
+                              data-item-id="{{ item.id }}"
+                              data-item-name="{{ item.hotel.name }}"
+                              data-confirm-msg="{% trans 'Remove this hotel from your trip?' %}">
+                        {% trans "Remove" %}
+                      </button>
 
                     </div>
                   </div>
@@ -215,19 +199,17 @@
 
               {% endfor %}
             {% else %}
-              <p>No saved destinations yet.</p>
+              <p>{% trans "No saved destinations yet." %}</p>
             {% endif %}
 
           </div>
 
           <button class="carousel-btn next-btn">❯</button>
         </div>
-      </div>
-
-      <!-- BIG ITINERARY -->
+      </div>      <!-- BIG ITINERARY -->
       <section class="section itinerary-section" id="itinerary-section">
         <div class="section__header">
-          <h2>Itinerary</h2>
+          <h2>{% trans "Itinerary" %}</h2>
           <button class="meta-pill meta-pill--big">
             <span class="meta-pill__icon">📅</span>
             12/1 – 12/2
@@ -238,16 +220,16 @@
         <div class="itinerary-day-full">
           <div class="itinerary-day-full__head">
             <div>
-              <h3>Monday, December 1st</h3>
-              <button class="link-button">Add subheading</button>
+              <h3>{% trans "Monday, December 1st" %}</h3>
+              <button class="link-button">{% trans "Add subheading" %}</button>
             </div>
             <div class="itinerary-day-full__actions">
               <button class="tiny-link">
-                Auto-fill day
+                {% trans "Auto-fill day" %}
               </button>
               <span class="dot-separator">·</span>
               <button class="tiny-link">
-                Optimize route
+                {% trans "Optimize route" %}
               </button>
               <button class="icon-button icon-button--ghost">⋯</button>
             </div>
@@ -256,7 +238,7 @@
           <!-- Add a place bar -->
           <div class="place-input-row">
             <div class="place-input">
-              <span class="place-input__placeholder">Add a place</span>
+              <span class="place-input__placeholder">{% trans "Add a place" %}</span>
             </div>
           </div>
         </div>
@@ -265,16 +247,16 @@
         <div class="itinerary-day-full">
           <div class="itinerary-day-full__head">
             <div>
-              <h3>Tuesday, December 2nd</h3>
-              <button class="link-button">Add subheading</button>
+              <h3>{% trans "Tuesday, December 2nd" %}</h3>
+              <button class="link-button">{% trans "Add subheading" %}</button>
             </div>
             <div class="itinerary-day-full__actions">
               <button class="tiny-link">
-                Auto-fill day
+                {% trans "Auto-fill day" %}
               </button>
               <span class="dot-separator">·</span>
               <button class="tiny-link">
-                Optimize route
+                {% trans "Optimize route" %}
               </button>
               <button class="icon-button icon-button--ghost">⋯</button>
             </div>
@@ -282,7 +264,7 @@
 
           <div class="place-input-row">
             <div class="place-input">
-              <span class="place-input__placeholder">Add a place</span>
+              <span class="place-input__placeholder">{% trans "Add a place" %}</span>
             </div>
           </div>
         </div>
@@ -308,12 +290,11 @@
 
     </aside>
 
-  </div>
-  <!-- Settings Modal -->
+  </div>  <!-- Settings Modal -->
 <div class="modal-overlay" id="settings-modal" style="display: none;">
   <div class="modal-container">
     <div class="modal-header">
-      <h3>Trip Settings</h3>
+      <h3>{% trans "Trip Settings" %}</h3>
       <button class="modal-close" id="close-settings">&times;</button>
     </div>
     
@@ -323,24 +304,24 @@
         <div class="form-section">
           <div class="form-row">
             <div class="form-group">
-              <label for="start-date">Start Date</label>
-              <input type="date" id="start-date" value="2024-12-01">
+              <label for="start-date">{% trans "Start Date" %}</label>
+              <input type="date" id="start-date" value="{{ departure_date|default:'2024-12-01' }}">
             </div>
             <div class="form-group">
-              <label for="end-date">End Date</label>
-              <input type="date" id="end-date" value="2024-12-02">
+              <label for="end-date">{% trans "End Date" %}</label>
+              <input type="date" id="end-date" value="{{ arrival_date|default:'2024-12-02' }}">
             </div>
           </div>
         </div>
         
         <!-- Travelers -->
         <div class="form-section">
-          <h4>Travelers</h4>
+          <h4>{% trans "Travelers" %}</h4>
           <div class="form-group">
-            <label for="travelers-count">Number of Travelers</label>
+            <label for="travelers-count">{% trans "Number of Travelers" %}</label>
             <div class="counter-control">
               <button type="button" class="counter-btn" id="decrease-travelers">-</button>
-              <input type="number" id="travelers-count" min="1" max="20" value="2" readonly>
+              <input type="number" id="travelers-count" min="1" max="20" value="{{ travelers|default:2 }}" readonly>
               <button type="button" class="counter-btn" id="increase-travelers">+</button>
             </div>
           </div>
@@ -348,14 +329,14 @@
         
         <!-- Budget -->
         <div class="form-section">
-          <h4>Budget (Million VND)</h4>
+          <h4>{% trans "Budget" %} ({% trans "Million VND" %})</h4>
           <div class="form-group">
-            <label for="budget">Total Budget</label>
+            <label for="budget">{% trans "Total Budget" %}</label>
             <div class="budget-input">
-              <input type="range" id="budget-slider" min="0" max="100" value="50" step="5">
+              <input type="range" id="budget-slider" min="0" max="100" value="{{ budget|default:50 }}" step="5">
               <div class="budget-display">
-                <span id="budget-value">50</span>
-                <span>Million VND</span>
+                <span id="budget-value">{{ budget|default:50 }}</span>
+                <span>{% trans "Million VND" %}</span>
               </div>
             </div>
           </div>
@@ -363,35 +344,35 @@
         
         <!-- Trip Type -->
         <div class="form-section">
-          <h4>Trip Type</h4>
+          <h4>{% trans "Trip Type" %}</h4>
           <div class="trip-type-options">
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="leisure" checked>
-              <span>Landmark</span>
+              <input type="radio" name="trip-type" value="landmark" checked>
+              <span>{% trans "Landmark" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="business">
-              <span>Scenery</span>
+              <input type="radio" name="trip-type" value="scenery">
+              <span>{% trans "Scenery" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="adventure">
-              <span>Sanctuary</span>
+              <input type="radio" name="trip-type" value="sanctuary">
+              <span>{% trans "Sanctuary" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="family">
-              <span>Museum</span>
+              <input type="radio" name="trip-type" value="museum">
+              <span>{% trans "Museum" %}</span>
             </label>
             <label class="trip-type-option">
-              <input type="radio" name="trip-type" value="family">
-              <span>Attraction</span>
+              <input type="radio" name="trip-type" value="attraction">
+              <span>{% trans "Attraction" %}</span>
             </label>
           </div>
         </div>
     </div>
     
     <div class="modal-footer">
-      <button class="btn btn--ghost" id="cancel-settings">Cancel</button>
-      <button class="btn btn--primary" id="save-settings" type="button">Save Changes</button>
+      <button class="btn btn--ghost" id="cancel-settings">{% trans "Cancel" %}</button>
+      <button class="btn btn--primary" id="save-settings" type="button">{% trans "Save Changes" %}</button>
     </div>
   </div>
 </div>
@@ -444,6 +425,333 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // generate on page load
     generateDays();
+});
+</script>
+<script>
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Get current language from URL
+  const currentLang = window.location.pathname.split('/')[1] || 'en'; // 'vi' or 'en'
+  
+  // Add to Trip buttons
+  document.querySelectorAll('.add-to-trip-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const destId = btn.getAttribute('data-destination-id');
+      
+      if (!destId) {
+        console.error('No destination ID found');
+        alert('Error: No destination ID');
+        return;
+      }
+      
+      console.log('Adding destination ID:', destId);
+      console.log('Language:', currentLang);
+      
+      // Use language-prefixed URL
+      const url = `/${currentLang}/destination/${destId}/add-trip/`;
+      console.log('Fetch URL:', url);
+      
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers.get('content-type'));
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Server returned HTML instead of JSON. Check URL and authentication.');
+        }
+        
+        return response.json();
+      })
+      .then(data => {
+        console.log('Response data:', data);
+        if (data.success) {
+          alert(data.message || 'Added to trip successfully!');
+          window.location.reload();
+        } else {
+          alert(data.message || 'Error adding to trip');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Network error: ' + error.message);
+      });
+    });
+  });
+  // Auto-fill day
+  document.querySelectorAll('.itinerary-day-full__actions .tiny-link').forEach(function(btn) {
+    if (btn.textContent.trim() === 'Auto-fill day') {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const dayName = btn.closest('.itinerary-day-full__head').querySelector('h3').textContent;
+        fetch('/auto-fill-day/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ day: dayName })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Auto-filled: ' + data.suggested.map(i => i.name).join(', '));
+            window.location.reload();
+          } else {
+            alert(data.message || 'Error auto-filling day');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error auto-filling day');
+        });
+      });
+    }
+  });
+
+  // Remove trip item (Real-time AJAX)
+  document.querySelectorAll('.remove-trip-item-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const itemId = btn.getAttribute('data-item-id');
+      const itemName = btn.getAttribute('data-item-name');
+      const confirmMsg = btn.getAttribute('data-confirm-msg');
+      
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+      
+      console.log('Removing trip item ID:', itemId);
+      
+      // Use language-prefixed URL
+      const url = `/${currentLang}/trip/remove/${itemId}/`;
+      console.log('Remove URL:', url);
+      
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          // If not JSON, just reload the page
+          console.log('Non-JSON response, reloading page...');
+          window.location.reload();
+          return;
+        }
+        
+        return response.json();
+      })
+      .then(data => {
+        if (!data) return; // Already handled reload above
+        
+        console.log('Response data:', data);
+        
+        if (data.success) {
+          // Remove the card from DOM without page reload
+          const card = btn.closest('.explore-card');
+          if (card) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
+            card.style.transition = 'all 0.3s ease';
+            
+            setTimeout(() => {
+              card.remove();
+              
+              // Check if no more saved items
+              const carousel = document.getElementById('saved-carousel');
+              const remainingCards = carousel.querySelectorAll('.explore-card');
+              
+              if (remainingCards.length === 0) {
+                carousel.innerHTML = '<p>{% trans "No saved destinations yet." %}</p>';
+              }
+              
+              // Show success message
+              alert(`Removed "${itemName}" from your trip!`);
+            }, 300);
+          }
+        } else {
+          alert(data.message || 'Error removing item');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Network error: ' + error.message);
+      });
+    });
+  });
+  // Optimize route
+  document.querySelectorAll('.itinerary-day-full__actions .tiny-link').forEach(function(btn) {
+    if (btn.textContent.trim() === 'Optimize route') {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const dayName = btn.closest('.itinerary-day-full__head').querySelector('h3').textContent;
+        fetch('/optimize-route/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ day: dayName })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Optimized order: ' + data.optimized.map(i => i.name).join(', '));
+            window.location.reload();
+          } else {
+            alert(data.message || 'Error optimizing route');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error optimizing route');
+        });
+      });
+    }
+  });
+
+  // === TRIP SETTINGS MODAL ===
+  const settingsBtn = document.getElementById('settings-btn');
+  const settingsModal = document.getElementById('settings-modal');
+  const closeSettingsBtn = document.getElementById('close-settings');
+  const cancelSettingsBtn = document.getElementById('cancel-settings');
+  const saveSettingsBtn = document.getElementById('save-settings');
+  
+  // Open modal
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', function() {
+      settingsModal.style.display = 'flex';
+    });
+  }
+  
+  // Close modal
+  function closeModal() {
+    settingsModal.style.display = 'none';
+  }
+  
+  if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener('click', closeModal);
+  }
+  
+  if (cancelSettingsBtn) {
+    cancelSettingsBtn.addEventListener('click', closeModal);
+  }
+  
+  // Close on outside click
+  settingsModal.addEventListener('click', function(e) {
+    if (e.target === settingsModal) {
+      closeModal();
+    }
+  });
+  
+  // Travelers counter
+  const decreaseBtn = document.getElementById('decrease-travelers');
+  const increaseBtn = document.getElementById('increase-travelers');
+  const travelersInput = document.getElementById('travelers-count');
+  
+  if (decreaseBtn) {
+    decreaseBtn.addEventListener('click', function() {
+      let value = parseInt(travelersInput.value);
+      if (value > 1) {
+        travelersInput.value = value - 1;
+      }
+    });
+  }
+  
+  if (increaseBtn) {
+    increaseBtn.addEventListener('click', function() {
+      let value = parseInt(travelersInput.value);
+      if (value < 20) {
+        travelersInput.value = value + 1;
+      }
+    });
+  }
+  
+  // Budget slider
+  const budgetSlider = document.getElementById('budget-slider');
+  const budgetValue = document.getElementById('budget-value');
+  
+  if (budgetSlider) {
+    budgetSlider.addEventListener('input', function() {
+      budgetValue.textContent = budgetSlider.value;
+    });
+  }
+  
+  // Save settings
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', function() {
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      const travelers = document.getElementById('travelers-count').value;
+      const budget = document.getElementById('budget-slider').value;
+      const tripType = document.querySelector('input[name="trip-type"]:checked').value;
+      
+      console.log('Saving trip settings:', {startDate, endDate, travelers, budget, tripType});
+      
+      // Send to backend
+      fetch(`/${currentLang}/update-trip-settings/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `start_date=${startDate}&end_date=${endDate}&travelers=${travelers}&budget=${budget}&trip_type=${tripType}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Response:', data);
+        if (data.success) {
+          alert('{% trans "Settings saved successfully!" %}');
+          closeModal();
+          window.location.reload();
+        } else {
+          alert('{% trans "Error saving settings" %}');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('{% trans "Network error" %}');
+      });
+    });
+  }
 });
 </script>
 

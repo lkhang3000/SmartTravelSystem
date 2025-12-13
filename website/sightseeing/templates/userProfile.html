@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Tour Profile Settings</title>
+    <title>{% trans "Smart Tour Profile Settings" %}</title>
     <style>
         /* ======================================= */
         /* TỔNG HỢP TOÀN BỘ CSS ĐÃ CHỈNH SỬA */
@@ -454,30 +455,30 @@
 
 <div class="main-layout-wrapper">
     <div class="settings-sidebar">
-        <div class="sidebar-header">User Profile Management</div>
+        <div class="sidebar-header">{% trans "User Profile Management" %}</div>
         <nav class="sidebar-menu">
-            <a href="#" class="menu-item active" data-target="personal-info">Personal Information</a>
-            <a href="#" class="menu-item" data-target="security">Security & Password</a>
-            <a href="#" class="menu-item" data-target="saved-planners">Saved Planners</a>
-            <a href="#" class="menu-item" data-target="search-history">Search History</a>
+            <a href="#" class="menu-item active" data-target="personal-info">{% trans "Personal Information" %}</a>
+            <a href="#" class="menu-item" data-target="security">{% trans "Security & Password" %}</a>
+            <a href="#" class="menu-item" data-target="saved-planners">{% trans "Saved Planners" %}</a>
+            <a href="#" class="menu-item" data-target="search-history">{% trans "Search History" %}</a>
 
             <div class="menu-divider"></div>
             
-            <a href="{% url 'logout' %}" class="menu-item logout">Log Out</a>
+            <a href="{% url 'logout' %}" class="menu-item logout">{% trans "Log Out" %}</a>
         </nav>
     </div>
 
     <div class="settings-content">
 
         <div id="personal-info" class="content-section active">
-            <h2>Personal Information</h2>
+            <h2>{% trans "Personal Information" %}</h2>
             
             <div class="profile-header">
                 <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=1e76ff&color=fff&size=80" 
                     class="profile-avatar" alt="User Avatar">
                 <div class="profile-details">
-                    <p><strong>Username:</strong> {{ user.username }}</p>
-                    <p><strong>Email:</strong> user@example.com</p>
+                    <p><strong>{% trans "Username" %}:</strong> {{ user.username }}</p>
+                    <p><strong>{% trans "Email" %}:</strong> user@example.com</p>
                 </div>
             </div>
 
@@ -486,55 +487,52 @@
             <form>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="group_size">Group size</label>
+                        <label for="group_size">{% trans "Group size" %}</label>
                         <input type="text" id="group_size" value="1">
                     </div>
                     <div class="form-group">
-                        <label for="budget">Budget(VND)</label>
+                        <label for="budget">{% trans "Budget(VND)" %}</label>
                         <input type="text" id="budget" value="1000000">
                     </div>
-                </div>
-
-                <div class="form-row">
+                </div>                <div class="form-row">
                     <div class="form-group date-input-container">
-                        <label for="arrival_day">Arrival Day</label>
+                        <label for="arrival_day">{% trans "Arrival Day" %}</label>
                         <input type="text" id="arrival_day" value="2025-12-01" readonly class="date-input-field">
                         <div id="arrival_calendar" class="mini-calendar"></div>
                     </div>
                     <div class="form-group date-input-container">
-                        <label for="departure_day">Departure Day</label>
+                        <label for="departure_day">{% trans "Departure Day" %}</label>
                         <input type="text" id="departure_day" value="2025-12-02" readonly class="date-input-field">
                         <div id="departure_calendar" class="mini-calendar"></div>
                     </div>
                 </div>
-                
-                <div class="form-row">
+                  <div class="form-row">
                     <div class="form-group">
-                        <label for="Regions">Destination</label>
+                        <label for="Regions">{% trans "Destination" %}</label>
                         <select id="Regions">
-                            <option value="All regions" selected>All regions</option>
-                            <option value="Ho Chi Minh City">Ho Chi Minh City</option>
-                            <option value="Hanoi">Hanoi</option>
-                            <option value="Da Nang">Da Nang</option>
-                            <option value="Hue">Hue</option>
-                            <option value="Can Tho">Can Tho</option>
+                            <option value="All regions" selected>{% trans "All regions" %}</option>
+                            <option value="Ho Chi Minh City">{% trans "Ho Chi Minh City" %}</option>
+                            <option value="Hanoi">{% trans "Hanoi" %}</option>
+                            <option value="Da Nang">{% trans "Da Nang" %}</option>
+                            <option value="Hue">{% trans "Hue" %}</option>
+                            <option value="Can Tho">{% trans "Can Tho" %}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="Category">Category</label>
+                        <label for="Category">{% trans "Category" %}</label>
                         <select id="category">
-                            <option value="All categories" selected>All categories</option>
-                            <option value="Landmark">Landmark</option>
-                            <option value="Scenery">Scenery</option>
-                            <option value="Sanctuary">Sanctuary</option>
-                            <option value="Museum">Museum</option>
-                            <option value="Attraction">Attraction</option>
+                            <option value="All categories" selected>{% trans "All categories" %}</option>
+                            <option value="Landmark">{% trans "Landmark" %}</option>
+                            <option value="Scenery">{% trans "Scenery" %}</option>
+                            <option value="Sanctuary">{% trans "Sanctuary" %}</option>
+                            <option value="Museum">{% trans "Museum" %}</option>
+                            <option value="Attraction">{% trans "Attraction" %}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="Rating">Ratings</label>
+                        <label for="Rating">{% trans "Ratings" %}</label>
                         <select id="Rating">
-                            <option value="All ratings" selected>All ratings</option>
+                            <option value="All ratings" selected>{% trans "All ratings" %}</option>
                             <option value="★☆☆☆☆(1+)">★☆☆☆☆(1+)</option>
                             <option value="★★☆☆☆(2+)">★★☆☆☆(2+)</option>
                             <option value="★★★☆☆(3+)">★★★☆☆(3+)</option>
@@ -545,44 +543,44 @@
                 </div>
 
                 <div class="save-changes-btn">
-                    <button type="submit" class="smart-btn">Save Changes</button>
+                    <button type="submit" class="smart-btn">{% trans "Save Changes" %}</button>
                 </div>
             </form>
         </div>
 
 
         <div id="security" class="content-section">
-            <h2>Security & Password</h2>
+            <h2>{% trans "Security & Password" %}</h2>
             <form>
                 <div class="form-group">
-                    <label for="current_password">Current Password</label>
+                    <label for="current_password">{% trans "Current Password" %}</label>
                     <input type="password" id="current_password">
                 </div>
                 <div class="form-group">
-                    <label for="new_password">New Password</label>
+                    <label for="new_password">{% trans "New Password" %}</label>
                     <input type="password" id="new_password">
                 </div>
                 <div class="form-group">
-                    <label for="confirm_password">Confirm New Password</label>
+                    <label for="confirm_password">{% trans "Confirm New Password" %}</label>
                     <input type="password" id="confirm_password">
                 </div>
                 <div class="save-changes-btn">
-                    <button type="submit" class="smart-btn">Change Password</button>
+                    <button type="submit" class="smart-btn">{% trans "Change Password" %}</button>
                 </div>
             </form>
         </div>
 
         <div id="saved-planners" class="content-section">
-            <h2>Saved Trip Planners</h2>
+            <h2>{% trans "Saved Trip Planners" %}</h2>
 
             <a href="{% url 'trip_planner' %}" class="trip-card-link">
                 <div class="trip-card-container">
                     <div class="trip-card-info">
-                        <h3 class="trip-card-title">Trip to Ho Chi Minh City</h3>
+                        <h3 class="trip-card-title">{% trans "Trip to Ho Chi Minh City" %}</h3>
                         <div class="trip-card-tags">
                             <span class="tag">12/1 – 12/2</span>
-                            <span class="tag">2 travelers</span>
-                            <span class="tag">Landmark</span>
+                            <span class="tag">{% trans "2 travelers" %}</span>
+                            <span class="tag">{% trans "Landmark" %}</span>
                         </div>
                     </div>
 
@@ -595,11 +593,11 @@
             <a href="{% url 'trip_planner' %}" class="trip-card-link">
                 <div class="trip-card-container">
                     <div class="trip-card-info">
-                        <h3 class="trip-card-title">Trip to Hanoi</h3>
+                        <h3 class="trip-card-title">{% trans "Trip to Hanoi" %}</h3>
                         <div class="trip-card-tags">
                             <span class="tag">10/10 – 10/15</span>
-                            <span class="tag">4 travelers</span>
-                            <span class="tag">Culture/Food</span>
+                            <span class="tag">{% trans "4 travelers" %}</span>
+                            <span class="tag">{% trans "Culture/Food" %}</span>
                         </div>
                     </div>
 
@@ -611,13 +609,13 @@
         </div>
 
         <div id="search-history" class="content-section">
-            <h2>Search History</h2>
-            <div class="history-item">📅 December 5, 2025: Search for **Ha Long Bay** (4 days, 1 traveler)</div>
-            <div class="history-item">📅 December 4, 2025: Search for **Da Nang Beaches** (3 days, High-end)</div>
-            <div class="history-item">📅 November 28, 2025: Search for **Ho Chi Minh City** (Current saved trip details)</div>
-            <div class="history-item">📅 November 15, 2025: Search for **Phu Quoc Island** (Resort focus)</div>
+            <h2>{% trans "Search History" %}</h2>
+            <div class="history-item">📅 {% trans "December 5, 2025: Search for" %} **Ha Long Bay** ({% trans "4 days, 1 traveler" %})</div>
+            <div class="history-item">📅 {% trans "December 4, 2025: Search for" %} **Da Nang Beaches** ({% trans "3 days, High-end" %})</div>
+            <div class="history-item">📅 {% trans "November 28, 2025: Search for" %} **Ho Chi Minh City** ({% trans "Current saved trip details" %})</div>
+            <div class="history-item">📅 {% trans "November 15, 2025: Search for" %} **Phu Quoc Island** ({% trans "Resort focus" %})</div>
             <div class="clear-history-wrapper">
-                <button class="smart-btn clear-history-btn">Clear History</button>
+                <button class="smart-btn clear-history-btn">{% trans "Clear History" %}</button>
             </div>
         </div>
 
