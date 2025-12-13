@@ -80,12 +80,13 @@
               <h1 class="hero-card__title" id="trip-title">{% trans "Trip to" %} {{ trip_destination|default:"Your Destination" }}</h1>
               <div class="hero-card__meta">
                 <span class="meta-pill">
-                  {{ date_range|default:"12/1 – 12/2" }}
+                  {{ date_range }}
                 </span>
                 <span class="meta-pill">
-                  {{ trip_travelers|default:2 }} {% trans "travelers" %}
+                  {{ trip_travelers }} {% trans "travelers" %}
                 </span>
               </div>
+
             </div>
             <div class="hero-card__actions">
               <button id="edit-title-btn" class="icon-button" aria-label="Edit trip">✎</button>
@@ -212,8 +213,9 @@
           <h2>{% trans "Itinerary" %}</h2>
           <button class="meta-pill meta-pill--big">
             <span class="meta-pill__icon">📅</span>
-            12/1 – 12/2
+            {{ date_range }}
           </button>
+
         </div>
 
         <!-- Day 1 -->
@@ -305,11 +307,11 @@
           <div class="form-row">
             <div class="form-group">
               <label for="start-date">{% trans "Start Date" %}</label>
-              <input type="date" id="start-date" value="{{ departure_date|default:'2024-12-01' }}">
+              <input type="date" id="start-date" value="{{ departure_date|date:'Y-m-d' }}">
             </div>
             <div class="form-group">
               <label for="end-date">{% trans "End Date" %}</label>
-              <input type="date" id="end-date" value="{{ arrival_date|default:'2024-12-02' }}">
+              <input type="date" id="end-date" value="{{ arrival_date|date:'Y-m-d' }}">
             </div>
           </div>
         </div>
@@ -321,7 +323,8 @@
             <label for="travelers-count">{% trans "Number of Travelers" %}</label>
             <div class="counter-control">
               <button type="button" class="counter-btn" id="decrease-travelers">-</button>
-              <input type="number" id="travelers-count" min="1" max="20" value="{{ travelers|default:2 }}" readonly>
+              <input type="number" id="travelers-count" min="0" max="20" step="1" value="{{ trip_travelers }}" readonly>
+
               <button type="button" class="counter-btn" id="increase-travelers">+</button>
             </div>
           </div>
@@ -333,7 +336,7 @@
           <div class="form-group">
             <label for="budget">{% trans "Total Budget" %}</label>
             <div class="budget-input">
-              <input type="range" id="budget-slider" min="0" max="100" value="{{ budget|default:50 }}" step="5">
+              <input type="range" id="budget-slider" min="0" max="100" step="1" value="{{ budget }}">
               <div class="budget-display">
                 <span id="budget-value">{{ budget|default:50 }}</span>
                 <span>{% trans "Million VND" %}</span>

@@ -555,11 +555,23 @@ def contact_us(request):
 def trip_planner(request):
     # Lấy thông tin trip từ session
     destination_name = request.session.get('trip_destination', 'Your Destination')
-    departure_date = request.session.get('trip_start', '')
-    arrival_date = request.session.get('trip_end', '')
+    departure_raw = request.session.get('trip_start_date')
+    arrival_raw = request.session.get('trip_end_date')
+
+    departure_date = None
+    arrival_date = None
+
+    if departure_raw:
+        departure_date = datetime.fromisoformat(departure_raw).date()
+    if arrival_raw:
+        arrival_date = datetime.fromisoformat(arrival_raw).date()
+
     budget = request.session.get('trip_budget', 0)
-    travelers = request.session.get('trip_travelers', 2)
-    price_per_person = request.session.get('trip_price_per_person', '')
+    travelers = request.session.get('trip_travelers', 1)
+
+    # luôn tính lại, không lấy từ session
+    price_per_person = round(budget / travelers, 2) if travelers else 0
+
     trip_map_url = request.session.get('trip_map_url', None)
     trip_image_url = request.session.get('trip_image_url', None)
 
@@ -588,26 +600,10 @@ def trip_planner(request):
     days = []
     num_days = 0
     date_range = ''
-    
+
     if departure_date and arrival_date:
-        try:
-            dep = datetime.strptime(departure_date, '%Y-%m-%d').date()
-            arr = datetime.strptime(arrival_date, '%Y-%m-%d').date()
-            num_days = (arr - dep).days + 1
-            date_range = f"{dep.strftime('%m/%d')} – {arr.strftime('%m/%d')}"
-            for i in range(num_days):
-                day_date = dep + timedelta(days=i)
-                days.append({
-                    'date': day_date,
-                    'day_name': day_date.strftime('%A'),
-                    'day_short': day_date.strftime('%a %m/%d'),
-                    'full_name': f"{day_date.strftime('%A')}, {day_date.strftime('%B %d')}"
-                })
-        except Exception as e:
-            print(f"Error parsing dates: {e}")
-            num_days = 0
-            days = []
-    
+        date_range = f"{departure_date.strftime('%m/%d')} – {arrival_date.strftime('%m/%d')}"
+
     context = {
         'destinations': destinations,
         'trip_items': trip_items,
@@ -688,8 +684,8 @@ def trip_form(request):
             
             # Store trip data in session for trip planner
             request.session['trip_destination'] = destination
-            request.session["trip_start"] = request.POST.get("start_date")
-            request.session["trip_end"] = request.POST.get("end_date")
+            request.session['trip_start_date'] = departure.isoformat() if departure else None
+            request.session['trip_end_date'] = arrival.isoformat() if arrival else None
             request.session['trip_budget'] = budget
             request.session['trip_travelers'] = travelers
             request.session['trip_price_per_person'] = price_per_person
