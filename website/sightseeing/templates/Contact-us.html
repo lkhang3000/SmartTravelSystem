@@ -33,13 +33,13 @@
       chatBox.style.display === "flex" ? "none" : "flex";
   }
 </script><meta data-intl-tel-input-cdn-path="intlTelInput/">
-</head>
-  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en"><header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
-        id="header" style="position: relative; width: 100%; z-index: 2000; padding: 15px 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+</head>  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
+    <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
+        id="header" style="position: absolute; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
 
     <!-- Logo (left) -->
     <div style="flex: 0 0 auto;">
-        <a href="{% url 'home' %}" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
+        <a href="./" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
             <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home">
         </a>
     </div>
@@ -59,16 +59,20 @@
                         </g>
                     </svg>
                 </a>
-            </div>            <div class="u-custom-menu u-nav-container" style="min-width: 0;">
-    <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color: #000;">{% trans "Home" %}</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color: #000;">{% trans "About us" %}</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color: #000;">{% trans "Contact us" %}</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color: #000;">{% trans "Trip Planner" %}</a></li>
-    </ul>
-</div>
-        </nav>       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
-     style="display: flex; align-items: center; gap: 5px; visibility: visible; margin-right: 70px; margin-top: 0px;">
+            </div>
+            <div class="u-custom-menu u-nav-container" style="min-width: 0; color: black;">
+                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}">{% trans "Home" %}</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}">{% trans "About us" %}</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}">{% trans "Contact us" %}</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}">{% trans "Trip Planner" %}</a></li>
+                </ul>
+            </div>
+        </nav>
+
+       <!-- Language Switcher -->
+       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
+     style="display: flex; align-items: center; gap: 5px; visibility: visible; margin-right: 70px; margin-top: 10px;">
 
     <!-- Vietnamese flag -->
     <form action="{% url 'set_language' %}" method="post" style="display: inline;">
@@ -111,6 +115,7 @@
     </form>
 
 </div>
+    </div>
 
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
@@ -139,7 +144,8 @@
         </a>
     {% endif %}
 </div>
-</header>    <section class="u-align-center u-clearfix u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-section-1" id="sec-3671">
+</header>
+    <section class="u-align-center u-clearfix u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-section-1" id="sec-3671">
       <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-1" src="{% static 'images/ContactUs11.gif' %}" alt="" data-image-width="1280" data-image-height="1280">
       <h3 class="u-custom-font u-font-montserrat u-text u-text-1">{% trans "Preparing For Your Success," %}<br>{% trans "We Provide Truly Prominent IT Solutions." %}
       </h3>
