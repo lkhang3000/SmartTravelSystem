@@ -32,14 +32,23 @@ class Destinations(models.Model):
     price_range = models.CharField(max_length=50, null=True, blank=True)
     
     # Thông tin chi tiết
-    category = models.CharField(max_length=100, null=True, blank=True)  # Loại hình: Biển, Núi, Di sản...
+    category = models.CharField(max_length=100, null=True, blank=True)  # Loại hình: Shopping Mall, Entertainment, Museum, etc.
     rating = models.FloatField(default=0.0, null=True, blank=True)  # Đánh giá 0-5
     address = models.TextField(null=True, blank=True)  # Địa chỉ đầy đủ
-    image_url = models.URLField(max_length=500, null=True, blank=True)  # Link ảnh đại diện
+    image_url = models.URLField(max_length=500, null=True, blank=True)  # Link ảnh đại diện (deprecated - use image_urls)
+    image_urls = models.TextField(null=True, blank=True)  # Multiple image URLs separated by " ||| "
     
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def get_image_list(self):
+        """Return list of image URLs"""
+        if self.image_urls:
+            return [url.strip() for url in self.image_urls.split('|||') if url.strip()]
+        elif self.image_url:
+            return [self.image_url]
+        return []
 
     def __str__(self):
         return self.desName
