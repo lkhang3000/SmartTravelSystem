@@ -1,6 +1,7 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
+<html style="font-size: 16px;" lang="{{ LANGUAGE_CODE }}"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="">
@@ -131,8 +132,7 @@
     });
   });
 </script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/">
-</head>
-  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
+</head>  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
     <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
         id="header" style="position: absolute; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
 
@@ -161,61 +161,66 @@
             </div>
             <div class="u-custom-menu u-nav-container" style="min-width: 0;">
                 <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="./">Home</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}">Trip Planner</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="./">{% trans "Home" %}</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}">{% trans "About us" %}</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}">{% trans "Contact us" %}</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}">{% trans "Trip Planner" %}</a></li>
                 </ul>
             </div>
         </nav>
 
+       <!-- Language Switcher -->
        <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
      style="display: flex; align-items: center; gap: 5px; visibility: visible; margin-right: 70px; margin-top: 10px;">
 
     <!-- Vietnamese flag -->
-    <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
-        <span style="display: inline-block; width: 30px; height: 30px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                <defs>
-                    <clipPath id="vn-a">
-                        <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
-                    </clipPath>
-                </defs>
-                <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
-                    <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
-                    <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
-                </g>
-            </svg>
-        </span>
-    </a>
+    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input name="language" type="hidden" value="vi">
+        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="Tiếng Việt">
+            <span style="display: inline-block; width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                    <defs>
+                        <clipPath id="vn-a">
+                            <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
+                        </clipPath>
+                    </defs>
+                    <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
+                        <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
+                        <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
+                    </g>
+                </svg>
+            </span>
+        </button>
+    </form>
 
     <!-- UK flag -->
-    <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
-        <span style="display: inline-block; width: 30px; height: 30px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                <path fill="#012169" d="M0 0h512v512H0z"/>
-                <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
-                <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
-                <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
-            </svg>
-        </span>
-    </a>
+    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input name="language" type="hidden" value="en">
+        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="English">
+            <span style="display: inline-block; width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                    <path fill="#012169" d="M0 0h512v512H0z"/>
+                    <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
+                    <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
+                    <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
+                    <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
+                </svg>
+            </span>
+        </button>
+    </form>
 
 </div>
-
-
-
-
-
-
-
+    </div>
 
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
     {% if user.is_authenticated %}
         <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
-           <img src="{% static 'images/list_icon.png' %}" alt="My Trips" style="width: 32px; height: 32px;">
+           <img src="{% static 'images/list_icon.png' %}" alt="{% trans 'My Trips' %}" style="width: 32px; height: 32px;">
            {% if trip_count > 0 %}
            <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
            {% endif %}
@@ -229,27 +234,25 @@
         <a href="{% url 'login_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
            style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
-           Log in
+           {% trans "Log in" %}
         </a>
         <a href="{% url 'signup_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
            style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
-           Register
+           {% trans "Register" %}
         </a>
     {% endif %}
 </div>
 </header>
-
 
     <section class="u-clearfix u-image u-shading u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-section-1"
          style="background-image: url('{% static 'images/cristina-gottardi-CSpjU6hYo_0-unsplash.jpg' %}'); background-position: 50% 50%;"
          id="block-12"
          data-image-width="4896"
          data-image-height="3264">
-      <div class="u-clearfix u-sheet u-sheet-1">
-       <p class="u-align-center u-custom-font u-font-lobster u-text u-text-default u-text-1"
+      <div class="u-clearfix u-sheet u-sheet-1">       <p class="u-align-center u-custom-font u-font-lobster u-text u-text-default u-text-1"
    style="text-shadow: 2px 2px 10px rgba(0,0,0,0.9), 0 8px 30px rgba(0,0,0,0.6);">
-   Venture far<br>Rediscover yourself
+   {% trans "Venture far" %}<br>{% trans "Rediscover yourself" %}
 </p>
         <div class="custom-expanded data-layout-selected u-clearfix u-layout-wrap u-radius u-layout-wrap-1">
           <div class="u-layout">
@@ -257,12 +260,11 @@
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
                 <div class="u-container-layout u-valign-top u-container-layout-1">
                   <div class="custom-expanded u-form u-form-1">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-1">
-                        <label class="u-custom-font u-font-montserrat u-label u-label-1">Location</label>
+                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-1">
+                        <label class="u-custom-font u-font-montserrat u-label u-label-1">{% trans "Location" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="location-filter" name="location" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-1">
-                            <option value="">All locations</option>
+                            <option value="">{% trans "All locations" %}</option>
                             {% for location in all_locations %}
                             <option value="{{ location.id }}">{{ location.locationName }}</option>
                             {% endfor %}
@@ -285,12 +287,11 @@
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
                 <div class="u-container-layout u-valign-top u-container-layout-2">
                   <div class="custom-expanded u-form u-form-2">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-3">
-                        <label class="u-custom-font u-font-montserrat u-label u-label-2">Category</label>
+                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-3">
+                        <label class="u-custom-font u-font-montserrat u-label u-label-2">{% trans "Category" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="category-filter" name="category" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-white u-input-2">
-                            <option value="">All categories</option>
+                            <option value="">{% trans "All categories" %}</option>
                             {% for category in all_categories %}
                             <option value="{{ category }}">{{ category }}</option>
                             {% endfor %}
@@ -313,12 +314,11 @@
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
                 <div class="u-container-layout u-valign-top u-container-layout-3">
                   <div class="custom-expanded u-form u-form-3">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">
-                      <div class="u-form-group u-form-select u-label-none u-form-group-5">
-                        <label class="u-custom-font u-font-montserrat u-label u-label-3">Rating</label>
+                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-5">
+                        <label class="u-custom-font u-font-montserrat u-label u-label-3">{% trans "Rating" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="rating-filter" name="rating" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-3">
-                            <option value="">All ratings</option>
+                            <option value="">{% trans "All ratings" %}</option>
                             <option value="1">★☆☆☆☆ (1+)</option>
                             <option value="2">★★☆☆☆ (2+)</option>
                             <option value="3">★★★☆☆ (3+)</option>
@@ -344,39 +344,34 @@
           </div>
         </div>
       </div>
-    </section>
-    <section class="u-clearfix u-container-align-center u-white u-section-2" id="sec-9086">
+    </section>    <section class="u-clearfix u-container-align-center u-white u-section-2" id="sec-9086">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-sheet-1">
-        <a href="{% url 'recommend_result' %}" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">Start Your Journey </a>
-        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">Why should you choose us?</h2>
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2" data-animation-name="customAnimationIn" data-animation-duration="600" data-animation-delay="0">What we offer<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
+        <a href="{% url 'recommend_result' %}" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">{% trans "Start Your Journey" %}</a>
+        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">{% trans "Why should you choose us?" %}</h2>
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2" data-animation-name="customAnimationIn" data-animation-duration="600" data-animation-delay="0">{% trans "What we offer" %}<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
         </h6>
         <div class="u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-list u-list-1">
           <div class="u-repeater u-repeater-1">
-            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-file-icon u-icon u-text-white u-icon-1"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/74742-16735a4c.png' %}" alt=""></span>
-                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-3">offers best prices&nbsp;&nbsp;</h5>
-                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-4">Not only will we give you a reasonable pricing, our personalization allow you to fit your budget. A good vacation is where finance isn't a concern.<span style="font-style: normal;"></span>
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">              <div class="u-container-layout u-similar-container u-container-layout-1"><span class="u-file-icon u-icon u-text-white u-icon-1"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/74742-16735a4c.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-3">{% trans "offers best prices" %}</h5>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-4">{% trans "Not only will we give you a reasonable pricing, our personalization allow you to fit your budget. A good vacation is where finance isn't a concern." %}<span style="font-style: normal;"></span>
                 </p>
               </div>
             </div>
-            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-2" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-file-icon u-icon u-text-white u-icon-3"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-4"><img src="{% static 'images/1895474-7d0e8707.png' %}" alt=""></span>
-                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-5">Trustworthy reviews </h5>
-                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-6">We made sure that all of our reviews come from authentic travelers who have used our service and will monitor for any bots that may appear. </p>
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-2" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">              <div class="u-container-layout u-similar-container u-container-layout-2"><span class="u-file-icon u-icon u-text-white u-icon-3"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-4"><img src="{% static 'images/1895474-7d0e8707.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-5">{% trans "Trustworthy reviews" %}</h5>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-6">{% trans "We made sure that all of our reviews come from authentic travelers who have used our service and will monitor for any bots that may appear." %}</p>
               </div>
             </div>
-            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-3" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-container-layout-3"><span class="u-file-icon u-icon u-text-white u-icon-5"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-6"><img src="{% static 'images/2077502-dd3c7421.png' %}" alt=""></span>
-                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-7">satisfaction guaranteed </h5>
-                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-8">We are extremely dedicated to our craft, focusing on your personalization. You won't leave dissatisfied with our services.</p>
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-3" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">              <div class="u-container-layout u-similar-container u-container-layout-3"><span class="u-file-icon u-icon u-text-white u-icon-5"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-6"><img src="{% static 'images/2077502-dd3c7421.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-7">{% trans "satisfaction guaranteed" %}</h5>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-8">{% trans "We are extremely dedicated to our craft, focusing on your personalization. You won't leave dissatisfied with our services." %}</p>
               </div>
             </div>
-            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-4" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">
-              <div class="u-container-layout u-similar-container u-container-layout-4"><span class="u-file-icon u-icon u-text-white u-icon-7"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-8"><img src="{% static 'images/4516627-672a4d01.png' %}" alt=""></span>
-                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-9"> Navigation and suggestion<br>
+            <div class="u-container-style u-custom-color-7 u-list-item u-radius u-repeater-item u-shape-round u-list-item-4" data-animation-name="customAnimationIn" data-animation-duration="1300" data-animation-delay="200" data-animation-direction="">              <div class="u-container-layout u-similar-container u-container-layout-4"><span class="u-file-icon u-icon u-text-white u-icon-7"><img src="{% static 'images/686700-b24a363d.png' %}" alt=""></span><span class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-file-icon u-icon u-text-custom-color-7 u-icon-8"><img src="{% static 'images/4516627-672a4d01.png' %}" alt=""></span>
+                <h5 class="u-align-left u-custom-font u-font-montserrat u-text u-text-9">{% trans "Navigation and suggestion" %}<br>
                 </h5>
-                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-10">We provide routes&nbsp; to nearby attractions, curated based on your previous preferences and plans your trip for easy scheduling.</p>
+                <p class="u-align-left u-custom-font u-font-montserrat u-text u-text-10">{% trans "We provide routes to nearby attractions, curated based on your previous preferences and plans your trip for easy scheduling." %}</p>
               </div>
             </div>
           </div>
@@ -385,26 +380,24 @@
     </section>
     <section class="u-clearfix u-section-3" id="block-11">
       <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <div class="u-container-style u-expanded-width u-grey-10 u-group u-hidden-xs u-radius u-shape-round u-group-1">
-          <div class="u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1"><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-1"><img src="{% static 'images/535188-3efc346f.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/3721843-2a83ae95.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/4516627-672a4d01.png' %}" alt=""></span>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-1"> Ask. Explore. Connect</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-2">Your trip, Your way</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-3"> Top Spots, Hotels &amp; Dining</p>
-            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-4"> Get insider tips and advices from locals in real-time chat forums for an epic journey.</p>
-            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-5"> Find top attractions with nearby hotels and restaurants tailored to your preferences.</p>
-            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-6"> Easily create your travel itinerary and organize every part of your journey.</p>
-            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-1">Explore </a>
-            <a href="{% url 'input_trip_planner' %}" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-2">Schedule </a>
-            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-3">Connect </a>
+        <div class="u-container-style u-expanded-width u-grey-10 u-group u-hidden-xs u-radius u-shape-round u-group-1">          <div class="u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1"><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-1"><img src="{% static 'images/535188-3efc346f.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/3721843-2a83ae95.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/4516627-672a4d01.png' %}" alt=""></span>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{% trans "Ask. Explore. Connect" %}</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-2">{% trans "Your trip, Your way" %}</p>
+            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-3">{% trans "Top Spots, Hotels & Dining" %}</p>
+            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-4">{% trans "Get insider tips and advices from locals in real-time chat forums for an epic journey." %}</p>
+            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-5">{% trans "Find top attractions with nearby hotels and restaurants tailored to your preferences." %}</p>
+            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-6">{% trans "Easily create your travel itinerary and organize every part of your journey." %}</p>
+            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-1">{% trans "Explore" %}</a>
+            <a href="{% url 'input_trip_planner' %}" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-2">{% trans "Schedule" %}</a>
+            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-3">{% trans "Connect" %}</a>
           </div>
         </div>
       </div>
-    </section>
-    <section class="u-clearfix u-section-4" id="block-10">
+    </section>    <section class="u-clearfix u-section-4" id="block-10">
       <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-sheet-1">
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Explore the Country </h6>
-        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">Popular Destinations</h2>
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0"> Discover amazing places and book your perfect stay<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">{% trans "Explore the Country" %}</h6>
+        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">{% trans "Popular Destinations" %}</h2>
+        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">{% trans "Discover amazing places and book your perfect stay" %}<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
         </h6>
         <div class="u-border-1 u-border-black u-container-style u-expanded-width-xs u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1">
           <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-container-layout-1">
@@ -456,22 +449,22 @@
     <!-- Row 1: Image Left, Content Right -->
     <div style="display:flex; gap:40px; align-items:center; margin-bottom:60px; flex-wrap:wrap;">
       <div style="flex:1 1 45%; min-width:280px;">
-        <img src="{% static 'images/pexels-vlada-karpovich-7368310.jpg' %}" alt="Trip planner" 
+        <img src="{% static 'images/pexels-vlada-karpovich-7368310.jpg' %}" alt="{% trans 'Trip planner' %}" 
              style="width:100%; border-radius:12px; display:block;">
       </div>
       <div style="flex:1 1 45%; min-width:280px;">
         <h2 class="u-custom-font u-font-montserrat u-text u-text-custom-color-7" 
             style="margin:0 0 20px; font-size:28px; font-weight:700;">
-          INTRODUCING:<br>TRIP PLANNER
+          {% trans "INTRODUCING:" %}<br>{% trans "TRIP PLANNER" %}
         </h2>
         <h3 class="u-custom-font u-font-montserrat u-text u-text-custom-color-7" 
             style="margin:0 0 16px; font-size:18px; font-weight:500;">
-          Have your trip planned with just the click of a button, the future of travelling
+          {% trans "Have your trip planned with just the click of a button, the future of travelling" %}
         </h3>
         <div class="custom-expanded u-border-4 u-border-custom-color-6 u-line u-line-horizontal u-line-1" 
              style="width:550px; height:4px; background:#478ac9; margin:0 0 20px;"></div>
         <p class="u-text" style="margin:0 0 20px; font-size:16px; line-height:1.6;">
-          Allow us to help schedule your vacation. We provide a flexible itinerary that maximizes your visits to attractions while allowing time to relax and enjoy local delicacies and landmarks.
+          {% trans "Allow us to help schedule your vacation. We provide a flexible itinerary that maximizes your visits to attractions while allowing time to relax and enjoy local delicacies and landmarks." %}
         </p>
       </div>
     </div>
@@ -479,16 +472,16 @@
     <!-- Row 2: Content Left, Image Right -->
     <div style="display:flex; gap:40px; align-items:center; flex-wrap:wrap; flex-direction:row-reverse;">
       <div style="flex:1 1 45%; min-width:280px;">
-        <img src="{% static 'images/carl-tronders-3nSoYKQ_bqg-unsplash1.jpg' %}" alt="Local guide" 
+        <img src="{% static 'images/carl-tronders-3nSoYKQ_bqg-unsplash1.jpg' %}" alt="{% trans 'Local guide' %}" 
              style="width:100%; border-radius:12px; display:block;">
       </div>
       <div style="flex:1 1 45%; min-width:280px; background:#2c3e50; padding:40px; border-radius:12px; color:#fff;">
         <h2 class="u-custom-font u-font-montserrat u-text" 
             style="margin:0 0 20px; font-size:28px; font-weight:700; color:#fff;">
-          LOCAL<br>GUIDE
+          {% trans "LOCAL" %}<br>{% trans "GUIDE" %}
         </h2>
         <p class="u-custom-font u-font-montserrat u-text" style="margin:0; font-size:16px; line-height:1.6; color:#e8f4f8;">
-          We are currently developing a new feature that allows you to have a direct chat with local residents. Allowing you to discover attractions such as hidden sceneries, food vendors and hotels.
+          {% trans "We are currently developing a new feature that allows you to have a direct chat with local residents. Allowing you to discover attractions such as hidden sceneries, food vendors and hotels." %}
         </p>
       </div>
     </div>

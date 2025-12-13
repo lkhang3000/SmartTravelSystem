@@ -1,0 +1,608 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SmartTour 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-11 12:00+0700\n"
+"PO-Revision-Date: 2025-01-11 12:00+0700\n"
+"Last-Translator: SmartTour Team\n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# Navigation
+msgid "Home"
+msgstr "Trang chủ"
+
+msgid "About us"
+msgstr "Về chúng tôi"
+
+msgid "Contact us"
+msgstr "Liên hệ"
+
+msgid "Trip Planner"
+msgstr "Lập kế hoạch"
+
+# Authentication
+msgid "Log in"
+msgstr "Đăng nhập"
+
+msgid "Login"
+msgstr "Đăng nhập"
+
+msgid "Register"
+msgstr "Đăng ký"
+
+msgid "Sign up"
+msgstr "Đăng ký"
+
+msgid "Signup"
+msgstr "Đăng ký"
+
+msgid "My Trips"
+msgstr "Chuyến đi của tôi"
+
+msgid "My Profile"
+msgstr "Hồ sơ của tôi"
+
+msgid "My Destinations"
+msgstr "Điểm đến của tôi"
+
+msgid "Logout"
+msgstr "Đăng xuất"
+
+msgid "Username"
+msgstr "Tên đăng nhập"
+
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Số điện thoại"
+
+msgid "New password"
+msgstr "Mật khẩu mới"
+
+msgid "Confirm new password"
+msgstr "Xác nhận mật khẩu mới"
+
+# Homepage
+msgid "Venture far"
+msgstr "Khám phá xa"
+
+msgid "Start Your Journey"
+msgstr "Bắt đầu chuyến đi"
+
+msgid "Rediscover yourself"
+msgstr "Tái khám phá bản thân"
+
+msgid "Why should you choose us?"
+msgstr "Tại sao bạn nên chọn chúng tôi?"
+
+msgid "What we offer"
+msgstr "Chúng tôi cung cấp gì"
+
+msgid "offers best prices"
+msgstr "Giá tốt nhất"
+
+msgid "Not only will we give you a reasonable pricing, our personalization allow you to fit your budget. A good vacation is where finance isn't a concern."
+msgstr "Chúng tôi không chỉ đưa ra mức giá hợp lý mà còn cho phép bạn tùy chỉnh theo ngân sách. Một kỳ nghỉ tuyệt vời là nơi tài chính không phải là mối quan tâm."
+
+msgid "Trustworthy reviews"
+msgstr "Đánh giá đáng tin cậy"
+
+msgid "We made sure that all of our reviews come from authentic travelers who have used our service and will monitor for any bots that may appear."
+msgstr "Chúng tôi đảm bảo rằng tất cả các đánh giá đều đến từ du khách thực tế đã sử dụng dịch vụ của chúng tôi và sẽ giám sát các bot có thể xuất hiện."
+
+msgid "satisfaction guaranteed"
+msgstr "Đảm bảo hài lòng"
+
+msgid "We are extremely dedicated to our craft, focusing on your personalization. You won't leave dissatisfied with our services."
+msgstr "Chúng tôi cực kỳ tận tâm với nghề nghiệp, tập trung vào cá nhân hóa cho bạn. Bạn sẽ không rời đi với sự không hài lòng về dịch vụ của chúng tôi."
+
+msgid "Navigation and suggestion"
+msgstr "Định hướng và gợi ý"
+
+msgid "We provide routes to nearby attractions, curated based on your previous preferences and plans your trip for easy scheduling."
+msgstr "Chúng tôi cung cấp tuyến đường đến các điểm tham quan gần đó, được tuyển chọn dựa trên sở thích trước đây của bạn và lập kế hoạch chuyến đi để dễ dàng sắp xếp lịch trình."
+
+msgid "Ask. Explore. Connect"
+msgstr "Hỏi. Khám phá. Kết nối"
+
+msgid "Connect"
+msgstr "Kết nối"
+
+msgid "Schedule"
+msgstr "Lên kế hoạch"
+msgid "Your trip, Your way"
+msgstr "Chuyến đi của bạn, theo cách của bạn"
+
+msgid "Top Spots, Hotels & Dining"
+msgstr "Địa điểm hàng đầu, Khách sạn & Ẩm thực"
+
+msgid "Get insider tips and advices from locals in real-time chat forums for an epic journey."
+msgstr "Nhận mẹo và lời khuyên nội bộ từ người dân địa phương trong diễn đàn trò chuyện thời gian thực cho một hành trình tuyệt vời."
+
+msgid "Find top attractions with nearby hotels and restaurants tailored to your preferences."
+msgstr "Tìm các điểm tham quan hàng đầu với khách sạn và nhà hàng gần đó phù hợp với sở thích của bạn."
+
+msgid "Easily create your travel itinerary and organize every part of your journey."
+msgstr "Dễ dàng tạo hành trình du lịch và tổ chức mọi phần của chuyến đi."
+
+msgid "Explore the Country"
+msgstr "Khám phá đất nước"
+
+msgid "Popular Destinations"
+msgstr "Điểm đến phổ biến"
+
+msgid "Discover amazing places and book your perfect stay"
+msgstr "Khám phá những nơi tuyệt vời và đặt chỗ ở hoàn hảo"
+
+msgid "reviews"
+msgstr "đánh giá"
+
+msgid "Free of Charge"
+msgstr "Miễn phí"
+
+msgid "INTRODUCING:"
+msgstr "GIỚI THIỆU:"
+
+
+msgid "Have your trip planned with just the click of a button, the future of travelling"
+msgstr "Lập kế hoạch chuyến đi chỉ bằng một cú nhấp chuột, tương lai của du lịch"
+
+msgid "Allow us to help schedule your vacation. We provide a flexible itinerary that maximizes your visits to attractions while allowing time to relax and enjoy local delicacies and landmarks."
+msgstr "Hãy để chúng tôi giúp lên lịch kỳ nghỉ của bạn. Chúng tôi cung cấp một hành trình linh hoạt tối đa hóa các chuyến thăm của bạn đến các điểm tham quan trong khi vẫn cho phép thời gian thư giãn và thưởng thức các món ăn địa phương và các địa danh."
+
+msgid "LOCAL"
+msgstr "ĐỊA PHƯƠNG"
+
+msgid "GUIDE"
+msgstr "HƯỚNG DẪN"
+
+msgid "We are currently developing a new feature that allows you to have a direct chat with local residents. Allowing you to discover attractions such as hidden sceneries, food vendors and hotels."
+msgstr "Chúng tôi đang phát triển một tính năng mới cho phép bạn trò chuyện trực tiếp với cư dân địa phương. Cho phép bạn khám phá các điểm tham quan như cảnh đẹp ẩn giấu, người bán thức ăn và khách sạn."
+
+# About Us
+msgid "Meet our team"
+msgstr "Gặp gỡ đội ngũ của chúng tôi"
+
+msgid "Problem and Solution"
+msgstr "Vấn đề và Giải pháp"
+
+msgid "Many travelers are excited to go on vacation but struggle to plan their trips—especially when visiting unfamiliar or overseas destinations."
+msgstr "Nhiều du khách háo hức đi nghỉ nhưng lại gặp khó khăn trong việc lập kế hoạch cho chuyến đi của mình—đặc biệt khi đến những địa điểm xa lạ hoặc nước ngoài."
+
+msgid "Our website acts as your personal travel planner, using smart AI filtering to curate destinations, activities, and accommodations tailored perfectly to your preferences."
+msgstr "Trang web của chúng tôi hoạt động như người lập kế hoạch du lịch cá nhân của bạn, sử dụng bộ lọc AI thông minh để tuyển chọn các điểm đến, hoạt động và chỗ ở phù hợp hoàn hảo với sở thích của bạn."
+
+msgid "How it works"
+msgstr "Cách hoạt động"
+
+msgid "By filling out the search bar with the specified tags, our AI model will sort out predetermined places for your choosing. These tags range from varieties such as distance, budget, themes and ratings."
+msgstr "Bằng cách điền vào thanh tìm kiếm với các thẻ được chỉ định, mô hình AI của chúng tôi sẽ sắp xếp các địa điểm được xác định trước để bạn lựa chọn. Các thẻ này bao gồm nhiều loại như khoảng cách, ngân sách, chủ đề và đánh giá."
+
+msgid "That's not all, you can also converse with our personally designed chatbot for further advice and inquiries about subjects such as our team or your plans."
+msgstr "Không chỉ có vậy, bạn cũng có thể trò chuyện với chatbot được thiết kế cá nhân của chúng tôi để được tư vấn thêm và giải đáp về các chủ đề như đội ngũ của chúng tôi hoặc kế hoạch của bạn."
+
+msgid "Challenges"
+msgstr "Thử thách"
+
+msgid "As you expected, we have faced many difficulties during developments (with AI models, GUI, designs,...) and it's certainly not going to disappear but we hope to strive forward and guaranteed your satisfaction."
+msgstr "Như bạn mong đợi, chúng tôi đã đối mặt với nhiều khó khăn trong quá trình phát triển (với các mô hình AI, GUI, thiết kế,...) và chắc chắn nó sẽ không biến mất nhưng chúng tôi hy vọng sẽ phấn đấu tiến về phía trước và đảm bảo sự hài lòng của bạn."
+
+msgid "As the saying goes 'What doesn't stop you makes you stronger' and that couldn't describe our team better. With each step back we only move farther towards our goals."
+msgstr "Như câu nói 'Điều gì không ngăn cản bạn sẽ làm bạn mạnh mẽ hơn' và điều đó không thể mô tả đội ngũ của chúng tôi tốt hơn. Với mỗi bước lùi, chúng tôi chỉ tiến xa hơn về phía mục tiêu của mình."
+
+msgid "Future Features"
+msgstr "Tính năng tương lai"
+
+msgid "It's a known fact that there are many apps and sites with the same premise like us. That's why we're currently developing a feature that will provide a live Q&A with the local resident of the place that you're visiting."
+msgstr "Đó là một sự thật rằng có nhiều ứng dụng và trang web có tiền đề tương tự như chúng tôi. Đó là lý do tại sao chúng tôi hiện đang phát triển một tính năng cung cấp hỏi đáp trực tiếp với cư dân địa phương của nơi bạn đang đến."
+
+msgid "So far it's only a concept but it's one we hope to make reality. You can contact us to suggest any ideas to improve our website, we couldn't be more grateful dear customers."
+msgstr "Cho đến nay nó chỉ là một khái niệm nhưng đó là điều chúng tôi hy vọng biến thành hiện thực. Bạn có thể liên hệ với chúng tôi để đề xuất bất kỳ ý tưởng nào để cải thiện trang web của chúng tôi, chúng tôi không thể biết ơn hơn thế này quý khách hàng."
+
+# Contact
+msgid "Contact Us"
+msgstr "Liên hệ với chúng tôi"
+
+msgid "Preparing For Your Success,"
+msgstr "Chuẩn bị cho sự thành công của bạn,"
+
+msgid "We Provide Truly Prominent IT Solutions."
+msgstr "Chúng tôi cung cấp các giải pháp CNTT thực sự nổi bật."
+
+msgid "Here at group 8 we are eager to hear your comments & inquiries about our website and will responds on the spot."
+msgstr "Tại nhóm 8, chúng tôi rất mong nhận được ý kiến và thắc mắc của bạn về trang web của chúng tôi và sẽ phản hồi ngay lập tức."
+
+msgid "Be sure to leave any idea/suggestion, we couldn't be more indebt to you, dear user, since it will notify us of any oversight we might have. As the saying goes: 'The customer is always right'."
+msgstr "Hãy chắc chắn để lại bất kỳ ý tưởng/đề xuất nào, chúng tôi không thể biết ơn hơn thế này, người dùng thân mến, vì nó sẽ thông báo cho chúng tôi về bất kỳ sơ suất nào mà chúng tôi có thể có. Như câu nói: 'Khách hàng luôn luôn đúng'."
+
+msgid "Travel Assistant"
+msgstr "Trợ lý du lịch"
+
+msgid "Hello! How can I help you today?"
+msgstr "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?"
+
+msgid "Type a message..."
+msgstr "Nhập tin nhắn..."
+
+# Destinations
+msgid "Imperial Capital Hue"
+msgstr "Cố đô Huế"
+
+msgid "Hanoi"
+msgstr "Hà Nội"
+
+msgid "Hue"
+msgstr "Huế"
+
+msgid "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm."
+msgstr "Huế cổ kính mê hoặc với các kinh thành hoàng gia, chùa chiền yên tĩnh và nét quyến rũ bên sông mang tính thơ mộng."
+
+msgid "Hoang Kiem Lake"
+msgstr "Hồ Hoàn Kiếm"
+
+msgid "A peaceful lake in Hanoi's Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge."
+msgstr "Một hồ nước thanh bình ở Khu phố cổ Hà Nội, nổi tiếng với Đền Ngọc Sơn và cây cầu The Húc màu đỏ tươi biểu tượng."
+
+msgid "Sung Sot Cave"
+msgstr "Hang Sửng Sốt"
+
+msgid "The largest and most spectacular cave in Ha Long Bay, featuring massive chambers and dramatic rock formations."
+msgstr "Hang động lớn nhất và ngoạn mục nhất ở Vịnh Hạ Long, có các phòng khổng lồ và thạch nhũ ấn tượng."
+
+msgid "Ho Chi Minh City"
+msgstr "Thành phố Hồ Chí Minh"
+
+msgid "Da Nang"
+msgstr "Đà Nẵng"
+
+msgid "Can Tho"
+msgstr "Cần Thơ"
+
+# Categories
+msgid "All locations"
+msgstr "Tất cả địa điểm"
+
+msgid "Category"
+msgstr "Danh mục"
+
+msgid "All categories"
+msgstr "Tất cả danh mục"
+
+msgid "Landmark"
+msgstr "Danh lam"
+
+msgid "Scenery"
+msgstr "Phong cảnh"
+
+msgid "Sanctuary"
+msgstr "Thánh địa"
+
+msgid "Museum"
+msgstr "Bảo tàng"
+
+msgid "Attraction"
+msgstr "Điểm tham quan"
+
+msgid "Destination"
+msgstr "Điểm đến"
+
+msgid "All regions"
+msgstr "Tất cả khu vực"
+
+msgid "Ratings"
+msgstr "Đánh giá"
+
+msgid "All ratings"
+msgstr "Tất cả đánh giá"
+
+# User Profile
+msgid "User Profile Management"
+msgstr "Quản lý hồ sơ người dùng"
+
+msgid "Personal Information"
+msgstr "Thông tin cá nhân"
+
+msgid "Security & Password"
+msgstr "Bảo mật & Mật khẩu"
+
+msgid "Saved Planners"
+msgstr "Kế hoạch đã lưu"
+
+msgid "Search History"
+msgstr "Lịch sử tìm kiếm"
+
+msgid "Log Out"
+msgstr "Đăng xuất"
+
+msgid "Group size"
+msgstr "Số người"
+
+msgid "Budget(VND)"
+msgstr "Ngân sách (VND)"
+
+msgid "Arrival Day"
+msgstr "Ngày đến"
+
+msgid "Departure Day"
+msgstr "Ngày về"
+
+msgid "Save Changes"
+msgstr "Lưu thay đổi"
+
+msgid "Current Password"
+msgstr "Mật khẩu hiện tại"
+
+msgid "New Password"
+msgstr "Mật khẩu mới"
+
+msgid "Confirm New Password"
+msgstr "Xác nhận mật khẩu mới"
+
+msgid "Change Password"
+msgstr "Đổi mật khẩu"
+
+msgid "Trip to Ho Chi Minh City"
+msgstr "Chuyến đi đến TP. Hồ Chí Minh"
+
+msgid "2 travelers"
+msgstr "2 khách du lịch"
+
+msgid "Trip to Hanoi"
+msgstr "Chuyến đi đến Hà Nội"
+
+msgid "4 travelers"
+msgstr "4 khách du lịch"
+
+msgid "Culture/Food"
+msgstr "Văn hóa/Ẩm thực"
+
+msgid "December 5, 2025: Search for"
+msgstr "5 tháng 12, 2025: Tìm kiếm"
+
+msgid "4 days, 1 traveler"
+msgstr "4 ngày, 1 khách du lịch"
+
+msgid "December 4, 2025: Search for"
+msgstr "4 tháng 12, 2025: Tìm kiếm"
+
+msgid "3 days, High-end"
+msgstr "3 ngày, Cao cấp"
+
+msgid "November 28, 2025: Search for"
+msgstr "28 tháng 11, 2025: Tìm kiếm"
+
+msgid "Current saved trip details"
+msgstr "Chi tiết chuyến đi đã lưu hiện tại"
+
+msgid "November 15, 2025: Search for"
+msgstr "15 tháng 11, 2025: Tìm kiếm"
+
+msgid "Resort focus"
+msgstr "Tập trung vào khu nghỉ dưỡng"
+
+msgid "Clear History"
+msgstr "Xóa lịch sử"
+
+# Trip List
+msgid "My Trip List"
+msgstr "Danh sách chuyến đi của tôi"
+
+msgid "Saved Destinations"
+msgstr "Điểm đến đã lưu"
+
+msgid "Start Planning"
+msgstr "Bắt đầu lập kế hoạch"
+
+msgid "Added on"
+msgstr "Đã thêm vào"
+
+msgid "Remove this destination from your trip?"
+msgstr "Xóa điểm đến này khỏi chuyến đi của bạn?"
+
+msgid "Remove this hotel from your trip?"
+msgstr "Xóa khách sạn này khỏi chuyến đi của bạn?"
+
+msgid "Hotel"
+msgstr "Khách sạn"
+
+msgid "Your trip list is empty"
+msgstr "Danh sách chuyến đi của bạn trống"
+
+msgid "Start adding destinations to plan your perfect trip!"
+msgstr "Bắt đầu thêm các điểm đến để lập kế hoạch cho chuyến đi hoàn hảo của bạn!"
+
+msgid "Find Destinations"
+msgstr "Tìm điểm đến"
+
+# Day Template
+msgid "Day Itinerary Template"
+msgstr "Mẫu Lịch trình theo Ngày"
+
+msgid "Itinerary for"
+msgstr "Lịch trình cho"
+
+msgid "Select destinations to visit this day:"
+msgstr "Chọn các điểm đến để tham quan trong ngày này:"
+
+msgid "Cost:"
+msgstr "Giá:"
+
+msgid "Add More Destinations"
+msgstr "Thêm Điểm Đến"
+
+msgid "Total Cost for the Day:"
+msgstr "Tổng Chi phí trong Ngày:"
+
+# Common Actions
+msgid "Details"
+msgstr "Chi tiết"
+
+msgid "Save"
+msgstr "Lưu"
+
+msgid "Cancel"
+msgstr "Hủy"
+
+msgid "Delete"
+msgstr "Xóa"
+
+msgid "Edit"
+msgstr "Sửa"
+
+msgid "Send"
+msgstr "Gửi"
+
+msgid "Submit"
+msgstr "Gửi"
+
+msgid "Search"
+msgstr "Tìm kiếm"
+
+# Trip Planner Page - Additional translations
+msgid "No destinations found for"
+msgstr "Không tìm thấy địa điểm cho"
+
+msgid "Hotel added on"
+msgstr "Khách sạn đã thêm vào"
+
+msgid "No saved destinations yet."
+msgstr "Chưa có địa điểm nào được lưu."
+
+msgid "Monday, December 1st"
+msgstr "Thứ Hai, 1 tháng 12"
+
+msgid "Tuesday, December 2nd"
+msgstr "Thứ Ba, 2 tháng 12"
+
+msgid "Add subheading"
+msgstr "Thêm tiêu đề phụ"
+
+msgid "Auto-fill day"
+msgstr "Tự động điền ngày"
+
+msgid "Optimize route"
+msgstr "Tối ưu hóa lộ trình"
+
+msgid "Add a place"
+msgstr "Thêm địa điểm"
+
+# Trip Settings Modal
+msgid "Trip Settings"
+msgstr "Cài đặt chuyến đi"
+
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+msgid "Travelers"
+msgstr "Khách du lịch"
+
+msgid "Number of Travelers"
+msgstr "Số lượng khách"
+
+msgid "Budget"
+msgstr "Ngân sách"
+
+msgid "Million VND"
+msgstr "Triệu VNĐ"
+
+msgid "Total Budget"
+msgstr "Tổng ngân sách"
+
+msgid "Trip Type"
+msgstr "Loại chuyến đi"
+
+msgid "travelers"
+msgstr "khách"
+
+msgid "Trip to"
+msgstr "Chuyến đi đến"
+
+msgid "Settings saved successfully!"
+msgstr "Đã lưu cài đặt thành công!"
+
+msgid "Error saving settings"
+msgstr "Lỗi khi lưu cài đặt"
+
+msgid "Network error"
+msgstr "Lỗi mạng"
+
+msgid "Add to Trip"
+msgstr "Thêm vào chuyến đi"
+
+msgid "View Details"
+msgstr "Chi tiết"
+
+msgid "Overview"
+msgstr "Tổng quan"
+
+msgid "Explore"
+msgstr "Khám phá"
+
+msgid "Places to visit"
+msgstr "Địa điểm tham quan"
+
+msgid "Saved destination"
+msgstr "Địa điểm đã lưu"
+
+# Recommend Result Page
+msgid "Recommend Result"
+msgstr "Kết quả đề xuất"
+
+msgid "SEARCH"
+msgstr "TÌM KIẾM"
+
+msgid "Top results"
+msgstr "Kết quả hàng đầu"
+
+msgid "Recommended for You"
+msgstr "Đề xuất cho bạn"
+
+msgid "Collaborative"
+msgstr "Cá nhân hóa"
+
+msgid "Search Results"
+msgstr "Kết quả tìm kiếm"
+
+msgid "No search results found. Try adjusting your filters."
+msgstr "Không tìm thấy kết quả. Hãy thử điều chỉnh bộ lọc."
+
+msgid "Page"
+msgstr "Trang"
+
+msgid "of"
+msgstr "trong số"
+
+msgid "total results"
+msgstr "tổng kết quả"
+
+msgid "Previous"
+msgstr "Trước"
+
+msgid "Next"
+msgstr "Tiếp"
+
+msgid "Showing"
+msgstr "Hiển thị"
+
+msgid "filtered results"
+msgstr "kết quả đã lọc"
+
+msgid "Itinerary"
+msgstr "Lịch trình"

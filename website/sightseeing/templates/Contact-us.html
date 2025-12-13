@@ -1,6 +1,7 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en"><head>
+<html style="font-size: 16px;" lang="{{ LANGUAGE_CODE }}"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="Trending destinations">
@@ -58,72 +59,89 @@
                         </g>
                     </svg>
                 </a>
-            </div>
-            <div class="u-custom-menu u-nav-container" style="min-width: 0;">
+            </div>            <div class="u-custom-menu u-nav-container" style="min-width: 0;">
     <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color: #000;">Home</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color: #000;">About us</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color: #000;">Contact us</a></li>
-        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color: #000;">Trip Planner</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color: #000;">{% trans "Home" %}</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color: #000;">{% trans "About us" %}</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color: #000;">{% trans "Contact us" %}</a></li>
+        <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color: #000;">{% trans "Trip Planner" %}</a></li>
     </ul>
 </div>
-        </nav>
-
-       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
+        </nav>       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
      style="display: flex; align-items: center; gap: 5px; visibility: visible; margin-right: 70px; margin-top: 0px;">
 
     <!-- Vietnamese flag -->
-    <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
-        <span style="display: inline-block; width: 30px; height: 30px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                <defs>
-                    <clipPath id="vn-a">
-                        <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
-                    </clipPath>
-                </defs>
-                <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
-                    <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
-                    <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
-                </g>
-            </svg>
-        </span>
-    </a>
+    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input name="language" type="hidden" value="vi">
+        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="Tiếng Việt">
+            <span style="display: inline-block; width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                    <defs>
+                        <clipPath id="vn-a">
+                            <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
+                        </clipPath>
+                    </defs>
+                    <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
+                        <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
+                        <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
+                    </g>
+                </svg>
+            </span>
+        </button>
+    </form>
 
     <!-- UK flag -->
-    <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
-        <span style="display: inline-block; width: 30px; height: 30px;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                <path fill="#012169" d="M0 0h512v512H0z"/>
-                <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
-                <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
-                <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
-            </svg>
-        </span>
-    </a>
+    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <input name="language" type="hidden" value="en">
+        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="English">
+            <span style="display: inline-block; width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                    <path fill="#012169" d="M0 0h512v512H0z"/>
+                    <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
+                    <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
+                    <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
+                    <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
+                </svg>
+            </span>
+        </button>
+    </form>
 
 </div>
-
-
 
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
-    <a href="{% url 'login_page' %}"
-   class="u-btn u-button-style u-custom-font u-font-montserrat"
-   style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
-   Log in
-</a>
-
-<a href="{% url 'signup_page' %}"
-   class="u-btn u-button-style u-custom-font u-font-montserrat"
-   style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
-   Register
-</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
+           <img src="{% static 'images/list_icon.png' %}" alt="{% trans 'My Trips' %}" style="width: 32px; height: 32px;">
+           {% if trip_count > 0 %}
+           <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
+           {% endif %}
+        </a>
+        <a href="{% url 'user_profile' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
+           {{ user.first_name|default:user.username }}
+        </a>
+    {% else %}
+        <a href="{% url 'login_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
+           {% trans "Log in" %}
+        </a>
+        <a href="{% url 'signup_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
+           {% trans "Register" %}
+        </a>
+    {% endif %}
 </div>
-</header>
-    <section class="u-align-center u-clearfix u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-section-1" id="sec-3671">
+</header>    <section class="u-align-center u-clearfix u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-section-1" id="sec-3671">
       <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-1" src="{% static 'images/ContactUs11.gif' %}" alt="" data-image-width="1280" data-image-height="1280">
-      <h3 class="u-custom-font u-font-montserrat u-text u-text-1"> Preparing For Your Success,<br>We Provide Truly Prominent IT Solutions.
+      <h3 class="u-custom-font u-font-montserrat u-text u-text-1">{% trans "Preparing For Your Success," %}<br>{% trans "We Provide Truly Prominent IT Solutions." %}
       </h3>
       <img class="u-image u-image-contain u-image-default u-preserve-proportions u-image-2" src="{% static 'images/Login-ezgif.com-optimize.gif' %}" alt="" data-image-width="1000" data-image-height="1000">
       <div class="u-image u-image-circle u-image-3" data-image-width="750" data-image-height="750"></div>
@@ -133,10 +151,9 @@ c0-6.7,3.1-17,17-17h12.5v13.9H73.5z"></path></svg></span>
         </a>
         <a class="u-social-url" title="github" target="_blank" href="https://github.com/lkhang3000/SmartTravelSystem"><span class="u-file-icon u-icon u-social-icon u-social-instagram u-icon-2"><img src="{% static 'images/919847.png' %}" alt=""></span>
         </a>
-        <a class="u-social-url" target="_blank" data-type="YouTube" title="YouTube" href="https://www.youtube.com/@SmartTour_VN"><span class="u-icon u-social-icon u-social-youtube u-text-palette-3-base u-icon-3"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 112 112" style=""><use xlink:href="#svg-237f"></use></svg><svg class="u-svg-content" viewBox="0 0 112 112" x="0" y="0" id="svg-237f"><circle fill="currentColor" cx="56.1" cy="56.1" r="55"></circle><path fill="#FFFFFF" d="M74.9,33.3H37.3c-7.4,0-13.4,6-13.4,13.4v18.8c0,7.4,6,13.4,13.4,13.4h37.6c7.4,0,13.4-6,13.4-13.4V46.7 C88.3,39.3,82.3,33.3,74.9,33.3L74.9,33.3z M65.9,57l-17.6,8.4c-0.5,0.2-1-0.1-1-0.6V47.5c0-0.5,0.6-0.9,1-0.6l17.6,8.9 C66.4,56,66.4,56.8,65.9,57L65.9,57z"></path></svg></span>
-        </a>
+        <a class="u-social-url" target="_blank" data-type="YouTube" title="YouTube" href="https://www.youtube.com/@SmartTour_VN"><span class="u-icon u-social-icon u-social-youtube u-text-palette-3-base u-icon-3"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 112 112" style=""><use xlink:href="#svg-237f"></use></svg><svg class="u-svg-content" viewBox="0 0 112 112" x="0" y="0" id="svg-237f"><circle fill="currentColor" cx="56.1" cy="56.1" r="55"></circle><path fill="#FFFFFF" d="M74.9,33.3H37.3c-7.4,0-13.4,6-13.4,13.4v18.8c0,7.4,6,13.4,13.4,13.4h37.6c7.4,0,13.4-6,13.4-13.4V46.7 C88.3,39.3,82.3,33.3,74.9,33.3L74.9,33.3z M65.9,57l-17.6,8.4c-0.5,0.2-1-0.1-1-0.6V47.5c0-0.5,0.6-0.9,1-0.6l17.6,8.9 C66.4,56,66.4,56.8,65.9,57L65.9,57z"></path></svg></span>        </a>
       </div>
-      <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-2">Here at group 8 we are eager to hear your comments &amp; inquiries about our website and will responds on the spot.<br>Be sure to leave any idea/suggestion, we couldn't be more indebt to you, dear user, since it will notify us of any oversight we might have. As the saying goes: "The customer is always right". 
+      <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-2">{% trans "Here at group 8 we are eager to hear your comments & inquiries about our website and will responds on the spot." %}<br>{% trans "Be sure to leave any idea/suggestion, we couldn't be more indebt to you, dear user, since it will notify us of any oversight we might have. As the saying goes: 'The customer is always right'." %}
       </p>
     </section>
     
@@ -146,14 +163,13 @@ c0-6.7,3.1-17,17-17h12.5v13.9H73.5z"></path></svg></span>
         <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
           <div class="chat-container"><!-- Floating Button -->
             <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
-            <div class="chat-box" id="chatBox">
-              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
+            <div class="chat-box" id="chatBox">              <div class="chat-header"><span>{% trans "Travel Assistant" %}</span><span class="close-btn" onclick="toggleChat()">×</span>
               </div>
               <div class="chat-body">
-                <div class="bot-msg">Hello! How can I help you today?</div>
+                <div class="bot-msg">{% trans "Hello! How can I help you today?" %}</div>
               </div>
               <div class="chat-input">
-                <input type="text" placeholder="Type a message...">
+                <input type="text" placeholder="{% trans 'Type a message...' %}">
                 <button>➤</button>
               </div>
             </div>

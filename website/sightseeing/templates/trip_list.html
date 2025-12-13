@@ -1,12 +1,13 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en">
+<html style="font-size: 16px;" lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <title>My Trip List</title>
+    <title>{% trans "My Trip List" %}</title>
     <link rel="stylesheet" href="{% static 'css/nicepage.css' %}" media="screen">
     <link rel="stylesheet" href="{% static 'css/index.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jquery.js' %}" defer=""></script>
@@ -116,10 +117,9 @@
                   text-decoration:none;
                   border-bottom:1px solid #eee;
                   transition:0.2s;
-                "
-                onmouseover="this.style.background='#f5f5f5'"
+                "                onmouseover="this.style.background='#f5f5f5'"
                 onmouseout="this.style.background='white'">
-                    👤 My Profile
+                    👤 {% trans "My Profile" %}
                 </a>
                 <a href="{% url 'recommend_result' %}" style="
                   display:block;
@@ -131,7 +131,7 @@
                 "
                 onmouseover="this.style.background='#f5f5f5'"
                 onmouseout="this.style.background='white'">
-                    🗺️ My Destinations
+                    🗺️ {% trans "My Destinations" %}
                 </a>
                 <a href="/logout/" style="
                   display:block;
@@ -142,7 +142,7 @@
                 "
                 onmouseover="this.style.background='#f5f5f5'"
                 onmouseout="this.style.background='white'">
-                    🚪 Logout
+                    🚪 {% trans "Logout" %}
                 </a>
             </div>
         </div>
@@ -162,8 +162,7 @@
                 }
             }
         }
-        </script>
-        {% else %}
+        </script>        {% else %}
         <!-- User chưa đăng nhập: hiển thị Login/Register -->
         <a href="{% url 'login_page' %}"
            style="
@@ -177,7 +176,7 @@
            "
            onmouseover="this.style.background='#C48300'"
            onmouseout="this.style.background='#F7931E'">
-            Log in
+            {% trans "Log in" %}
         </a>
         <a href="{% url 'signup_page' %}"
            style="
@@ -191,7 +190,7 @@
            "
            onmouseover="this.style.background='#C48300'"
            onmouseout="this.style.background='#F7931E'">
-            Register
+            {% trans "Register" %}
         </a>
         {% endif %}
     </div>
@@ -199,11 +198,11 @@
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Saved Destinations</h1>
+        <h1 class="mb-0">{% trans "Saved Destinations" %}</h1>
         {% if trip_items %}
             <a href="{% url 'input_trip_planner' %}" class="btn" style="background:#F7931E; border-radius:25px; color:white; font-weight:700; padding:8px 18px; text-decoration:none; transition:0.2s; display:flex; align-items:center; gap:8px;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">
                 
-                Start Planning
+                {% trans "Start Planning" %}
             </a>
         {% endif %}
     </div>
@@ -228,15 +227,14 @@
                                 <img src="https://picsum.photos/seed/{{ trip_item.destination.id }}/400/200" class="card-img-top" alt="{{ trip_item.destination.desName }}" style="height: 200px; object-fit: cover;">
                             {% endif %}
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">{{ trip_item.destination.desName }}</h5>
-                                <p class="card-text">{{ trip_item.destination.description|truncatechars:100 }}</p>
+                                <h5 class="card-title">{{ trip_item.destination.desName }}</h5>                                <p class="card-text">{{ trip_item.destination.description|truncatechars:100 }}</p>
                                 <div class="mt-auto">
-                                    <p class="text-muted small">Added on {{ trip_item.added_at|date:"M d, Y" }}</p>
+                                    <p class="text-muted small">{% trans "Added on" %} {{ trip_item.added_at|date:"M d, Y" }}</p>
                                     <div class="d-flex gap-2">
-                                        <a href="{% url 'destination_detail' trip_item.destination.id %}" class="btn btn-sm" style="background:#F7931E; border-radius:25px; color:white; font-weight:700; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">View Details</a>
+                                        <a href="{% url 'destination_detail' trip_item.destination.id %}" class="btn btn-sm" style="background:#F7931E; border-radius:25px; color:white; font-weight:700; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">{% trans "View Details" %}</a>
                                         <form method="post" action="{% url 'remove_from_trip' trip_item.id %}" class="d-inline">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Remove this destination from your trip?')">Remove</button>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('{% trans "Remove this destination from your trip?" %}')">{% trans "Remove" %}</button>
                                         </form>
                                     </div>
                                 </div>
@@ -248,15 +246,14 @@
                                 <img src="https://picsum.photos/seed/hotel{{ trip_item.hotel.id }}/400/200" class="card-img-top" alt="{{ trip_item.hotel.name }}" style="height: 200px; object-fit: cover;">
                             {% endif %}
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">{{ trip_item.hotel.name }}</h5>
-                                <p class="card-text">{{ trip_item.hotel.address|truncatechars:100 }}</p>
+                                <h5 class="card-title">{{ trip_item.hotel.name }}</h5>                                <p class="card-text">{{ trip_item.hotel.address|truncatechars:100 }}</p>
                                 <div class="mt-auto">
-                                    <p class="text-muted small">Added on {{ trip_item.added_at|date:"M d, Y" }}</p>
+                                    <p class="text-muted small">{% trans "Added on" %} {{ trip_item.added_at|date:"M d, Y" }}</p>
                                     <div class="d-flex gap-2">
-                                        <span class="badge bg-info">Hotel</span>
+                                        <span class="badge bg-info">{% trans "Hotel" %}</span>
                                         <form method="post" action="{% url 'remove_from_trip' trip_item.id %}" class="d-inline">
                                             {% csrf_token %}
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Remove this hotel from your trip?')">Remove</button>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('{% trans "Remove this hotel from your trip?" %}')">{% trans "Remove" %}</button>
                                         </form>
                                     </div>
                                 </div>
@@ -265,14 +262,12 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
-
-    {% else %}
+        </div>    {% else %}
         <div class="text-center py-5">
             <i class="fas fa-suitcase fa-3x text-muted mb-3"></i>
-            <h3 class="text-muted">Your trip list is empty</h3>
-            <p class="text-muted">Start adding destinations to plan your perfect trip!</p>
-            <a href="{% url 'recommend_result' %}" class="btn btn-primary">Find Destinations</a>
+            <h3 class="text-muted">{% trans "Your trip list is empty" %}</h3>
+            <p class="text-muted">{% trans "Start adding destinations to plan your perfect trip!" %}</p>
+            <a href="{% url 'recommend_result' %}" class="btn btn-primary">{% trans "Find Destinations" %}</a>
         </div>
     {% endif %}
 </div>
