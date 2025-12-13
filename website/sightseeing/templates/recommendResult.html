@@ -1,11 +1,12 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="​Easy Way to Find a Perfect Property, ​Properties For Rent, ​Let’s Find The Right Selling Option, 20k, 14k, 2m, ​​Explore Apartment Types, ​Trusted By Best Exclusive Agents, ​Get Your Dream House">
     <meta name="description" content="">
-    <title>recommendResult</title>
+    <title>{% trans "Recommend Result" %}</title>
     <link rel="stylesheet" href="{% static 'css/nicepageForRecommendResult.css' %}" media="screen">
 <link rel="stylesheet" href="{% static 'css/indexForRecommendResult.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jqueryForRecommendResult.js' %}" defer=""></script>
@@ -207,8 +208,7 @@
             background-position: right 15px center;
             background-size: 24px;
             padding-right: 45px;
-          ">
-            <option value="" style="background: #333; color: white;">All regions</option>
+          ">            <option value="" style="background: #333; color: white;">{% trans "All regions" %}</option>
             {% for loc in all_locations %}
             <option value="{{ loc.id }}" style="background: #333; color: white;" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
             {% endfor %}
@@ -235,8 +235,7 @@
             background-position: right 15px center;
             background-size: 24px;
             padding-right: 45px;
-          ">
-            <option value="" style="background: #333; color: white;">All locations</option>
+          ">            <option value="" style="background: #333; color: white;">{% trans "All categories" %}</option>
             {% for cat in all_categories %}
             <option value="{{ cat }}" style="background: #333; color: white;" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
             {% endfor %}
@@ -263,8 +262,7 @@
             background-position: right 15px center;
             background-size: 24px;
             padding-right: 45px;
-          ">
-            <option value="" style="background: #333; color: white;">All ratings</option>
+          ">            <option value="" style="background: #333; color: white;">{% trans "All ratings" %}</option>
             <option value="5.0" style="background: #333; color: white;" {% if selected_rating == '5.0' %}selected{% endif %}>★★★★★ (5.0)</option>
             <option value="4.0" style="background: #333; color: white;" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
             <option value="3.0" style="background: #333; color: white;" {% if selected_rating == '3.0' %}selected{% endif %}>★★★☆☆ (3.0+)</option>
@@ -287,10 +285,9 @@
             transition: all 0.3s;
             font-family: 'Montserrat', sans-serif;
             white-space: nowrap;
-          "
-          onmouseover="this.style.background='#E67E22'; this.style.borderColor='#E67E22';"
+          "          onmouseover="this.style.background='#E67E22'; this.style.borderColor='#E67E22';"
           onmouseout="this.style.background='#F7931E'; this.style.borderColor='#F7931E';">
-            SEARCH
+            {% trans "SEARCH" %}
           </button>
         </div>
       </div>
@@ -320,10 +317,9 @@
   
 {% comment %}Top results: prefers a view-provided `top_results` list. Falls back to sorting `search_results` by rating (works if search_results is list/dict-like).{% endcomment %}
 
-{% if top_results %}
-  {% with top=top_results %}
+{% if top_results %}  {% with top=top_results %}
     <div class="top-results-section" style="margin-bottom:24px;text-align:center;">
-      <h3 style="color:#F7931E;font-size:22px;margin-bottom:16px;">Top results</h3>
+      <h3 style="color:#F7931E;font-size:22px;margin-bottom:16px;">{% trans "Top results" %}</h3>
       <div class="recommendation-grid">
         {% for spot in top|slice:":3" %}
           <div class="recommendation-card">
@@ -347,10 +343,9 @@
 
 {% elif search_results %}
   {# Fallback: try to pick top 3 by rating using dictsortreversed (works if items are dict-like) #}
-  {% with top=search_results|dictsortreversed:"rating"|slice:":3" %}
-    {% if top %}
+  {% with top=search_results|dictsortreversed:"rating"|slice:":3" %}    {% if top %}
       <div class="top-results-section" style="margin-bottom:24px;text-align:center;">
-        <h3 style="color:#F7931E;font-size:60px;margin-bottom:16px;font-weight: 900;">Top results</h3>
+        <h3 style="color:#F7931E;font-size:60px;margin-bottom:16px;font-weight: 900;">{% trans "Top results" %}</h3>
         <div class="recommendation-grid">
           {% for spot in top %}
             <div class="recommendation-card">
@@ -377,10 +372,9 @@
   <div class="container">
     <h2 class="section-title">Recommended results</h2>
     
-    <!khúc này để thêm ảnh nè, có gì sửa gì thì sửa chỗ này> 
-  {% if collaborative_recommendations and not filters_applied %}
+    <!khúc này để thêm ảnh nè, có gì sửa gì thì sửa chỗ này>   {% if collaborative_recommendations and not filters_applied %}
   <div class="collaborative-section" style="margin-bottom: 40px;">
-    <h3 style="color: #F7931E; font-size: 24px; margin-bottom: 20px; text-align: center;">Recommended for You</h3>
+    <h3 style="color: #F7931E; font-size: 24px; margin-bottom: 20px; text-align: center;">{% trans "Recommended for You" %}</h3>
     <div class="recommendation-grid">
       {% for spot in collaborative_recommendations %}
       <div class="recommendation-card collaborative-recommendation">
@@ -388,8 +382,7 @@
           <a href="{% url 'destination_detail' spot.id %}">
             <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
                  onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
-          </a>
-          <div class="recommendation-badge">Collaborative</div>
+          </a>          <div class="recommendation-badge">{% trans "Collaborative" %}</div>
         </div>
         
         <div class="card-content">
@@ -404,10 +397,9 @@
       {% endfor %}
     </div>
   </div>
-  {% endif %}
-  
+  {% endif %}  
   <div class="search-results-section">
-    <h3 style="color: #333; font-size: 24px; margin-bottom: 20px; text-align: center;">Search Results</h3>
+    <h3 style="color: #333; font-size: 24px; margin-bottom: 20px; text-align: center;">{% trans "Search Results" %}</h3>
   <div class="recommendation-grid">
       {% if search_results %}
         {% for spot in search_results %}
@@ -428,41 +420,37 @@
             </div>
           </div>
         </div>
-        {% endfor %}
-      {% else %}
+        {% endfor %}      {% else %}
         <div class="no-recommendations">
-          <p>No search results found. Try adjusting your filters.</p>
+          <p>{% trans "No search results found. Try adjusting your filters." %}</p>
         </div>
       {% endif %}
     </div>
   </div>
     
-    <!-- Pagination Controls -->
-    {% if page_obj and not filters_applied %}
+    <!-- Pagination Controls -->    {% if page_obj and not filters_applied %}
     <div class="pagination-container" style="display: flex; flex-direction: column; align-items: center; margin: 40px 0; gap: 15px;">
       <span class="pagination-info" style="font-weight: bold; color: #333;">
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ total_results }} total results)
+        {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }} ({{ total_results }} {% trans "total results" %})
       </span>
       
-      <div style="display: flex; align-items: center; gap: 10px;">
-        {% if page_obj.has_previous %}
+      <div style="display: flex; align-items: center; gap: 10px;">        {% if page_obj.has_previous %}
           <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
              class="pagination-btn" style="padding: 10px 15px; background: #F7931E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s;"
-             onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">‹ Before</a>
+             onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">‹ {% trans "Previous" %}</a>
         {% endif %}
         
         {% if page_obj.has_next %}
           <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
              class="pagination-btn" style="padding: 10px 15px; background: #F7931E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s;"
-             onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">Next ›</a>
+             onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">{% trans "Next" %} ›</a>
         {% endif %}
       </div>
     </div>
     {% endif %}
-    
-    {% if filters_applied %}
+      {% if filters_applied %}
     <div class="filter-info" style="text-align: center; margin: 20px 0; color: #666;">
-      <p>Showing {{ total_results }} filtered results</p>
+      <p>{% trans "Showing" %} {{ total_results }} {% trans "filtered results" %}</p>
     </div>
     {% endif %}
   </div>

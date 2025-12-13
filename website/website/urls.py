@@ -16,15 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
 from sightseeing import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.get_home, name='home'),
+    path('i18n/', include('django.conf.urls.i18n')),
     
     # Chatbot Gemini
-    path('', include('sightseeing.urls_chatbot')),
+    path('api/', include('sightseeing.urls_chatbot')),
+]
+
+urlpatterns += i18n_patterns(
+    path('', views.get_home, name='home'),
     
     # Include sightseeing app URLs (without api/ prefix for user-facing pages)
     path('', include('sightseeing.urls')),
-]
+)

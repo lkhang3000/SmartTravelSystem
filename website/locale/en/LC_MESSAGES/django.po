@@ -1,0 +1,370 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-10 23:13+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\sightseeing\templates\About-us.html:9
+#: .\sightseeing\templates\homepage.html:163
+#: .\sightseeing\templates\homepage.html:644
+#: .\sightseeing\templates\homepage.html:653
+msgid "About us"
+msgstr "About us"
+
+#: .\sightseeing\templates\homepage.html:9
+msgid "Homepage"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:162
+#: .\sightseeing\templates\homepage.html:643
+#: .\sightseeing\templates\homepage.html:652
+msgid "Home"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:164
+#: .\sightseeing\templates\homepage.html:645
+#: .\sightseeing\templates\homepage.html:654
+msgid "Contact us"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:165
+msgid "Trip Planner"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:252
+msgid "Log in"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:257
+msgid "Register"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:272
+msgid "Venture far<br>Rediscover yourself"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:282
+msgid "Location"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:285
+msgid "All locations"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:297
+#: .\sightseeing\templates\homepage.html:324
+#: .\sightseeing\templates\homepage.html:353
+msgid "Thank you! Your message has been sent."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:298
+#: .\sightseeing\templates\homepage.html:325
+#: .\sightseeing\templates\homepage.html:354
+msgid "Unable to send your message. Please fix errors then try again."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:309
+msgid "Category"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:312
+msgid "All categories"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:336
+msgid "Rating"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:339
+msgid "All ratings"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:340
+msgid "★☆☆☆☆ (1+)"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:341
+msgid "★★☆☆☆ (2+)"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:342
+msgid "★★★☆☆ (3+)"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:343
+msgid "★★★★☆ (4+)"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:344
+msgid "★★★★★"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:363
+#: .\sightseeing\templates\homepage.html:368
+msgid "Start Your Journey"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:369
+msgid "Why should you choose us?"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:370
+msgid "What we offer"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:376
+msgid "offers best prices"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:377
+msgid ""
+"Not only will we give you a reasonable pricing, our personalization allow "
+"you to fit your budget. A good vacation is where finance isn't a concern."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:383
+msgid "Trustworthy reviews"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:384
+msgid ""
+"We made sure that all of our reviews come from authentic travelers who have "
+"used our service and will monitor for any bots that may appear."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:389
+msgid "satisfaction guaranteed"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:390
+msgid ""
+"We are extremely dedicated to our craft, focusing on your personalization. "
+"You won't leave dissatisfied with our services."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:396
+msgid "Navigation and suggestion"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:398
+msgid ""
+"We provide routes to nearby attractions, curated based on your previous "
+"preferences and plans your trip for easy scheduling."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:409
+msgid "Ask. Explore. Connect"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:410
+msgid "Your trip, Your way"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:411
+msgid "Top Spots, Hotels & Dining"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:412
+msgid ""
+"Get insider tips and advices from locals in real-time chat forums for an "
+"epic journey."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:413
+msgid ""
+"Find top attractions with nearby hotels and restaurants tailored to your "
+"preferences."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:414
+msgid ""
+"Easily create your travel itinerary and organize every part of your journey."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:415
+msgid "Explore"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:416
+msgid "Schedule"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:417
+msgid "Connect"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:424
+msgid "Explore the Country"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:425
+msgid "Popular Destinations"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:426
+msgid "Discover amazing places and book your perfect stay"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:431
+msgid "Imperial Capital Hue"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:432
+msgid "Hue City"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:433
+msgid "★★★★☆ (9236 reviews)"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:434
+msgid "\\"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:435
+#: .\sightseeing\templates\homepage.html:447
+#: .\sightseeing\templates\homepage.html:458
+msgid "Details"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:436
+msgid "200.000"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:436
+#: .\sightseeing\templates\homepage.html:459
+msgid "đ"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:436
+#: .\sightseeing\templates\homepage.html:459
+msgid "/Person"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:443
+msgid "Hoang Kiem Lake"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:444
+msgid "Hanoi"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:445
+msgid "★★★☆☆ (837 reviews)"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:446
+msgid ""
+"“A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the "
+"iconic crimson The Huc Bridge glowing beautifully at night.”"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:448
+msgid "Free of Charge"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:454
+msgid "Sung Sot Cave"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:455
+msgid "Ha Long Bay"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:456
+msgid "★★★★★ (3618 reviews)"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:457
+msgid ""
+"“The largest and most spectacular cave in Ha Long Bay, featuring massive "
+"chambers, dramatic rock formations, and colorful illuminated pathways.”"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:459
+msgid "250.000"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:483
+msgid "INTRODUCING:"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:483
+msgid "TRIP PLANNER"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:487
+msgid ""
+"Have your trip planned with just the click of a button, the future of "
+"travelling"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:492
+msgid ""
+"Allow us to help schedule your vacation. We provide a flexible itinerary "
+"that maximizes your visits to attractions while allowing time to relax and "
+"enjoy local delicacies and landmarks."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:506
+msgid "LOCAL"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:506
+msgid "GUIDE"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:509
+msgid ""
+"We are currently developing a new feature that allows you to have a direct "
+"chat with local residents. Allowing you to discover attractions such as "
+"hidden sceneries, food vendors and hotels."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:522
+msgid "Travel Assistant"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:525
+msgid "Hello! How can I help you today?"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:528
+msgid "Type a message..."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:661
+msgid "This project of Group 8 is to not be copied due to copyright law."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:661
+msgid ""
+"This project is for educational purposes only and is not intended for "
+"commercial use."
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:664
+msgid "This"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:664
+msgid "One Page Template"
+msgstr ""
+
+#: .\sightseeing\templates\homepage.html:664
+msgid "was created with Nicepage Builder"
+msgstr ""

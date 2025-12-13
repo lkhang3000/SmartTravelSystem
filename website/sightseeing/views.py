@@ -7,15 +7,15 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 import json
 import os
+import traceback
 from datetime import datetime, timedelta
 from .Services.recommender import get_recommender
 from django.core.paginator import Paginator
-
 from sightseeing.models import Destinations, Hotel
 import random
-
 from django.http import JsonResponse
 from datetime import datetime
+from django.views.decorators.http import require_POST
 
 def update_trip(request):
     if request.method == "POST":
@@ -553,184 +553,78 @@ def contact_us(request):
     return render(request, 'Contact-us.html')
 
 def trip_planner(request):
-    # Get trip data from session
-    destination = request.session.get('trip_destination', 'Unknown')
-    departure_date = request.session.get('trip_departure', '')
-    arrival_date = request.session.get('trip_arrival', '')
+    # Lấy thông tin trip từ session
+    destination_name = request.session.get('trip_destination', 'Your Destination')
+    departure_date = request.session.get('trip_start', '')
+    arrival_date = request.session.get('trip_end', '')
     budget = request.session.get('trip_budget', 0)
-    travelers = request.session.get('trip_travelers', 1)
+    travelers = request.session.get('trip_travelers', 2)
     price_per_person = request.session.get('trip_price_per_person', '')
-    
-    recommendations = Destinations.objects.filter(location__locationName__icontains=destination)
+    trip_map_url = request.session.get('trip_map_url', None)
+    trip_image_url = request.session.get('trip_image_url', None)
 
-    # Calculate number of days
-    num_days = 7  # default
+    # Lấy danh sách địa điểm theo location
+    destinations = Destinations.objects.none()  # Empty queryset by default
+    
+    if destination_name and destination_name != 'Your Destination':
+        # Try to find destinations by location name
+        try:
+            destinations = Destinations.objects.filter(
+                location__locationName__icontains=destination_name
+            )[:20]  # Limit to 20 results
+        except Exception as e:
+            print(f"Error loading destinations: {e}")
+            destinations = Destinations.objects.all()[:10]
+    else:
+        # Show random destinations if no trip destination set
+        destinations = Destinations.objects.all().order_by('?')[:10]
+
+    # Lấy các địa điểm đã lưu trong trip
+    trip_items = []
+    if request.user.is_authenticated:
+        trip_items = TripItem.objects.filter(user=request.user).select_related('destination', 'hotel')
+
+    # Tính số ngày
     days = []
+    num_days = 0
     date_range = ''
+    
     if departure_date and arrival_date:
         try:
-            dep = datetime.strptime(departure_date, '%d/%m/%Y').date()
-            arr = datetime.strptime(arrival_date, '%d/%m/%Y').date()
+            dep = datetime.strptime(departure_date, '%Y-%m-%d').date()
+            arr = datetime.strptime(arrival_date, '%Y-%m-%d').date()
             num_days = (arr - dep).days + 1
-            if num_days < 1:
-                num_days = 1
             date_range = f"{dep.strftime('%m/%d')} – {arr.strftime('%m/%d')}"
             for i in range(num_days):
                 day_date = dep + timedelta(days=i)
-                day_name = day_date.strftime('%A')
-                day_short = day_date.strftime('%m/%d')
-                full_name = f"{day_name}, {day_date.strftime('%B %d')}"
                 days.append({
                     'date': day_date,
-                    'day_name': day_name,
-                    'day_short': day_short,
-                    'full_name': full_name
+                    'day_name': day_date.strftime('%A'),
+                    'day_short': day_date.strftime('%a %m/%d'),
+                    'full_name': f"{day_date.strftime('%A')}, {day_date.strftime('%B %d')}"
                 })
-        except:
-            num_days = 7
-    
-    # Ensure integers
-    try:
-        budget = int(budget) if budget else 0
-    except:
-        budget = 0
-    try:
-        travelers = int(travelers) if travelers else 1
-    except:
-        travelers = 1
-    
-    # Get personalized recommendations for authenticated users
-    personalized_recommendations = []
-    if request.user.is_authenticated:
-        try:
-            recommender = get_recommender()
-            user_profile = UsersProfile.objects.filter(user=request.user).first()
-            if user_profile and user_profile.custom_user_id:
-                collab_recommendations = recommender.recommend_for_user(user_profile.custom_user_id, top_n=6)
-                if not collab_recommendations.empty:
-                    print(f"Found {len(collab_recommendations)} personalized recommendations for trip planner")
-                    for _, row in collab_recommendations.iterrows():
-                        try:
-                            dest = Destinations.objects.get(destination_id=row['destination_id'])
-                            rec_dict = {
-                                'id': dest.id,
-                                'name': dest.desName,
-                                'location': dest.location.locationName if dest.location else 'Unknown',
-                                'category': dest.category or 'General',
-                                'rating': dest.rating or 0.0,
-                                'image_url': dest.image_url or 'https://picsum.photos/seed/default/400/300',
-                                'price_range': dest.price_range or 'Contact for pricing'
-                            }
-                            personalized_recommendations.append(rec_dict)
-                        except Destinations.DoesNotExist:
-                            continue
         except Exception as e:
-            print(f"Error getting personalized recommendations: {e}")
+            print(f"Error parsing dates: {e}")
+            num_days = 0
+            days = []
     
-    # Fallback to popular destinations if no personalized recommendations
-    if not personalized_recommendations:
-        try:
-            recommender = get_recommender()
-            popular_dests = recommender.get_popular_destinations(top_n=6)
-            if not popular_dests.empty:
-                for _, row in popular_dests.iterrows():
-                    try:
-                        dest = Destinations.objects.get(destination_id=row['destination_id'])
-                        rec_dict = {
-                            'id': dest.id,
-                            'name': dest.desName,
-                            'location': dest.location.locationName if dest.location else 'Unknown',
-                            'category': dest.category or 'General',
-                            'rating': dest.rating or 0.0,
-                            'image_url': dest.image_url or 'https://picsum.photos/seed/default/400/300',
-                            'price_range': dest.price_range or 'Contact for pricing'
-                        }
-                        personalized_recommendations.append(rec_dict)
-                    except Destinations.DoesNotExist:
-                        continue
-        except Exception as e:
-            print(f"Error getting popular destinations: {e}")
-    
-    # Get user's trip items
-    trip_items = []
-    checked_state = {}
-    for item in TripItem.objects.filter(user=request.user).select_related('destination', 'hotel'):
-        if item.destination:
-            name = item.destination.desName
-            address = item.destination.address
-            price_range = item.destination.price_range
-        elif item.hotel:
-            name = item.hotel.name
-            address = item.hotel.address
-            price_range = f"{item.hotel.price} VND/night" if item.hotel.price else "Contact for pricing"
-        else:
-            name = 'Unknown'
-            address = ''
-            price_range = ''
-        trip_items.append({
-            'id': item.id,
-            'destination__desName': name,
-            'destination__address': address,
-            'destination__price_range': price_range
-        })
-        
-        # Build checked state
-        if item.day:
-            if item.day not in checked_state:
-                checked_state[item.day] = {}
-            checked_state[item.day][trip_items.index(trip_items[-1])] = True
-    
-    import json
-    trip_items_json = json.dumps(trip_items)
-    checked_state_json = json.dumps(checked_state)
-    recommendations_json = json.dumps(personalized_recommendations)
-    
-    recommended_list = []
-    for d in recommendations:
-        recommended_list.append({
-            "id": d.id,
-            "name": d.desName,
-            "location": d.location.locationName if d.location else "Unknown",
-            "category": d.category or "General",
-            "rating": d.rating or 0.0,
-            "image_url": d.image_url or "https://picsum.photos/seed/default/400/300",
-            "price_range": d.price_range or ""
-        })
-
     context = {
-        'destination': destination,
+        'destinations': destinations,
+        'trip_items': trip_items,
+        'trip_destination': destination_name,
         'departure_date': departure_date,
         'arrival_date': arrival_date,
         'budget': budget,
         'travelers': travelers,
         'price_per_person': price_per_person,
-        'num_days': num_days,
+        'trip_map_url': trip_map_url,
+        'trip_image_url': trip_image_url,
         'days': days,
+        'num_days': num_days,
         'date_range': date_range,
-        'trip_items': trip_items,
-        'trip_items_json': trip_items_json,
-        'checked_state_json': checked_state_json,
-        'recommendations_json': recommendations_json,
-        'explore_recommendations': recommended_list,
-        'explore_recommendations_json': json.dumps(recommended_list),
     }
     
-    destination_name = request.session.get('trip_destination', None)
-    
-    destinations = []
-    if destination_name:
-        # Lọc destination theo tên user chọn
-        destinations = Destinations.objects.filter(location__locationName=destination_name)
-
-    return render(request, 'Trip-planner.html', {
-        'destinations': destinations,
-        'trip_destination': destination_name,
-        'trip_map_url': request.session.get('trip_map_url', None),
-        'trip_image_url': request.session.get('trip_image_url', None),
-        'trip_budget': request.session.get('trip_budget', None),
-        'trip_travelers': request.session.get('trip_travelers', None),
-        'trip_price_per_person': request.session.get('trip_price_per_person', None)
-    })
+    return render(request, 'Trip-planner.html', context)
 
 def input_trip_planner(request):
     # Get all locations for destination dropdown
@@ -831,27 +725,39 @@ def trip_form(request):
 @csrf_exempt
 def update_trip_settings(request):
     """Update trip settings via AJAX"""
-    if request.method == 'POST' and request.user.is_authenticated:
+    if request.method == 'POST':
         try:
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
             travelers = request.POST.get('travelers')
             budget = request.POST.get('budget')
+            trip_type = request.POST.get('trip_type')
             
             # Update session
+            if start_date:
+                request.session['trip_start'] = start_date
+            if end_date:
+                request.session['trip_end'] = end_date
             if travelers:
                 request.session['trip_travelers'] = int(travelers)
             if budget:
                 request.session['trip_budget'] = int(budget)
+            if trip_type:
+                request.session['trip_type'] = trip_type
             
-            return JsonResponse({'success': True})
+            request.session.modified = True
+            
+            return JsonResponse({'success': True, 'message': 'Settings updated successfully'})
         except Exception as e:
+            print(f"Error updating trip settings: {e}")
             return JsonResponse({'success': False, 'error': str(e)})
     
-    return JsonResponse({'success': False, 'error': 'Invalid request'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
 @csrf_exempt
 def add_to_trip(request, destination_id):
-    """Add destination to user's trip list"""
+    """Add destination to user's trip list - For Trip Planner page"""
     if not request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'success': False, 'message': 'Please login to add destinations to your trip.'})
@@ -883,32 +789,111 @@ def add_to_trip(request, destination_id):
                 messages.info(request, f'{destination.desName} is already in your trip.')
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                     return JsonResponse({'success': False, 'message': f'{destination.desName} is already in your trip.'})
+        except Destinations.DoesNotExist:
+            messages.error(request, 'Destination not found.')
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'message': 'Destination not found.'})
         except Exception as e:
             print(f"Error in add_to_trip: {e}")
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'message': 'An error occurred while adding to trip.'})
             messages.error(request, 'An error occurred while adding to trip.')
     
-    if not request.headers.get('x-requested-with'):
-        return redirect(request.META.get('HTTP_REFERER', 'home'))
+    # Always return HttpResponse - redirect to previous page or trip planner
+    return redirect(request.META.get('HTTP_REFERER', 'trip_planner'))
+
+@csrf_exempt
+def add_destination_to_trip(request, destination_id):
+    """Add destination to user's trip list - For other pages (detail, recommend, etc.)"""
+    if not request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'message': 'Please login to add destinations to your trip.'})
+        messages.error(request, 'Please login to add destinations to your trip.')
+        return redirect('login_page')
+    
+    try:
+        destination = Destinations.objects.get(id=destination_id)
+        trip_item, created = TripItem.objects.get_or_create(
+            user=request.user,
+            destination=destination
+        )
+        
+        if created:
+            messages.success(request, f'Added {destination.desName} to your trip!')
+            # Update user preference score
+            try:
+                from .Services.search_history_utils import update_user_preference_score
+                update_user_preference_score(request.user, destination)
+            except:
+                pass
+            
+            # Return JSON for AJAX
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Added {destination.desName} to your trip!',
+                    'item_id': trip_item.id,
+                    'item_name': destination.desName
+                })
+        else:
+            messages.info(request, f'{destination.desName} is already in your trip.')
+            # Return JSON for AJAX
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'message': f'{destination.desName} is already in your trip.'
+                })
+            
+    except Destinations.DoesNotExist:
+        messages.error(request, 'Destination not found.')
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'message': 'Destination not found.'})
+    except Exception as e:
+        print(f"Error in add_destination_to_trip: {e}")
+        messages.error(request, 'An error occurred while adding to trip.')
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'message': 'An error occurred while adding to trip.'})
+    
+    # Redirect back to previous page for non-AJAX
+    return redirect(request.META.get('HTTP_REFERER', 'recommend_result'))
 
 def remove_from_trip(request, trip_item_id):
     """Remove destination from user's trip list"""
-    if request.user.is_authenticated:
-        try:
-            trip_item = TripItem.objects.get(id=trip_item_id, user=request.user)
-            if trip_item.destination:
-                item_name = trip_item.destination.desName
-            elif trip_item.hotel:
-                item_name = trip_item.hotel.name
-            else:
-                item_name = "Unknown"
-            trip_item.delete()
-            messages.success(request, f'Removed {item_name} from your trip.')
-        except TripItem.DoesNotExist:
-            messages.error(request, 'Trip item not found.')
+    if not request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'message': 'Please login to remove items.'})
+        messages.error(request, 'Please login to manage your trip.')
+        return redirect('login_page')
     
-    return redirect('trip_list')
+    try:
+        trip_item = TripItem.objects.get(id=trip_item_id, user=request.user)
+        
+        if trip_item.destination:
+            item_name = trip_item.destination.desName
+        elif trip_item.hotel:
+            item_name = trip_item.hotel.name
+        else:
+            item_name = "Unknown"
+        
+        trip_item.delete()
+        
+        # Return JSON for AJAX requests
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': f'Removed {item_name} from your trip.',
+                'item_name': item_name
+            })
+        
+        # Redirect for non-AJAX requests
+        messages.success(request, f'Removed {item_name} from your trip.')
+        return redirect('trip_list')
+        
+    except TripItem.DoesNotExist:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'message': 'Trip item not found.'})
+        messages.error(request, 'Trip item not found.')
+        return redirect('trip_list')
 
 def add_hotel_to_trip(request, hotel_id):
     """Add hotel to user's trip list"""
@@ -927,8 +912,6 @@ def add_hotel_to_trip(request, hotel_id):
             )
             if created:
                 messages.success(request, f'Added {hotel.name} to your trip!')
-                # Update user preference score after adding to trip (for hotel, maybe lower score)
-                # For now, skip or add to search history with hotel_id
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                     return JsonResponse({
                         'success': True, 
@@ -948,14 +931,13 @@ def add_hotel_to_trip(request, hotel_id):
                 return JsonResponse({'success': False, 'message': 'Hotel not found.'})
         except Exception as e:
             print(f"Error in add_hotel_to_trip: {e}")
-            import traceback
             traceback.print_exc()
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'message': 'An error occurred while adding to trip.'})
             messages.error(request, 'An error occurred while adding to trip.')
     
-    if not request.headers.get('x-requested-with'):
-        return redirect(request.META.get('HTTP_REFERER', 'home'))
+    # Always return HttpResponse - redirect to previous page or trip planner
+    return redirect(request.META.get('HTTP_REFERER', 'trip_planner'))
 
 def trip_list(request):
     """Display user's trip list"""
@@ -1005,4 +987,62 @@ def save_day_selections(request):
             return JsonResponse({'success': False, 'message': 'An error occurred while saving.'})
     
     return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+@csrf_exempt
+@require_POST
+def auto_fill_day(request):
+    """Gợi ý các địa điểm cho một ngày trong trip"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Please login to use auto-fill.'})
+    try:
+        data = json.loads(request.body)
+        day = data.get('day')
+        # Lấy các địa điểm chưa được chọn cho ngày này
+        trip_items = TripItem.objects.filter(user=request.user, day__isnull=True).select_related('destination')
+        # Gợi ý: chọn ngẫu nhiên 2-3 địa điểm chưa chọn
+        suggested = random.sample(list(trip_items), min(3, trip_items.count())) if trip_items.count() > 0 else []
+        result = [
+            {
+                'id': item.id,
+                'name': item.destination.desName if item.destination else '',
+                'address': item.destination.address if item.destination else '',
+                'image_url': item.destination.image_url if item.destination else ''
+            }
+            for item in suggested
+        ]
+        # Gán các item này vào ngày
+        for item in suggested:
+            item.day = day
+            item.save()
+        return JsonResponse({'success': True, 'suggested': result})
+    except Exception as e:
+        print(f"Error in auto_fill_day: {e}")
+        return JsonResponse({'success': False, 'message': 'Error auto-filling day.'})
+
+@csrf_exempt
+@require_POST
+def optimize_route(request):
+    """Tối ưu thứ tự các địa điểm cho một ngày (ví dụ: theo rating)"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Please login to optimize route.'})
+    try:
+        data = json.loads(request.body)
+        day = data.get('day')
+        # Lấy các địa điểm đã chọn cho ngày này
+        trip_items = TripItem.objects.filter(user=request.user, day=day).select_related('destination')
+        # Sắp xếp theo rating giảm dần
+        sorted_items = sorted(trip_items, key=lambda x: x.destination.rating if x.destination else 0, reverse=True)
+        result = [
+            {
+                'id': item.id,
+                'name': item.destination.desName if item.destination else '',
+                'address': item.destination.address if item.destination else '',
+                'image_url': item.destination.image_url if item.destination else ''
+            }
+            for item in sorted_items
+        ]
+        return JsonResponse({'success': True, 'optimized': result})
+    except Exception as e:
+        print(f"Error in optimize_route: {e}")
+        return JsonResponse({'success': False, 'message': 'Error optimizing route.'})
 
