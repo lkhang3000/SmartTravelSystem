@@ -27,11 +27,10 @@
             width: 100%;
         }
 
-        /* CỘT TRÁI: HÌNH ẢNH */
+        /* --- THAY ĐỔI 1: CẬP NHẬT HÌNH ẢNH BÊN TRÁI --- */
         .split-image-side {
             flex: 1.2; 
-            /* Ảnh Vịnh Hạ Long */
-            background-image: url('{% static "images/sunSet.png" %}');           
+            background-image: url('{% static "images/The-Colors-Of-The-Rice.jpg" %}');
             background-size: cover;     
             background-position: center;
             position: relative;
@@ -49,7 +48,7 @@
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            /* justify-content: center;  <-- Bỏ dòng này để content bắt đầu từ trên xuống, giúp margin-top của logo hoạt động tốt hơn */
             align-items: center;
             padding: 40px;
             overflow-y: auto;
@@ -61,11 +60,13 @@
             text-align: center;
         }
 
-        /* LOGO & TEXT - ĐÃ ĐỒNG BỘ FONT VỚI SIGNUP */
+        /* --- THAY ĐỔI 2: ĐẨY LOGO XUỐNG THẤP HƠN --- */
         .login-logo {
-            width: 120px; /* Chỉnh size bằng trang Signup (120px) */
+            width: 120px;
             height: auto;
             margin-bottom: 15px;
+            /* Thêm margin-top để đẩy logo xuống. Tăng giảm giá trị này tùy ý. */
+            margin-top: 50px; 
         }
 
         .login-title {
@@ -180,8 +181,12 @@
             .split-form-side {
                 flex: 1;
                 padding: 20px;
-                padding-top: 40px;
+                /* padding-top: 40px; <- Có thể cần điều chỉnh lại cái này trên mobile nếu logo bị đẩy xuống quá sâu */
                 justify-content: flex-start;
+            }
+             /* Trên mobile, có thể giảm margin-top của logo đi một chút nếu cần */
+            .login-logo {
+                 margin-top: 30px;
             }
         }
     </style>
