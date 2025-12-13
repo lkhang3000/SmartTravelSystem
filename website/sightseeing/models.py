@@ -76,7 +76,12 @@ class Trip(models.Model):
     arrival_date = models.DateField(null=True, blank=True)
     budget = models.IntegerField(null=True, blank=True)  # Budget in million VND
     travelers = models.IntegerField(default=1, null=True, blank=True)
-    price_per_person = models.IntegerField(null=True, blank=True)  # Price per person in VND
+    price_per_person = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )  # Price per person in VND
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
