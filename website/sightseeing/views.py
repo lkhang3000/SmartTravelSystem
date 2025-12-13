@@ -660,6 +660,18 @@ def trip_form(request):
             budget = int(budget) if budget else 0
             travelers = int(travelers) if travelers else 1
             
+            # Convert price_per_person to decimal (remove commas if present)
+            # If not provided, calculate automatically: budget (VND) / travelers
+            if price_per_person:
+                from decimal import Decimal
+                price_per_person = Decimal(price_per_person.replace(',', '').replace(' ', ''))
+            elif budget and travelers:
+                from decimal import Decimal
+                # Budget is now in VND, divide by travelers
+                price_per_person = Decimal(budget) / Decimal(travelers)
+            else:
+                price_per_person = None
+            
             # Parse dates if provided
             departure = None
             arrival = None
@@ -683,7 +695,7 @@ def trip_form(request):
                 arrival_date=arrival,
                 budget=budget,
                 travelers=travelers,
-                price_per_person=price_per_person if price_per_person else None
+                price_per_person=price_per_person
             )
             
             # Store trip data in session for trip planner
