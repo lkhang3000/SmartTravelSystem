@@ -2,6 +2,8 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <head>
   <meta charset="UTF-8" />
   <title>{% trans "Trip Planner" %}</title>
@@ -52,15 +54,15 @@
 
         <div class="nav-section">
           <p class="nav-section__title">{% trans "Itinerary" %}</p>
+
+          {% for day in days %}
           <button class="nav-item" data-section="itinerary-section">
-            <span>Mon 12/1</span>
-            <span class="nav-item__pill">3 stops</span>
+            <span>{{ day.label }}</span>
+            <span class="nav-item__pill">0 stops</span>
           </button>
-          <button class="nav-item" data-section="itinerary-section">
-            <span>Tue 12/2</span>
-            <span class="nav-item__pill">2 stops</span>
-          </button>
+          {% endfor %}
         </div>
+
 
       </nav>
     </aside>
@@ -83,7 +85,7 @@
                   {{ date_range }}
                 </span>
                 <span class="meta-pill">
-                  {{ trip_travelers }} {% trans "travelers" %}
+                  {{ travelers }} {% trans "travelers" %}
                 </span>
               </div>
 
@@ -109,27 +111,65 @@
 
           <div class="carousel-track" id="explore-carousel">
             {% for dest in destinations %}
-            <article class="explore-card">
-              <div class="explore-card__image" style="background-image: url('{{ dest.image_url }}');"></div>
-              <div class="explore-card__body">
-                <h3 class="explore-card__title">{{ dest.desName }}</h3>
-                <p class="explore-card__subtitle">{{ dest.category }} | {{ dest.ratings }}⭐</p>
-                <p class="explore-card__meta">{{ dest.address }} - {{ dest.location.locationName }}</p>
-                <p class="explore-card__description">{{ dest.description|truncatewords:20 }}</p>
-                <button class="btn btn--small btn--primary add-to-trip-btn" 
-                        data-destination-id="{{ dest.id }}">
-                  {% trans "Add to Trip" %}
-                </button>
+          <article class="explore-card">
+
+            <!-- IMAGE -->
+            <div class="explore-card__image"
+                style="background-image: url('{{ dest.image_url }}');">
+            </div>
+            <!-- ACTIONS BELOW IMAGE -->
+          <div class="explore-card__image-actions">
+
+            <!-- ADD TO TRIP -->
+            <button class="btn btn--small btn--primary add-to-trip-btn"
+                    data-destination-id="{{ dest.id }}">
+              ➕ {% trans "Add to Trip" %}
+            </button>
+
+            <!-- 📍 LOCATION -->
+            <button class="btn btn--small btn--ghost explore-location-btn"
+                    data-location="{{ dest.address }} {{ dest.location.locationName }}">
+              📍 {% trans "Location" %}
+            </button>
+
+          </div>
+
+            <!-- BODY -->
+            <div class="explore-card__body">
+              
+              <h3 class="explore-card__title">{{ dest.desName }}</h3>
+              <p class="explore-card__subtitle">
+                {{ dest.category }} | {{ dest.ratings }}⭐
+              </p>
+              <p class="explore-card__meta">
+                {{ dest.address }} - {{ dest.location.locationName }}
+              </p>
+              <p class="explore-card__description">
+                {{ dest.description|truncatewords:20 }}
+              </p>
+
+              <!-- ✅ ACTIONS (VIEW DETAIL + ADD TO TRIP) -->
+              <div class="explore-card__actions">
+
+                <!-- VIEW DETAIL (PHẢI) -->
+                <a href="{% url 'destination_detail' dest.id %}"
+                  class="btn btn--small btn--ghost">
+                  👁 {% trans "View details" %}
+                </a>
+
               </div>
-            </article>
-            {% empty %}
-            <p>{% trans "No destinations found for" %} "{{ trip_destination }}".</p>
-            {% endfor %}
+            </div>
+
+          </article>
+
+          {% endfor %}
+
           </div>
 
           <button class="carousel-btn next-btn">❯</button>
         </div>
-      </section>      <!-- Saved Destinations -->
+      </section>      
+      <!-- Saved Destinations -->
       <div class="explore-subsection" id="saved-section">
         <h3 class="explore-subtitle">{% trans "Saved destinations" %}</h3>
 
@@ -165,7 +205,11 @@
                               data-confirm-msg="{% trans 'Remove this destination from your trip?' %}">
                         {% trans "Remove" %}
                       </button>
-
+                      <button class="btn btn--small btn--ghost explore-location-btn"
+                              data-location="{{ item.destination.address }} {{ item.destination.location.locationName }}">
+                        📍 {% trans "Location" %}
+                      </button>
+                      
                     </div>
                   </div>
                 </article>
@@ -215,51 +259,22 @@
             <span class="meta-pill__icon">📅</span>
             {{ date_range }}
           </button>
-
         </div>
 
-        <!-- Day 1 -->
+        {% for day in days %}
         <div class="itinerary-day-full">
           <div class="itinerary-day-full__head">
             <div>
-              <h3>{% trans "Monday, December 1st" %}</h3>
+              <h3>
+                {{ day.weekday }}, {{ day.date|date:"F jS" }}
+              </h3>
               <button class="link-button">{% trans "Add subheading" %}</button>
             </div>
-            <div class="itinerary-day-full__actions">
-              <button class="tiny-link">
-                {% trans "Auto-fill day" %}
-              </button>
-              <span class="dot-separator">·</span>
-              <button class="tiny-link">
-                {% trans "Optimize route" %}
-              </button>
-              <button class="icon-button icon-button--ghost">⋯</button>
-            </div>
-          </div>
 
-          <!-- Add a place bar -->
-          <div class="place-input-row">
-            <div class="place-input">
-              <span class="place-input__placeholder">{% trans "Add a place" %}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Day 2 -->
-        <div class="itinerary-day-full">
-          <div class="itinerary-day-full__head">
-            <div>
-              <h3>{% trans "Tuesday, December 2nd" %}</h3>
-              <button class="link-button">{% trans "Add subheading" %}</button>
-            </div>
             <div class="itinerary-day-full__actions">
-              <button class="tiny-link">
-                {% trans "Auto-fill day" %}
-              </button>
+              <button class="tiny-link">{% trans "Auto-fill day" %}</button>
               <span class="dot-separator">·</span>
-              <button class="tiny-link">
-                {% trans "Optimize route" %}
-              </button>
+              <button class="tiny-link">{% trans "Optimize route" %}</button>
               <button class="icon-button icon-button--ghost">⋯</button>
             </div>
           </div>
@@ -270,7 +285,9 @@
             </div>
           </div>
         </div>
+        {% endfor %}
       </section>
+
 
     </main>
 
@@ -307,11 +324,13 @@
           <div class="form-row">
             <div class="form-group">
               <label for="start-date">{% trans "Start Date" %}</label>
-              <input type="date" id="start-date" value="{{ departure_date|date:'Y-m-d' }}">
+              <input type="text" id="start-date" class="u-input-rectangle datepicker" value="{{ departure_date|date:'d/m/Y' }}" placeholder="dd/mm/yyyy">
+
             </div>
             <div class="form-group">
               <label for="end-date">{% trans "End Date" %}</label>
-              <input type="date" id="end-date" value="{{ arrival_date|date:'Y-m-d' }}">
+              <input type="text" id="end-date" class="u-input-rectangle datepicker" value="{{ arrival_date|date:'d/m/Y' }}" placeholder="dd/mm/yyyy">
+
             </div>
           </div>
         </div>
@@ -323,7 +342,7 @@
             <label for="travelers-count">{% trans "Number of Travelers" %}</label>
             <div class="counter-control">
               <button type="button" class="counter-btn" id="decrease-travelers">-</button>
-              <input type="number" id="travelers-count" min="0" max="20" step="1" value="{{ trip_travelers }}" readonly>
+              <input type="number" id="travelers-count" min="0" max="20" step="1" value="{{ travelers }}" readonly>
 
               <button type="button" class="counter-btn" id="increase-travelers">+</button>
             </div>
@@ -755,6 +774,55 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const startInput = document.getElementById("start-date");
+    const endInput   = document.getElementById("end-date");
+
+    const startPicker = flatpickr(startInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            if (selectedDates.length > 0) {
+                endPicker.set("minDate", selectedDates[0]);
+
+                if (
+                    endPicker.selectedDates.length > 0 &&
+                    endPicker.selectedDates[0] < selectedDates[0]
+                ) {
+                    endPicker.clear();
+                }
+            }
+        }
+    });
+
+    const endPicker = flatpickr(endInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true
+    });
+
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  document.querySelectorAll('.explore-location-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const location = btn.dataset.location;
+      const iframe = document.querySelector('.map-pane__body iframe');
+
+      if (iframe && location) {
+        iframe.src = 
+          `https://maps.google.com/maps?output=embed&q=${encodeURIComponent(location)}&z=16`;
+      }
+    });
+  });
+
 });
 </script>
 

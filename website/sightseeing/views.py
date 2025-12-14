@@ -16,6 +16,7 @@ import random
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.http import require_POST
+from datetime import timedelta
 
 def update_trip(request):
     if request.method == "POST":
@@ -555,6 +556,8 @@ def contact_us(request):
 def trip_planner(request):
     # Lấy thông tin trip từ session
     destination_name = request.session.get('trip_destination', 'Your Destination')
+    from datetime import datetime
+
     departure_raw = request.session.get('trip_start_date')
     arrival_raw = request.session.get('trip_end_date')
 
@@ -562,9 +565,17 @@ def trip_planner(request):
     arrival_date = None
 
     if departure_raw:
-        departure_date = datetime.fromisoformat(departure_raw).date()
+        try:
+            departure_date = datetime.fromisoformat(departure_raw).date()
+        except ValueError:
+            departure_date = datetime.strptime(departure_raw, "%Y-%m-%d").date()
+
     if arrival_raw:
-        arrival_date = datetime.fromisoformat(arrival_raw).date()
+        try:
+            arrival_date = datetime.fromisoformat(arrival_raw).date()
+        except ValueError:
+            arrival_date = datetime.strptime(arrival_raw, "%Y-%m-%d").date()
+
 
     budget = request.session.get('trip_budget', 0)
     travelers = request.session.get('trip_travelers', 1)
@@ -596,13 +607,28 @@ def trip_planner(request):
     if request.user.is_authenticated:
         trip_items = TripItem.objects.filter(user=request.user).select_related('destination', 'hotel')
 
-    # Tính số ngày
     days = []
     num_days = 0
     date_range = ''
 
     if departure_date and arrival_date:
         date_range = f"{departure_date.strftime('%m/%d')} – {arrival_date.strftime('%m/%d')}"
+
+        current = departure_date
+        index = 1
+
+        while current <= arrival_date:
+            days.append({
+                'index': index,
+                'date': current,
+                'weekday': current.strftime('%A'),
+                'label': current.strftime('%a %m/%d')
+            })
+            current += timedelta(days=1)
+            index += 1
+
+        num_days = len(days)
+
 
     context = {
         'destinations': destinations,
@@ -720,36 +746,39 @@ def trip_form(request):
 
 @csrf_exempt
 def update_trip_settings(request):
-    """Update trip settings via AJAX"""
     if request.method == 'POST':
         try:
-            start_date = request.POST.get('start_date')
-            end_date = request.POST.get('end_date')
             travelers = request.POST.get('travelers')
             budget = request.POST.get('budget')
             trip_type = request.POST.get('trip_type')
-            
-            # Update session
-            if start_date:
-                request.session['trip_start'] = start_date
-            if end_date:
-                request.session['trip_end'] = end_date
+
+            from datetime import datetime
+
+            start_date_raw = request.POST.get('start_date')
+            end_date_raw = request.POST.get('end_date')
+
+            if start_date_raw:
+                start_date = datetime.strptime(start_date_raw, "%d/%m/%Y").date()
+                request.session['trip_start_date'] = start_date.isoformat()
+
+            if end_date_raw:
+                end_date = datetime.strptime(end_date_raw, "%d/%m/%Y").date()
+                request.session['trip_end_date'] = end_date.isoformat()
+
             if travelers:
                 request.session['trip_travelers'] = int(travelers)
             if budget:
                 request.session['trip_budget'] = int(budget)
             if trip_type:
                 request.session['trip_type'] = trip_type
-            
-            request.session.modified = True
-            
-            return JsonResponse({'success': True, 'message': 'Settings updated successfully'})
-        except Exception as e:
-            print(f"Error updating trip settings: {e}")
-            return JsonResponse({'success': False, 'error': str(e)})
-    
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
+            request.session.modified = True
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False})
 
 @csrf_exempt
 def add_to_trip(request, destination_id):
