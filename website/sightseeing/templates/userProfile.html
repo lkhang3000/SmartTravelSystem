@@ -139,6 +139,14 @@
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
         }
+        .messages li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .messages li.error { background-color: #f8d7da; color: #842029; }
+        .messages li.success { background-color: #d1e7dd; color: #0f5132; }
 
         .profile-avatar {
             width: 80px;
@@ -550,24 +558,34 @@
 
 
         <div id="security" class="content-section">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             <h2>{% trans "Security & Password" %}</h2>
-            <form>
+            <form method="POST" action="{% url 'change_password' %}">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="current_password">{% trans "Current Password" %}</label>
-                    <input type="password" id="current_password">
+                    <input type="password" id="current_password" name="current_password" required>
                 </div>
                 <div class="form-group">
                     <label for="new_password">{% trans "New Password" %}</label>
-                    <input type="password" id="new_password">
+                    <input type="password" id="new_password" name="new_password" required>
                 </div>
                 <div class="form-group">
                     <label for="confirm_password">{% trans "Confirm New Password" %}</label>
-                    <input type="password" id="confirm_password">
+                    <input type="password" id="confirm_password" name="confirm_password" required>
                 </div>
                 <div class="save-changes-btn">
                     <button type="submit" class="smart-btn">{% trans "Change Password" %}</button>
                 </div>
             </form>
+
         </div>
 
         <div id="saved-planners" class="content-section">

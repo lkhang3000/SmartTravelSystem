@@ -17,6 +17,41 @@ from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.http import require_POST
 from datetime import timedelta
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth import update_session_auth_hash
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        user = request.user
+
+        # Kiểm tra password hiện tại
+        if not user.check_password(current_password):
+            messages.error(request, "Current password is incorrect.")
+            return redirect('user_profile')  # hoặc trang profile của bạn
+
+        # Kiểm tra password mới trùng
+        if new_password != confirm_password:
+            messages.error(request, "New password and confirmation do not match.")
+            return redirect('user_profile')
+
+        # Update password
+        user.set_password(new_password)
+        user.save()
+
+        # Giữ phiên đăng nhập sau khi đổi password
+        update_session_auth_hash(request, user)
+
+        messages.success(request, "Your password has been changed successfully.")
+        return redirect('user_profile')
+
+    return redirect('user_profile')
 
 def update_trip(request):
     if request.method == "POST":
