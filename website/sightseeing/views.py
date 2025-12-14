@@ -23,6 +23,28 @@ from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 
 @login_required
+def change_email(request):
+    if request.method == "POST":
+        new_email = request.POST.get("new_email")
+        current_password = request.POST.get("current_password")
+
+        user = request.user
+
+        if not user.check_password(current_password):
+            messages.error(
+                request,
+                "Current password is incorrect.",
+                extra_tags="change_email"
+            )
+            return redirect("user_profile")
+        
+        user.email = new_email
+        user.save()
+
+        messages.success(request, "Email updated successfully.")
+        return redirect("user_profile")
+
+@login_required
 def change_password(request):
     if request.method == "POST":
         current_password = request.POST.get('current_password')

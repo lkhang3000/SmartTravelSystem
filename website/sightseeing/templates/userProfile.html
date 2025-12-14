@@ -281,6 +281,14 @@
             border-bottom: 1px dashed #eee;
             font-size: 15px;
         }
+        .email-error {
+            background: #f8d7da;
+            color: #842029;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
 
         .history-item:last-child {
             border-bottom: none;
@@ -388,11 +396,72 @@
             align-items: center;
             height: 30px;
         }
+        .change-email-btn {
+            margin-left: 10px;
+            padding: 4px 12px;
+            font-size: 13px;
+            border-radius: 20px;
+            border: 1px solid #1e76ff;
+            background: white;
+            color: #1e76ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .change-email-btn:hover {
+            background: #1e76ff;
+            color: white;
+        }
 
         .calendar-grid span.prev-month, 
         .calendar-grid span.next-month {
             color: #ccc;
             cursor: default;
+        }
+        /* ===== Change Email Modal ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-box h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-cancel {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
         }
 
         .calendar-grid span:not(.prev-month):not(.next-month):hover {
@@ -486,7 +555,13 @@
                     class="profile-avatar" alt="User Avatar">
                 <div class="profile-details">
                     <p><strong>{% trans "Username" %}:</strong> {{ user.username }}</p>
-                    <p><strong>{% trans "Email" %}:</strong> user@example.com</p>
+                    <p>
+                        <strong>{% trans "Email" %}:</strong> {{ request.user.email }}
+                        <button type="button" class="change-email-btn">
+                            {% trans "Change Email" %}
+                        </button>
+                    </p>
+
                 </div>
             </div>
 
@@ -877,5 +952,75 @@
         // --- KẾT THÚC LOGIC MINI CALENDAR ---
     });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const changeEmailBtn = document.querySelector('.change-email-btn');
+    const emailModal = document.getElementById('changeEmailModal');
+    const cancelBtn = document.querySelector('.modal-cancel');
+
+    if (!changeEmailBtn || !emailModal || !cancelBtn) return;
+
+    changeEmailBtn.addEventListener('click', () => {
+        emailModal.classList.add('active');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        emailModal.classList.remove('active');
+    });
+
+    emailModal.addEventListener('click', (e) => {
+        if (e.target === emailModal) {
+            emailModal.classList.remove('active');
+        }
+    });
+});
+</script>
+
+<!-- Change Email Modal -->
+<div id="changeEmailModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3>{% trans "Change Email" %}</h3>
+        {% if messages %}
+            {% for message in messages %}
+                {% if 'change_email' in message.tags %}
+                    <div class="email-error">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <form method="POST" action="{% url 'change_email' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>{% trans "New Email" %}</label>
+                <input type="email" name="new_email" required>
+            </div>
+
+            <div class="form-group">
+                <label>{% trans "Current Password" %}</label>
+                <input type="password" name="current_password" required>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="modal-cancel">{% trans "Cancel" %}</button>
+                <button type="submit" class="smart-btn">{% trans "Update Email" %}</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const emailModal = document.getElementById('changeEmailModal');
+
+    {% for message in messages %}
+        {% if 'change_email' in message.tags %}
+            emailModal.classList.add('active');
+        {% endif %}
+    {% endfor %}
+});
+</script>
+
 </body>
 </html>
