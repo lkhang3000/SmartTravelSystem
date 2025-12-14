@@ -222,12 +222,36 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            flatpickr(".datepicker", {
+
+            // === DATE PICKER START / END ===
+            const startInput = document.querySelector('input[name="departure"]');
+            const endInput   = document.querySelector('input[name="arrival"]');
+
+            const startPicker = flatpickr(startInput, {
                 dateFormat: "d/m/Y",
                 minDate: "today",
-                disableMobile: "true"
+                disableMobile: true,
+                onChange: function (selectedDates) {
+                    if (selectedDates.length > 0) {
+                        endPicker.set("minDate", selectedDates[0]);
+
+                        // Nếu end date < start date thì clear
+                        if (endPicker.selectedDates.length > 0 &&
+                            endPicker.selectedDates[0] < selectedDates[0]) {
+                            endPicker.clear();
+                        }
+                    }
+                }
             });
 
+            const endPicker = flatpickr(endInput, {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                disableMobile: true
+            });
+
+
+            // === BUDGET CALCULATION (GIỮ NGUYÊN) ===
             const budgetRange = document.getElementById("budgetRange");
             const budgetInput = document.getElementById("budgetInput");
             const travelersInput = document.getElementById("travelers");
@@ -235,13 +259,16 @@
             const hiddenInput = document.getElementById("hiddenPricePerPerson");
 
             const formatCurrency = (amount) => {
-                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+                return new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(amount);
             };
 
             function updateCalculation() {
                 let budgetMillion = parseFloat(budgetRange.value) || 0;
                 let totalBudgetVND = budgetMillion * 1000000;
-                let people = parseInt(travelersInput.value) || 1; 
+                let people = parseInt(travelersInput.value) || 1;
                 if (people < 1) people = 1;
 
                 let perPerson = totalBudgetVND / people;
@@ -256,15 +283,16 @@
             });
 
             budgetInput.addEventListener("input", () => {
-                if(parseInt(budgetInput.value) > 100) budgetInput.value = 100;
+                if (parseInt(budgetInput.value) > 100) budgetInput.value = 100;
                 budgetRange.value = budgetInput.value;
                 updateCalculation();
             });
 
             travelersInput.addEventListener("input", updateCalculation);
-            
+
             updateCalculation();
         });
     </script>
+
 </body>
 </html>
