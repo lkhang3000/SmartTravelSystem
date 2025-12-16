@@ -269,7 +269,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-<<<<<<< HEAD
 
             // === DATE PICKER START / END ===
             const startInput = document.querySelector('input[name="departure"]');
@@ -290,29 +289,6 @@
                         }
                     }
                 }
-=======
-            const startPicker = flatpickr("#start-date", {
-                dateFormat: "d/m/Y",
-                minDate: "today",
-                allowInput: true,
-                monthSelectorType: "static",
-                yearSelectorType: "static",
-                closeOnSelect: false,
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length > 0) {
-                        endPicker.set('minDate', selectedDates[0]);
-                    }
-                }
-            });
-
-            const endPicker = flatpickr("#end-date", {
-                dateFormat: "d/m/Y",
-                minDate: "today",
-                allowInput: true,
-                monthSelectorType: "static",
-                yearSelectorType: "static",
-                closeOnSelect: false
->>>>>>> 747447e (update tripplanner intinerrary)
             });
 
             const endPicker = flatpickr(endInput, {
@@ -331,15 +307,10 @@
             const totalBudgetDisplay = document.getElementById("totalBudgetDisplay");
 
             const formatCurrency = (amount) => {
-<<<<<<< HEAD
                 return new Intl.NumberFormat('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 }).format(amount);
-=======
-                let million = amount / 1000000;
-                return million.toFixed(1) + " million VND";
->>>>>>> 747447e (update tripplanner intinerrary)
             };
 
             function updateCalculation() {
