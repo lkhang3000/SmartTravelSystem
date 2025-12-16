@@ -927,19 +927,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 placeCard.querySelector('.place-card__info').appendChild(noteElement);
             }
         } else {
-            // Save to database (new item) - only if day is valid
-            if (!day) {
-                console.error('❌ Cannot save: day is undefined or null');
-                return;
-            }
-            saveItineraryItem(placeData.itemId, day, existingPlaces).then(itemId => {
-                if (itemId) {
-                    placeCard.dataset.itemId = itemId;
-                    console.log('✅ Item saved with ID:', itemId);
-                } else {
-                    console.error('❌ Failed to save item to database');
-                }
-            });
+            console.log('✨ Added to UI (Pending Save)');
         }
 
         // Add note handler
@@ -1377,9 +1365,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Save button handler
-    const saveTripBtn = document.getElementById('save-trip-btn');
+  const saveTripBtn = document.getElementById('save-trip-btn');
     if (saveTripBtn) {
-        saveTripBtn.addEventListener('click', function(e) {
+        saveTripBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             console.log('💾 Save button clicked');
             saveAllItinerary();
