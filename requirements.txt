@@ -6,7 +6,9 @@ cycler==0.12.1
 Django==5.2.7
 djangorestframework==3.16.1
 fonttools==4.60.1
+google-generativeai>=0.3.0
 google_search_results==2.4.2
+gunicorn
 idna==3.11
 kiwisolver==1.4.9
 matplotlib==3.10.7
@@ -24,9 +26,8 @@ scikit-learn==1.6.1
 seaborn==0.13.2
 six==1.17.0
 sqlparse==0.5.3
+tensorflow==2.18.0
 tzdata==2025.2
 urllib3==2.5.0
-gunicorn 
-whitenoise
-google-generativeai>=0.3.0
+whitenoise==6.9.0
 

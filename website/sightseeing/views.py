@@ -116,9 +116,24 @@ def get_home(request):
             recommender = get_recommender()
             user_profile = UsersProfile.objects.filter(user=request.user).first()
             if user_profile and user_profile.custom_user_id:
-                collab_recommendations = recommender.recommend_for_user(user_profile.custom_user_id, top_n=6)
+                # Get user preferences from session if available
+                user_prefs = {}
+                user_data = request.session.get('user_preferences')
+                if user_data:
+                    prefs = user_data.get('trip_preferences', {})
+                    user_prefs = {
+                        'category': ', '.join(prefs.get('tags', [])),
+                        'budget': prefs.get('budget', 0),
+                        'duration': 3
+                    }
+
+                collab_recommendations = recommender.recommend_for_user(
+                    user_profile.custom_user_id,
+                    user_preferences=user_prefs,
+                    top_n=6
+                )
                 if not collab_recommendations.empty:
-                    print(f"Found {len(collab_recommendations)} personalized recommendations for homepage")
+                    print(f"Found {len(collab_recommendations)} personalized hybrid recommendations for homepage")
                     for _, row in collab_recommendations.iterrows():
                         try:
                             dest = Destinations.objects.get(destination_id=row['destination_id'])
@@ -129,13 +144,13 @@ def get_home(request):
                                 'category': dest.category or 'General',
                                 'rating': dest.rating or 0.0,
                                 'image_url': dest.image_url or 'https://picsum.photos/seed/default/400/300',
-                                'similarity_score': row['similarity_score']
+                                'hybrid_score': row['hybrid_score']
                             }
                             personalized_recommendations.append(rec_dict)
                         except Destinations.DoesNotExist:
                             continue
         except Exception as e:
-            print(f"Error getting personalized recommendations: {e}")
+            print(f"Error getting personalized hybrid recommendations: {e}")
     
     # Fallback to popular destinations if no personalized recommendations
     if not personalized_recommendations:
@@ -340,9 +355,24 @@ def recommend_result(request):
             recommender = get_recommender()
             user_profile = UsersProfile.objects.filter(user=request.user).first()
             if user_profile and user_profile.custom_user_id:
-                collab_recommendations = recommender.recommend_for_user(user_profile.custom_user_id, top_n=20)
+                # Extract user preferences for hybrid recommender
+                user_preferences = {}
+                if user_data:
+                    prefs = user_data.get('trip_preferences', {})
+                    user_preferences = {
+                        'category': selected_category or ', '.join(prefs.get('tags', [])),
+                        'budget': prefs.get('budget', 0),
+                        'duration': 3,  # Default duration, can be enhanced
+                        'region': prefs.get('domestic_or_international', {}).get('region', '')
+                    }
+
+                collab_recommendations = recommender.recommend_for_user(
+                    user_profile.custom_user_id,
+                    user_preferences=user_preferences,
+                    top_n=20
+                )
                 if not collab_recommendations.empty:
-                    print(f"Found {len(collab_recommendations)} collaborative recommendations")
+                    print(f"Found {len(collab_recommendations)} hybrid recommendations")
                     for _, row in collab_recommendations.iterrows():
                         # Get destination by destination_id
                         try:
@@ -357,17 +387,19 @@ def recommend_result(request):
                                 'description': dest.description or '',
                                 'price_range': dest.price_range or 'Contact for pricing',
                                 'image_url': dest.image_url or 'https://picsum.photos/seed/default/800/600',
-                                'recommendation_type': 'collaborative',
-                                'similarity_score': row['similarity_score']
+                                'recommendation_type': 'hybrid',
+                                'hybrid_score': row['hybrid_score'],
+                                'collab_score': row.get('collab_score', 0),
+                                'content_score': row.get('content_score', 0)
                             }
                             collaborative_recommendations.append(rec_dict)
                             recommendations_list.append(rec_dict)
-                            print(f"Added collaborative rec: {rec_dict['name']} (type: {rec_dict['recommendation_type']})")
+                            print(f"Added hybrid rec: {rec_dict['name']} (hybrid_score: {row['hybrid_score']:.3f})")
                         except Destinations.DoesNotExist:
                             print(f"Destination {row['destination_id']} not found in DB")
                             continue
         except Exception as e:
-            print(f"Collaborative filtering failed: {e}")
+            print(f"Hybrid recommendation failed: {e}")
 
     # Always get search results from database (content-based)
     # Start with all destinations from database
@@ -458,14 +490,12 @@ def recommend_result(request):
         recommendations_list.sort(key=lambda x: x.get('rating', 0), reverse=True)
 
     # Check if any filters are applied
-    collaborative_recommendations = recommendations_list[:10]
-    remaining_results = recommendations_list[10:]
     filters_applied = bool(selected_location or selected_category or selected_price or selected_rating)
 
-    # Implement pagination
-    if not filters_applied:
-        # No filters applied - show 20 per page
-        paginator = Paginator(recommendations_list, 10)
+    # Always implement pagination for search results
+    if not collaborative_recommendations:
+        # No collaborative recommendations - paginate all search results
+        paginator = Paginator(search_results, 10)
         page_number = request.GET.get('page', 1)
         try:
             page_number = int(page_number)
@@ -477,13 +507,33 @@ def recommend_result(request):
         except:
             page_obj = paginator.page(1)
 
-        search_results = page_obj.object_list
-        total_results = len(recommendations_list)
+        paginated_results = page_obj.object_list
+        total_results = len(search_results)
+        collaborative_recommendations = []  # Ensure it's empty
     else:
-        # Filters applied - show all results (no pagination for filtered results)
-        search_results = recommendations_list
-        page_obj = None
-        total_results = len(recommendations_list)
+        # Have collaborative recommendations - show them first, then paginate remaining
+        collaborative_recommendations = recommendations_list[:10]  # Top 10 collaborative
+        remaining_results = recommendations_list[10:]  # Rest for pagination
+        
+        if remaining_results:
+            paginator = Paginator(remaining_results, 10)
+            page_number = request.GET.get('page', 1)
+            try:
+                page_number = int(page_number)
+            except ValueError:
+                page_number = 1
+
+            try:
+                page_obj = paginator.page(page_number)
+            except:
+                page_obj = paginator.page(1)
+
+            paginated_results = page_obj.object_list
+            total_results = len(remaining_results)
+        else:
+            paginated_results = []
+            page_obj = None
+            total_results = 0
 
     # Get all locations and categories for filter dropdowns
     all_locations = Location.objects.all().order_by('locationName')
@@ -493,7 +543,7 @@ def recommend_result(request):
     context = {
         'recommendations': recommendations_list,
         'collaborative_recommendations': collaborative_recommendations,
-        'search_results': search_results,
+        'search_results': paginated_results,
         'user_preferences': user_data,
         'all_locations': all_locations,
         'all_categories': all_categories,
@@ -501,7 +551,7 @@ def recommend_result(request):
         'selected_category': selected_category,
         'selected_price': selected_price,
         'selected_rating': selected_rating,
-        'total_results': len(recommendations_list),
+        'total_results': total_results,
         'page_obj': page_obj,
         'filters_applied': filters_applied,
         'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
