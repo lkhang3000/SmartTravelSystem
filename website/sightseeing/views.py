@@ -473,11 +473,11 @@ def recommend_result(request):
         except:
             page_obj = paginator.page(1)
 
-        recommendations = page_obj.object_list
+        search_results = page_obj.object_list
         total_results = len(recommendations_list)
     else:
         # Filters applied - show all results (no pagination for filtered results)
-        recommendations = recommendations_list
+        search_results = recommendations_list
         page_obj = None
         total_results = len(recommendations_list)
 
