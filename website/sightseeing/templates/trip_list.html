@@ -22,75 +22,80 @@
     "@context": "http://schema.org",
     "@type": "Organization",
     "name": "SmartTour",
-    "logo": "{% static 'images/SmartTour11.png' %}"
+    "logo": "{% static 'images/Odyscape.png' %}"
 }</script>
     <meta name="theme-color" content="#478ac9">
-    <meta property="og:title" content="Smart Tour">
+    <meta property="og:title" content="Odyscape">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
     <meta data-intl-tel-input-cdn-path="intlTelInput/">
-</head>
-<body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en">
-    <header class="u-header"
-        style="height:123px; display:flex; align-items:center; justify-content:space-between; padding:0 30px; background:linear-gradient(90deg, #0ab1d9, #34c59d); position:sticky; top:0; z-index:1000;">
-
-    <!-- LEFT: Logo -->
-    <a href="{% url 'home' %}"
-       class="u-logo"
-       style="display:flex; align-items:center;">
-        <img src="{% static 'images/SmartTour11.png' %}"
-             style="height:130px; width:130px; display:block;"
-             alt="logo">
-    </a>
-
-    <!-- MIDDLE: Title -->
-    <a href="{% url 'home' %}" style="text-decoration:none;">
-    <p style="margin:0;
-        font-size:60px;
-        font-weight:800;
-        color:white;
-        letter-spacing:1px;
-        margin-left:40px;
-        text-shadow:0 3px 6px rgba(0,0,0,6);">
-        SMART TOUR
-    </p>
-    </a>
-
-    <!-- RIGHT: Buttons / User Menu -->
-    <div style="display:flex; gap:10px; align-items:center;">
-        {% if user.is_authenticated %}
-        <!-- Trip List Icon -->
-        <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
-            <div style="background:#F7931E; border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; transition:0.2s;"
-                 onmouseover="this.style.background='#C48300'"
-                 onmouseout="this.style.background='#F7931E'">
-                <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:24px; height:24px;">
-            </div>
-            {% if trip_count %}
-            <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold;">
-                {{ trip_count }}
-            </span>
-            {% endif %}
+<header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
+        id="header"
+        style="position: relative; width: 100%; z-index: 2000; height: 100px; min-height: 100px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: linear-gradient(90deg, #0077b6, #00b4d8, #00a8e8);"> <div style="flex: 0 0 auto;">
+        <a href="{% url 'home' %}" class="u-image u-logo u-image-1">
+            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home" style="height:100px; width:auto; display:block; margin-top:0px; margin-left:-60px;">
         </a>
+    </div>
 
-        <!-- User đã đăng nhập: hiển thị icon + dropdown -->
+    <div style="flex:1 1 auto; display:flex; align-items:center; justify-content:center; min-width:0; padding: 0 40px;">
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" style="position:relative;top:0;left:0;">
+            <div class="menu-collapse u-custom-font u-font-montserrat" style="font-size:1rem;letter-spacing:0px;">
+                <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-hover-custom-color-7" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
+                    <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#svg-ec46"></use></svg>
+                    <svg class="u-svg-content" version="1.1" id="svg-ec46" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                        <g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect></g>
+                    </svg>
+                </a>
+            </div>
+            <div class="u-custom-menu u-nav-container" style="min-width:0;margin-top: 70px;">
+                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap:wrap;justify-content:center;">
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color:black;">Home</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color:black;">About us</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color:black;">Contact us</a></li>
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color:black;">Trip Planner</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div style="display:flex;gap:15px;align-items:center;">
+        
+        <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1" style="display:flex;align-items:center;gap:5px;visibility:visible;margin-right:0;margin-top:0;">
+             <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
+                 <span style="display:inline-block;width:30px;height:30px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                          <defs><clipPath id="vn-a"><path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/></clipPath></defs>
+                          <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
+                              <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
+                              <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
+                          </g>
+                      </svg>
+                 </span>
+             </a>
+             <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
+                 <span style="display:inline-block;width:30px;height:30px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
+                          <path fill="#012169" d="M0 0h512v512H0z"/>
+                          <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
+                          <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
+                          <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
+                          <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
+                      </svg>
+                 </span>
+             </a>
+        </div>
+        
+        {% if user.is_authenticated %}
+        <a href="{% url 'trip_list' %}" style="position:relative;text-decoration:none;">
+            <div style="background:#F7931E;border-radius:50%;width:45px;height:45px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">
+                <img src="{% static 'images/list_icon.png' %}" style="width:20px;height:20px;" alt="Trip List">
+            </div>
+            <span class="trip-count" style="position:absolute;top:-8px;right:-8px;background:red;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;{% if not trip_count %}display:none;{% endif %}">
+                {{ trip_count|default:0 }}
+            </span>
+        </a>
         <div style="position:relative;">
-            <button id="userMenuBtn" style="
-              padding:8px 12px;
-              background:#F7931E;
-              border-radius:25px;
-              color:white;
-              font-weight:700;
-              border:none;
-              cursor:pointer;
-              display:flex;
-              align-items:center;
-              gap:8px;
-              transition:0.2s;
-            "
-            onmouseover="this.style.background='#C48300'"
-            onmouseout="this.style.background='#F7931E'"
-            onclick="toggleUserMenu()">
+            <button id="userMenuBtn" style="padding:8px 12px;background:#F7931E;border-radius:25px;color:white;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;transition:0.2s; font-family: 'Montserrat'" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'" onclick="toggleUserMenu()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
@@ -99,101 +104,35 @@
                     <path d="M7 10l5 5 5-5z"/>
                 </svg>
             </button>
-            <div id="userDropdown" style="
-              display:none;
-              position:absolute;
-              top:110%;
-              right:0;
-              background:white;
-              border-radius:8px;
-              box-shadow:0 4px 12px rgba(0,0,0,0.15);
-              min-width:180px;
-              z-index:1000;
-            ">
-                <a href="{% url 'user_profile' %}" style="
-                  display:block;
-                  padding:12px 16px;
-                  color:#333;
-                  text-decoration:none;
-                  border-bottom:1px solid #eee;
-                  transition:0.2s;
-                "                onmouseover="this.style.background='#f5f5f5'"
-                onmouseout="this.style.background='white'">
-                    👤 {% trans "My Profile" %}
+            <div id="userDropdown" style="display:none;position:absolute;top:110%;right:0;background:white;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:180px;z-index:1000;font-family: 'Montserrat'">
+                <a href="{% url 'user_profile' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                    👤 My Profile
                 </a>
-                <a href="{% url 'recommend_result' %}" style="
-                  display:block;
-                  padding:12px 16px;
-                  color:#333;
-                  text-decoration:none;
-                  border-bottom:1px solid #eee;
-                  transition:0.2s;
-                "
-                onmouseover="this.style.background='#f5f5f5'"
-                onmouseout="this.style.background='white'">
-                    🗺️ {% trans "My Destinations" %}
+                <a href="{% url 'recommend_result' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                    🗺️ My Destinations
                 </a>
-                <a href="/logout/" style="
-                  display:block;
-                  padding:12px 16px;
-                  color:#d32f2f;
-                  text-decoration:none;
-                  transition:0.2s;
-                "
-                onmouseover="this.style.background='#f5f5f5'"
-                onmouseout="this.style.background='white'">
-                    🚪 {% trans "Logout" %}
+                <a href="/logout/" style="display:block;padding:12px 16px;color:#d32f2f;text-decoration:none;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                    🚪 Logout
                 </a>
             </div>
         </div>
-
-        <script>
-        function toggleUserMenu() {
-            var dropdown = document.getElementById('userDropdown');
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // Đóng dropdown khi click bên ngoài
-        window.onclick = function(event) {
-            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
-                var dropdown = document.getElementById('userDropdown');
-                if (dropdown && dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
-                }
-            }
-        }
-        </script>        {% else %}
-        <!-- User chưa đăng nhập: hiển thị Login/Register -->
-        <a href="{% url 'login_page' %}"
-           style="
-             padding:8px 18px;
-             background:#F7931E;
-             border-radius:25px;
-             color:white;
-             font-weight:700;
-             text-decoration:none;
-             transition:0.2s;
-           "
-           onmouseover="this.style.background='#C48300'"
-           onmouseout="this.style.background='#F7931E'">
-            {% trans "Log in" %}
-        </a>
-        <a href="{% url 'signup_page' %}"
-           style="
-             padding:8px 18px;
-             background:#F7931E;
-             border-radius:25px;
-             color:white;
-             font-weight:700;
-             text-decoration:none;
-             transition:0.2s;
-           "
-           onmouseover="this.style.background='#C48300'"
-           onmouseout="this.style.background='#F7931E'">
-            {% trans "Register" %}
-        </a>
         {% endif %}
     </div>
+    
+    <script>
+    function toggleUserMenu() {
+        var dropdown = document.getElementById('userDropdown');
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    }
+    window.onclick = function(event) {
+        if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+            var dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        }
+    }
+    </script>
 </header>
 
 <div class="container mt-5">
