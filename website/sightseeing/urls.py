@@ -4,8 +4,20 @@ URL patterns for sightseeing app
 from django.urls import path
 from . import views
 from . import api_views
+from django.contrib.auth import views as auth_views
+from django.urls import path
+from .views import CustomPasswordResetConfirmView
+from django.views.generic import TemplateView
+from django.contrib.auth.views import PasswordResetView
 
 urlpatterns = [
+    path(
+        'password-reset/',
+        PasswordResetView.as_view(
+            template_name='password_reset.html'
+        ),
+        name='password_reset'
+    ),
     path("change-email/", views.change_email, name="change_email"),
     # Authentication URLs
     path('login/', views.login_page, name='login_page'),
@@ -15,8 +27,17 @@ urlpatterns = [
     # Password reset URLs
     path('password-reset/', views.password_reset, name='password_reset'),
     path('password-reset/done/', views.password_reset_done, name='password_reset_done'),
-    path('password-reset/confirm/', views.password_reset_confirm, name='password_reset_confirm'),
-    path('password-reset/complete/', views.password_reset_complete, name='password_reset_complete'),
+     path(
+        'reset/<uidb64>/<token>/',
+        CustomPasswordResetConfirmView.as_view(),
+        name='password_reset_confirm'
+    ),
+    
+    path(
+    'reset/complete/',
+    TemplateView.as_view(template_name='password_reset_complete.html'),
+    name='password_reset_complete'
+),
     
     # Itinerary API URLs
     path('api/itinerary/save/', api_views.save_itinerary_item, name='api_save_itinerary'),
