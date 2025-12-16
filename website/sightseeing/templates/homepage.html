@@ -135,7 +135,7 @@
 </head>  
 <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
     <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
-    id="header" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background-color: rgba(180, 180, 180, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+    id="header" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
 
     <!-- Logo (left) -->
     <div style="flex: 0 0 auto;">
@@ -221,7 +221,9 @@
     <div style="display: flex; gap: 10px; align-items: center;">
     {% if user.is_authenticated %}
         <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
-           <img src="{% static 'images/list_icon.png' %}" alt="{% trans 'My Trips' %}" style="width: 32px; height: 32px;">
+           <div style="background:#F7931E;border-radius:50%;width:45px;height:45px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">
+        <img src="{% static 'images/list_icon.png' %}" style="width:20px;height:20px;" alt="Trip List">
+    </div>
            {% if trip_count > 0 %}
            <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
            {% endif %}
