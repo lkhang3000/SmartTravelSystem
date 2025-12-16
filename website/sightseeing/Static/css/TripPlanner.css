@@ -32,11 +32,30 @@ body {
 
 .app-shell {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1.75fr) minmax(0, 1.2fr);
+  /* Đổi minmax(400px...) thành minmax(0, 1fr) để tránh bị kẹt khi kéo */
+  grid-template-columns: 260px 4px minmax(0, 1fr) 4px minmax(300px, 1fr);
   height: 100vh;
   overflow: hidden;
+  width: 100vw; /* Đảm bảo full chiều rộng */
 }
 
+/* RESIZABLE GUTTERS */
+.gutter {
+  background-color: #e4e4ea; /* Màu xám nhẹ để dễ nhìn */
+  cursor: col-resize;
+  z-index: 100;
+  transition: background-color 0.2s;
+}
+
+.gutter:hover, .gutter.active {
+  background-color: #ff5a3c; /* Màu cam khi hover */
+}
+
+.map-pane {
+  overflow: hidden; /* Quan trọng để map không bị tràn */
+  display: flex;
+  flex-direction: column;
+}
 /* SIDEBAR */
 
 .sidebar {
@@ -2122,3 +2141,4 @@ body {
   border-radius: 4px;
   font-size: 13px;
 }
+
