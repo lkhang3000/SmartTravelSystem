@@ -29,73 +29,81 @@
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
     <meta data-intl-tel-input-cdn-path="intlTelInput/">
-<header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
-        id="header"
-        style="position: relative; width: 100%; z-index: 2000; height: 100px; min-height: 100px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: linear-gradient(90deg, #0077b6, #00b4d8, #00a8e8);"> <div style="flex: 0 0 auto;">
-        <a href="{% url 'home' %}" class="u-image u-logo u-image-1">
-            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home" style="height:100px; width:auto; display:block; margin-top:0px; margin-left:-60px;">
-        </a>
-    </div>
+{% load static %}
+<header class="u-header"
+    id="header"
+    style="/* Container chính: Đảm bảo căn chỉnh các khối Left và Right */
+        position:sticky; 
+        top:0; 
+        z-index:1000;
+        height:100px; 
+        display:flex; 
+        align-items:center; 
+        justify-content:space-between; /* Giữ Logo/Tên và User Menu xa nhau */
+        padding:0 30px; 
+        /* Thay đổi background để khớp với Header 2 */
+        background: rgba(138, 213, 234, 0.85);
+        backdrop-filter: blur(10px); 
+        -webkit-backdrop-filter: blur(10px);
+        ">
 
-    <div style="flex:1 1 auto; display:flex; align-items:center; justify-content:center; min-width:0; padding: 0 40px;">
-        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" style="position:relative;top:0;left:0;">
-            <div class="menu-collapse u-custom-font u-font-montserrat" style="font-size:1rem;letter-spacing:0px;">
-                <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-hover-custom-color-7" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
-                    <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#svg-ec46"></use></svg>
-                    <svg class="u-svg-content" version="1.1" id="svg-ec46" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-                        <g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect></g>
-                    </svg>
-                </a>
-            </div>
-            <div class="u-custom-menu u-nav-container" style="min-width:0;margin-top: 70px;">
-                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap:wrap;justify-content:center;">
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color:black;">Home</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color:black;">About us</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color:black;">Contact us</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color:black;">Trip Planner</a></li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-
-    <div style="display:flex;gap:15px;align-items:center;">
+    <div style="display: flex; align-items: center; gap: 30px;"> 
         
-        <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1" style="display:flex;align-items:center;gap:5px;visibility:visible;margin-right:0;margin-top:0;">
-             <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
-                 <span style="display:inline-block;width:30px;height:30px;">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                          <defs><clipPath id="vn-a"><path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/></clipPath></defs>
-                          <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
-                              <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
-                              <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
-                          </g>
-                      </svg>
-                 </span>
-             </a>
-             <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
-                 <span style="display:inline-block;width:30px;height:30px;">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                          <path fill="#012169" d="M0 0h512v512H0z"/>
-                          <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                          <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
-                          <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
-                          <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
-                      </svg>
-                 </span>
-             </a>
-        </div>
-        
-        {% if user.is_authenticated %}
-        <a href="{% url 'trip_list' %}" style="position:relative;text-decoration:none;">
-            <div style="background:#F7931E;border-radius:50%;width:45px;height:45px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">
-                <img src="{% static 'images/list_icon.png' %}" style="width:20px;height:20px;" alt="Trip List">
-            </div>
-            <span class="trip-count" style="position:absolute;top:-8px;right:-8px;background:red;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;{% if not trip_count %}display:none;{% endif %}">
-                {{ trip_count|default:0 }}
+        <a href="{% url 'home' %}" class="u-logo" style="display:flex; align-items:center; text-decoration: none;">
+            <img src="{% static 'images/Odyscape.png' %}"
+                 style="height: 80px; width: 80px; display:block; margin-right: 10px;" 
+                 alt="logo"> 
+            
+            <span style="
+                font-size: 32px; /* Điều chỉnh font size nhỏ hơn Header 1 cũ (60px) */
+                font-weight: 800; 
+                color: white; 
+                letter-spacing: 1px;
+                user-select: none;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.5); 
+            ">
+                ODYSCAPE
             </span>
         </a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 15px;"> 
+        {% if user.is_authenticated %}
+        
+        <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
+             <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
+                         display:flex; align-items:center; justify-content:center;
+                         transition:0.2s;"
+                  onmouseover="this.style.background='#C48300'"
+                  onmouseout="this.style.background='#F7931E'">
+                 <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:20px; height:20px;">
+             </div>
+             {% if trip_count %}
+             <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; 
+                          width:20px; height:20px; display:flex; align-items:center; justify-content:center; 
+                          font-size:12px; font-weight:bold;">
+                 {{ trip_count }}
+             </span>
+             {% endif %}
+         </a>
+
         <div style="position:relative;">
-            <button id="userMenuBtn" style="padding:8px 12px;background:#F7931E;border-radius:25px;color:white;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;transition:0.2s; font-family: 'Montserrat'" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'" onclick="toggleUserMenu()">
+            <button id="userMenuBtn" style="
+                padding:8px 12px;
+                background:#FB8700;
+                border-radius:25px;
+                color:white;
+                font-weight:700;
+                border:none;
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                gap:8px;
+                transition:0.2s;
+            "
+            onmouseover="this.style.background='#C48300'"
+            onmouseout="this.style.background='#F7931E'"
+            onclick="toggleUserMenu()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
@@ -104,45 +112,123 @@
                     <path d="M7 10l5 5 5-5z"/>
                 </svg>
             </button>
-            <div id="userDropdown" style="display:none;position:absolute;top:110%;right:0;background:white;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:180px;z-index:1000;font-family: 'Montserrat'">
-                <a href="{% url 'user_profile' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+            <div id="userDropdown" style="
+                display:none;
+                position:absolute;
+                top:110%;
+                right:0;
+                background:white;
+                border-radius:8px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                min-width:180px;
+                z-index:1000;
+            ">
+                <a href="{% url 'user_profile' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     👤 My Profile
                 </a>
-                <a href="{% url 'recommend_result' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <a href="{% url 'recommend_result' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     🗺️ My Destinations
                 </a>
-                <a href="/logout/" style="display:block;padding:12px 16px;color:#d32f2f;text-decoration:none;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <a href="/logout/" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#d32f2f;
+                    text-decoration:none;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     🚪 Logout
                 </a>
             </div>
         </div>
-        {% endif %}
-    </div>
-    
-    <script>
-    function toggleUserMenu() {
-        var dropdown = document.getElementById('userDropdown');
-        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-    }
-    window.onclick = function(event) {
-        if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+
+        <script>
+        function toggleUserMenu() {
             var dropdown = document.getElementById('userDropdown');
-            if (dropdown && dropdown.style.display === 'block') {
-                dropdown.style.display = 'none';
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Đóng dropdown khi click bên ngoài
+        window.onclick = function(event) {
+            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+                var dropdown = document.getElementById('userDropdown');
+                if (dropdown && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
             }
         }
-    }
-    </script>
+        </script>       
+        {% else %}
+        <a href="{% url 'login_page' %}"
+           style="
+            font-weight:bold; 
+            padding:10px 20px; 
+            border:2px solid white;
+            border-radius:25px; 
+            color:white; 
+            text-decoration:none;
+            transition:0.2s;
+           "
+           onmouseover="this.style.background='white'; this.style.color='#0ab1d9';"
+           onmouseout="this.style.background='transparent'; this.style.color='white';">
+            Log in
+        </a>
+        <a href="{% url 'signup_page' %}"
+           style="
+            font-weight:bold; 
+            padding:10px 20px; 
+            background:white; 
+            color:black; /* Đổi màu chữ nếu background là white */
+            border-radius:25px; 
+            text-decoration:none;
+            transition:0.2s;
+           "
+           onmouseover="this.style.background='#eee';"
+           onmouseout="this.style.background='white';">
+            Register
+        </a>
+        {% endif %}
+    </div>
 </header>
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">{% trans "Saved Destinations" %}</h1>
         {% if trip_items %}
-            <a href="{% url 'input_trip_planner' %}" class="btn" style="background:#F7931E; border-radius:25px; color:white; font-weight:700; padding:8px 18px; text-decoration:none; transition:0.2s; display:flex; align-items:center; gap:8px;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">
-                
-                {% trans "Start Planning" %}
-            </a>
+            <a href="{% url 'trip_planner' %}" class="custom-link-button" role="button" tabindex="0">
+    <span style="color:white">Start planning</span>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 74 74"
+        height="34"
+        width="34"
+    >
+        <circle stroke-width="4" stroke="white" r="35.5" cy="37" cx="37"></circle>
+        <path
+            fill="white"
+            d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"
+        ></path>
+    </svg>
+</a>
         {% endif %}
     </div>
 
@@ -170,7 +256,7 @@
                                 <div class="mt-auto">
                                     <p class="text-muted small">{% trans "Added on" %} {{ trip_item.added_at|date:"M d, Y" }}</p>
                                     <div class="d-flex gap-2">
-                                        <a href="{% url 'destination_detail' trip_item.destination.id %}" class="btn btn-sm" style="background:#F7931E; border-radius:25px; color:white; font-weight:700; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">{% trans "View Details" %}</a>
+                                        <a href="{% url 'destination_detail' trip_item.destination.id %}" class="btn btn-sm" style="background:#FB8700; border-radius:25px; color:white; font-weight:700; text-decoration:none; transition:0.2s;" onmouseover="this.style.background='#C48300'" onmouseout="this.style.background='#F7931E'">{% trans "View Details" %}</a>
                                         <form method="post" action="{% url 'remove_from_trip' trip_item.id %}" class="d-inline">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('{% trans "Remove this destination from your trip?" %}')">{% trans "Remove" %}</button>
@@ -213,6 +299,47 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+/* Thay thế 'button' bằng class mới: .custom-link-button */
+.custom-link-button {
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
+  padding: 10px 20px;
+  border-radius: 100px;
+  background: #fb8700;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  box-shadow: 0 6px 16px rgba(247, 147, 30, 0.45);
+  
+  /* Thêm thuộc tính này cho thẻ <a> */
+  text-decoration: none; 
+}
 
+.custom-link-button:hover {
+  background: #fb8700;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(247, 147, 30, 0.45);
+}
+
+/* Thay thế 'button > svg' bằng class mới */
+.custom-link-button > svg {
+  width: 34px;
+  margin-left: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Thay thế 'button:hover svg' bằng class mới */
+.custom-link-button:hover svg {
+  transform: translateX(5px);
+}
+
+/* Thay thế 'button:active' bằng class mới */
+.custom-link-button:active {
+  transform: scale(0.95);
+}
+</style>
 </body>
 </html>
