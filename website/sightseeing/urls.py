@@ -3,6 +3,7 @@ URL patterns for sightseeing app
 """
 from django.urls import path
 from . import views
+from . import api_views
 
 urlpatterns = [
     path("change-email/", views.change_email, name="change_email"),
@@ -16,7 +17,15 @@ urlpatterns = [
     path('password-reset/done/', views.password_reset_done, name='password_reset_done'),
     path('password-reset/confirm/', views.password_reset_confirm, name='password_reset_confirm'),
     path('password-reset/complete/', views.password_reset_complete, name='password_reset_complete'),
-      #Function pages
+    
+    # Itinerary API URLs
+    path('api/itinerary/save/', api_views.save_itinerary_item, name='api_save_itinerary'),
+    path('api/itinerary/update/', api_views.update_itinerary_item, name='api_update_itinerary'),
+    path('api/itinerary/update-note/', api_views.update_itinerary_note, name='api_update_note'),
+    path('api/itinerary/remove/', api_views.remove_itinerary_item, name='api_remove_itinerary'),
+    path('api/itinerary/get/', api_views.get_itinerary, name='api_get_itinerary'),
+    
+    #Function pages
     path('Trip-planner/', views.trip_planner, name='trip_planner'),
     path('input-trip-planner/', views.input_trip_planner, name='input_trip_planner'),
     path('trip-form/', views.trip_form, name='trip_form'),

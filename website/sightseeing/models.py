@@ -69,6 +69,22 @@ class Hotel(models.Model):
     def __str__(self):
         return self.name
 
+class Restaurant(models.Model):
+    name = models.CharField(max_length=200, null=True)
+    restaurant_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like rest_001
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='restaurants', null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    rating = models.FloatField(default=0.0, null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)  # Giá trung bình một người, VND
+    image_url = models.URLField(max_length=500, null=True, blank=True)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.name
+
 class SearchHistory(models.Model):
     user_id = models.CharField(max_length=20)  # Custom user ID like user_001
     destination_id = models.CharField(max_length=20)  # Custom destination ID like dest_001
@@ -101,17 +117,20 @@ class TripItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     destination = models.ForeignKey(Destinations, on_delete=models.CASCADE, null=True, blank=True)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, null=True, blank=True)
-    day = models.IntegerField(null=True, blank=True)  # Day of the trip (1, 2, 3, etc.)
+    day = models.IntegerField(null=True, blank=True, help_text='Day number in the trip (1, 2, 3, etc.)')
+    order = models.IntegerField(default=0, help_text='Order of item within the day')
+    notes = models.TextField(blank=True, null=True, help_text='User notes for this destination')
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ['user', 'destination', 'hotel']
+        ordering = ['day', 'order']
 
     def __str__(self):
         if self.destination:
-            return f"{self.user.username} - {self.destination.desName}"
+            return f"{self.user.username} - Day {self.day} - {self.destination.desName}"
         elif self.hotel:
-            return f"{self.user.username} - {self.hotel.name}"
+            return f"{self.user.username} - Day {self.day} - {self.hotel.name}"
         return f"{self.user.username} - Unknown"
 
 class Comment(models.Model):

@@ -150,6 +150,27 @@
         }
 
         .u-repeater-1 { grid-template-columns: 1fr !important; }
+
+        /* Flatpickr dropdown fixes */
+        .flatpickr-monthDropdown-months { pointer-events: auto; }
+        .flatpickr-current-month span { pointer-events: auto; }
+        .flatpickr-calendar { z-index: 9999; }
+
+        /* Flatpickr custom colors */
+        .flatpickr-day.selected {
+            background-color: #FB8700 !important;
+            border-color: #FB8700 !important;
+        }
+        .flatpickr-day.selected:hover {
+            background-color: #d84315 !important;
+        }
+        .flatpickr-day.startRange, .flatpickr-day.endRange {
+            background-color: #FB8700 !important;
+            border-color: #FB8700 !important;
+        }
+        .flatpickr-day.inRange {
+            background-color: rgba(251, 135, 0, 0.1) !important;
+        }
     </style>
 </head>
 
@@ -165,7 +186,7 @@
                     
                     <a href="#" class="link-new-guide">Or write a new guide</a>
 
-                    <form action="{% url 'trip_form' %}" method="POST" class="u-form-vertical" style="margin-top: 15px; text-align: left;">
+                    <form action="{% url 'trip_form' %}" method="POST" class="u-form-vertical" style="margin-top: 15px; text-align: left;" onsubmit="return validateDates()">
                         {% csrf_token %}
                         
                         <div class="u-form-group">
@@ -181,13 +202,14 @@
                         <div style="display: flex; gap: 15px; margin-top: 15px;">
                             <div class="u-form-group" style="flex: 1;">
                                 <label class="u-label">Start Date</label>
-                                <input type="text" name="departure" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy">
+                                <input type="text" id="start-date" name="departure" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy" required>
                             </div>
                             <div class="u-form-group" style="flex: 1;">
                                 <label class="u-label">End Date</label>
-                                <input type="text" name="arrival" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy">
+                                <input type="text" id="end-date" name="arrival" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy" required>
                             </div>
                         </div>
+                        <div id="dateError" style="color: red; font-size: 0.9rem; margin-top: 5px; display: none;">Trip duration cannot exceed 1 year.</div>
 
                         <div class="u-form-group" style="margin-top: 15px;">
                             <label for="travelers" class="u-label">Travelers</label>
@@ -203,6 +225,9 @@
                                 <input type="range" id="budgetRange" name="budget" min="0" max="100" value="0" step="1">
                                 <span style="font-size: 0.8rem; color: #777;">100</span>
                                 <input type="number" id="budgetInput" class="u-input-rectangle budget-display" value="0" min="0" max="100">
+                            </div>
+                            <div class="budget-total-display" style="margin-top: 5px; font-size: 0.9rem; color: #FB8700; font-weight: 600;">
+                                Current budget: <span id="totalBudgetDisplay">0</span> million VND
                             </div>
                         </div>
 
@@ -221,7 +246,30 @@
     </section>
 
     <script>
+        function validateDates() {
+            let start = document.getElementById("start-date").value;
+            let end = document.getElementById("end-date").value;
+            if (!start || !end) return true; // let browser handle required
+            let startParts = start.split('/');
+            let endParts = end.split('/');
+            if (startParts.length !== 3 || endParts.length !== 3) return true;
+            let startDate = new Date(startParts[2], startParts[1] - 1, startParts[0]);
+            let endDate = new Date(endParts[2], endParts[1] - 1, endParts[0]);
+            let diff = endDate - startDate;
+            let days = diff / (1000 * 60 * 60 * 24);
+            let startYear = startDate.getFullYear();
+            let isLeap = (startYear % 4 === 0 && startYear % 100 !== 0) || (startYear % 400 === 0);
+            let maxDays = isLeap ? 366 : 365;
+            if (days > maxDays) {
+                document.getElementById("dateError").style.display = "block";
+                return false;
+            }
+            document.getElementById("dateError").style.display = "none";
+            return true;
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
+<<<<<<< HEAD
 
             // === DATE PICKER START / END ===
             const startInput = document.querySelector('input[name="departure"]');
@@ -242,6 +290,29 @@
                         }
                     }
                 }
+=======
+            const startPicker = flatpickr("#start-date", {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                allowInput: true,
+                monthSelectorType: "static",
+                yearSelectorType: "static",
+                closeOnSelect: false,
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        endPicker.set('minDate', selectedDates[0]);
+                    }
+                }
+            });
+
+            const endPicker = flatpickr("#end-date", {
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                allowInput: true,
+                monthSelectorType: "static",
+                yearSelectorType: "static",
+                closeOnSelect: false
+>>>>>>> 747447e (update tripplanner intinerrary)
             });
 
             const endPicker = flatpickr(endInput, {
@@ -257,12 +328,18 @@
             const travelersInput = document.getElementById("travelers");
             const priceDisplay = document.getElementById("priceDisplay");
             const hiddenInput = document.getElementById("hiddenPricePerPerson");
+            const totalBudgetDisplay = document.getElementById("totalBudgetDisplay");
 
             const formatCurrency = (amount) => {
+<<<<<<< HEAD
                 return new Intl.NumberFormat('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 }).format(amount);
+=======
+                let million = amount / 1000000;
+                return million.toFixed(1) + " million VND";
+>>>>>>> 747447e (update tripplanner intinerrary)
             };
 
             function updateCalculation() {
@@ -275,6 +352,7 @@
 
                 priceDisplay.textContent = formatCurrency(perPerson);
                 hiddenInput.value = perPerson;
+                totalBudgetDisplay.textContent = budgetMillion;
             }
 
             budgetRange.addEventListener("input", () => {
@@ -291,6 +369,9 @@
             travelersInput.addEventListener("input", updateCalculation);
 
             updateCalculation();
+
+            document.getElementById("start-date").addEventListener("input", () => document.getElementById("dateError").style.display = "none");
+            document.getElementById("end-date").addEventListener("input", () => document.getElementById("dateError").style.display = "none");
         });
     </script>
 
