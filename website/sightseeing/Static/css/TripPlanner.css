@@ -2142,3 +2142,27 @@ body {
   font-size: 13px;
 }
 
+/* Tùy chỉnh riêng cho mục con */
+.submenu-item {
+  /* Kế thừa giao diện nav-item nhưng ghi đè font và padding */
+  font-size: 13.5px !important;       /* Font nhỏ hơn (Overview là 16px) */
+  padding-left: 36px !important;      /* Thụt lề vào trong để tạo phân cấp */
+  padding-top: 8px !important;        /* Giữ độ dày nút vừa phải */
+  padding-bottom: 8px !important;
+  color: #4b5563;                     /* Màu chữ xám nhẹ hơn một chút */
+  margin-top: 2px;
+}
+
+/* Hiệu ứng Hover (giống hệt Overview) */
+.submenu-item:hover {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+}
+
+/* Khi mục này đang Active (được chọn) */
+.submenu-item.nav-item--active {
+  background-color: #f3f4f6 !important; /* Nền cam nhạt */
+  color: #000000 !important;          
+  font-weight: 600;
+  border: 1px solid rgba(255, 132, 39, 0);
+}
