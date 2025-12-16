@@ -170,11 +170,17 @@
       </section>      <!-- BIG ITINERARY -->
       <section class="section itinerary-section" id="itinerary-section">
         <div class="section__header">
-          <h2>{% trans "Itinerary" %}</h2>
-          <button class="meta-pill meta-pill--big">
+    <h2>{% trans "Itinerary" %}</h2>
+    
+    <div style="display: flex; gap: 10px;">
+        <button class="btn btn--primary" id="auto-fill-btn" style="background-color: #ff8427">
+             {% trans "Auto-fill Itinerary" %}
+        </button>
+        <button class="meta-pill meta-pill--big">
             <span>{{ date_range }}</span>
-          </button>
-        </div>
+        </button>
+    </div>
+    </div>
 
         <div id="itinerary-days">
           <!-- Days will be dynamically generated here -->
@@ -1376,6 +1382,92 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const autoFillBtn = document.getElementById('auto-fill-btn');
+    if (autoFillBtn) {
+        autoFillBtn.addEventListener('click', async function() {
+            // 1. Lấy dữ liệu
+            const savedCarousel = document.getElementById('saved-carousel');
+            const savedCards = Array.from(savedCarousel.querySelectorAll('.explore-card'));
+            const dayCards = document.querySelectorAll('.itinerary-day-full');
+            const totalDays = dayCards.length;
+
+            // Validate
+            if (savedCards.length === 0) {
+                alert('{% trans "No saved destinations to auto-fill." %}');
+                return;
+            }
+            if (totalDays === 0) {
+                alert('{% trans "Please add days to your trip first." %}');
+                return;
+            }
+
+            if (!confirm(`{% trans "Auto-fill will distribute" %} ${savedCards.length} {% trans "places across" %} ${totalDays} {% trans "days. Continue?" %}`)) {
+                return;
+            }
+
+            // UI Loading
+            const originalText = autoFillBtn.innerHTML;
+            autoFillBtn.innerHTML = '⏳ Processing...';
+            autoFillBtn.disabled = true;
+
+            let currentDayIndex = 0;
+            const updatePromises = [];
+
+            // 2. VÒNG LẶP XỬ LÝ
+            for (const card of savedCards) {
+                const title = card.querySelector('.explore-card__title').textContent;
+                const subtitle = card.querySelector('.explore-card__subtitle').textContent;
+                const imgStyle = card.querySelector('.explore-card__image').style.backgroundImage;
+                const removeBtn = card.querySelector('.remove-trip-item-btn');
+                const itemId = removeBtn?.getAttribute('data-item-id');
+
+                const targetDayCard = dayCards[currentDayIndex];
+                const dayNumber = parseInt(targetDayCard.getAttribute('data-day'));
+                const currentPlacesCount = targetDayCard.querySelectorAll('.place-card').length; 
+                
+                // GỌI HÀM CÓ SẴN (Giờ đã gọi được vì nằm cùng scope)
+                addPlaceToDay(dayNumber, {
+                    title: title,
+                    subtitle: subtitle,
+                    image: imgStyle,
+                    itemId: itemId 
+                }, itemId);
+
+                card.remove();
+
+                if (itemId) {
+                    const promise = updateItineraryOrder(itemId, dayNumber, currentPlacesCount, '')
+                        .then(success => {
+                            if(!success) console.warn(`Failed to sync item ${itemId}`);
+                            return success;
+                        });
+                    updatePromises.push(promise);
+                }
+
+                currentDayIndex = (currentDayIndex + 1) % totalDays;
+            }
+
+            if (savedCarousel.children.length === 0) {
+                savedCarousel.innerHTML = '<p>{% trans "No saved destinations yet." %}</p>';
+            }
+            
+            for(let i = 1; i <= totalDays; i++) {
+                updateStopCount(i);
+            }
+
+            try {
+                await Promise.all(updatePromises);
+                showNotification(`✅ {% trans "Auto-filled" %} ${savedCards.length} {% trans "places successfully!" %}`, 'success');
+            } catch (err) {
+                console.error(err);
+                showNotification('⚠️ Some items might not be saved correctly.', 'warning');
+            } finally {
+                autoFillBtn.innerHTML = originalText;
+                autoFillBtn.disabled = false;
+            }
+        });
+    }
+
     // generate on page load
     generateDays();
     
@@ -2293,8 +2385,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
-
-
 </body>
 </html>
