@@ -4,6 +4,262 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.results-layout {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.filter-sidebar {
+    flex: 0 0 280px;
+}
+
+.filter-widget {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.widget-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Horizontal Card for Search Results */
+.list-card {
+    display: flex;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+    text-align: left;
+}
+
+.list-card-image {
+    flex: 0 0 300px;
+    position: relative;
+}
+
+.list-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.list-card-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.amenity-tag {
+    background: #f0f4f8;
+    color: #555;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    margin-right: 5px;
+    font-weight: 600;
+}
+
+.view-details-btn {
+    background: #FF5A00;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* Container Heading Style */
+.top-picks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.top-picks-title {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #333 !important;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Updated Card Styles */
+.recommendation-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease;
+    text-align: left;
+    border: 1px solid #f0f0f0;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image-wrapper {
+    position: relative;
+    height: 200px;
+}
+
+.card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Floating Status Badge */
+.status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #444;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card-content {
+    padding: 15px 20px 20px 20px;
+}
+
+.spot-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.location-box {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Bottom Row Styling */
+.card-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.rating-display {
+    color: #FF5A00;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.review-count {
+    color: #999;
+    font-weight: 400;
+    font-size: 13px;
+    margin-left: 4px;
+}
+
+.price-display {
+    text-align: right;
+}
+
+.price-amt {
+    color: #FF5A00;
+    font-size: 18px;
+    font-weight: 800;
+    display: block;
+}
+
+.price-period {
+    font-size: 12px;
+    color: #888;
+}
+
+
+/* Figma Layout Wrapper */
+.main-content-wrapper {
+    display: flex;
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+    gap: 30px;
+}
+
+/* Sidebar Styling */
+.figma-sidebar {
+    flex: 0 0 280px;
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    height: fit-content;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 120px; /* Adjust based on your fixed header height */
+}
+
+/* Figma Hero / Top Pick Card */
+.figma-top-pick {
+    display: flex;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+    min-height: 450px;
+}
+
+.top-pick-img { width: 55%; object-fit: cover; }
+.top-pick-content { width: 45%; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+
+/* 4-Column Grid for the 20 results */
+.figma-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.dropdown-item {
+    color: #333 !important;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f4f7f9;
+    color: #000 !important;
+}
+
+#userMenuBtn:hover {
+    background-color: #a4c2e0 !important;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
