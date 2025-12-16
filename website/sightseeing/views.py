@@ -23,6 +23,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
+from django.db import transaction
+from .models import Trip, TripItem, Destinations
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'reset_password_form.html'
@@ -505,8 +507,59 @@ def recommend_result(request):
 
     return render(request, 'recommendResult.html', context)
 
+@login_required
 def user_profile(request):
-    return render(request, 'userProfile.html')
+    # 1. Lấy danh sách chuyến đi của user
+    trips = Trip.objects.filter(user=request.user).order_by('-updated_at')
+    
+    # 2. Tìm ảnh đại diện xịn cho từng chuyến đi
+    for trip in trips:
+        # Mặc định dùng ảnh random nếu không tìm thấy gì
+        trip.display_image = f"https://picsum.photos/seed/{trip.destination}/800/400"
+        
+        if trip.destination:
+            search_term = trip.destination.strip()
+            
+            # --- ƯU TIÊN 1: Tìm theo tên chính xác của Địa điểm (Destinations) ---
+            # Ví dụ: Trip to "Ba Na Hills" -> Tìm Destination "Ba Na Hills"
+            dest = Destinations.objects.filter(desName__icontains=search_term).first()
+            if dest:
+                # data.csv dùng cột 'image_urls' (nhiều ảnh ngăn cách bởi |||)
+                images = dest.get_image_list() 
+                if images:
+                    trip.display_image = images[0] # Lấy ảnh đầu tiên
+                elif dest.image_url:
+                    trip.display_image = dest.image_url
+                continue # Đã tìm thấy, qua chuyến đi tiếp theo
+
+            # --- ƯU TIÊN 2: Tìm theo tên chính xác của Khách sạn (Hotel) ---
+            # Ví dụ: Trip to "Somerset Grand Hanoi"
+            hotel = Hotel.objects.filter(name__icontains=search_term).first()
+            if hotel and hotel.image_url:
+                trip.display_image = hotel.image_url # hotels.csv dùng cột 'Image' -> model 'image_url'
+                continue
+
+            # --- ƯU TIÊN 3: Tìm theo Tên Thành Phố/Khu vực (Location) ---
+            # Ví dụ: Trip to "Hanoi" -> Tìm đại một địa điểm bất kỳ thuộc Location "Hanoi" để lấy ảnh
+            dest_in_loc = Destinations.objects.filter(location__locationName__icontains=search_term).first()
+            if dest_in_loc:
+                images = dest_in_loc.get_image_list()
+                if images:
+                    trip.display_image = images[0]
+                elif dest_in_loc.image_url:
+                    trip.display_image = dest_in_loc.image_url
+                continue
+            
+            # Nếu không có Destination nào ở đó, thử tìm Hotel ở đó
+            hotel_in_loc = Hotel.objects.filter(location__locationName__icontains=search_term).first()
+            if hotel_in_loc and hotel_in_loc.image_url:
+                trip.display_image = hotel_in_loc.image_url
+                continue
+
+    context = {
+        'trips': trips
+    }
+    return render(request, 'userProfile.html', context)
 
 def user_input(request):
     return render(request, 'userInput.html')
@@ -1134,3 +1187,127 @@ def optimize_route(request):
         print(f"Error in optimize_route: {e}")
         return JsonResponse({'success': False, 'message': 'Error optimizing route.'})
 
+@login_required
+@require_POST
+def save_trip_api(request):
+    try:
+        data = json.loads(request.body)
+        
+       # 1. Tìm chuyến đi được cập nhật gần đây nhất của user này
+        trip = Trip.objects.filter(user=request.user).order_by('-updated_at').first()
+
+        # 2. Nếu chưa có chuyến nào thì tạo mới
+        if not trip:
+            trip = Trip.objects.create(
+                user=request.user, 
+                destination=data.get('title', 'My Trip')
+            )
+
+        # Cập nhật thông tin Trip
+        trip.destination = data.get('title')
+        
+        # Xử lý Budget: Frontend slider thường trả về số nhỏ (vd: 10, 50 triệu)
+        # Cần nhân lên nếu lưu DB là VND
+        raw_budget = float(data.get('budget', 0))
+        if raw_budget < 10000: # Nếu số nhỏ (<10.000), giả định là đơn vị Triệu
+             trip.budget = raw_budget * 1000000
+        else:
+             trip.budget = raw_budget
+
+        trip.travelers = int(data.get('travelers', 1))
+
+        # Xử lý ngày tháng (Frontend gửi dd/mm/yyyy -> Cần chuyển về YYYY-MM-DD)
+        date_fmt = "%d/%m/%Y"
+        if data.get('start_date'):
+            try:
+                trip.departure_date = datetime.strptime(data.get('start_date'), date_fmt).date()
+            except ValueError:
+                pass
+        if data.get('end_date'):
+            try:
+                trip.arrival_date = datetime.strptime(data.get('end_date'), date_fmt).date()
+            except ValueError:
+                pass
+        
+        trip.save()
+
+        # 2. XỬ LÝ TRIP ITEMS (Danh sách địa điểm)
+        items_data = data.get('items', [])
+        
+        with transaction.atomic():
+            for item in items_data:
+                dest_id = item.get('destination_id')
+                day = item.get('day')
+                order = item.get('order')
+                notes = item.get('notes', '')
+
+                if dest_id:
+                    # Dùng update_or_create để đảm bảo item được cập nhật đúng ngày/thứ tự
+                    TripItem.objects.update_or_create(
+                        user=request.user,
+                        destination_id=dest_id,
+                        defaults={
+                            'day': day,
+                            'order': order,
+                            'notes': notes
+                        }
+                    )
+
+        return JsonResponse({'success': True, 'message': 'Trip saved successfully!'})
+
+    except Exception as e:
+        print(f"Error saving trip: {e}")
+        return JsonResponse({'success': False, 'message': str(e)}, status=400)
+
+@login_required
+def update_profile_settings(request):
+    """Xử lý lưu thông tin từ trang User Profile"""
+    if request.method == 'POST':
+        # 1. Lấy dữ liệu từ form
+        username = request.user.username
+        region = request.POST.get('region')
+        budget = request.POST.get('budget')
+        departure_date = request.POST.get('departure_date')
+        return_date = request.POST.get('return_date')
+        num_people = request.POST.get('num_people', 1)
+        tags = request.POST.getlist('tags', [])
+        
+        # 2. Tạo cấu trúc JSON
+        user_data = {
+            "user_info": {
+                "username": username,
+                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            },
+            "trip_preferences": {
+                "domestic_or_international": {
+                    "type": "domestic",
+                    "region": region
+                },
+                "tags": tags,
+                "budget": int(budget) if budget else 0,
+                "departure_date": departure_date if departure_date else None,
+                "return_date": return_date if return_date else None,
+                "num_people": int(num_people) if num_people else 1
+            }
+        }
+        
+        # 3. Lưu vào Session
+        request.session['user_preferences'] = user_data
+        request.session.modified = True
+        
+        # 4. Lưu file JSON (Optional)
+        try:
+            input_folder = os.path.join('sightseeing', 'Services', 'user_inputs')
+            os.makedirs(input_folder, exist_ok=True)
+            filename = f"user_input_{username}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            filepath = os.path.join(input_folder, filename)
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(user_data, f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print(f"Error saving JSON: {e}")
+
+        # 5. Thông báo và Quay lại trang Profile
+        messages.success(request, '✅ Profile settings updated successfully!')
+        return redirect('user_profile')
+    
+    return redirect('user_profile')
