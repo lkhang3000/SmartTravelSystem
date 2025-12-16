@@ -220,20 +220,34 @@
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
     {% if user.is_authenticated %}
-        <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
-           <div style="background:#F7931E;border-radius:50%;width:45px;height:45px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">
-        <img src="{% static 'images/list_icon.png' %}" style="width:20px;height:20px;" alt="Trip List">
-    </div>
-           {% if trip_count > 0 %}
-           <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
-           {% endif %}
-        </a>
-        <a href="{% url 'user_profile' %}"
-           class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
-           {{ user.first_name|default:user.username }}
-        </a>
-    {% else %}
+    <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
+       <div style="background:#F7931E; border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+            <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px; filter: brightness(0) invert(1);" alt="Trip List">
+        </div>
+       {% if trip_count > 0 %}
+       <span style="position: absolute; top: -5px; right: -5px; background-color: #ff4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
+       {% endif %}
+    </a>
+
+    <div style="position: relative; display: inline-block; margin-left: 15px;">
+    <button id="userMenuBtn" onclick="toggleUserMenu()"
+       style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; padding: 10px 30px; border: 2px solid white; border-radius: 50px; background-color: #B9D1EA; color: black; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+       {{ user.first_name|default:user.username }}
+    </button>
+    
+    <div id="userDropdown" style="display: none; position: absolute; right: 0; top: 58px; background-color: #ffffff; min-width: 190px; box-shadow: 0px 10px 30px rgba(0,0,0,0.15); z-index: 3000; border-radius: 18px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); padding: 8px 0;">
+    <a href="{% url 'user_profile' %}" style="display: flex; align-items: center; padding: 12px 20px; text-decoration: none; color: #333; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 500; transition: background 0.2s;">
+        <span style="margin-right: 12px; font-size: 18px; color: #512da8;">👤</span> {% trans "My Profile" %}
+    </a>
+    
+    <div style="height: 1px; background: #f0f0f0; margin: 4px 20px;"></div>
+    
+    <a href="{% url 'logout' %}" style="display: flex; align-items: center; padding: 12px 20px; text-decoration: none; color: #e53935; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 500; transition: background 0.2s;">
+        <span style="margin-right: 12px; font-size: 18px; color: #e53935;">⮞</span> {% trans "Logout" %}
+    </a>
+</div>
+</div>
+{% else %}
         <a href="{% url 'login_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
            style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
@@ -511,7 +525,7 @@
     
     
     
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
+   <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
         <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
           <div class="chat-container"><!-- Floating Button -->
             <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
@@ -628,7 +642,7 @@
     font-size: 20px;
   } </style>
         </div>
-        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation">
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" aria-label="Menu navigation">
           <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
             <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
               <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
@@ -637,7 +651,7 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" style="padding: 10px 20px;">Home</a>
+            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">Home</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
 </li></ul>
@@ -646,17 +660,16 @@
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="./">Home</a>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">Home</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">Contact us</a>
 </li></ul>
               </div>
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not be copied due to copyright law.<br>This project is for educational purposes only and is not intended for commercial use. 
-        </p>
+        <p class="u-small-text u-text u-text-variant u-text-1">This webstite of Group 8 is not a product to be monetized and is only for a group project </p>
       </div></footer>
     <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/one-page-template">One Page Template</a> was created with Nicepage Builder 
     </section>
