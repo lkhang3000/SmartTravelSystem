@@ -104,7 +104,9 @@
               {% for item in trip_items %}
 
                 {% if item.destination %}
-                <article class="explore-card">
+                <article class="explore-card" 
+                         data-location="{{ item.destination.address }} {{ item.destination.location.locationName }}"
+                         style="cursor: pointer;">
                   <div class="explore-card__image"
                       style="background-image: url('{% if item.destination.image_url %}{{ item.destination.image_url }}{% else %}https://picsum.photos/400/200{% endif %}');">
                   </div>
@@ -120,12 +122,9 @@
                               data-item-id="{{ item.id }}"
                               data-destination-id="{{ item.destination.id }}"
                               data-item-name="{{ item.destination.desName }}"
-                              data-confirm-msg="{% trans 'Remove this destination from your trip?' %}">
+                              data-confirm-msg="{% trans 'Remove this destination from your trip?' %}"
+                              onclick="event.stopPropagation();">
                         {% trans "Remove" %}
-                      </button>
-                      <button class="btn btn--small btn--ghost explore-location-btn"
-                              data-location="{{ item.destination.address }} {{ item.destination.location.locationName }}">
-                        📍 {% trans "Location" %}
                       </button>
                       
                     </div>
@@ -182,7 +181,7 @@
         </div>
 
         <!-- Add new day button -->
-        <button class="btn btn--outline" style="margin-top: 20px; width: 100%;">
+        <button class="btn btn--outline" id="add-day-btn" style="margin-top: 20px; width: 100%;">
           + {% trans "Add another day" %}
         </button>
       </section>
@@ -203,11 +202,11 @@
           <div class="budget-meta">
             <div class="budget-info-row">
               <span class="budget-info-label">{% trans "Travelers" %}:</span>
-              <span class="budget-info-value" id="travelers-display">1</span>
+              <span class="budget-info-value" id="travelers-display">{{ travelers }}</span>
             </div>
             <div class="budget-info-row">
               <span class="budget-info-label">{% trans "Per person" %}:</span>
-              <span class="budget-info-value" id="per-person-display">0 million VND</span>
+              <span class="budget-info-value" id="per-person-display">0 VND</span>
             </div>
           </div>
         </div>
@@ -232,10 +231,6 @@
           <div class="expenses-list" id="expenses-list">
             <!-- Expenses will be dynamically added here -->
           </div>
-
-          <button class="btn btn--outline btn--add-other-expense" id="add-other-expense-btn">
-            + {% trans "Add other expenses" %}
-          </button>
         </div>
       </section>
 
@@ -243,7 +238,8 @@
     </main>
 
     <!-- RIGHT MAP PANEL -->
-      <div class="map-pane__body">
+    <aside style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: transparent !important;">
+      <div class="map-pane__body" style="flex: 1; min-height: 0; position: relative; background: transparent !important; background-image: none !important;">
           {% if request.session.trip_map_url %}
           <iframe 
               width="100%" 
@@ -256,6 +252,20 @@
           {% else %}
           <p>No map available. Please create a trip first.</p>
           {% endif %}
+      </div>
+
+      <!-- Destination Detail Panel -->
+      <div class="destination-detail-panel" id="destination-detail-panel" style="display: none; padding: 15px; margin: 0 15px 15px 15px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; max-height: 30vh; overflow-y: auto;">
+        <div class="detail-header" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+          <h3 id="detail-title" style="margin: 0; font-size: 18px; color: var(--text-main);">Destination Name</h3>
+          <button id="close-detail-panel" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>
+        </div>
+        <div class="detail-image" id="detail-image" style="width: 100%; height: 120px; background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 12px;"></div>
+        <div class="detail-info">
+          <p id="detail-category" style="font-size: 13px; color: #666; margin-bottom: 6px;"></p>
+          <p id="detail-rating" style="font-size: 13px; color: #666; margin-bottom: 6px;"></p>
+          <p id="detail-address" style="font-size: 13px; color: #666; margin-bottom: 6px;"></p>
+        </div>
       </div>
 
     </aside>
@@ -397,7 +407,7 @@
         
         <!-- Budget -->
         <div class="form-section">
-          <h4>{% trans "Budget" %} ({% trans "Million VND" %})</h4>
+          <h4>{% trans "Budget" %} (VND)</h4>
           <div class="form-group">
             <label for="budget">{% trans "Total Budget" %}</label>
             <div class="budget-input">
@@ -638,9 +648,12 @@ document.addEventListener("DOMContentLoaded", function () {
         systemDestinations.forEach(dest => {
             const rating = dest.rating ? dest.rating.replace(/,/g, '.') : '';
             const subtitle = dest.category + (rating ? ` | ${rating}` : '');
+            const location = dest.address || dest.name;
             
             const miniCard = document.createElement('div');
             miniCard.classList.add('day-explore-card');
+            miniCard.setAttribute('data-location', location);
+            miniCard.style.cursor = 'pointer';
             miniCard.innerHTML = `
                 <div class="day-explore-card__image" style="background-image: url('${dest.image}'); background-size: cover; background-position: center;"></div>
                 <div class="day-explore-card__body">
@@ -652,9 +665,36 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             `;
             
-            // Add click handler
+            // Add click handler for map location and detail panel
+            miniCard.addEventListener('click', function(e) {
+                // Don't trigger if clicking the Add button
+                if (!e.target.closest('.btn-add-to-day')) {
+                    const iframe = document.querySelector('.map-pane__body iframe');
+                    const detailPanel = document.getElementById('destination-detail-panel');
+                    
+                    if (iframe && location) {
+                        iframe.src = `https://maps.google.com/maps?output=embed&q=${encodeURIComponent(location)}&z=16`;
+                    }
+                    
+                    // Show detail panel
+                    if (detailPanel) {
+                        document.getElementById('detail-title').textContent = dest.name;
+                        document.getElementById('detail-category').textContent = dest.category || '';
+                        document.getElementById('detail-rating').textContent = rating ? `⭐ ${rating}` : '';
+                        document.getElementById('detail-address').textContent = dest.address || '';
+                        
+                        const detailImage = document.getElementById('detail-image');
+                        detailImage.style.backgroundImage = `url('${dest.image}')`;
+                        
+                        detailPanel.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Add click handler for Add button
             const addBtn = miniCard.querySelector('.btn-add-to-day');
-            addBtn.addEventListener('click', function() {
+            addBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
                 const currentDay = parseInt(dayNumber);
                 if (!currentDay || isNaN(currentDay)) {
                     console.error('❌ Invalid day number:', dayNumber);
@@ -875,7 +915,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Display existing note
                 const noteElement = document.createElement('div');
                 noteElement.classList.add('place-card__note');
-                noteElement.innerHTML = `<span style="color: #666;">📝 ${existingNotes}</span>`;
+                noteElement.innerHTML = `<span style="color: #666;">${existingNotes}</span>`;
                 placeCard.querySelector('.place-card__info').appendChild(noteElement);
             }
         } else {
@@ -1569,12 +1609,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const decreaseBtn = document.getElementById('decrease-travelers');
   const increaseBtn = document.getElementById('increase-travelers');
   const travelersInput = document.getElementById('travelers-count');
+  const travelersDisplay = document.getElementById('travelers-display');
   
   if (decreaseBtn) {
     decreaseBtn.addEventListener('click', function() {
       let value = parseInt(travelersInput.value);
       if (value > 1) {
         travelersInput.value = value - 1;
+        if (travelersDisplay) {
+          travelersDisplay.textContent = value - 1;
+        }
       }
     });
   }
@@ -1584,6 +1628,9 @@ document.addEventListener('DOMContentLoaded', function() {
       let value = parseInt(travelersInput.value);
       if (value < 20) {
         travelersInput.value = value + 1;
+        if (travelersDisplay) {
+          travelersDisplay.textContent = value + 1;
+        }
       }
     });
   }
@@ -1643,7 +1690,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Get budget and travelers from context
   const rawBudget = '{{ budget|default_if_none:"0" }}';
-  const rawTravelers = '{{ trip_travelers|default_if_none:"1" }}';
+  const rawTravelers = '{{ travelers|default_if_none:"1" }}';
 
   // Budget is in millions, convert to actual VND
   const totalBudgetInMillions = (() => {
@@ -1668,21 +1715,25 @@ document.addEventListener('DOMContentLoaded', function() {
     updateBudgetDisplay();
   }
   
+  // Format number with thousand separators
+  function formatVND(amount) {
+    return Math.round(amount).toLocaleString('en-US') + ' VND';
+  }
+
   // Update budget display with current expenses
   function updateBudgetDisplay() {
     const budgetDisplay = document.getElementById('total-budget-display');
     const travelersDisplay = document.getElementById('travelers-display');
     const perPersonDisplay = document.getElementById('per-person-display');
     
-    // Calculate total expenses in millions
+    // Calculate total expenses
     const totalExpensesVND = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-    const totalExpensesInMillions = totalExpensesVND / 1000000;
     
-    // Current budget = initial budget + expenses
-    const currentBudgetInMillions = totalBudgetInMillions + totalExpensesInMillions;
+    // Current budget = initial budget + expenses (both in VND)
+    const currentBudgetVND = totalBudget + totalExpensesVND;
     
     if (budgetDisplay) {
-      budgetDisplay.textContent = Math.round(currentBudgetInMillions);
+      budgetDisplay.textContent = formatVND(currentBudgetVND).replace(' VND', '');
     }
     
     if (travelersDisplay) {
@@ -1690,8 +1741,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (perPersonDisplay) {
-      const perPersonInMillions = currentBudgetInMillions / travelers;
-      perPersonDisplay.textContent = Math.round(perPersonInMillions) + ' million VND';
+      const perPersonVND = currentBudgetVND / travelers;
+      perPersonDisplay.textContent = formatVND(perPersonVND);
     }
   }
 
@@ -1884,7 +1935,7 @@ function closeExpenseModalFunc() {
           </div>
         </div>
         <div class="expense-item__amount">
-          ${(expense.amount / 1000000).toFixed(2)} million VND
+          ${formatVND(expense.amount)}
         </div>
       </div>
     `).join('');
@@ -2070,31 +2121,102 @@ document.addEventListener("DOMContentLoaded", function () {
                     endPicker.clear();
                 }
             }
+            // Trigger generateDays when start date changes
+            generateDays();
         }
     });
 
     const endPicker = flatpickr(endInput, {
         dateFormat: "d/m/Y",
         minDate: "today",
-        disableMobile: true
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            // Trigger generateDays when end date changes
+            generateDays();
+        }
     });
+    
+    // Store flatpickr instances globally for access by add-day button
+    window.endPickerInstance = endPicker;
+    window.startPickerInstance = startPicker;
+    
+    // Add another day button handler (after flatpickr initialization)
+    const addDayBtn = document.getElementById('add-day-btn');
+    if (addDayBtn) {
+        addDayBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🔄 Add day button clicked');
+            
+            if (!endPicker || !endPicker.selectedDates || endPicker.selectedDates.length === 0) {
+                alert('{% trans "Please set trip dates first" %}');
+                return;
+            }
+            
+            // Get current end date from flatpickr
+            const currentEndDate = endPicker.selectedDates[0];
+            console.log('📅 Current end date:', currentEndDate);
+            
+            // Add one day
+            const newEndDate = new Date(currentEndDate);
+            newEndDate.setDate(newEndDate.getDate() + 1);
+            console.log('📅 New end date:', newEndDate);
+            
+            // Set new date in flatpickr (this will trigger onChange which calls generateDays)
+            endPicker.setDate(newEndDate);
+            
+            console.log('✅ Added new day successfully');
+        });
+    } else {
+        console.log('❌ Add day button not found');
+    }
 
 });
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-  document.querySelectorAll('.explore-location-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const location = btn.dataset.location;
+  // Handle card clicks to show location on map (for saved destinations)
+  document.querySelectorAll('.explore-card[data-location]').forEach(card => {
+    card.addEventListener('click', function () {
+      const location = card.dataset.location;
       const iframe = document.querySelector('.map-pane__body iframe');
+      const detailPanel = document.getElementById('destination-detail-panel');
 
       if (iframe && location) {
         iframe.src = 
           `https://maps.google.com/maps?output=embed&q=${encodeURIComponent(location)}&z=16`;
       }
+      
+      // Show detail panel
+      if (detailPanel) {
+        const title = card.querySelector('.explore-card__title')?.textContent || 'Unknown';
+        const subtitle = card.querySelector('.explore-card__subtitle')?.textContent || '';
+        const imageUrl = card.querySelector('.explore-card__image')?.style.backgroundImage?.replace(/url\(["']?([^"']+)["']?\)/g, '$1') || '';
+        
+        document.getElementById('detail-title').textContent = title;
+        document.getElementById('detail-category').textContent = subtitle;
+        document.getElementById('detail-address').textContent = location;
+        document.getElementById('detail-rating').textContent = '';
+        
+        const detailImage = document.getElementById('detail-image');
+        if (imageUrl) {
+          detailImage.style.backgroundImage = `url('${imageUrl}')`;
+        }
+        
+        detailPanel.style.display = 'block';
+      }
     });
   });
+  
+  // Note: day-explore-card click handlers are added dynamically in populateDayCarousel()
+  
+  // Close detail panel button
+  const closeDetailBtn = document.getElementById('close-detail-panel');
+  if (closeDetailBtn) {
+    closeDetailBtn.addEventListener('click', function() {
+      document.getElementById('destination-detail-panel').style.display = 'none';
+    });
+  }
 
 });
 </script>
