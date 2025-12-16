@@ -162,18 +162,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Gemini API Key
 GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
 
-# Email Configuration
-# For development, use console backend (prints emails to console)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'hoanappoxt4869@gmail.com'
+EMAIL_HOST_PASSWORD = 'cwqw oetf stqn lkxo'
+DEFAULT_FROM_EMAIL = 'Odyscape <hoanbk006@gmail.com>'
 
-# For production, use SMTP (uncomment and configure below)
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your-email@gmail.com'
-# EMAIL_HOST_PASSWORD = 'your-app-password'
-# DEFAULT_FROM_EMAIL = 'Smart Tour <noreply@smarttour.com>'
-
-# For now, use console backend
-DEFAULT_FROM_EMAIL = 'Smart Tour <noreply@smarttour.com>'
