@@ -567,44 +567,53 @@
 
             
 
-            <form>
+            <form method="POST" action="{% url 'update_profile_settings' %}">
+                {% csrf_token %}
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label for="group_size">{% trans "Group size" %}</label>
-                        <input type="text" id="group_size" value="1">
+                        <input type="number" id="group_size" name="num_people" value="{{ request.session.user_preferences.trip_preferences.num_people|default:'1' }}">
                     </div>
                     <div class="form-group">
-                        <label for="budget">{% trans "Budget(VND)" %}</label>
-                        <input type="text" id="budget" value="1000000">
+                        <label for="budget">{% trans "Budget (VND)" %}</label>
+                        <input type="number" id="budget" name="budget" value="{{ request.session.user_preferences.trip_preferences.budget|default:'1000000' }}">
                     </div>
-                </div>                <div class="form-row">
+                </div>
+                
+                <div class="form-row">
                     <div class="form-group date-input-container">
                         <label for="arrival_day">{% trans "Arrival Day" %}</label>
-                        <input type="text" id="arrival_day" value="2025-12-01" readonly class="date-input-field">
+                        <input type="text" id="arrival_day" name="departure_date" 
+                               value="{{ request.session.user_preferences.trip_preferences.departure_date|default:'2025-12-01' }}" 
+                               readonly class="date-input-field">
                         <div id="arrival_calendar" class="mini-calendar"></div>
                     </div>
                     <div class="form-group date-input-container">
                         <label for="departure_day">{% trans "Departure Day" %}</label>
-                        <input type="text" id="departure_day" value="2025-12-02" readonly class="date-input-field">
+                        <input type="text" id="departure_day" name="return_date" 
+                               value="{{ request.session.user_preferences.trip_preferences.return_date|default:'2025-12-02' }}" 
+                               readonly class="date-input-field">
                         <div id="departure_calendar" class="mini-calendar"></div>
                     </div>
                 </div>
-                  <div class="form-row">
+
+                <div class="form-row">
                     <div class="form-group">
                         <label for="Regions">{% trans "Destination" %}</label>
-                        <select id="Regions">
-                            <option value="All regions" selected>{% trans "All regions" %}</option>
-                            <option value="Ho Chi Minh City">{% trans "Ho Chi Minh City" %}</option>
-                            <option value="Hanoi">{% trans "Hanoi" %}</option>
-                            <option value="Da Nang">{% trans "Da Nang" %}</option>
-                            <option value="Hue">{% trans "Hue" %}</option>
-                            <option value="Can Tho">{% trans "Can Tho" %}</option>
+                        <select id="Regions" name="region">
+                            <option value="All regions">{% trans "All regions" %}</option>
+                            <option value="Ho Chi Minh City" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Ho Chi Minh City" %}selected{% endif %}>{% trans "Ho Chi Minh City" %}</option>
+                            <option value="Hanoi" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Hanoi" %}selected{% endif %}>{% trans "Hanoi" %}</option>
+                            <option value="Da Nang" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Da Nang" %}selected{% endif %}>{% trans "Da Nang" %}</option>
+                            <option value="Hue" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Hue" %}selected{% endif %}>{% trans "Hue" %}</option>
+                            <option value="Can Tho" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Can Tho" %}selected{% endif %}>{% trans "Can Tho" %}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="Category">{% trans "Category" %}</label>
-                        <select id="category">
-                            <option value="All categories" selected>{% trans "All categories" %}</option>
+                        <select id="category" name="tags">
+                            <option value="All categories">{% trans "All categories" %}</option>
                             <option value="Landmark">{% trans "Landmark" %}</option>
                             <option value="Scenery">{% trans "Scenery" %}</option>
                             <option value="Sanctuary">{% trans "Sanctuary" %}</option>
@@ -614,13 +623,13 @@
                     </div>
                     <div class="form-group">
                         <label for="Rating">{% trans "Ratings" %}</label>
-                        <select id="Rating">
+                        <select id="Rating" name="rating">
                             <option value="All ratings" selected>{% trans "All ratings" %}</option>
-                            <option value="★☆☆☆☆(1+)">★☆☆☆☆(1+)</option>
-                            <option value="★★☆☆☆(2+)">★★☆☆☆(2+)</option>
-                            <option value="★★★☆☆(3+)">★★★☆☆(3+)</option>
-                            <option value="★★★★☆(4+)">★★★★☆(4+)</option>
-                            <option value="★★★★★">★★★★★</option>
+                            <option value="1">★☆☆☆☆(1+)</option>
+                            <option value="2">★★☆☆☆(2+)</option>
+                            <option value="3">★★★☆☆(3+)</option>
+                            <option value="4">★★★★☆(4+)</option>
+                            <option value="5">★★★★★</option>
                         </select>
                     </div>
                 </div>
@@ -666,39 +675,36 @@
         <div id="saved-planners" class="content-section">
             <h2>{% trans "Saved Trip Planners" %}</h2>
 
-            <a href="{% url 'trip_planner' %}" class="trip-card-link">
-                <div class="trip-card-container">
-                    <div class="trip-card-info">
-                        <h3 class="trip-card-title">{% trans "Trip to Ho Chi Minh City" %}</h3>
-                        <div class="trip-card-tags">
-                            <span class="tag">12/1 – 12/2</span>
-                            <span class="tag">{% trans "2 travelers" %}</span>
-                            <span class="tag">{% trans "Landmark" %}</span>
+            {% if trips %}
+                {% for trip in trips %}
+                <a href="{% url 'trip_planner' %}" class="trip-card-link">
+                    <div class="trip-card-container">
+                        <div class="trip-card-info">
+                            <h3 class="trip-card-title">{% trans "Trip to" %} {{ trip.destination }}</h3>
+                            
+                            <div class="trip-card-tags">
+                                {% if trip.departure_date and trip.arrival_date %}
+                                    <span class="tag">{{ trip.departure_date|date:"d/m" }} – {{ trip.arrival_date|date:"d/m" }}</span>
+                                {% endif %}
+                                
+                                <span class="tag">{{ trip.travelers }} {% trans "travelers" %}</span>
+                                
+                                <span class="tag">{{ trip.budget}} VND</span>
+                            </div>
+                        </div>
+
+                        <div class="trip-card-image"
+                            style="background-image: url('{{ trip.display_image }}');">
                         </div>
                     </div>
-
-                    <div class="trip-card-image"
-                         style="background-image: url('https://picsum.photos/seed/hcmc/800/400');">
-                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div style="padding: 20px; text-align: center; color: #666;">
+                    <p>{% trans "You haven't saved any trips yet." %}</p>
+                    <a href="{% url 'trip_planner' %}" class="smart-btn" style="text-decoration: none;">{% trans "Create New Trip" %}</a>
                 </div>
-            </a>
-
-            <a href="{% url 'trip_planner' %}" class="trip-card-link">
-                <div class="trip-card-container">
-                    <div class="trip-card-info">
-                        <h3 class="trip-card-title">{% trans "Trip to Hanoi" %}</h3>
-                        <div class="trip-card-tags">
-                            <span class="tag">10/10 – 10/15</span>
-                            <span class="tag">{% trans "4 travelers" %}</span>
-                            <span class="tag">{% trans "Culture/Food" %}</span>
-                        </div>
-                    </div>
-
-                    <div class="trip-card-image"
-                         style="background-image: url('https://picsum.photos/seed/hanoi/800/400');">
-                    </div>
-                </div>
-            </a>
+            {% endif %}
         </div>
 
         <div id="search-history" class="content-section">
