@@ -53,7 +53,7 @@
 
       </nav>
     </aside>
-    
+    <div class="gutter gutter-left" id="gutter-left"></div>
     <!-- MAIN CONTENT -->
     <main class="main">
 
@@ -181,10 +181,10 @@
         </div>
 
         <!-- Add new day button -->
-        <button class="btn btn--outline" id="add-day-btn" style="margin-top: 20px; width: 100%;">
-          + {% trans "Add another day" %}
+        <button class="btn btn--outline-dashed" id="add-day-btn">
+        <span style="font-size: 18px; font-weight: bold;">+</span> 
+        {% trans "Add another day" %}
         </button>
-      </section>
 
       <!-- BUDGETING SECTION -->
       <section class="section budget-section" id="budget-section">
@@ -233,12 +233,10 @@
           </div>
         </div>
       </section>
-
-
     </main>
-
+    <div class="gutter gutter-right" id="gutter-right"></div>
     <!-- RIGHT MAP PANEL -->
-    <aside style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: transparent !important;">
+    <aside class="map-pane" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: transparent !important;">
       <div class="map-pane__body" style="flex: 1; min-height: 0; position: relative; background: transparent !important; background-image: none !important;">
           {% if request.session.trip_map_url %}
           <iframe 
@@ -1303,8 +1301,70 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    startInput.addEventListener("change", generateDays);
-    endInput.addEventListener("change", generateDays);
+    let startPicker, endPicker;
+
+    startPicker = flatpickr(startInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            if (selectedDates.length > 0) {
+                endPicker.set("minDate", selectedDates[0]);
+                if (endPicker.selectedDates.length > 0 && endPicker.selectedDates[0] < selectedDates[0]) {
+                    endPicker.clear();
+                }
+            }
+            generateDays(); // Gọi hàm generateDays nằm cùng phạm vi
+        }
+    });
+
+    endPicker = flatpickr(endInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            generateDays(); // Gọi hàm generateDays nằm cùng phạm vi
+        }
+    });
+
+    // 2. XỬ LÝ NÚT THÊM NGÀY (ADD DAY BUTTON)
+    const addDayBtn = document.getElementById('add-day-btn');
+    if (addDayBtn) {
+        addDayBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Kiểm tra xem đã có ngày kết thúc chưa
+            if (!endPicker.selectedDates || endPicker.selectedDates.length === 0) {
+                const startDate = startPicker.selectedDates[0] || new Date();
+                endPicker.setDate(startDate, true);
+                return;
+            }
+            
+            // Lấy ngày kết thúc hiện tại + 1
+            const currentEndDate = endPicker.selectedDates[0];
+            const newEndDate = new Date(currentEndDate);
+            newEndDate.setDate(newEndDate.getDate() + 1);
+            
+            // Cập nhật ngày mới (trigger onChange -> gọi generateDays)
+            endPicker.setDate(newEndDate, true);
+            
+            // Hiệu ứng cuộn xuống ngày mới tạo
+            setTimeout(() => {
+                const daysContainer = document.getElementById("itinerary-days");
+                const newDayCard = daysContainer.lastElementChild;
+                if (newDayCard) {
+                    newDayCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Highlight
+                    newDayCard.style.transition = 'background 0.5s';
+                    newDayCard.style.background = '#fff8f0';
+                    setTimeout(() => {
+                        newDayCard.style.background = ''; 
+                    }, 1000);
+                }
+            }, 100);
+        });
+    }
 
     // Save button handler
     const saveTripBtn = document.getElementById('save-trip-btn');
@@ -2100,78 +2160,7 @@ function closeExpenseModalFunc() {
 
 });
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    const startInput = document.getElementById("start-date");
-    const endInput   = document.getElementById("end-date");
-
-    const startPicker = flatpickr(startInput, {
-        dateFormat: "d/m/Y",
-        minDate: "today",
-        disableMobile: true,
-        onChange: function (selectedDates) {
-            if (selectedDates.length > 0) {
-                endPicker.set("minDate", selectedDates[0]);
-
-                if (
-                    endPicker.selectedDates.length > 0 &&
-                    endPicker.selectedDates[0] < selectedDates[0]
-                ) {
-                    endPicker.clear();
-                }
-            }
-            // Trigger generateDays when start date changes
-            generateDays();
-        }
-    });
-
-    const endPicker = flatpickr(endInput, {
-        dateFormat: "d/m/Y",
-        minDate: "today",
-        disableMobile: true,
-        onChange: function (selectedDates) {
-            // Trigger generateDays when end date changes
-            generateDays();
-        }
-    });
-    
-    // Store flatpickr instances globally for access by add-day button
-    window.endPickerInstance = endPicker;
-    window.startPickerInstance = startPicker;
-    
-    // Add another day button handler (after flatpickr initialization)
-    const addDayBtn = document.getElementById('add-day-btn');
-    if (addDayBtn) {
-        addDayBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('🔄 Add day button clicked');
-            
-            if (!endPicker || !endPicker.selectedDates || endPicker.selectedDates.length === 0) {
-                alert('{% trans "Please set trip dates first" %}');
-                return;
-            }
-            
-            // Get current end date from flatpickr
-            const currentEndDate = endPicker.selectedDates[0];
-            console.log('📅 Current end date:', currentEndDate);
-            
-            // Add one day
-            const newEndDate = new Date(currentEndDate);
-            newEndDate.setDate(newEndDate.getDate() + 1);
-            console.log('📅 New end date:', newEndDate);
-            
-            // Set new date in flatpickr (this will trigger onChange which calls generateDays)
-            endPicker.setDate(newEndDate);
-            
-            console.log('✅ Added new day successfully');
-        });
-    } else {
-        console.log('❌ Add day button not found');
-    }
-
-});
-</script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -2218,8 +2207,94 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+    const appShell = document.querySelector('.app-shell');
+    const gutterLeft = document.getElementById('gutter-left');
+    const gutterRight = document.getElementById('gutter-right');
+    // Lưu ý: Đảm bảo bạn đã thêm class="map-pane" vào thẻ aside bên phải ở Bước 2
+    const mapIframe = document.querySelector('.map-pane iframe');
+
+    // Các cột: [0]:Sidebar, [1]:Gutter, [2]:Main, [3]:Gutter, [4]:Map
+    // Chúng ta cần lấy phần tử DOM thực tế để đo kích thước chính xác
+    const sidebarEl = document.querySelector('.sidebar');
+    const mapEl = document.querySelector('.map-pane');
+
+    if (!appShell || !gutterLeft || !gutterRight || !sidebarEl || !mapEl) return;
+
+    let isResizingLeft = false;
+    let isResizingRight = false;
+
+    // Hàm chặn sự kiện chuột vào iframe để không bị mất focus khi kéo
+    function toggleIframePointer(enable) {
+        if (mapIframe) {
+            mapIframe.style.pointerEvents = enable ? 'auto' : 'none';
+        }
+    }
+
+    // --- KÉO TRÁI ---
+    gutterLeft.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        isResizingLeft = true;
+        gutterLeft.classList.add('active');
+        toggleIframePointer(false); // Tắt tương tác bản đồ
+        document.body.style.cursor = 'col-resize';
+    });
+
+    // --- KÉO PHẢI ---
+    gutterRight.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        isResizingRight = true;
+        gutterRight.classList.add('active');
+        toggleIframePointer(false); // Tắt tương tác bản đồ
+        document.body.style.cursor = 'col-resize';
+    });
+
+    // --- DI CHUYỂN CHUỘT ---
+    document.addEventListener('mousemove', function(e) {
+        if (!isResizingLeft && !isResizingRight) return;
+
+        // Lấy chiều rộng hiện tại của 2 cột bên cạnh để giữ nguyên cột không kéo
+        const currentSidebarWidth = sidebarEl.offsetWidth;
+        const currentMapWidth = mapEl.offsetWidth;
+
+        if (isResizingLeft) {
+            let newLeftWidth = e.clientX;
+            
+            // Giới hạn Min/Max Sidebar
+            if (newLeftWidth < 200) newLeftWidth = 200;
+            if (newLeftWidth > 600) newLeftWidth = 600;
+
+            // Cập nhật Grid: [Mới] [Gutter] [Auto] [Gutter] [Cũ - Map]
+            appShell.style.gridTemplateColumns = `${newLeftWidth}px 4px 1fr 4px ${currentMapWidth}px`;
+        }
+
+        if (isResizingRight) {
+            // Chiều rộng Map = Tổng màn hình - Vị trí chuột
+            let newRightWidth = window.innerWidth - e.clientX;
+
+            // Giới hạn Min/Max Map
+            if (newRightWidth < 200) newRightWidth = 200;
+            if (newRightWidth > 900) newRightWidth = 900;
+
+            // Cập nhật Grid: [Cũ - Sidebar] [Gutter] [Auto] [Gutter] [Mới]
+            appShell.style.gridTemplateColumns = `${currentSidebarWidth}px 4px 1fr 4px ${newRightWidth}px`;
+        }
+    });
+
+    // --- THẢ CHUỘT ---
+    document.addEventListener('mouseup', function() {
+        if (isResizingLeft || isResizingRight) {
+            isResizingLeft = false;
+            isResizingRight = false;
+            gutterLeft.classList.remove('active');
+            gutterRight.classList.remove('active');
+            toggleIframePointer(true); // Bật lại bản đồ
+            document.body.style.cursor = '';
+        }
+    });
 });
 </script>
+
+
 
 </body>
 </html>
