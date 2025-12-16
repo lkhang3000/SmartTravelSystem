@@ -58,4 +58,6 @@ urlpatterns = [
     path('contact-us/', views.contact_us, name='contact_us'),
 
     path("update-trip/", views.update_trip, name="update_trip"),
+    path('api/save-full-trip/', views.save_trip_api, name='save_trip_api'),
+    path('update-profile-settings/', views.update_profile_settings, name='update_profile_settings'),
 ]
