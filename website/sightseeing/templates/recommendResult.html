@@ -253,6 +253,87 @@
             color: #666;
         }
         
+        /* Override for list card layout */
+        .results-layout {
+            display: flex !important;
+            gap: 30px !important;
+            margin-top: 30px !important;
+            max-width: 1200px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding: 0 20px !important;
+        }
+        
+        .list-card {
+            display: flex !important;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden !important;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #f0f0f0;
+            text-align: left;
+            width: 100% !important;
+            max-width: 100% !important;
+            align-items: stretch;
+            max-height: 180px !important;
+        }
+        
+        .list-card-image {
+            flex: 0 0 200px !important;
+            position: relative;
+            height: 180px !important;
+            overflow: hidden !important;
+            min-width: 200px !important;
+            max-width: 200px !important;
+        }
+        
+        .list-card-image img {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 200px !important;
+            max-height: 180px !important;
+            object-fit: cover !important;
+            display: block !important;
+        }
+        
+        .list-card-content {
+            flex: 1 !important;
+            padding: 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            overflow: hidden !important;
+        }
+        
+        .amenity-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #666;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .view-details-btn {
+            background: #FF5A00;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .view-details-btn:hover {
+            background: #e65100;
+            color: white;
+            text-decoration: none;
+        }
+        
     </style>
 </head>
 
@@ -344,7 +425,7 @@
 
     <section class="u-clearfix" style="padding: 120px 0 60px 0; background-color: #f0f0f0; margin-top: 20px;">
     <div style="width: 100%; display: flex; justify-content: center;">
-        <form method="GET" action="" id="searchForm">
+        <form method="GET" action="" id="searchForm" class="u-form-custom-backend">
             <div class="search-pill-container">
                 
                 <div class="filter-column">
@@ -469,13 +550,13 @@
     <div style="flex: 1;">
         
         {% comment %} 1. Recommended for You (Limited to Top 10) {% endcomment %}
-        {% if collaborative_recommendations and not filters_applied %}
+        {% if collaborative_recommendations %}
             <h3 style="text-align: left; font-size: 22px; margin-bottom: 20px;">{% trans "Recommended for You" %}</h3>
             {% for spot in collaborative_recommendations %}
                 <div class="list-card" style="border: 2px solid #FF5A00;"> 
                     <div class="list-card-image">
                         <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x300/?hotel'">
-                        <div style="position:absolute; top:10px; right:10px; background:#FF5A00; color:white; padding:4px 10px; border-radius:15px; font-size:10px; font-weight:bold;">{% trans "Collaborative" %}</div>
+                        <div style="position:absolute; top:10px; right:10px; background:#FF5A00; color:white; padding:4px 10px; border-radius:15px; font-size:10px; font-weight:bold;">🤖 {% trans "AI Recommended" %}</div>
                     </div>
                     <div class="list-card-content">
                         <div style="display:flex; justify-content:space-between;">

@@ -291,10 +291,12 @@
         <div class="custom-expanded data-layout-selected u-clearfix u-layout-wrap u-radius u-layout-wrap-1">
           <div class="u-layout">
             <div class="u-layout-row">
+              <!-- Single unified form for all filters -->
+              <form id="unified-search-form" action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical" method="get" style="display: flex; width: 100%; gap: 0;">
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
                 <div class="u-container-layout u-valign-top u-container-layout-1">
                   <div class="custom-expanded u-form u-form-1">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-1">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-1" style="padding: 10px;">
                         <label class="u-custom-font u-font-montserrat u-label u-label-1">{% trans "Location" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="location-filter" name="location" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-1">
@@ -306,22 +308,13 @@
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-2"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
                   </div>
                 </div>
               </div>
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
                 <div class="u-container-layout u-valign-top u-container-layout-2">
                   <div class="custom-expanded u-form u-form-2">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-3">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-3" style="padding: 10px;">
                         <label class="u-custom-font u-font-montserrat u-label u-label-2">{% trans "Category" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="category-filter" name="category" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-white u-input-2">
@@ -333,22 +326,13 @@
                           <svg class="u-caret u-caret-svg u-text-white" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-3"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
                   </div>
                 </div>
               </div>
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
                 <div class="u-container-layout u-valign-top u-container-layout-3">
                   <div class="custom-expanded u-form u-form-3">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-5">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-5" style="padding: 10px;">
                         <label class="u-custom-font u-font-montserrat u-label u-label-3">{% trans "Rating" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="rating-filter" name="rating" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-3">
@@ -362,18 +346,13 @@
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-4"></a>
+                      <div class="u-align-right u-form-group u-form-submit u-label-none" style="padding: 10px;">
+                        <button type="submit" class="u-border-none u-btn u-btn-submit u-button-style u-gradient u-none u-text-white u-btn-4" style="padding: 10px 30px; cursor: pointer;">{% trans "Search" %}</button>
                       </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
                   </div>
                 </div>
               </div>
+              </form>
             </div>
           </div>
         </div>
