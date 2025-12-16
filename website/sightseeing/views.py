@@ -458,12 +458,14 @@ def recommend_result(request):
         recommendations_list.sort(key=lambda x: x.get('rating', 0), reverse=True)
 
     # Check if any filters are applied
+    collaborative_recommendations = recommendations_list[:10]
+    remaining_results = recommendations_list[10:]
     filters_applied = bool(selected_location or selected_category or selected_price or selected_rating)
 
     # Implement pagination
     if not filters_applied:
         # No filters applied - show 20 per page
-        paginator = Paginator(recommendations_list, 20)
+        paginator = Paginator(recommendations_list, 10)
         page_number = request.GET.get('page', 1)
         try:
             page_number = int(page_number)
