@@ -40,13 +40,6 @@
 
         <div class="nav-section">
           <p class="nav-section__title">{% trans "Itinerary" %}</p>
-<<<<<<< HEAD
-
-          {% for day in days %}
-          <button class="nav-item" data-section="itinerary-section">
-            <span>{{ day.label }}</span>
-            <span class="nav-item__pill">0 stops</span>
-=======
           <div id="sidebar-days">
             <!-- Days will be dynamically generated here -->
           </div>
@@ -55,11 +48,8 @@
         <div class="nav-section">
           <button class="nav-item" data-section="budget-section">
             <span>{% trans "Budgeting" %}</span>
->>>>>>> 747447e (update tripplanner intinerrary)
           </button>
-          {% endfor %}
         </div>
-
 
       </nav>
     </aside>
@@ -105,77 +95,6 @@
           <h2>{% trans "Saved destinations" %}</h2>
         </div>
 
-<<<<<<< HEAD
-        <!-- Carousel showing destinations for selected location -->
-        <div class="carousel-wrapper">
-          <button class="carousel-btn prev-btn">❮</button>
-
-          <div class="carousel-track" id="explore-carousel">
-            {% for dest in destinations %}
-          <article class="explore-card">
-
-            <!-- IMAGE -->
-            <div class="explore-card__image"
-                style="background-image: url('{{ dest.image_url }}');">
-            </div>
-            <!-- ACTIONS BELOW IMAGE -->
-          <div class="explore-card__image-actions">
-
-            <!-- ADD TO TRIP -->
-            <button class="btn btn--small btn--primary add-to-trip-btn"
-                    data-destination-id="{{ dest.id }}">
-              ➕ {% trans "Add to Trip" %}
-            </button>
-
-            <!-- 📍 LOCATION -->
-            <button class="btn btn--small btn--ghost explore-location-btn"
-                    data-location="{{ dest.address }} {{ dest.location.locationName }}">
-              📍 {% trans "Location" %}
-            </button>
-
-          </div>
-
-            <!-- BODY -->
-            <div class="explore-card__body">
-              
-              <h3 class="explore-card__title">{{ dest.desName }}</h3>
-              <p class="explore-card__subtitle">
-                {{ dest.category }} | {{ dest.ratings }}⭐
-              </p>
-              <p class="explore-card__meta">
-                {{ dest.address }} - {{ dest.location.locationName }}
-              </p>
-              <p class="explore-card__description">
-                {{ dest.description|truncatewords:20 }}
-              </p>
-
-              <!-- ✅ ACTIONS (VIEW DETAIL + ADD TO TRIP) -->
-              <div class="explore-card__actions">
-
-                <!-- VIEW DETAIL (PHẢI) -->
-                <a href="{% url 'destination_detail' dest.id %}"
-                  class="btn btn--small btn--ghost">
-                  👁 {% trans "View details" %}
-                </a>
-
-              </div>
-            </div>
-
-          </article>
-
-          {% endfor %}
-
-          </div>
-
-          <button class="carousel-btn next-btn">❯</button>
-        </div>
-      </section>      
-      <!-- Saved Destinations -->
-      <div class="explore-subsection" id="saved-section">
-        <h3 class="explore-subtitle">{% trans "Saved destinations" %}</h3>
-
-=======
->>>>>>> 747447e (update tripplanner intinerrary)
         <div class="carousel-wrapper">
           <button class="carousel-btn prev-btn">❮</button>
 
@@ -258,23 +177,6 @@
           </button>
         </div>
 
-<<<<<<< HEAD
-        {% for day in days %}
-        <div class="itinerary-day-full">
-          <div class="itinerary-day-full__head">
-            <div>
-              <h3>
-                {{ day.weekday }}, {{ day.date|date:"F jS" }}
-              </h3>
-              <button class="link-button">{% trans "Add subheading" %}</button>
-            </div>
-
-            <div class="itinerary-day-full__actions">
-              <button class="tiny-link">{% trans "Auto-fill day" %}</button>
-              <span class="dot-separator">·</span>
-              <button class="tiny-link">{% trans "Optimize route" %}</button>
-              <button class="icon-button icon-button--ghost">⋯</button>
-=======
         <div id="itinerary-days">
           <!-- Days will be dynamically generated here -->
         </div>
@@ -324,7 +226,6 @@
                 <option value="amount-desc">{% trans "Amount (highest first)" %}</option>
                 <option value="amount-asc">{% trans "Amount (lowest first)" %}</option>
               </select>
->>>>>>> 747447e (update tripplanner intinerrary)
             </div>
           </div>
 
@@ -336,7 +237,6 @@
             + {% trans "Add other expenses" %}
           </button>
         </div>
-        {% endfor %}
       </section>
 
 
@@ -597,10 +497,21 @@ document.addEventListener("DOMContentLoaded", function () {
         daysContainer.innerHTML = "";
         sidebarDaysContainer.innerHTML = "";
 
-        const start = new Date(startInput.value);
-        const end = new Date(endInput.value);
+        // Parse dd/mm/yyyy format
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                // dd/mm/yyyy -> yyyy-mm-dd
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+            return new Date(dateStr);
+        }
 
-        if (isNaN(start) || isNaN(end) || start > end) {
+        const start = parseDate(startInput.value);
+        const end = parseDate(endInput.value);
+
+        if (!start || !end || isNaN(start) || isNaN(end) || start > end) {
             daysContainer.innerHTML = "<p style='color:#999;'>Please select valid dates</p>";
             return;
         }
