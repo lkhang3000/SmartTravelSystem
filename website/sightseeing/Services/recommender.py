@@ -165,9 +165,12 @@ class ContentBasedRecommender:
         scored_destinations.sort(key=lambda x: x['preference_score'], reverse=True)
         return pd.DataFrame(scored_destinations[:top_n])
 
+<<<<<<< HEAD
+=======
 # Setup Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
 django.setup()
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
 
 class AIRecommender:
     """AI-Powered Recommender using Matrix Factorization (NMF) + Neural Network (MLP)"""

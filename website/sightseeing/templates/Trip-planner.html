@@ -26,7 +26,7 @@
               <span class="brand__title">Odyscape</span>
             </div>
           </a>
-        </div>        <button class="ai-chip">
+        </div>        <button class="ai-chip" onclick="toggleChat()">
           <span>{% trans "AI Assistant" %}</span>
         </button>
       </div>
@@ -56,6 +56,30 @@
 
       </nav>
     </aside>
+<<<<<<< HEAD
+
+    <!-- CHATBOT SECTION -->
+    <section class="chatbot-section" id="chatbot-section" style="display: none; height: 100vh; overflow: hidden;">
+      <div class="chat-interface" style="display: flex; flex-direction: column; height: 100%; background: linear-gradient(to bottom, #ff8427, #ff6b35); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+        <div class="chat-header" style="background: linear-gradient(to right, #ff8427, #ff6b35); color: #fff; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0;">
+          <div style="display: flex; align-items: center;">
+            <img src="{% static 'images/Odyscape.png' %}" alt="Odyscape Logo" style="width: 30px; height: 30px; margin-right: 10px;">
+            <span>Travel Assistant</span>
+          </div>
+          <span class="close-btn" onclick="toggleChat()" style="cursor: pointer; font-size: 20px; color: #fff;">×</span>
+        </div>
+        <div class="chat-body" style="padding: 10px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: rgba(255,255,255,0.9);">
+          <div class="bot-msg">Xin chào! Tôi có thể giúp gì cho chuyến đi của bạn đến {{ trip_destination }}?</div>
+        </div>
+        <div class="chat-input" style="padding: 10px; border-top: 1px solid rgba(255,255,255,0.3); display: flex;">
+          <input type="text" placeholder="Anything for your trip?" style="flex: 1; padding: 8px; border: 1px solid rgba(255,255,255,0.3); border-radius: 25px; margin-right: 8px; background: rgba(255,255,255,0.9);">
+          <button style="padding: 8px 12px; background: linear-gradient(to right, #ff8427, #ff6b35); color: white; border: none; border-radius: 25px; cursor: pointer;">➤</button>
+        </div>
+      </div>
+    </section>
+
+=======
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
     <div class="gutter gutter-left" id="gutter-left"></div>
     <!-- MAIN CONTENT -->
     <main class="main">
@@ -92,7 +116,9 @@
             </div>
           </div>
         </div>
-      </header>      <!-- Saved Destinations -->
+      </header>
+
+      <!-- Saved Destinations -->
       <section class="section" id="saved-section">
         <div class="section__header">
           <h2>{% trans "Saved destinations" %}</h2>
@@ -242,6 +268,10 @@
           </div>
         </div>
       </section>
+<<<<<<< HEAD
+
+=======
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
     </main>
     <div class="gutter gutter-right" id="gutter-right"></div>
     <!-- RIGHT MAP PANEL -->
@@ -1524,6 +1554,92 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const autoFillBtn = document.getElementById('auto-fill-btn');
+    if (autoFillBtn) {
+        autoFillBtn.addEventListener('click', async function() {
+            // 1. Lấy dữ liệu
+            const savedCarousel = document.getElementById('saved-carousel');
+            const savedCards = Array.from(savedCarousel.querySelectorAll('.explore-card'));
+            const dayCards = document.querySelectorAll('.itinerary-day-full');
+            const totalDays = dayCards.length;
+
+            // Validate
+            if (savedCards.length === 0) {
+                alert('{% trans "No saved destinations to auto-fill." %}');
+                return;
+            }
+            if (totalDays === 0) {
+                alert('{% trans "Please add days to your trip first." %}');
+                return;
+            }
+
+            if (!confirm(`{% trans "Auto-fill will distribute" %} ${savedCards.length} {% trans "places across" %} ${totalDays} {% trans "days. Continue?" %}`)) {
+                return;
+            }
+
+            // UI Loading
+            const originalText = autoFillBtn.innerHTML;
+            autoFillBtn.innerHTML = '⏳ Processing...';
+            autoFillBtn.disabled = true;
+
+            let currentDayIndex = 0;
+            const updatePromises = [];
+
+            // 2. VÒNG LẶP XỬ LÝ
+            for (const card of savedCards) {
+                const title = card.querySelector('.explore-card__title').textContent;
+                const subtitle = card.querySelector('.explore-card__subtitle').textContent;
+                const imgStyle = card.querySelector('.explore-card__image').style.backgroundImage;
+                const removeBtn = card.querySelector('.remove-trip-item-btn');
+                const itemId = removeBtn?.getAttribute('data-item-id');
+
+                const targetDayCard = dayCards[currentDayIndex];
+                const dayNumber = parseInt(targetDayCard.getAttribute('data-day'));
+                const currentPlacesCount = targetDayCard.querySelectorAll('.place-card').length; 
+                
+                // GỌI HÀM CÓ SẴN (Giờ đã gọi được vì nằm cùng scope)
+                addPlaceToDay(dayNumber, {
+                    title: title,
+                    subtitle: subtitle,
+                    image: imgStyle,
+                    itemId: itemId 
+                }, itemId);
+
+                card.remove();
+
+                if (itemId) {
+                    const promise = updateItineraryOrder(itemId, dayNumber, currentPlacesCount, '')
+                        .then(success => {
+                            if(!success) console.warn(`Failed to sync item ${itemId}`);
+                            return success;
+                        });
+                    updatePromises.push(promise);
+                }
+
+                currentDayIndex = (currentDayIndex + 1) % totalDays;
+            }
+
+            if (savedCarousel.children.length === 0) {
+                savedCarousel.innerHTML = '<p>{% trans "No saved destinations yet." %}</p>';
+            }
+            
+            for(let i = 1; i <= totalDays; i++) {
+                updateStopCount(i);
+            }
+
+            try {
+                await Promise.all(updatePromises);
+                showNotification(`✅ {% trans "Auto-filled" %} ${savedCards.length} {% trans "places successfully!" %}`, 'success');
+            } catch (err) {
+                console.error(err);
+                showNotification('⚠️ Some items might not be saved correctly.', 'warning');
+            } finally {
+                autoFillBtn.innerHTML = originalText;
+                autoFillBtn.disabled = false;
+            }
+        });
+    }
+
     // generate on page load
     generateDays();
     
@@ -2439,7 +2555,302 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.style.cursor = '';
         }
     });
+<<<<<<< HEAD
 });
 </script>
 </body>
-</html>
+
+<script>
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+function toggleChat() {
+  const chatSection = document.getElementById("chatbot-section");
+  const sidebar = document.querySelector(".sidebar");
+  const main = document.querySelector(".main");
+  const gutterLeft = document.querySelector(".gutter-left");
+  const gutterRight = document.querySelector(".gutter-right");
+  const appShell = document.querySelector(".app-shell");
+
+  const currentDisplay = window.getComputedStyle(chatSection).display;
+  if (currentDisplay === "none") {
+    // Show chatbot and map, hide sidebar and main
+    chatSection.style.display = "block";
+    sidebar.style.display = "none";
+    main.style.display = "none";
+    gutterLeft.style.display = "none";
+    gutterRight.style.display = "none";
+    // Grid: 1fr (chatbot) 1fr (map)
+    appShell.style.gridTemplateColumns = "1fr 1fr";
+  } else {
+    // Hide chatbot, show sidebar and main
+    chatSection.style.display = "none";
+    sidebar.style.display = "block";
+    main.style.display = "block";
+    gutterLeft.style.display = "block";
+    gutterRight.style.display = "block";
+    // Reset grid
+    appShell.style.gridTemplateColumns = "300px 4px 1fr 4px 400px";
+  }
+}
+
+// Initialize chatbot when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Chatbot DOMContentLoaded fired');
+  const chatInput = document.querySelector('#chatbot-section .chat-input input');
+  const sendButton = document.querySelector('#chatbot-section .chat-input button');
+  const chatBody = document.querySelector('#chatbot-section .chat-body');
+
+  console.log('chatInput:', chatInput);
+  console.log('sendButton:', sendButton);
+  console.log('chatBody:', chatBody);
+
+  if (!chatInput || !sendButton || !chatBody) {
+    console.error('Chatbot elements not found!');
+    return; // If not on page with chatbot
+  }
+
+  // Function to add message to chat
+  function addMessage(text, isUser = false) {
+    console.log('addMessage called:', text, 'isUser:', isUser);
+    const msgDiv = document.createElement('div');
+    msgDiv.className = isUser ? 'user-msg' : 'bot-msg';
+    msgDiv.innerHTML = parseClickable(text);
+    chatBody.appendChild(msgDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    console.log('Message added to chatBody');
+  }
+
+  // Function to parse clickable links in text
+  function parseClickable(text) {
+    // First, parse markdown-style links
+    text = text.replace(/\[([^\]]+)\]\(clickable:([^\)]+)\)/g, '<a href="#" onclick="showOnMap(\'$2\'); return false;">$1</a>');
+    
+    // Then, parse known location names
+    const knownLocations = [
+      'Nguyen Hue Walking Street',
+      'Ben Thanh Market',
+      'Notre-Dame Cathedral Basilica',
+      'War Remnants Museum',
+      'Independence Palace',
+      'Saigon Central Post Office',
+      'Ho Chi Minh Mausoleum',
+      'Halong Bay'
+      // Add more as needed
+    ];
+    knownLocations.forEach(loc => {
+      const key = loc.toLowerCase().replace(/\s+/g, '_');
+      const regex = new RegExp(`\\b${loc}\\b`, 'gi');
+      text = text.replace(regex, `<a href="#" onclick="showOnMap('${key}'); return false;">${loc}</a>`);
+    });
+    
+    return text;
+  }
+
+  // Function to show location on map
+  function showOnMap(location) {
+    console.log('showOnMap called with:', location);
+    
+    const locations = {
+      'ho_chi_minh_mausoleum': { lat: 21.0369, lng: 105.8342, name: 'Ho Chi Minh Mausoleum', category: 'Historical Site' },
+      'halong_bay': { lat: 20.9101, lng: 107.1839, name: 'Halong Bay', category: 'Natural Wonder' },
+      'nguyen_hue_walking_street': { lat: 10.7725, lng: 106.6981, name: 'Nguyen Hue Walking Street', category: 'Street' },
+      'ben_thanh_market': { lat: 10.7723, lng: 106.6980, name: 'Ben Thanh Market', category: 'Market' },
+      'notre_dame_cathedral': { lat: 10.7798, lng: 106.6990, name: 'Notre-Dame Cathedral Basilica', category: 'Cathedral' },
+      'war_remnants_museum': { lat: 10.7797, lng: 106.6918, name: 'War Remnants Museum', category: 'Museum' },
+      'independence_palace': { lat: 10.7768, lng: 106.6952, name: 'Independence Palace', category: 'Historical Site' },
+      'saigon_central_post_office': { lat: 10.7799, lng: 106.6997, name: 'Saigon Central Post Office', category: 'Historical Building' },
+      // Add more as needed
+    };
+    
+    const locationData = locations[location.toLowerCase().replace(/\s+/g, '_')];
+    console.log('locationData found:', locationData);
+    if (locationData) {
+      const iframe = document.querySelector('.map-pane__body iframe');
+      const detailPanel = document.getElementById('destination-detail-panel');
+      console.log('iframe:', iframe);
+      console.log('detailPanel:', detailPanel);
+      
+      // Update map iframe
+      if (iframe) {
+        iframe.src = `https://maps.google.com/maps?output=embed&q=${locationData.lat},${locationData.lng}&z=16`;
+        console.log('Map updated to:', locationData.lat, locationData.lng);
+      }
+      
+      // Show detail panel
+      if (detailPanel) {
+        document.getElementById('detail-title').textContent = locationData.name;
+        document.getElementById('detail-category').textContent = locationData.category;
+        document.getElementById('detail-address').textContent = `${locationData.lat}, ${locationData.lng}`;
+        document.getElementById('detail-rating').textContent = '';
+        
+        const detailImage = document.getElementById('detail-image');
+        if (detailImage) {
+          detailImage.style.backgroundImage = `url('https://picsum.photos/400/300')`;
+        }
+        
+        detailPanel.style.display = 'block';
+      }
+      
+      console.log('Map centered to:', locationData);
+    } else {
+      alert('Location not found: ' + location + '. Add to locations object.');
+    }
+  }
+
+  // Function to send message to Gemini API
+  async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // Add user message to chat
+    addMessage(message, true);
+    chatInput.value = '';
+
+    // Show typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'bot-msg typing';
+    typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    chatBody.appendChild(typingDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Animate typing dots
+    let dotCount = 0;
+    const typingInterval = setInterval(() => {
+      dotCount = (dotCount + 1) % 4;
+      const dots = '.'.repeat(dotCount);
+      typingDiv.innerHTML = dots;
+    }, 500);
+
+    try {
+      console.log('About to send message:', message);
+      // Send to backend API
+      const response = await fetch('/api/chat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      body: JSON.stringify({ 
+        message: message, 
+        type: 'tripplanner',
+        travelers: '{{ travelers }}',
+        destination: '{{ trip_destination }}',
+        date_range: '{{ date_range }}'
+      })
+      });
+
+      // Remove typing indicator
+        clearInterval(typingInterval);
+        typingDiv.remove();
+
+      const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (data.reply) {
+        console.log('Adding bot reply:', data.reply);
+        addMessage(data.reply);
+      } else if (data.error) {
+        addMessage('Error: ' + data.error);
+      } else {
+        addMessage('Sorry, I couldn\'t understand that.');
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      // Remove typing indicator
+      clearInterval(typingInterval);
+      typingDiv.remove();
+      addMessage('Sorry, there was an error. Please try again.');
+    }
+  }
+
+  // Event listeners
+  sendButton.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+});
+</script>
+
+<style>
+.bot-msg, .user-msg {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.bot-msg {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  align-self: flex-start;
+}
+
+.user-msg {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  align-self: flex-end;
+}
+
+.typing {
+  font-style: italic;
+  color: #000;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  animation: typing-bounce 1.4s infinite;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+</style>
+
+=======
+});
+</script>
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
+</body>

@@ -520,4 +520,8 @@ def chat_with_gemini(request):
         
         return JsonResponse({
             'reply': f'Sorry, something went wrong. Please try again.'
+<<<<<<< HEAD
         }, status=500)
+=======
+        }, status=500)
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f

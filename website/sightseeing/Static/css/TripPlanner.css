@@ -48,7 +48,11 @@ body {
 }
 
 .gutter:hover, .gutter.active {
+<<<<<<< HEAD
+  background-color: #ff5a3c; /* Màu cam khi hover */
+=======
   background-color: #f98e15; /* Màu cam khi hover */
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
 }
 
 .map-pane {

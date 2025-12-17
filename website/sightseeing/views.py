@@ -104,14 +104,46 @@ def update_trip(request):
 
 @ensure_csrf_cookie
 def get_home(request):
-    # Get all locations and categories for filter dropdowns
+    # 1. Get filter data
     all_locations = Location.objects.all().order_by('locationName')
     all_categories = Destinations.objects.values_list('category', flat=True).distinct().order_by('category')
-    all_categories = [cat for cat in all_categories if cat]  # Remove None values
-    
-    # Get personalized recommendations for authenticated users
+    all_categories = [cat for cat in all_categories if cat]
+
+    # 2. Get specific IDs for carousel linking
+    loc_danang = Location.objects.filter(locationName__icontains='Da Nang').first()
+    loc_hcm = Location.objects.filter(locationName__icontains='Ho Chi Minh').first()
+    loc_hanoi = Location.objects.filter(locationName__icontains='Hanoi').first()
+    loc_hue = Location.objects.filter(locationName__icontains='Hue').first()
+    loc_quangninh = Location.objects.filter(locationName__icontains='Quang Ninh').first()
+    loc_phuquoc = Location.objects.filter(locationName__icontains='Phu Quoc').first()
+
+    # 3. Personalized recommendations (Keeping your existing logic)
     personalized_recommendations = []
+    # ... [Keep your existing recommendation code here] ...
+
+    # 4. FETCH SAVED TRIPS (Crucial Step)
+    saved_trips = []
     if request.user.is_authenticated:
+        # Fetch top 3
+        saved_trips = Trip.objects.filter(user=request.user).order_by('-updated_at')[:3]
+        
+        # Logic to find the best image for each card
+        for trip in saved_trips:
+            trip.display_image = f"https://picsum.photos/seed/{trip.destination}/800/400"
+            if trip.destination:
+                search_term = trip.destination.strip()
+                dest = Destinations.objects.filter(desName__icontains=search_term).first()
+                if dest:
+                    # Uses the helper method you have in your Destinations model
+                    images = dest.get_image_list() if hasattr(dest, 'get_image_list') else []
+                    trip.display_image = images[0] if images else (dest.image_url or trip.display_image)
+                else:
+                    dest_in_loc = Destinations.objects.filter(location__locationName__icontains=search_term).first()
+                    if dest_in_loc:
+                        images = dest_in_loc.get_image_list() if hasattr(dest_in_loc, 'get_image_list') else []
+                        trip.display_image = images[0] if images else (dest_in_loc.image_url or trip.display_image)
+
+    # 5. CONTEXT (Add saved_trips here)
         try:
             recommender = get_recommender()
             user_profile = UsersProfile.objects.filter(user=request.user).first()
@@ -179,6 +211,18 @@ def get_home(request):
     context = {
         'all_locations': all_locations,
         'all_categories': all_categories,
+        
+        # Specific IDs for linking
+        'danang_id': loc_danang.id if loc_danang else None,
+        'hcm_id': loc_hcm.id if loc_hcm else None,
+        'hanoi_id': loc_hanoi.id if loc_hanoi else None,
+        'hue_id': loc_hue.id if loc_hue else None,
+        'quangninh_id': loc_quangninh.id if loc_quangninh else None,
+        'phuquoc_id': loc_phuquoc.id if loc_phuquoc else None,
+
+        # New data for the homepage cards
+        'saved_trips': saved_trips, 
+        
         'selected_location': '',
         'selected_category': '',
         'selected_rating': '',

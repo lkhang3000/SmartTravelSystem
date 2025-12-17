@@ -2,6 +2,33 @@
   background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('images/cristina-gottardi-CSpjU6hYo_0-unsplash.jpg');
   background-position: 50% 50%;
 }
+.u-hover-feature:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dropdown-item {
+    color: #333 !important;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f4f7f9;
+    color: #000 !important;
+}
+
+#userMenuBtn:hover {
+    background-color: #a4c2e0 !important;
+}
 
 .dropdown-item {
     color: #333 !important;
