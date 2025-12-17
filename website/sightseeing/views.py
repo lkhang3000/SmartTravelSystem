@@ -914,6 +914,7 @@ def trip_planner(request):
             request.session['trip_end_date'] = trip.arrival_date.isoformat() if trip.arrival_date else None
             request.session['trip_budget'] = trip.budget
             request.session['trip_travelers'] = trip.travelers
+            request.session['trip_id'] = trip.id
             request.session.modified = True
         except Trip.DoesNotExist:
             pass  # Ignore if trip not found
@@ -941,11 +942,18 @@ def trip_planner(request):
             arrival_date = datetime.strptime(arrival_raw, "%Y-%m-%d").date()
 
 
-    budget = request.session.get('trip_budget', 0)
+    # 1. Lấy Budget từ Session (mặc định là 50 triệu nếu chưa có)
+    budget = request.session.get('trip_budget', 50) 
     travelers = request.session.get('trip_travelers', 1)
 
-    # luôn tính lại, không lấy từ session
-    price_per_person = round(budget / travelers, 2) if travelers else 0
+    # 2. Đảm bảo budget là con số để tránh lỗi hiển thị
+    try:
+        budget_display = float(budget)
+    except (TypeError, ValueError):
+        budget_display = 50.0
+
+    # 3. Tính toán giá mỗi người
+    price_per_person = round(budget_display / travelers, 2) if travelers > 0 else 0
 
     trip_map_url = request.session.get('trip_map_url', None)
     trip_image_url = request.session.get('trip_image_url', None)
@@ -1003,7 +1011,7 @@ def trip_planner(request):
         'trip_destination': destination_name,
         'departure_date': departure_date,
         'arrival_date': arrival_date,
-        'budget': budget,
+        'budget': budget_display, # Số triệu (VD: 50.0)
         'travelers': travelers,
         'price_per_person': price_per_person,
         'trip_map_url': trip_map_url,
@@ -1021,6 +1029,13 @@ def input_trip_planner(request):
     # Get all locations for destination dropdown
     all_locations = Location.objects.all().order_by('locationName')
     
+    # Get current trip data from session
+    budget = request.session.get('trip_budget', 50)
+    travelers = request.session.get('trip_travelers', 1)
+    destination = request.session.get('trip_destination', '')
+    start_date = request.session.get('trip_start_date', '')
+    end_date = request.session.get('trip_end_date', '')
+    
     context = {
         'all_locations': all_locations,
         'page_title': _('Plan Your Trip'),
@@ -1028,6 +1043,11 @@ def input_trip_planner(request):
         'odyscape_logo': _('Odyscape Logo'),
         'or_write_guide': _('Or write a new guide'),
         'destination_label': _('Destination'),
+        'budget': budget,
+        'travelers': travelers,
+        'destination': destination,
+        'start_date': start_date,
+        'end_date': end_date,
     }
     print(f"DEBUG: context page_title: {context['page_title']}")
     return render(request, 'inputTripPlanner.html', context)
@@ -1054,7 +1074,7 @@ def trip_form(request):
         
         try:
             # Convert budget to integer
-            budget = int(budget) if budget else 50
+            budget = int(budget) if budget else 0
             travelers = int(travelers) if travelers else 1
             
             # Parse dates if provided
@@ -1090,6 +1110,9 @@ def trip_form(request):
             request.session['trip_budget'] = budget
             request.session['trip_travelers'] = travelers
             request.session['trip_price_per_person'] = price_per_person
+            
+            # Store trip ID for itinerary API
+            request.session['trip_id'] = trip.id
             
             # Google Map URL
             request.session['trip_map_url'] = f"https://maps.google.com/maps?output=embed&q={destination}&z=12"

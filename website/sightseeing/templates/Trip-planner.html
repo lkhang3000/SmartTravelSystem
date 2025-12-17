@@ -103,8 +103,8 @@
 
           <div class="carousel-track" id="saved-carousel">
 
-            {% if trip_items %}
-              {% for item in trip_items %}
+            {% if saved_items %}
+              {% for item in saved_items %}
 
                 {% if item.destination %}
                 <article class="explore-card" 
@@ -206,16 +206,22 @@
 
         <div class="budget-overview">
           <div class="budget-total">
-            <span class="budget-amount" id="total-budget-display">0</span>
+            <span class="budget-amount" id="total-budget-display">
+              {% if budget %}
+                {{ budget }}.000.000
+              {% else %}
+                Not set
+              {% endif %}
+            </span>
           </div>
           <div class="budget-meta">
             <div class="budget-info-row">
               <span class="budget-info-label">{% trans "Travelers" %}:</span>
-              <span class="budget-info-value" id="travelers-display">{{ travelers }}</span>
+              <span class="budget-info-value" id="travelers-display">{% firstof travelers 1 %}</span>
             </div>
             <div class="budget-info-row">
               <span class="budget-info-label">{% trans "Per person" %}:</span>
-              <span class="budget-info-value" id="per-person-display">0 VND</span>
+              <span class="budget-info-value" id="per-person-display">Calculating...</span>
             </div>
           </div>
         </div>
@@ -1551,7 +1557,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const csrftoken = getCookie('csrftoken');
+let csrftoken = getCookie('csrftoken');
 
 document.addEventListener('DOMContentLoaded', function() {
   // Get current language from URL
@@ -1893,149 +1899,66 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ===================================
-  // BUDGET & EXPENSES FUNCTIONALITY
+  // BUDGET & EXPENSES FUNCTIONALITY - FIXED
   // ===================================
 
-  // Get budget and travelers from context
-  const rawBudget = '{{ budget|default_if_none:"0" }}';
-  const rawTravelers = '{{ travelers|default_if_none:"1" }}';
+  // Sử dụng tên biến riêng biệt để tránh lỗi Redeclaration (trùng tên)
+  let initialBudgetMillion = parseFloat('{{ budget|default:"50" }}');
+  if (initialBudgetMillion === 0) initialBudgetMillion = 50; // Default to 50 if 0
+  let currentTravelersCount = parseInt('{{ travelers|default:"1" }}');
 
-  // Budget is in millions, convert to actual VND
-  const totalBudgetInMillions = (() => {
-    const normalized = (rawBudget || '0').toString().replace(/[^0-9.-]/g, '');
-    const parsed = Number(normalized);
-    return Number.isFinite(parsed) ? parsed : 0;
-  })();
-  
-  const totalBudget = totalBudgetInMillions * 1000000; // Convert millions to VND
+  // Quy đổi sang VND để tính toán
+  let totalBaseBudgetVND = initialBudgetMillion * 1000000;
+  let tripExpensesList = []; 
 
-  const travelers = (() => {
-    const normalized = (rawTravelers || '1').toString().replace(/[^0-9.-]/g, '');
-    const parsed = Number(normalized);
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
-  })();
-  
-  // Store expenses
-  let expenses = [];
-
-  // Initialize budget display
-  function initBudget() {
-    updateBudgetDisplay();
-  }
-  
-  // Format number with thousand separators
-  function formatVND(amount) {
-    return Math.round(amount).toLocaleString('en-US') + ' VND';
+  // Hàm format tiền tệ
+  function formatVNDCustom(amount) {
+    return Math.round(amount).toLocaleString('vi-VN') + ' VND';
   }
 
-  // Update budget display with current expenses
-  function updateBudgetDisplay() {
-    const budgetDisplay = document.getElementById('total-budget-display');
+  // HÀM QUAN TRỌNG: Cập nhật hiển thị ngay lập tức
+  function refreshBudgetUI() {
+    const totalDisplay = document.getElementById('total-budget-display');
     const travelersDisplay = document.getElementById('travelers-display');
     const perPersonDisplay = document.getElementById('per-person-display');
     
-    // Calculate total expenses
-    const totalExpensesVND = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+    // Tính tổng chi phí từ các khoản add thêm (nếu có)
+    const expenseSum = tripExpensesList.reduce((sum, exp) => sum + exp.amount, 0);
+    const finalTotalVND = totalBaseBudgetVND + expenseSum;
     
-    // Current budget = initial budget + expenses (both in VND)
-    const currentBudgetVND = totalBudget + totalExpensesVND;
-    
-    if (budgetDisplay) {
-      budgetDisplay.textContent = formatVND(currentBudgetVND).replace(' VND', '');
+    if (totalDisplay) {
+        // Hiển thị số tiền tổng (Xóa chữ VND để khớp giao diện của bạn)
+        totalDisplay.textContent = Math.round(finalTotalVND).toLocaleString('vi-VN');
     }
     
     if (travelersDisplay) {
-      travelersDisplay.textContent = travelers;
+        travelersDisplay.textContent = currentTravelersCount;
     }
     
     if (perPersonDisplay) {
-      const perPersonVND = currentBudgetVND / travelers;
-      perPersonDisplay.textContent = formatVND(perPersonVND);
+        const avg = currentTravelersCount > 0 ? (finalTotalVND / currentTravelersCount) : 0;
+        perPersonDisplay.textContent = formatVNDCustom(avg);
     }
   }
 
-  // Expense modal management
-  const expenseModal = document.getElementById('expense-modal');
-  const addExpenseBtn = document.getElementById('add-expense-btn');
-  const addOtherExpenseBtn = document.getElementById('add-other-expense-btn');
-  const closeExpenseModalBtn = document.getElementById('close-expense-modal');
-  const cancelExpenseBtn = document.getElementById('cancel-expense');
-  const expenseForm = document.getElementById('expense-form');
-  const categoryBtns = document.querySelectorAll('.category-btn');
-
-  let selectedCategory = null;
-
-  // Open expense modal
-  function openExpenseModal() {
-  console.log('🚀 Opening expense modal...');
-  
-  const modal = document.getElementById('expense-modal');
-  if (!modal) {
-    console.error('❌ Modal not found!');
-    return;
-  }
-  
-  console.log('Before - opacity:', window.getComputedStyle(modal).opacity);
-  console.log('Before - visibility:', window.getComputedStyle(modal).visibility);
-  console.log('Before - display:', window.getComputedStyle(modal).display);
-  
-  // ADD CLASS, DON'T CHANGE DISPLAY
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
-  
-  // Force reflow
-  void modal.offsetHeight;
-  
-  console.log('After - opacity:', window.getComputedStyle(modal).opacity);
-  console.log('After - visibility:', window.getComputedStyle(modal).visibility);
-  console.log('After - display:', window.getComputedStyle(modal).display);
-  console.log('✅ Modal classes:', modal.className);
-}
-
-function closeExpenseModalFunc() {
-  const modal = document.getElementById('expense-modal');
-  if (modal) {
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
-  }
-  
-  const form = document.getElementById('expense-form');
-  if (form) {
-    form.reset();
-  }
-  
-  selectedCategory = null;
-  document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.classList.remove('selected');
+  // GỌI HÀM NGAY KHI LOAD TRANG
+  document.addEventListener('DOMContentLoaded', function() {
+      console.log("Budget System Initialized:", totalBaseBudgetVND);
+      refreshBudgetUI();
   });
-}
-  // Category selection
-  categoryBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      categoryBtns.forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedCategory = btn.dataset.category;
-      
-      const nameGroup = document.getElementById('expense-name-group');
-      const nameInput = document.getElementById('expense-name');
-      
-      // Only show name input for 'other' category
-      if (selectedCategory === 'other') {
-        nameGroup.style.display = 'flex';
-        nameInput.required = true;
-        nameInput.value = '';
-      } else {
-        nameGroup.style.display = 'none';
-        nameInput.required = false;
-        nameInput.value = '';
-      }
+
+  // Cập nhật khi người dùng kéo Slider trong Settings Modal
+  const bSlider = document.getElementById('budget-slider');
+  const bValueText = document.getElementById('budget-value');
+  
+  if (bSlider) {
+    bSlider.addEventListener('input', function() {
+      bValueText.textContent = this.value;
+      // Cập nhật biến toàn cục và vẽ lại UI ngay lập tức
+      totalBaseBudgetVND = parseFloat(this.value) * 1000000;
+      refreshBudgetUI();
     });
-  });
-
-  // Add expense
-  if (expenseForm) {
-    expenseForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+  }
       
       const nameInput = document.getElementById('expense-name');
       const amountInput = document.getElementById('expense-amount');
@@ -2210,10 +2133,6 @@ function closeExpenseModalFunc() {
       }
     });
   }
-
-  // Initialize budget on page load
-  initBudget();
-  renderExpenses();
 
   // ============================================
   // NOTE MODAL MANAGEMENT
@@ -2442,15 +2361,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-Lỗi này xác nhận chính xác vấn đề: Trong file HTML của bạn chưa có đoạn code tạo giao diện khung chat, nên JavaScript không tìm thấy phần tử ai-chat-panel để hiển thị.
-
-Bạn hãy mở file Trip-planner.html và thêm đoạn code sau vào cuối file (đặt ngay trước thẻ đóng </body>).
-
-Đoạn code này bao gồm cả HTML (cấu trúc khung chat) và CSS (để căn chỉnh vị trí và màu sắc).
-
-Copy đoạn code này vào cuối file Trip-planner.html:
-HTML
-
 <div id="ai-chat-panel" style="display: none;">
   <div class="ai-chat-header">
       <div style="display: flex; align-items: center; gap: 8px;">
@@ -2580,5 +2490,60 @@ HTML
     background: #e67a00;
 }
 </style>
+
+<script>
+// Chat functions
+function toggleChat() {
+    const panel = document.getElementById('ai-chat-panel');
+    if (panel.style.display === 'none' || panel.style.display === '') {
+        panel.style.display = 'flex';
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+function sendAIMessage() {
+    const input = document.getElementById('ai-user-input');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    // Add user message
+    addMessage(message, 'user');
+    input.value = '';
+    
+    // Send to API
+    fetch('/api/chat/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        addMessage(data.response, 'bot');
+    })
+    .catch(error => {
+        addMessage('Xin lỗi, có lỗi xảy ra.', 'bot');
+    });
+}
+
+function addMessage(text, type) {
+    const messages = document.getElementById('ai-chat-messages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'ai-message ' + (type === 'user' ? 'user-msg' : 'bot-msg');
+    msgDiv.innerHTML = text;
+    messages.appendChild(msgDiv);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+// Allow sending message on Enter key
+document.getElementById('ai-user-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendAIMessage();
+    }
+});
+</script>
 </body>
 </html>

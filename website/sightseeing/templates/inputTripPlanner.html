@@ -215,16 +215,16 @@
                             <label for="travelers" class="u-label">{% trans "Travelers" %}</label>
                             <input type="number" id="travelers" name="travelers" 
                                    class="u-input-rectangle" style="width: 100%;" 
-                                   min="1" step="1" value="1" placeholder="{% trans 'Enter number of people' %}" required>
+                                   min="1" step="1" value="{{ travelers }}" placeholder="{% trans 'Enter number of people' %}" required>
                         </div>
 
                         <div class="u-form-group" style="margin-top: 15px;">
                             <label class="u-label">{% trans "Total Budget (Million VND)" %}</label>
                             <div class="range-container">
                                 <span style="font-size: 0.8rem; color: #777;">0</span>
-                                <input type="range" id="budgetRange" name="budget" min="0" max="100" value="0" step="1">
+                                <input type="range" id="budgetRange" name="budget" min="0" max="100" value="{{ budget }}" step="1">
                                 <span style="font-size: 0.8rem; color: #777;">100</span>
-                                <input type="number" id="budgetInput" class="u-input-rectangle budget-display" value="0" min="0" max="100">
+                                <input type="number" id="budgetInput" class="u-input-rectangle budget-display" value="{{ budget }}" min="0" max="100">
                             </div>
                             <div class="budget-total-display" style="margin-top: 5px; font-size: 0.9rem; color: #FB8700; font-weight: 600;">
                                 {% trans "Current budget:" %} <span id="totalBudgetDisplay">0</span> {% trans "million VND" %}
