@@ -407,9 +407,7 @@
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none" style="padding: 10px;">
-                        <button type="submit" class="u-border-none u-btn u-btn-submit u-button-style u-gradient u-none u-text-white u-btn-4" style="padding: 10px 30px; cursor: pointer;">{% trans "Search" %}</button>
-                      </div>
+                    
                   </div>
                 </div>
               </div>
@@ -418,9 +416,135 @@
           </div>
         </div>
       </div>
-    </section>    <section class="u-clearfix u-container-align-center u-white u-section-2" id="sec-9086">
+      
+    </section>
+        
+    <section class="u-clearfix u-container-align-center u-white u-section-2" id="sec-9086">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-sheet-1">
         <a href="{% url 'recommend_result' %}" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">{% trans "Start Your Journey" %}</a>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<style>
+  .hero-slider-container {
+    width: 100%;
+    max-width: 1200px; /* Container fits 3 slides of ~400px each */
+    height: 350px;     /* Reduced height */
+    margin: 40px auto; 
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Each slide is now roughly 600px wide, but Swiper will scale them to fit 3 per view */
+  .hero-slider-container .swiper-slide {
+    width: 600px; 
+    height: 350px;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid #000;
+  }
+
+  .hero-slider-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Overlay stays at bottom of each individual slide */
+  .hero-text-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 30px 10px 15px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    text-align: center;
+  }
+
+  .hero-city-name {
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px; /* Scaled down for smaller slide size */
+    font-weight: 700;
+  }
+  /* Target all pagination dots */
+  .hero-slider-container .swiper-pagination-bullet {
+    background: #ffffff !important; /* Set background to white */
+    opacity: 0.5; /* Semi-transparent for inactive dots */
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Target only the active dot */
+  .hero-slider-container .swiper-pagination-bullet-active {
+    background: #ffffff !important; /* Keep it white */
+    opacity: 1; /* Fully opaque for the active dot */
+  }
+</style>
+
+<div class="hero-slider-container swiper mySwiper">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+      <a href="{% url 'recommend_result' %}?location={{ danang_id }}">
+        <img src="{% static 'images/DaNang.jpg' %}" alt="Da Nang">
+        <div class="hero-text-overlay"><p class="hero-city-name">Da Nang</p></div>
+      </a>
+    </div>
+    <div class="swiper-slide">
+      <a href="{% url 'recommend_result' %}?location={{ hcm_id }}">
+        <img src="{% static 'images/HoChiMinh.jpg' %}" alt="Ho Chi Minh">
+        <div class="hero-text-overlay"><p class="hero-city-name">Ho Chi Minh</p></div>
+      </a>
+    </div>
+    <div class="swiper-slide">
+      <a href="{% url 'recommend_result' %}?location={{ hanoi_id }}">
+        <img src="{% static 'images/HaNoi.jpg' %}" alt="Ha Noi">
+        <div class="hero-text-overlay"><p class="hero-city-name">Ha Noi</p></div>
+      </a>
+    </div>
+
+    <div class="swiper-slide">
+      <a href="{% url 'recommend_result' %}?location={{ quangninh_id }}">
+        <img src="{% static 'images/VinhHaLong.jpg' %}" alt="Quang Ninh">
+        <div class="hero-text-overlay"><p class="hero-city-name">Quang Ninh</p></div>
+      </a>
+    </div>
+    <div class="swiper-slide">
+      <a href="{% url 'recommend_result' %}?location={{ phuquoc_id }}">
+        <img src="{% static 'images/PhuQuoc.jpg' %}" alt="Phu Quoc">
+        <div class="hero-text-overlay"><p class="hero-city-name">Phu Quoc</p></div>
+      </a>
+    </div>
+    <div class="swiper-slide">
+      <a href="{% url 'recommend_result' %}?location={{ hue_id }}">
+        <img src="{% static 'images/Hue.jpg' %}" alt="Hue">
+        <div class="hero-text-overlay"><p class="hero-city-name">Hue</p></div>
+      </a>
+    </div>
+  </div>
+  <div class="swiper-pagination"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    slidesPerView: 3,       // Show 3 slides at once
+    spaceBetween: 20,       // Gap between slides
+    centeredSlides: true,   // Center the active slide
+    loop: true,             // Infinite loop
+    grabCursor: true,       // Shows a "hand" icon to indicate dragging
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false, 
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    speed: 800, 
+  });
+</script>
+
         <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-1" data-animation-name="customAnimationIn" data-animation-duration="700" data-animation-delay="0">{% trans "Why should you choose us?" %}</h2>
         <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-2" data-animation-name="customAnimationIn" data-animation-duration="600" data-animation-delay="0">{% trans "What we offer" %}<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
         </h6>
@@ -543,6 +667,39 @@
       </div>
     </div>
 
+    {% if saved_trips %}
+<section class="u-clearfix u-section-saved-trips" style="padding: 40px 20px; background-color: #f9f9f9;">
+  <div class="u-clearfix u-sheet" style="max-width: 1200px; margin: 0 auto;">
+    <h3 class="u-custom-font u-font-montserrat" style="margin-bottom: 30px; font-weight: 700; color: #333;">
+      {% trans "Your Recent Trip Plans" %}
+    </h3>
+    
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: flex-start;">
+      {% for trip in saved_trips %}
+      <a href="{% url 'user_profile' %}#saved-planners" style="text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 380px;">
+        <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="height: 180px; background-image: url('{{ trip.display_image }}'); background-size: cover; background-position: center;"></div>
+          <div style="padding: 15px;">
+            <h4 style="margin: 0 0 10px; font-size: 18px; font-weight: 700;">{{ trip.destination }}</h4>
+            <div style="display: flex; gap: 10px;">
+                {% if trip.departure_date %}
+                <span style="font-size: 12px; background: #eaf2ff; color: #1e76ff; padding: 3px 8px; border-radius: 5px;">
+                    {{ trip.departure_date|date:"d/m" }}
+                </span>
+                {% endif %}
+                <span style="font-size: 12px; background: #fff4e6; color: #f7931e; padding: 3px 8px; border-radius: 5px;">
+                    {{ trip.travelers }} {% trans "travelers" %}
+                </span>
+            </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
     <!-- Row 2: Content Left, Image Right -->
     <div style="display:flex; gap:40px; align-items:center; flex-wrap:wrap; flex-direction:row-reverse;">
       <div style="flex:1 1 45%; min-width:280px;">
@@ -653,7 +810,7 @@
     display: none;
     position: absolute;
     bottom: 75px;
-    left: 0;
+    right: 0;
     width: 360px;
     height: 500px;
     background: #ffffff;
