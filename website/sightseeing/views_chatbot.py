@@ -1,10 +1,30 @@
-# file views_chatbot.py: # Django API for Gemini chatbot - BACKEND ONLY
+from pathlib import Path
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 import json
+import traceback
 import os
+from dotenv import load_dotenv
+
+# --- CẤU HÌNH API KEY TỪ .ENV ---
+# Load biến môi trường từ file .env (nếu có)
+try:
+    current_file_path = Path(__file__).resolve()
+    project_root = current_file_path.parent.parent.parent # Ra đến thư mục SmartTravelSystem
+    env_path = project_root / '.env'
+    
+    if env_path.exists():
+        load_dotenv(dotenv_path=env_path)
+        print(f"Loaded .env from: {env_path}")
+    else:
+        # Fallback: Thử load mặc định nếu không tìm thấy theo đường dẫn trên
+        load_dotenv()
+        print("Loaded .env from default location")
+except Exception as e:
+    print(f"Error loading .env: {e}")
+
 
 # Import Gemini
 try:
