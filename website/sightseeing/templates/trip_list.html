@@ -341,5 +341,32 @@
   transform: scale(0.95);
 }
 </style>
+
+<footer class="u-align-center u-clearfix u-footer u-grey-80" id="footer" style="padding: 30px 0 !important; min-height: auto !important;">
+  <div class="u-clearfix u-sheet" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; min-height: auto !important; width: 100% !important; max-width: 1200px; margin: 0 auto;">
+
+    <nav style="margin-bottom: 15px;">
+        <ul style="display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; justify-content: center;">
+          <li><a href="{% url 'home' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">Home</a></li>
+          <li><a href="{% url 'about_us' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">About us</a></li>
+          <li><a href="{% url 'contact_us' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">Contact us</a></li>
+        </ul>
+    </nav>
+
+    <div style="margin-bottom: 20px;">
+      <a href="{% url 'home' %}">
+        <img src="{% static 'images/Odyscape.png' %}" alt="Logo" style="width: 100px; height: auto; display: block; margin: 0 auto;">
+      </a>
+    </div>
+
+    <p style="font-size: 0.85rem; margin: 0; opacity: 0.8; color: #ffffff; font-style: italic;">
+      &copy; 2025 Group 8. This project is protected by copyright law.
+    </p>
+
+  </div>
+</footer>
+
+      <section class="u-backlink u-clearfix u-grey-80"> This website was created with <a href="https://nicepage.com">Nicepage</a> </section>
+  
 </body>
 </html>

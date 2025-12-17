@@ -37,7 +37,7 @@
 </script><meta data-intl-tel-input-cdn-path="intlTelInput/">
 </head>  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
     <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
-        id="header" style="position: relative; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; height: 100px">
+        id="header" style="position: sticky; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; height: 100px">
 
     <!-- Logo (left) -->
     <div style="flex: 0 0 auto;">
@@ -122,33 +122,124 @@
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
     {% if user.is_authenticated %}
-        <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
-           <div style="background:#F7931E;border-radius:50%;width:45px;height:45px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">
-        <img src="{% static 'images/list_icon.png' %}" style="width:20px;height:20px;" alt="Trip List">
-    </div>
-           {% if trip_count > 0 %}
-           <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
-           {% endif %}
-        </a>
-        <a href="{% url 'user_profile' %}"
-           class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
-           {{ user.first_name|default:user.username }}
-        </a>
+    <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
+             <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
+                         display:flex; align-items:center; justify-content:center;
+                         transition:0.2s;"
+                  onmouseover="this.style.background='#FB8700'"
+                  onmouseout="this.style.background='#F7931E'">
+                 <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:20px; height:20px;">
+             </div>
+             {% if trip_count %}
+             <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; 
+                          width:20px; height:20px; display:flex; align-items:center; justify-content:center; 
+                          font-size:12px; font-weight:bold;">
+                 {{ trip_count }}
+             </span>
+             {% endif %}
+         </a>
+    <div style="position:relative;">
+            <button id="userMenuBtn" style="
+                padding:8px 12px;
+                background:#FB8700;
+                border-radius:25px;
+                color:white;
+                font-weight:700;
+                border:none;
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                gap:8px;
+                transition:0.2s;
+            "
+            onmouseover="this.style.background='#FB8700'"
+            onmouseout="this.style.background='#FB8700'"
+            onclick="toggleUserMenu()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                {{ user.username }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+            <div id="userDropdown" style="
+                display:none;
+                position:absolute;
+                top:110%;
+                right:0;
+                background:white;
+                border-radius:8px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                min-width:180px;
+                z-index:1000;
+            ">
+                <a href="{% url 'user_profile' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    👤 My Profile
+                </a>
+                <a href="{% url 'recommend_result' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    🗺️ My Destinations
+                </a>
+                <a href="/logout/" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#d32f2f;
+                    text-decoration:none;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    🚪 Logout
+                </a>
+            </div>
+</div>
     {% else %}
         <a href="{% url 'login_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px; border-radius: 25px;">
            {% trans "Log in" %}
         </a>
         <a href="{% url 'signup_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px; border-radius: 25px;">
            {% trans "Register" %}
         </a>
     {% endif %}
 </div>
 </header>
+<script>
+        function toggleUserMenu() {
+            var dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Đóng dropdown khi click bên ngoài
+        window.onclick = function(event) {
+            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+                var dropdown = document.getElementById('userDropdown');
+                if (dropdown && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        } </script>
+
     <section class="u-clearfix u-section-1" id="block-1">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
         <h1 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">{% trans "Meet our team" %}</h1>
@@ -275,152 +366,30 @@
     
     
     
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
-        <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
-          <div class="chat-container"><!-- Floating Button -->
-            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
-            <div class="chat-box" id="chatBox">
-              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
-              </div>
-              <div class="chat-body">
-                <div class="bot-msg">Hello! How can I help you today?</div>
-              </div>
-              <div class="chat-input">
-                <input type="text" placeholder="Type a message...">
-                <button>➤</button>
-              </div>
-            </div>
-          </div>
-          <style> .chat-container {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    z-index: 9999;
-    font-family: sans-serif;
-  }
+    <footer class="u-align-center u-clearfix u-footer u-grey-80" id="footer" style="padding: 30px 0 !important; min-height: auto !important;">
+  <div class="u-clearfix u-sheet" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; min-height: auto !important; width: 100% !important; max-width: 1200px; margin: 0 auto;">
 
-  /* Floating button */
-  .chat-button {
-    width: 60px;
-    height: 60px;
-    background-color: #1e5f74; /* darker ocean tone */
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    font-size: 28px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    color: #fff;
-  }
+    <nav style="margin-bottom: 15px;">
+        <ul style="display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; justify-content: center;">
+          <li><a href="{% url 'home' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">Home</a></li>
+          <li><a href="{% url 'about_us' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">About us</a></li>
+          <li><a href="{% url 'contact_us' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">Contact us</a></li>
+        </ul>
+    </nav>
 
-  .chat-button:hover {
-    transform: scale(1.1);
-    background-color: #174c5c; /* slightly darker hover */
-  }
+    <div style="margin-bottom: 20px;">
+      <a href="{% url 'home' %}">
+        <img src="{% static 'images/Odyscape.png' %}" alt="Logo" style="width: 100px; height: auto; display: block; margin: 0 auto;">
+      </a>
+    </div>
 
-  /* Chat box */
-  .chat-box {
-    display: none;
-    position: absolute;
-    bottom: 75px;
-    right: 0;
-    width: 350px;
-    height: 450px;
-    background: #eaf4f6; /* light blue-gray */
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    overflow: hidden;
-    flex-direction: column;
-    color: #000; /* black text */
-  }
+    <p style="font-size: 0.85rem; margin: 0; opacity: 0.8; color: #ffffff; font-style: italic;">
+      &copy; 2025 Group 8. This project is protected by copyright law.
+    </p>
 
-  .chat-header {
-    background-color: #1e5f74;
-    color: #000;
-    padding: 12px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  </div>
+</footer>
 
-  .chat-body {
-    padding: 10px;
-    flex: 1;
-    overflow-y: auto;
-    background: #f5f8f9;
-  }
-
-  .bot-msg {
-    background: #c8e3e8; /* pale teal bubble */
-    padding: 8px 12px;
-    border-radius: 10px;
-    width: fit-content;
-    color: #000;
-  }
-
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #ccc;
-  }
-
-  .chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    color: #000;
-    background: #fff;
-  }
-
-  .chat-input button {
-    background: #1e5f74;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    color: #fff;
-  }
-
-  .chat-input button:hover {
-    background: #174c5c;
-  }
-
-  .close-btn {
-    cursor: pointer;
-    font-size: 20px;
-  } </style>
-        </div>
-        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" aria-label="Menu navigation">
-          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
-            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
-              <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
-              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
-</g></svg>
-            </a>
-          </div>
-          <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">{% trans "Home" %}</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">{% trans "About us" %}</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">{% trans "Contact us" %}</a>
-</li></ul>
-          </div>
-          <div class="u-custom-menu u-nav-container-collapse" id="4bf4" role="region" aria-label="Menu panel">
-            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
-              <div class="u-inner-container-layout u-sidenav-overflow">
-                <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">{% trans "Home" %}</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">{% trans "About us" %}</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">{% trans "Contact us" %}</a>
-</li></ul>
-              </div>
-            </div>
-            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
-          </div>
-        </nav>
-        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not by copied due to copyright law </p>
-      </div></footer>
-    <section class="u-backlink u-clearfix u-grey-80"></section>
+      <section class="u-backlink u-clearfix u-grey-80"> This website was created with <a href="https://nicepage.com">Nicepage</a> </section>
   
 </body></html>

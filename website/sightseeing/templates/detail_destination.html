@@ -143,7 +143,7 @@
            align-items:center; 
            justify-content:space-between; /* Giữ Logo/Tên và User Menu xa nhau */
            padding:0 30px; 
-           background: rgba(138, 213, 234, 0.85);
+           background: rgba(171, 220, 249, 0.7);
            backdrop-filter: blur(10px); 
            -webkit-backdrop-filter: blur(10px);
            ">
@@ -187,71 +187,125 @@
 
     <div style="display: flex; align-items: center; gap: 15px;">
         {% if user.is_authenticated %}
-
-        <a href="{% url 'trip_list' %}" style="position: relative; text-decoration: none;">
-            <div style="background:#FB8700; border-radius:50%; width:45px; height:45px;
-                         display:flex; align-items:center; justify-content:center;">
-                <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px;">
-            </div>
-            <span class="trip-count"
-                  style="position:absolute; top:-8px; right:-8px; background:red; color:white;
-                         border-radius:50%; width:20px; height:20px; display:flex;
-                         align-items:center; justify-content:center; font-size:12px; font-weight:bold;
-                         {% if not trip_count %}display:none;{% endif %}">
-                {{ trip_count|default:0 }}
-            </span>
-        </a>
-
-        <div style="position:relative;">
-            <button id="userMenuBtn"
-                    style="padding: 8px 12px; background: #FB8700; border-radius: 25px;
-                           color: white; font-weight: 700; border: none; cursor: pointer;
-                           display: flex; align-items: center; gap: 8px;">
+    <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
+             <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
+                         display:flex; align-items:center; justify-content:center;
+                         transition:0.2s;"
+                  onmouseover="this.style.background='#FB8700'"
+                  onmouseout="this.style.background='#F7931E'">
+                 <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:20px; height:20px;">
+             </div>
+             {% if trip_count %}
+             <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; 
+                          width:20px; height:20px; display:flex; align-items:center; justify-content:center; 
+                          font-size:12px; font-weight:bold;">
+                 {{ trip_count }}
+             </span>
+             {% endif %}
+         </a>
+    <div style="position:relative;">
+            <button id="userMenuBtn" style="
+                padding:8px 12px;
+                background:#FB8700;
+                border-radius:25px;
+                color:white;
+                font-weight:700;
+                border:none;
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                gap:8px;
+                transition:0.2s;
+            "
+            onmouseover="this.style.background='#FB8700'"
+            onmouseout="this.style.background='#FB8700'"
+            onclick="toggleUserMenu()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
                 {{ user.username }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
             </button>
-
-            <div id="userDropdown"
-                 style="display:none; position:absolute; top:110%; right:0; background:white;
-                         border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); min-width:180px;">
-                <a href="{% url 'user_profile' %}" class="dropdown-item"
-                   style="display:block; padding:12px 16px; border-bottom:1px solid #eee;">
+            <div id="userDropdown" style="
+                display:none;
+                position:absolute;
+                top:110%;
+                right:0;
+                background:white;
+                border-radius:8px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                min-width:180px;
+                z-index:1000;
+            ">
+                <a href="{% url 'user_profile' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     👤 My Profile
                 </a>
-                <a href="{% url 'recommend_result' %}" class="dropdown-item"
-                   style="display:block; padding:12px 16px; border-bottom:1px solid #eee;">
+                <a href="{% url 'recommend_result' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     🗺️ My Destinations
                 </a>
-                <a href="/logout/" class="dropdown-item"
-                   style="display:block; padding:12px 16px; color:#d32f2f;">
+                <a href="/logout/" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#d32f2f;
+                    text-decoration:none;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     🚪 Logout
                 </a>
             </div>
-        </div>
-
-        <script>
-            // ... JavaScript cho User Dropdown ...
-        </script>
-
-        {% else %}
-
+</div>
+{% else %}
         <a href="{% url 'login_page' %}"
-           style="font-weight:bold; padding:10px 20px; border:2px solid white;
-                   border-radius:25px; color:white; text-decoration:none;">
-            Log in
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
+           {% trans "Log in" %}
         </a>
-
         <a href="{% url 'signup_page' %}"
-           style="font-weight:bold; padding:10px 20px; background:white; color:black;
-                   border-radius:25px; text-decoration:none;">
-            Register
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
+           {% trans "Register" %}
         </a>
-
-        {% endif %}
-    </div>
+    {% endif %}
+</div>
 </header>
+
+<script>
+        function toggleUserMenu() {
+            var dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Đóng dropdown khi click bên ngoài
+        window.onclick = function(event) {
+            if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
+                var dropdown = document.getElementById('userDropdown');
+                if (dropdown && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+        </script>
 
 
 
@@ -913,5 +967,31 @@ function animateTripButton(btn) {
 }
 
 </script>
+<footer class="u-align-center u-clearfix u-footer u-grey-80" id="footer" style="padding: 30px 0 !important; min-height: auto !important;">
+  <div class="u-clearfix u-sheet" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; min-height: auto !important; width: 100% !important; max-width: 1200px; margin: 0 auto;">
+    
+    <nav style="margin-bottom: 15px;">
+        <ul style="display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; justify-content: center;">
+          <li><a href="{% url 'home' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">Home</a></li>
+          <li><a href="{% url 'about_us' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">About us</a></li>
+          <li><a href="{% url 'contact_us' %}" style="color: #ffffff; text-decoration: none; font-size: 0.9rem;">Contact us</a></li>
+        </ul>
+    </nav>
+    
+    <div style="margin-bottom: 20px;">
+      <a href="{% url 'home' %}">
+        <img src="{% static 'images/Odyscape.png' %}" alt="Logo" style="width: 100px; height: auto; display: block; margin: 0 auto;">
+      </a>
+    </div>
+
+    <p style="font-size: 0.85rem; margin: 0; opacity: 0.8; color: #ffffff; font-style: italic;">
+      &copy; 2025 Group 8. This project is protected by copyright law.
+    </p>
+
+  </div>
+</footer>
+
+<section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/one-page-template">One Page Template</a> was created with Nicepage Builder </section>
+
 </body>
 </html>
