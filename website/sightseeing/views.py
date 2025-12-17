@@ -123,8 +123,7 @@ def get_home(request):
                     prefs = user_data.get('trip_preferences', {})
                     user_prefs = {
                         'category': ', '.join(prefs.get('tags', [])),
-                        'budget': prefs.get('budget', 0),
-                        'duration': 3
+                        'budget': prefs.get('budget', 0)
                     }
 
                 collab_recommendations = recommender.recommend_for_user(
@@ -143,7 +142,7 @@ def get_home(request):
                                 'location': dest.location.locationName if dest.location else 'Unknown',
                                 'category': dest.category or 'General',
                                 'rating': dest.rating or 0.0,
-                                'image_url': dest.image_url or 'https://picsum.photos/seed/default/400/300',
+                                'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/400/300',
                                 'hybrid_score': row['hybrid_score']
                             }
                             personalized_recommendations.append(rec_dict)
@@ -167,7 +166,7 @@ def get_home(request):
                             'location': dest.location.locationName if dest.location else 'Unknown',
                             'category': dest.category or 'General',
                             'rating': dest.rating or 0.0,
-                            'image_url': dest.image_url or 'https://picsum.photos/seed/default/400/300',
+                            'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/400/300',
                             'average_user_rating': row['average_user_rating']
                         }
                         personalized_recommendations.append(rec_dict)
@@ -362,7 +361,6 @@ def recommend_result(request):
                     user_preferences = {
                         'category': selected_category or ', '.join(prefs.get('tags', [])),
                         'budget': prefs.get('budget', 0),
-                        'duration': 3,  # Default duration, can be enhanced
                         'region': prefs.get('domestic_or_international', {}).get('region', '')
                     }
 
@@ -386,7 +384,7 @@ def recommend_result(request):
                                 'address': dest.address or '',
                                 'description': dest.description or '',
                                 'price_range': dest.price_range or 'Contact for pricing',
-                                'image_url': dest.image_url or 'https://picsum.photos/seed/default/800/600',
+                                'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/800/600',
                                 'recommendation_type': 'hybrid',
                                 'hybrid_score': row['hybrid_score'],
                                 'collab_score': row.get('collab_score', 0),
@@ -474,7 +472,7 @@ def recommend_result(request):
             'address': dest.address or '',
             'description': dest.description or '',
             'price_range': dest.price_range or 'Contact for pricing',
-            'image_url': dest.image_url or 'https://picsum.photos/seed/default/800/600',
+            'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/800/600',
             'recommendation_type': 'search_result',
             'similarity_score': None
         }

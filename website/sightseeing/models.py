@@ -42,6 +42,7 @@ class Destinations(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+
     def get_image_list(self):
         """Return list of image URLs"""
         if self.image_urls:
@@ -49,6 +50,20 @@ class Destinations(models.Model):
         elif self.image_url:
             return [self.image_url]
         return []
+
+    def get_thumbnail_url(self):
+        """
+        Return the thumbnail URL (second image if available, otherwise first).
+        HTTP checking is handled by template onerror fallback.
+        """
+        images = self.get_image_list()
+        if len(images) > 1:
+            # Skip the first image, use the second one (usually better quality)
+            return images[1]
+        elif len(images) == 1:
+            return images[0]
+        else:
+            return None
 
     def __str__(self):
         return self.desName

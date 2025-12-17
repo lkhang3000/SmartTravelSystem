@@ -48,7 +48,7 @@ class ContentBasedRecommender:
         """Load destinations data"""
         destinations = Destinations.objects.all().values(
             'destination_id', 'desName', 'category', 'rating',
-            'location', 'description', 'price', 'duration'
+            'location', 'description'
         )
         self.destinations_df = pd.DataFrame(list(destinations))
         self.destinations_df.set_index('destination_id', inplace=True)
@@ -73,9 +73,7 @@ class ContentBasedRecommender:
         numeric_features = []
         for idx, row in self.destinations_df.iterrows():
             features = [
-                row.get('rating', 0),
-                row.get('price', 0),
-                row.get('duration', 1)
+                row.get('rating', 0)
             ]
             numeric_features.append(features)
 
@@ -132,21 +130,14 @@ class ContentBasedRecommender:
             if 'category' in user_preferences and dest_info['category'] == user_preferences['category']:
                 score += 0.4
 
-            # Budget compatibility
-            if 'budget' in user_preferences:
-                dest_price = dest_info.get('price', 0)
-                user_budget = user_preferences['budget']
-                if dest_price <= user_budget:
-                    score += 0.3
-                elif dest_price <= user_budget * 1.5:  # Allow some flexibility
-                    score += 0.1
-
-            # Duration compatibility
-            if 'duration' in user_preferences:
-                dest_duration = dest_info.get('duration', 1)
-                user_duration = user_preferences['duration']
-                if abs(dest_duration - user_duration) <= 1:
-                    score += 0.2
+            # Budget compatibility - Skip since no price field
+            # if 'budget' in user_preferences:
+            #     dest_price = dest_info.get('price', 0)
+            #     user_budget = user_preferences['budget']
+            #     if dest_price <= user_budget:
+            #         score += 0.3
+            #     elif dest_price <= user_budget * 1.5:  # Allow some flexibility
+            #         score += 0.1
 
             # Rating preference
             if dest_info.get('rating', 0) >= 4.0:
@@ -984,8 +975,7 @@ if __name__ == "__main__":
     test_user = "user_001"
     user_prefs = {
         'category': 'Beach',
-        'budget': 500,
-        'duration': 3
+        'budget': 500
     }
 
     recommendations = recommender.recommend_for_user(test_user, user_preferences=user_prefs, top_n=5)
