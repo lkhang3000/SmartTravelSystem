@@ -4,142 +4,411 @@
 <html style="font-size: 16px;" lang="en"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="​Easy Way to Find a Perfect Property, ​Properties For Rent, ​Let’s Find The Right Selling Option, 20k, 14k, 2m, ​​Explore Apartment Types, ​Trusted By Best Exclusive Agents, ​Get Your Dream House">
-    <meta name="description" content="">
+    <meta name="keywords" content="Trip Recommendations">
+    <meta name="description" content="Recommended destinations based on user preferences and search criteria.">
     <title>{% trans "Recommend Result" %}</title>
     <link rel="stylesheet" href="{% static 'css/nicepageForRecommendResult.css' %}" media="screen">
-<link rel="stylesheet" href="{% static 'css/indexForRecommendResult.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'css/DetailDestination.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'css/indexForRecommendResult.css' %}" media="screen">
     <script class="u-script" type="text/javascript" src="{% static 'js/jqueryForRecommendResult.js' %}" defer=""></script>
     <script class="u-script" type="text/javascript" src="{% static 'js/nicepageForRecommendResult.js' %}" defer=""></script>
     <meta name="generator" content="Nicepage 7.15.3, nicepage.com">
     
-    
-
-
     <link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&amp;family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900">
     <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "recommendResult",
-		"url": "/",
-		"logo": "images/SmartTour11.png"
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "recommendResult",
+    "url": "/",
+    "logo": "images/SmartTour11.png"
 }</script>
     <meta name="theme-color" content="#6f66ee">
     <meta property="og:title" content="recommendResult">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
     <link rel="canonical" href="/">
-  <meta data-intl-tel-input-cdn-path="intlTelInput/">
-  <style>
-    .filter-select:hover {
-      border-color: #667eea !important;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    .filter-select:focus {
-      outline: none;
-      border-color: #667eea !important;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-    }
+    <meta data-intl-tel-input-cdn-path="intlTelInput/">
     
-    /* Collaborative recommendation styling */
-    .collaborative-recommendation {
-      border: 2px solid #F7931E !important;
-      box-shadow: 0 4px 15px rgba(247, 147, 30, 0.2) !important;
-      position: relative;
-    }
-    
-    .recommendation-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #F7931E;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: bold;
-      z-index: 10;
-    }
-    
-    .similarity-score {
-      font-size: 14px;
-      color: #F7931E;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-  </style>
-  <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
-        id="header"
-        style="position: relative; width: 100%; z-index: 2000; height: 100px; min-height: 100px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
-    <div style="flex: 0 0 auto;">
-        <a href="{% url 'home' %}" class="u-image u-logo u-image-1">
-            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home" style="height:100px; width:auto; display:block; margin-top:30px">
+    <style>
+        /* Container for the whole search bar */
+.search-pill-container {
+    background: white;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row; /* Forces horizontal layout */
+    align-items: center;
+    padding: 8px 10px 8px 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    min-width: 900px;
+    margin: 0 auto;
+}
+
+/* Individual filter sections */
+.filter-column {
+    display: flex;
+    flex-direction: column;
+    padding-right: 25px;
+    margin-right: 20px;
+    border-right: 1px solid #ddd; /* The vertical divider */
+    min-width: 180px;
+}
+
+/* Remove divider from the last filter before the button */
+.filter-column:nth-last-of-type(2) {
+    border-right: none;
+}
+
+.filter-label-text {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+.filter-select-minimal {
+    border: none !important;
+    background: transparent !important;
+    font-size: 17px;
+    font-weight: 700;
+    color: #222;
+    padding: 0 !important;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    appearance: none; /* Removes default arrow */
+}
+
+/* The Orange Button */
+.search-btn-pill {
+    background: #fb8700; 
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 35px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.3s ease;
+}
+
+.search-btn-pill:hover {
+    background: #fb8700;
+}
+        /* General Styles for Figma Look */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f7f7f7; /* Light gray background */
+        }
+        
+        /* Filter Selects */
+        .filter-select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #fb8700 !important;
+            border-radius: 30px;
+            font-size: 16px;
+            background: #Fb8700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 24px;
+            padding-right: 45px;
+        }
+
+        .filter-select:hover {
+            border-color: #E67E22 !important; /* Slightly darker orange on hover */
+            box-shadow: 0 0 15px rgba(247, 147, 30, 0.4) !important;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #ffffff !important;
+            box-shadow: 0 0 20px rgba(247, 147, 30, 0.6) !important;
+        }
+        
+        .filter-select option {
+            background: #333; /* Dark background for dropdown options */
+            color: white;
+        }
+        
+        /* Search Button */
+        .search-button {
+            padding: 16px 40px;
+            background: #FFb8700;
+            color: white;
+            border: 2px solid #FB8700;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+        }
+        
+        /* Collaborative recommendation styling */
+        .collaborative-recommendation {
+            border: 2px solid #FB8700 !important;
+            box-shadow: 0 4px 15px rgba(247, 147, 30, 0.2) !important;
+            position: relative;
+        }
+        
+        .recommendation-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #Fb8700;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        /* Recommendation Grid & Cards */
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .recommendation-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: left;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .spot-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #333; /* Dark color for name */
+        }
+
+        .card-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .location-text {
+            color: #666;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .top-results-section h3 {
+             /* Matched to Figma large, bold title */
+            color: #FB8700 !important;
+            font-size: 48px !important;
+            margin-bottom: 30px !important;
+            font-weight: 900 !important;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .no-recommendations {
+            text-align: center;
+            grid-column: 1 / -1; /* Center across the grid */
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        /* Override for list card layout */
+        .results-layout {
+            display: flex !important;
+            gap: 30px !important;
+            margin-top: 30px !important;
+            max-width: 1200px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding: 0 20px !important;
+        }
+        
+        .list-card {
+            display: flex !important;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden !important;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #f0f0f0;
+            text-align: left;
+            width: 100% !important;
+            max-width: 100% !important;
+            align-items: stretch;
+            max-height: 180px !important;
+        }
+        
+        .list-card-image {
+            flex: 0 0 200px !important;
+            position: relative;
+            height: 180px !important;
+            overflow: hidden !important;
+            min-width: 200px !important;
+            max-width: 200px !important;
+        }
+        
+        .list-card-image img {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 200px !important;
+            max-height: 180px !important;
+            object-fit: cover !important;
+            display: block !important;
+        }
+        
+        .list-card-content {
+            flex: 1 !important;
+            padding: 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            overflow: hidden !important;
+        }
+        
+        .amenity-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #666;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .view-details-btn {
+            background: #FB8700;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .view-details-btn:hover {
+            background: #fb8c0dff;
+            color: white;
+            text-decoration: none;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
+    id="header" style="position: fixed; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: none;">
+
+    <div style="flex: 0 0 200px; display: flex; align-items: center; height: 100%;">
+        <a href="{% url 'home' %}" style="display: block; height: 100px;">
+            <img src="{% static 'images/Odyscape.png' %}" style="height: 100px; width: auto; object-fit: contain; display: block;" title="Home">
         </a>
     </div>
-    <div style="flex:1 1 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:20px;min-width:0;">
-        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" style="position:relative;top:0;left:0;">
-            <div class="menu-collapse u-custom-font u-font-montserrat" style="font-size:1rem;letter-spacing:0px;">
-                <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-hover-custom-color-7" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
-                    <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#svg-ec46"></use></svg>
-                    <svg class="u-svg-content" version="1.1" id="svg-ec46" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <rect y="1" width="16" height="2"></rect>
-                            <rect y="7" width="16" height="2"></rect>
-                            <rect y="13" width="16" height="2"></rect>
-                        </g>
-                    </svg>
-                </a>
-            </div>
-            <div class="u-custom-menu u-nav-container" style="min-width:0;">
-                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap:wrap;justify-content:center;">
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color:#000;">Home</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color:#000;">About us</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color:#000;">Contact us</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color:#000;">Trip Planner</a></li>
-                </ul>
-            </div>
+
+    <div style="flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 40px; padding-right: 50px;">
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+            <ul class="u-nav u-unstyled" style="display: flex; gap: 25px; margin: 0; padding: 0; list-style: none;">
+                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none;">{% trans "Home" %}</a></li>
+                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none;">{% trans "About us" %}</a></li>
+                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none;">{% trans "Contact us" %}</a></li>
+                <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none;">{% trans "Trip Planner" %}</a></li>
+            </ul>
         </nav>
-        <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1" style="display:flex;align-items:center;gap:5px;visibility:visible;margin-right:0;margin-top:0;">
-            <a class="u-language-top-url u-language-url" data-lang-text="Tiếng Việt" href="./" data-language="vi">
-                <span style="display:inline-block;width:30px;height:30px;">
+
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0;">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input name="language" type="hidden" value="vi">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: block;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                        <defs>
-                            <clipPath id="vn-a">
-                                <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
-                            </clipPath>
-                        </defs>
-                        <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
-                            <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
-                            <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
-                        </g>
+                        <path fill="#da251d" d="M0 0h512v512H0z"/><path fill="#ff0" d="m256 120 35 108h113l-91 66 35 108-92-67-92 67 35-108-91-66h113z"/>
                     </svg>
-                </span>
-            </a>
-            <a class="u-language-top-url u-language-url" data-lang-text="English" href="./" data-language="en">
-                <span style="display:inline-block;width:30px;height:30px;">
+                </button>
+            </form>
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0;">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <input name="language" type="hidden" value="en">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: block;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                        <path fill="#012169" d="M0 0h512v512H0z"/>
-                        <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                        <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
-                        <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
-                        <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
+                        <path fill="#012169" d="M0 0h512v512H0z"/><path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/><path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/><path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/><path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
                     </svg>
-                </span>
-            </a>
+                </button>
+            </form>
         </div>
     </div>
-    <div style="display:flex;gap:15px;align-items:center;">
+
+    <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 20px;">
         {% if user.is_authenticated %}
-        <a href="{% url 'trip_list' %}" style="position:relative;text-decoration:none;">
-            <div style="background:#F7931E;border-radius:50%;width:45px;height:45px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;transition:0.2s;" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">
-                <img src="{% static 'images/list_icon.png' %}" style="width:20px;height:20px;" alt="Trip List">
+        <a href="{% url 'trip_list' %}" style="position: relative; display: block;">
+            <div style="background:#Fb8700; border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center;">
+                <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px; filter: brightness(0) invert(1);">
             </div>
-            <span class="trip-count" style="position:absolute;top:-8px;right:-8px;background:red;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;{% if not trip_count %}display:none;{% endif %}">
-                {{ trip_count|default:0 }}
-            </span>
+            {% if trip_count > 0 %}
+            <span style="position: absolute; top: -5px; right: -5px; background-color: #ff4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
+            {% endif %}
         </a>
         <div style="position:relative;">
-            <button id="userMenuBtn" style="padding:8px 12px;background:#F7931E;border-radius:25px;color:white;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;transition:0.2s; font-family: 'Montserrat'" onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'" onclick="toggleUserMenu()">
+            <button id="userMenuBtn" style="
+                padding:8px 12px;
+                background:#FB8700;
+                border-radius:25px;
+                color:white;
+                font-weight:700;
+                border:none;
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                gap:8px;
+                transition:0.2s;
+            "
+           onmouseover="this.style.background='#C48300'"
+            onmouseout="this.style.background='#F7931E'"
+            onclick="toggleUserMenu()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
@@ -148,25 +417,65 @@
                     <path d="M7 10l5 5 5-5z"/>
                 </svg>
             </button>
-            <div id="userDropdown" style="display:none;position:absolute;top:110%;right:0;background:white;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:180px;z-index:1000;font-family: 'Montserrat'">
-                <a href="{% url 'user_profile' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+            <div id="userDropdown" style="
+                display:none;
+                position:absolute;
+                top:110%;
+                right:0;
+                background:white;
+                border-radius:8px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                min-width:180px;
+                z-index:1000;
+            ">
+                <a href="{% url 'user_profile' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     👤 My Profile
                 </a>
-                <a href="{% url 'recommend_result' %}" style="display:block;padding:12px 16px;color:#333;text-decoration:none;border-bottom:1px solid #eee;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <a href="{% url 'recommend_result' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     🗺️ My Destinations
                 </a>
-                <a href="/logout/" style="display:block;padding:12px 16px;color:#d32f2f;text-decoration:none;transition:0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <a href="/logout/" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#d32f2f;
+                    text-decoration:none;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
                     🚪 Logout
                 </a>
             </div>
-        </div>
+        {% else %}
+        <a href="{% url 'login_page' %}" style="color: black; font-weight: bold; text-decoration: none; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">Log in</a>
+        <a href="{% url 'signup_page' %}" style="background: white; color: black; font-weight: bold; text-decoration: none; padding: 10px 20px; border-radius: 25px;">Register</a>
         {% endif %}
     </div>
-    <script>
+</header>
+
+<script>
     function toggleUserMenu() {
         var dropdown = document.getElementById('userDropdown');
-        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
     }
+
     window.onclick = function(event) {
         if (!event.target.matches('#userMenuBtn') && !event.target.closest('#userMenuBtn')) {
             var dropdown = document.getElementById('userDropdown');
@@ -175,292 +484,436 @@
             }
         }
     }
-    </script>
-</header>
+</script>
 
-     <!-- Search Form Section -->
-<section class="u-clearfix u-section-2" id="block-8"
-  style="padding: 60px 0; display:flex; justify-content:center; align-items:center;
-         /* lighter overlay: increase alpha for more whiteness, decrease for darker */
-         background: linear-gradient(135deg, rgba(200, 200, 200, 0.9), rgba(200, 200, 200, 0.9)), url('https://source.unsplash.com/1600x900/?mountain,landscape');
-         background-size: cover; background-position: center; background-blend-mode: lighten;">
-  <div style="width: 100%; max-width: 1400px; padding: 0 20px;">
-    <form method="GET" action="" id="searchForm">
-      <div style="display: flex; gap: 20px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 0 auto;">
-        
-        <!-- Location Filter -->
-        <div style="flex: 1; min-width: 250px; max-width: 350px;">
-          <select name="location" class="filter-select" style="
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #F7931E;
-            border-radius: 30px;
-            font-size: 16px;
-            background: #F7931E;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 24px;
-            padding-right: 45px;
-          ">            <option value="" style="background: #333; color: white;">{% trans "All regions" %}</option>
-            {% for loc in all_locations %}
-            <option value="{{ loc.id }}" style="background: #333; color: white;" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
-            {% endfor %}
-          </select>
-        </div>
+    <section class="u-clearfix" style="padding: 120px 0 60px 0; background-color: #f0f0f0; margin-top: 20px;">
+    <div style="width: 100%; display: flex; justify-content: center;">
+        <form method="GET" action="" id="searchForm" class="u-form-custom-backend">
+            <div class="search-pill-container">
+                
+                <div class="filter-column">
+                    <span class="filter-label-text">📍 {% trans "Where to?" %}</span>
+                    <select name="location" class="filter-select-minimal">
+                        <option value="">{% trans "All regions" %}</option>
+                        {% for loc in all_locations %}
+                        <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <!-- Category Filter -->
-        <div style="flex: 1; min-width: 250px; max-width: 350px;">
-          <select name="category" class="filter-select" style="
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #F7931E;
-            border-radius: 30px;
-            font-size: 16px;
-            background: #F7931E;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 24px;
-            padding-right: 45px;
-          ">            <option value="" style="background: #333; color: white;">{% trans "All categories" %}</option>
-            {% for cat in all_categories %}
-            <option value="{{ cat }}" style="background: #333; color: white;" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
-            {% endfor %}
-          </select>
-        </div>
+                <div class="filter-column">
+                    <span class="filter-label-text">📂 {% trans "Category" %}</span>
+                    <select name="category" class="filter-select-minimal">
+                        <option value="">{% trans "All categories" %}</option>
+                        {% for cat in all_categories %}
+                        <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <!-- Rating Filter -->
-        <div style="flex: 1; min-width: 250px; max-width: 350px;">
-          <select name="rating" class="filter-select" style="
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #F7931E;
-            border-radius: 30px;
-            font-size: 16px;
-            background: #F7931E;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 24px;
-            padding-right: 45px;
-          ">            <option value="" style="background: #333; color: white;">{% trans "All ratings" %}</option>
-            <option value="5.0" style="background: #333; color: white;" {% if selected_rating == '5.0' %}selected{% endif %}>★★★★★ (5.0)</option>
-            <option value="4.0" style="background: #333; color: white;" {% if selected_rating == '4.0' %}selected{% endif %}>★★★★☆ (4.0+)</option>
-            <option value="3.0" style="background: #333; color: white;" {% if selected_rating == '3.0' %}selected{% endif %}>★★★☆☆ (3.0+)</option>
-            <option value="2.0" style="background: #333; color: white;" {% if selected_rating == '2.0' %}selected{% endif %}>★★☆☆☆ (2.0+)</option>
-            <option value="1.0" style="background: #333; color: white;" {% if selected_rating == '1.0' %}selected{% endif %}>★☆☆☆☆ (1.0+)</option>
-          </select>
-        </div>
+                <div class="filter-column">
+                    <span class="filter-label-text">⭐ {% trans "Minimum Rating" %}</span>
+                    <select name="rating" class="filter-select-minimal">
+                        <option value="">{% trans "All ratings" %}</option>
+                        <option value="2.0" {% if selected_rating == '2.0' %}selected{% endif %}>5.0 Stars</option>
+                        <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>4.0+ Stars</option>
+                        <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>3.0+ Stars</option>
+                        <option value="2.0" {% if selected_rating == '2.0' %}selected{% endif %}>2.0+ Stars</option>
+                        <option value="2.0" {% if selected_rating == '2.0' %}selected{% endif %}>1.0+ Stars</option>
+                    </select>
+                </div>
 
-        <!-- Search Button -->
-        <div style="flex: 0 0 auto;">
-          <button type="submit" style="
-            padding: 16px 40px;
-            background: #F7931E;
-            color: white;
-            border: 2px solid #F7931E;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
-            white-space: nowrap;
-          "          onmouseover="this.style.background='#E67E22'; this.style.borderColor='#E67E22';"
-          onmouseout="this.style.background='#F7931E'; this.style.borderColor='#F7931E';">
-            {% trans "SEARCH" %}
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
+                <button type="submit" class="search-btn-pill" style = "background: #fb8700">
+                    {% trans "Search Destinations" %}
+                </button>
+                
+            </div>
+        </form>
+    </div>
 </section>
 
-<style>
-  .filter-select:hover {
-    border-color: #ffffff !important;
-    box-shadow: 0 0 15px rgba(247, 147, 30, 0.4) !important;
-  }
-  
-  .filter-select:focus {
-    outline: none;
-    border-color: #ffffff !important;
-    box-shadow: 0 0 20px rgba(247, 147, 30, 0.6) !important;
-  }
-  
-  .filter-select option {
-    background:white;
-    color: white;
-  }
-</style>
+    <section class="recommendation-section" id="block-1" style="padding: 40px 20px;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            
+            {% comment %} Top results logic updated for new card style {% endcomment %}
+            {% if top_results or search_results %}
+                {% with spots=top_results|slice:":3"|default:search_results|dictsortreversed:"rating"|slice:":3" header_title=top_results|yesno:"Top Picks for You,Top Results" %}
+                    {% if spots %}
+                    <div class="top-results-section" style="margin-bottom: 40px; text-align: left;">
+                        <div class="top-picks-header">
+                            <h3 class="top-picks-title">📈 {% trans header_title %}</h3>
+                            <a href="#" class = "smart-btn" style = "background: #FB8700;">{% trans "View All" %}</a>
+                        </div>
+                        
+                        <div class="recommendation-grid">
+                            {% for spot in spots %}
+                                <div class="recommendation-card">
+                                    <div class="card-image-wrapper">
+                                        <a href="{% url 'destination_detail' spot.id %}">
+                                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
+                                                 onerror="this.src='https://source.unsplash.com/featured/400x300/?{{ spot.name|urlencode }}'">
+                                        </a>
+                                        <span class="status-badge">
+                                            {% if spot.rating >= 4.9 %}{% trans "Luxury" %}
+                                            {% elif spot.rating >= 4.8 %}{% trans "Popular" %}
+                                            {% else %}{% trans "Best Value" %}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+
+                                    <div class="card-content" style="padding: 15px;">
+                                        <h3 class="spot-name" style="font-size: 18px; font-weight: 700; margin: 0;">
+                                            <a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a>
+                                        </h3>
+                                        
+                                        <div style="color: #666; font-size: 14px; margin: 5px 0;">
+                                            📍 {{ spot.location }}
+                                        </div>
+
+                                        <div class="card-bottom-row">
+                                            <div style="color: #Fb8700; font-weight: 700;">
+                                                ★ {{ spot.rating }} 
+                                                <span style="color: #999; font-weight: 400; font-size: 12px;">({{ spot.reviews_count|default:"2k+" }} reviews)</span>
+                                            </div>
+                                            
+                                            <div style="text-align: right;">
+                                                <span style="color: #fb8700; font-size: 18px; font-weight: 800; display: block;">${{ spot.price|default:"450" }}</span>
+                                                <span style="font-size: 10px; color: #888;">per night</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
+
+            {% comment %} START: Two-Column Results Area with 10/10 Split {% endcomment %}
+<div class="results-layout">
     
-<section class="recommendation-section" id="block-1">
-  
-{% comment %}Top results: prefers a view-provided `top_results` list. Falls back to sorting `search_results` by rating (works if search_results is list/dict-like).{% endcomment %}
-
-{% if top_results %}  {% with top=top_results %}
-    <div class="top-results-section" style="margin-bottom:24px;text-align:center;">
-      <h3 style="color:#F7931E;font-size:22px;margin-bottom:16px;">{% trans "Top results" %}</h3>
-      <div class="recommendation-grid">
-        {% for spot in top|slice:":3" %}
-          <div class="recommendation-card">
-            <div class="card-image">
-              <a href="{% url 'destination_detail' spot.id %}">
-                <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
-              </a>
+    <aside class="filter-sidebar">
+        <div class="filter-widget">
+            <div class="widget-title">Budget</div>
+            <div style="font-size: 14px; color: #555;">
+                <label style="display:flex; justify-content:space-between; margin-bottom:10px;"><input type="checkbox"> Under $100 <span>12</span></label>
+                <label style="display:flex; justify-content:space-between; margin-bottom:10px;"><input type="checkbox"> $100 - $300 <span>24</span></label>
             </div>
-            <div class="card-content">
-              <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
-              <div class="card-info-row">
-                <span class="rating-value" style="color:#F7931E;font-weight:bold;">{{ spot.rating }}/5.0</span>
-                <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  {% endwith %}
-
-{% elif search_results %}
-  {# Fallback: try to pick top 3 by rating using dictsortreversed (works if items are dict-like) #}
-  {% with top=search_results|dictsortreversed:"rating"|slice:":3" %}    {% if top %}
-      <div class="top-results-section" style="margin-bottom:24px;text-align:center;">
-        <h3 style="color:#F7931E;font-size:60px;margin-bottom:16px;font-weight: 900;">{% trans "Top results" %}</h3>
-        <div class="recommendation-grid">
-          {% for spot in top %}
-            <div class="recommendation-card">
-              <div class="card-image">
-                <a href="{% url 'destination_detail' spot.id %}">
-                  <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
-                </a>
-              </div>
-              <div class="card-content">
-                <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
-                <div class="card-info-row">
-                  <span class="rating-value" style="color:#F7931E;font-weight:bold;">{{ spot.rating }}/5.0</span>
-                  <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
         </div>
-      </div>
-    {% endif %}
-  {% endwith %}
-{% endif %}
-
-  <div class="container">
-    <h2 class="section-title">Recommended results</h2>
-    
-    <!khúc này để thêm ảnh nè, có gì sửa gì thì sửa chỗ này>   {% if collaborative_recommendations and not filters_applied %}
-  <div class="collaborative-section" style="margin-bottom: 40px;">
-    <h3 style="color: #F7931E; font-size: 24px; margin-bottom: 20px; text-align: center;">{% trans "Recommended for You" %}</h3>
-    <div class="recommendation-grid">
-      {% for spot in collaborative_recommendations %}
-      <div class="recommendation-card collaborative-recommendation">
-        <div class="card-image">
-          <a href="{% url 'destination_detail' spot.id %}">
-            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
-                 onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
-          </a>          <div class="recommendation-badge">{% trans "Collaborative" %}</div>
+        <div class="filter-widget">
+            <div class="widget-title">Popular Amenities</div>
+            <div style="font-size: 14px; color: #555;">
+                <label style="display:block; margin-bottom:10px;">📶 Free WiFi</label>
+                <label style="display:block; margin-bottom:10px;">🏊 Pool</label>
+            </div>
         </div>
+    </aside>
+
+    <div style="flex: 1;">
         
-        <div class="card-content">
-          <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
-          
-          <div class="card-info-row">
-            <span class="rating-value" style="color: #F7931E; font-weight: bold;">{{ spot.rating }}/5.0</span>
-            <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
-          </div>
+        {% comment %} 1. Recommended for You (Limited to Top 10) {% endcomment %}
+        {% if collaborative_recommendations %}
+            <h3 style="text-align: left; font-size: 22px; margin-bottom: 20px;">{% trans "Recommended for You" %}</h3>
+            {% for spot in collaborative_recommendations %}
+                <div class="list-card" style="border: 2px solid #FB8700;"> 
+                    <div class="list-card-image">
+                        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x300/?hotel'">
+                        <div style="position:absolute; top:10px; right:10px; background:#FB8700; color:white; padding:4px 10px; border-radius:15px; font-size:10px; font-weight:bold;">🤖 {% trans "AI Recommended" %}</div>
+                    </div>
+                    <div class="list-card-content">
+                        <div style="display:flex; justify-content:space-between;">
+                            <h3 style="margin:0; font-size:18px;">{{ spot.name }}</h3>
+                            <div style="color:#Fb8700; font-weight:bold;">★ {{ spot.rating }}</div>
+                        </div>
+                        <div style="color:#666; font-size:13px; margin:5px 0;">📍 {{ spot.location }}</div>
+                        <div style="margin:10px 0;"><span class="amenity-tag">Free WiFi</span><span class="amenity-tag">Pool</span></div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <span style="color:#FB8700; font-size:22px; font-weight:800;">${{ spot.price|default:"500" }} <small style="font-size:12px; color:#888;">/ night</small></span>
+                            <a href="{% url 'destination_detail' spot.id %}" class="smart-btn">{% trans "View Details" %}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% comment %} 2. All Results (Paginated 10 per page) {% endcomment %}
+        <div class="search-results-section">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0; font-size: 22px; font-weight: 700;">{% trans "All Results" %}</h3>
+                <span style="color:#666; font-size:14px;">{{ total_results }} {% trans "properties found" %}</span>
+            </div>
+
+            {% if search_results %}
+                {% for spot in search_results %}
+                    <div class="list-card">
+                        <div class="list-card-image">
+                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x300/?tourism'">
+                            <div style="position:absolute; bottom:10px; left:10px; background:white; padding:3px 10px; border-radius:4px; font-size:11px; font-weight:bold; color:#333;">{% trans "5-Star Hotel" %}</div>
+                        </div>
+                        <div class="list-card-content">
+                            <div style="display:flex; justify-content:space-between;">
+                                <h3 style="margin:0; font-size:18px;">{{ spot.name }}</h3>
+                                <div style="color:#Fb8700; font-weight:bold;">★ {{ spot.rating }}</div>
+                            </div>
+                            <div style="color:#666; font-size:13px; margin:5px 0;">📍 {{ spot.location }}</div>
+                            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px;">
+                                <div>
+                                    <small style="display:block; color:#888; font-size:11px;">Starting from</small>
+                                    <span style="color:#Fb8700; font-size:22px; font-weight:800;">${{ spot.price|default:"620" }}</span>
+                                    <small style="color:#888;">/ night</small>
+                                </div>
+                                <a href="{% url 'destination_detail' spot.id %}" class="view-details-btn">{% trans "View Details" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
-      </div>
-      {% endfor %}
+
+        {% comment %} 3. Numbered Pagination Controls {% endcomment %}
+        {% if page_obj.has_other_pages %}
+            <div class="pagination-container" style="display: flex; justify-content: center; align-items: center; margin: 40px 0; gap: 8px;">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #333;">&laquo; Previous</a>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <span style="padding: 10px 18px; background: #fb8700; color: white; border-radius: 8px; font-weight: bold;">{{ i }}</span>
+                    {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                        <a href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                           style="padding: 10px 18px; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #333;">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                       style="padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #333;">Next &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
     </div>
-  </div>
-  {% endif %}  
-  <div class="search-results-section">
-    <h3 style="color: #333; font-size: 24px; margin-bottom: 20px; text-align: center;">{% trans "Search Results" %}</h3>
-  <div class="recommendation-grid">
-      {% if search_results %}
-        {% for spot in search_results %}
-        <div class="recommendation-card">
-          <div class="card-image">
-            <a href="{% url 'destination_detail' spot.id %}">
-              <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
-                   onerror="this.src='https://source.unsplash.com/featured/400x250/?{{ spot.name|urlencode }},{{ spot.location|urlencode }},tourism'">
+</div>
+        </div>
+    </div>
+</section>
+    
+    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
+        <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
+        </div>
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" aria-label="Menu navigation">
+          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
+              <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
+              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+</g></svg>
             </a>
           </div>
-          
-          <div class="card-content">
-            <h3 class="spot-name"><a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a></h3>
-            
-            <div class="card-info-row">
-              <span class="rating-value" style="color: #F7931E; font-weight: bold;">{{ spot.rating }}/5.0</span>
-              <span class="location-text">{{ spot.location }} - {{ spot.category }}</span>
-            </div>
+          <div class="u-custom-menu u-nav-container">
+            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">Home</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
+</li></ul>
           </div>
-        </div>
-        {% endfor %}      {% else %}
-        <div class="no-recommendations">
-          <p>{% trans "No search results found. Try adjusting your filters." %}</p>
-        </div>
-      {% endif %}
-    </div>
-  </div>
-    
-    <!-- Pagination Controls -->    {% if page_obj and not filters_applied %}
-    <div class="pagination-container" style="display: flex; flex-direction: column; align-items: center; margin: 40px 0; gap: 15px;">
-      <span class="pagination-info" style="font-weight: bold; color: #333;">
-        {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }} ({{ total_results }} {% trans "total results" %})
-      </span>
-      
-      <div style="display: flex; align-items: center; gap: 10px;">        {% if page_obj.has_previous %}
-          <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-             class="pagination-btn" style="padding: 10px 15px; background: #F7931E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s;"
-             onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">‹ {% trans "Previous" %}</a>
-        {% endif %}
-        
-        {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-             class="pagination-btn" style="padding: 10px 15px; background: #F7931E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s;"
-             onmouseover="this.style.background='#E67E22'" onmouseout="this.style.background='#F7931E'">{% trans "Next" %} ›</a>
-        {% endif %}
-      </div>
-    </div>
-    {% endif %}
-      {% if filters_applied %}
-    <div class="filter-info" style="text-align: center; margin: 20px 0; color: #666;">
-      <p>{% trans "Showing" %} {{ total_results }} {% trans "filtered results" %}</p>
-    </div>
-    {% endif %}
-  </div>
-</section>
-    
-    
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="sec-6200"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
+          <div class="u-custom-menu u-nav-container-collapse" id="4bf4" role="region" aria-label="Menu panel">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-inner-container-layout u-sidenav-overflow">
+                <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">Home</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">Contact us</a>
+</li></ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not by copied due to copyright law </p>
       </div></footer>
+
+    <div class="chat-container">
+        <div class="chat-button" onclick="toggleChat()"> 💬 </div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">
+                <span>Travel Assistant</span>
+                <span class="close-btn" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-body">
+                <div class="bot-msg">Hello! How can I help you today?</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Typing message...">
+                <button>➤</button>
+            </div>
+        </div>
+    </div>
+
     <section class="u-backlink u-clearfix u-grey-80"> This website was created with <a href="https://nicepage.com">Nicepage</a>
     </section>
+     <style>
+  /* CSS FIX CHO CHATBOT - TÔNG MÀU SMARTTOUR #FB8700 */
+  .chat-container { 
+    position: fixed;
+    bottom: 25px;
+    right: 25px; 
+    z-index: 10000;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Nút bấm nổi (Floating Button) */
+  .chat-button {
+    width: 60px;
+    height: 60px;
+    background: #fb8700; /* Màu chủ đạo */
+    background: linear-gradient(135deg, #fb8700, #ffae42); /* Gradient cam năng động */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(251, 135, 0, 0.4);
+    font-size: 28px;
+    color: #fff;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .chat-button:hover {
+    transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, #e67a00, #fb8700);
+    box-shadow: 0 8px 20px rgba(251, 135, 0, 0.6);
+  }
+
+  /* Khung Chat (Chat Box) */
+  .chat-box {
+    display: none;
+    position: absolute;
+    bottom: 75px;
+    left: 0;
+    width: 360px;
+    height: 500px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    overflow: hidden;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+    border: 1px solid rgba(251, 135, 0, 0.1);
+  }
+
+  /* Header của Chat */
+  .chat-header {
+    background-color: #fb8700; 
+    color: #fff;
+    padding: 15px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.5px;
+  }
+
+  /* Thân Chat (Chat Body) */
+  .chat-body {
+    padding: 15px;
+    flex: 1;
+    overflow-y: auto;
+    background: #fff9f2; /* Màu nền cam cực nhẹ để làm dịu mắt */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Tin nhắn từ Bot */
+  .bot-msg {
+    background: #ffe0b3; /* Màu cam nhạt cho bot */
+    padding: 10px 14px;
+    border-radius: 15px 15px 15px 4px;
+    max-width: 85%;
+    color: #854700; /* Chữ nâu đậm trên nền cam nhạt */
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    align-self: flex-start !important;
+  }
+
+  /* Tin nhắn từ Người dùng */
+  .user-msg {
+    background: #fb8700; /* Màu cam chính */
+    padding: 10px 14px;
+    border-radius: 15px 15px 4px 15px;
+    max-width: 85%;
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 2px 8px rgba(251, 135, 0, 0.2);
+    align-self: flex-end !important;
+  }
+
+  /* Phần nhập liệu (Input Area) */
+  .chat-input {
+    display: flex;
+    padding: 12px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    align-items: center;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ffe0b3;
+    border-radius: 25px;
+    outline: none;
+    font-size: 14px;
+    transition: border 0.3s ease;
+  }
+
+  .chat-input input:focus {
+    border: 1px solid #fb8700;
+  }
+
+  .chat-input button {
+    background: #fb8700;
+    border: none;
+    width: 38px;
+    height: 38px;
+    margin-left: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .chat-input button:hover {
+    background: #e67a00;
+    transform: scale(1.05);
+  }
+
+  .close-btn { 
+    cursor: pointer; 
+    font-size: 22px; 
+    line-height: 1;
+    opacity: 0.8;
+  }
   
+  .close-btn:hover { opacity: 1; }
+
+  /* Hiệu ứng mờ dần khi mở */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Tùy chỉnh thanh cuộn cho đẹp */
+  .chat-body::-webkit-scrollbar { width: 5px; }
+  .chat-body::-webkit-scrollbar-track { background: #fff9f2; }
+  .chat-body::-webkit-scrollbar-thumb { background: #ffe0b3; border-radius: 10px; }
+</style>
+
 </body></html>

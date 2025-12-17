@@ -26,7 +26,7 @@
               <span class="brand__title">Odyscape</span>
             </div>
           </a>
-        </div>        <button class="ai-chip">
+        </div>        <button class="ai-chip" onclick="toggleChat()">
           <span>{% trans "AI Assistant" %}</span>
         </button>
       </div>
@@ -35,6 +35,9 @@
         <div class="nav-section">
           <button class="nav-item nav-item--active" id="overview-btn" data-section="overview-section">
             <span>{% trans "Overview" %}</span>
+          </button>
+          <button class="nav-item submenu-item" data-section="saved-section">
+          <span>{% trans "Saved destinations" %}</span>
           </button>
         </div>
 
@@ -53,7 +56,28 @@
 
       </nav>
     </aside>
-    
+
+    <!-- CHATBOT SECTION -->
+    <section class="chatbot-section" id="chatbot-section" style="display: none; height: 100vh; overflow: hidden;">
+      <div class="chat-interface" style="display: flex; flex-direction: column; height: 100%; background: linear-gradient(to bottom, #ff8427, #ff6b35); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+        <div class="chat-header" style="background: linear-gradient(to right, #ff8427, #ff6b35); color: #fff; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0;">
+          <div style="display: flex; align-items: center;">
+            <img src="{% static 'images/Odyscape.png' %}" alt="Odyscape Logo" style="width: 30px; height: 30px; margin-right: 10px;">
+            <span>Travel Assistant</span>
+          </div>
+          <span class="close-btn" onclick="toggleChat()" style="cursor: pointer; font-size: 20px; color: #fff;">×</span>
+        </div>
+        <div class="chat-body" style="padding: 10px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: rgba(255,255,255,0.9);">
+          <div class="bot-msg">Xin chào! Tôi có thể giúp gì cho chuyến đi của bạn đến {{ trip_destination }}?</div>
+        </div>
+        <div class="chat-input" style="padding: 10px; border-top: 1px solid rgba(255,255,255,0.3); display: flex;">
+          <input type="text" placeholder="Anything for your trip?" style="flex: 1; padding: 8px; border: 1px solid rgba(255,255,255,0.3); border-radius: 25px; margin-right: 8px; background: rgba(255,255,255,0.9);">
+          <button style="padding: 8px 12px; background: linear-gradient(to right, #ff8427, #ff6b35); color: white; border: none; border-radius: 25px; cursor: pointer;">➤</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="gutter gutter-left" id="gutter-left"></div>
     <!-- MAIN CONTENT -->
     <main class="main">
 
@@ -89,7 +113,9 @@
             </div>
           </div>
         </div>
-      </header>      <!-- Saved Destinations -->
+      </header>
+
+      <!-- Saved Destinations -->
       <section class="section" id="saved-section">
         <div class="section__header">
           <h2>{% trans "Saved destinations" %}</h2>
@@ -170,27 +196,33 @@
       </section>      <!-- BIG ITINERARY -->
       <section class="section itinerary-section" id="itinerary-section">
         <div class="section__header">
-          <h2>{% trans "Itinerary" %}</h2>
-          <button class="meta-pill meta-pill--big">
+    <h2>{% trans "Itinerary" %}</h2>
+    
+    <div style="display: flex; gap: 10px;">
+        <button class="btn btn--primary" id="auto-fill-btn" style="background-color: #ff8427">
+             {% trans "Auto-fill Itinerary" %}
+        </button>
+        <button class="meta-pill meta-pill--big">
             <span>{{ date_range }}</span>
-          </button>
-        </div>
+        </button>
+    </div>
+    </div>
 
         <div id="itinerary-days">
           <!-- Days will be dynamically generated here -->
         </div>
 
         <!-- Add new day button -->
-        <button class="btn btn--outline" id="add-day-btn" style="margin-top: 20px; width: 100%;">
-          + {% trans "Add another day" %}
+        <button class="btn btn--outline-dashed" id="add-day-btn">
+        <span style="font-size: 18px; font-weight: bold;">+</span> 
+        {% trans "Add another day" %}
         </button>
-      </section>
 
       <!-- BUDGETING SECTION -->
       <section class="section budget-section" id="budget-section">
         <div class="section__header">
           <h2>{% trans "Budgeting" %}</h2>
-          <button class="btn btn--primary btn--add-expense" id="add-expense-btn">
+          <button class="btn btn--primary btn--add-expense" id="add-expense-btn" style = "background: #fb8700">
             + {% trans "Add an expense" %}
           </button>
         </div>
@@ -234,11 +266,10 @@
         </div>
       </section>
 
-
     </main>
-
+    <div class="gutter gutter-right" id="gutter-right"></div>
     <!-- RIGHT MAP PANEL -->
-    <aside style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: transparent !important;">
+    <aside class="map-pane" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: transparent !important;">
       <div class="map-pane__body" style="flex: 1; min-height: 0; position: relative; background: transparent !important; background-image: none !important;">
           {% if request.session.trip_map_url %}
           <iframe 
@@ -255,7 +286,8 @@
       </div>
 
       <!-- Destination Detail Panel -->
-      <div class="destination-detail-panel" id="destination-detail-panel" style="display: none; padding: 15px; margin: 0 15px 15px 15px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; max-height: 30vh; overflow-y: auto;">
+      <div class="destination-detail-panel" id="destination-detail-panel" 
+     style="display: none; padding: 15px; margin: 0 15px 15px 15px; background: rgba(255, 255, 255, 0); backdrop-filter: blur(8px); border: 1px solid rgba(229, 231, 235, 0); border-radius: 8px; max-height: 30vh; overflow-y: auto;">
         <div class="detail-header" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
           <h3 id="detail-title" style="margin: 0; font-size: 18px; color: var(--text-main);">Destination Name</h3>
           <button id="close-detail-panel" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>
@@ -919,19 +951,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 placeCard.querySelector('.place-card__info').appendChild(noteElement);
             }
         } else {
-            // Save to database (new item) - only if day is valid
-            if (!day) {
-                console.error('❌ Cannot save: day is undefined or null');
-                return;
-            }
-            saveItineraryItem(placeData.itemId, day, existingPlaces).then(itemId => {
-                if (itemId) {
-                    placeCard.dataset.itemId = itemId;
-                    console.log('✅ Item saved with ID:', itemId);
-                } else {
-                    console.error('❌ Failed to save item to database');
-                }
-            });
+            console.log('✨ Added to UI (Pending Save)');
         }
 
         // Add note handler
@@ -1303,16 +1323,164 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    startInput.addEventListener("change", generateDays);
-    endInput.addEventListener("change", generateDays);
+    let startPicker, endPicker;
+
+    startPicker = flatpickr(startInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            if (selectedDates.length > 0) {
+                endPicker.set("minDate", selectedDates[0]);
+                if (endPicker.selectedDates.length > 0 && endPicker.selectedDates[0] < selectedDates[0]) {
+                    endPicker.clear();
+                }
+            }
+            generateDays(); // Gọi hàm generateDays nằm cùng phạm vi
+        }
+    });
+
+    endPicker = flatpickr(endInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            generateDays(); // Gọi hàm generateDays nằm cùng phạm vi
+        }
+    });
+
+    // 2. XỬ LÝ NÚT THÊM NGÀY (ADD DAY BUTTON)
+    const addDayBtn = document.getElementById('add-day-btn');
+    if (addDayBtn) {
+        addDayBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Kiểm tra xem đã có ngày kết thúc chưa
+            if (!endPicker.selectedDates || endPicker.selectedDates.length === 0) {
+                const startDate = startPicker.selectedDates[0] || new Date();
+                endPicker.setDate(startDate, true);
+                return;
+            }
+            
+            // Lấy ngày kết thúc hiện tại + 1
+            const currentEndDate = endPicker.selectedDates[0];
+            const newEndDate = new Date(currentEndDate);
+            newEndDate.setDate(newEndDate.getDate() + 1);
+            
+            // Cập nhật ngày mới (trigger onChange -> gọi generateDays)
+            endPicker.setDate(newEndDate, true);
+            
+            // Hiệu ứng cuộn xuống ngày mới tạo
+            setTimeout(() => {
+                const daysContainer = document.getElementById("itinerary-days");
+                const newDayCard = daysContainer.lastElementChild;
+                if (newDayCard) {
+                    newDayCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Highlight
+                    newDayCard.style.transition = 'background 0.5s';
+                    newDayCard.style.background = '#fff8f0';
+                    setTimeout(() => {
+                        newDayCard.style.background = ''; 
+                    }, 1000);
+                }
+            }, 100);
+        });
+    }
 
     // Save button handler
-    const saveTripBtn = document.getElementById('save-trip-btn');
+  const saveTripBtn = document.getElementById('save-trip-btn');
     if (saveTripBtn) {
-        saveTripBtn.addEventListener('click', function(e) {
+        saveTripBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             console.log('💾 Save button clicked');
             saveAllItinerary();
+        });
+    }
+
+    const autoFillBtn = document.getElementById('auto-fill-btn');
+    if (autoFillBtn) {
+        autoFillBtn.addEventListener('click', async function() {
+            // 1. Lấy dữ liệu
+            const savedCarousel = document.getElementById('saved-carousel');
+            const savedCards = Array.from(savedCarousel.querySelectorAll('.explore-card'));
+            const dayCards = document.querySelectorAll('.itinerary-day-full');
+            const totalDays = dayCards.length;
+
+            // Validate
+            if (savedCards.length === 0) {
+                alert('{% trans "No saved destinations to auto-fill." %}');
+                return;
+            }
+            if (totalDays === 0) {
+                alert('{% trans "Please add days to your trip first." %}');
+                return;
+            }
+
+            if (!confirm(`{% trans "Auto-fill will distribute" %} ${savedCards.length} {% trans "places across" %} ${totalDays} {% trans "days. Continue?" %}`)) {
+                return;
+            }
+
+            // UI Loading
+            const originalText = autoFillBtn.innerHTML;
+            autoFillBtn.innerHTML = '⏳ Processing...';
+            autoFillBtn.disabled = true;
+
+            let currentDayIndex = 0;
+            const updatePromises = [];
+
+            // 2. VÒNG LẶP XỬ LÝ
+            for (const card of savedCards) {
+                const title = card.querySelector('.explore-card__title').textContent;
+                const subtitle = card.querySelector('.explore-card__subtitle').textContent;
+                const imgStyle = card.querySelector('.explore-card__image').style.backgroundImage;
+                const removeBtn = card.querySelector('.remove-trip-item-btn');
+                const itemId = removeBtn?.getAttribute('data-item-id');
+
+                const targetDayCard = dayCards[currentDayIndex];
+                const dayNumber = parseInt(targetDayCard.getAttribute('data-day'));
+                const currentPlacesCount = targetDayCard.querySelectorAll('.place-card').length; 
+                
+                // GỌI HÀM CÓ SẴN (Giờ đã gọi được vì nằm cùng scope)
+                addPlaceToDay(dayNumber, {
+                    title: title,
+                    subtitle: subtitle,
+                    image: imgStyle,
+                    itemId: itemId 
+                }, itemId);
+
+                card.remove();
+
+                if (itemId) {
+                    const promise = updateItineraryOrder(itemId, dayNumber, currentPlacesCount, '')
+                        .then(success => {
+                            if(!success) console.warn(`Failed to sync item ${itemId}`);
+                            return success;
+                        });
+                    updatePromises.push(promise);
+                }
+
+                currentDayIndex = (currentDayIndex + 1) % totalDays;
+            }
+
+            if (savedCarousel.children.length === 0) {
+                savedCarousel.innerHTML = '<p>{% trans "No saved destinations yet." %}</p>';
+            }
+            
+            for(let i = 1; i <= totalDays; i++) {
+                updateStopCount(i);
+            }
+
+            try {
+                await Promise.all(updatePromises);
+                showNotification(`✅ {% trans "Auto-filled" %} ${savedCards.length} {% trans "places successfully!" %}`, 'success');
+            } catch (err) {
+                console.error(err);
+                showNotification('⚠️ Some items might not be saved correctly.', 'warning');
+            } finally {
+                autoFillBtn.innerHTML = originalText;
+                autoFillBtn.disabled = false;
+            }
         });
     }
 
@@ -2101,78 +2269,6 @@ function closeExpenseModalFunc() {
 });
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const startInput = document.getElementById("start-date");
-    const endInput   = document.getElementById("end-date");
-
-    const startPicker = flatpickr(startInput, {
-        dateFormat: "d/m/Y",
-        minDate: "today",
-        disableMobile: true,
-        onChange: function (selectedDates) {
-            if (selectedDates.length > 0) {
-                endPicker.set("minDate", selectedDates[0]);
-
-                if (
-                    endPicker.selectedDates.length > 0 &&
-                    endPicker.selectedDates[0] < selectedDates[0]
-                ) {
-                    endPicker.clear();
-                }
-            }
-            // Trigger generateDays when start date changes
-            generateDays();
-        }
-    });
-
-    const endPicker = flatpickr(endInput, {
-        dateFormat: "d/m/Y",
-        minDate: "today",
-        disableMobile: true,
-        onChange: function (selectedDates) {
-            // Trigger generateDays when end date changes
-            generateDays();
-        }
-    });
-    
-    // Store flatpickr instances globally for access by add-day button
-    window.endPickerInstance = endPicker;
-    window.startPickerInstance = startPicker;
-    
-    // Add another day button handler (after flatpickr initialization)
-    const addDayBtn = document.getElementById('add-day-btn');
-    if (addDayBtn) {
-        addDayBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('🔄 Add day button clicked');
-            
-            if (!endPicker || !endPicker.selectedDates || endPicker.selectedDates.length === 0) {
-                alert('{% trans "Please set trip dates first" %}');
-                return;
-            }
-            
-            // Get current end date from flatpickr
-            const currentEndDate = endPicker.selectedDates[0];
-            console.log('📅 Current end date:', currentEndDate);
-            
-            // Add one day
-            const newEndDate = new Date(currentEndDate);
-            newEndDate.setDate(newEndDate.getDate() + 1);
-            console.log('📅 New end date:', newEndDate);
-            
-            // Set new date in flatpickr (this will trigger onChange which calls generateDays)
-            endPicker.setDate(newEndDate);
-            
-            console.log('✅ Added new day successfully');
-        });
-    } else {
-        console.log('❌ Add day button not found');
-    }
-
-});
-</script>
-<script>
 document.addEventListener('DOMContentLoaded', function () {
 
   // Handle card clicks to show location on map (for saved destinations)
@@ -2218,8 +2314,381 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+    const appShell = document.querySelector('.app-shell');
+    const gutterLeft = document.getElementById('gutter-left');
+    const gutterRight = document.getElementById('gutter-right');
+    // Lưu ý: Đảm bảo bạn đã thêm class="map-pane" vào thẻ aside bên phải ở Bước 2
+    const mapIframe = document.querySelector('.map-pane iframe');
+
+    // Các cột: [0]:Sidebar, [1]:Gutter, [2]:Main, [3]:Gutter, [4]:Map
+    // Chúng ta cần lấy phần tử DOM thực tế để đo kích thước chính xác
+    const sidebarEl = document.querySelector('.sidebar');
+    const mapEl = document.querySelector('.map-pane');
+
+    if (!appShell || !gutterLeft || !gutterRight || !sidebarEl || !mapEl) return;
+
+    let isResizingLeft = false;
+    let isResizingRight = false;
+
+    // Hàm chặn sự kiện chuột vào iframe để không bị mất focus khi kéo
+    function toggleIframePointer(enable) {
+        if (mapIframe) {
+            mapIframe.style.pointerEvents = enable ? 'auto' : 'none';
+        }
+    }
+
+    // --- KÉO TRÁI ---
+    gutterLeft.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        isResizingLeft = true;
+        gutterLeft.classList.add('active');
+        toggleIframePointer(false); // Tắt tương tác bản đồ
+        document.body.style.cursor = 'col-resize';
+    });
+
+    // --- KÉO PHẢI ---
+    gutterRight.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        isResizingRight = true;
+        gutterRight.classList.add('active');
+        toggleIframePointer(false); // Tắt tương tác bản đồ
+        document.body.style.cursor = 'col-resize';
+    });
+
+    // --- DI CHUYỂN CHUỘT ---
+    document.addEventListener('mousemove', function(e) {
+        if (!isResizingLeft && !isResizingRight) return;
+
+        // Lấy chiều rộng hiện tại của 2 cột bên cạnh để giữ nguyên cột không kéo
+        const currentSidebarWidth = sidebarEl.offsetWidth;
+        const currentMapWidth = mapEl.offsetWidth;
+
+        if (isResizingLeft) {
+            let newLeftWidth = e.clientX;
+            
+            // Giới hạn Min/Max Sidebar
+            if (newLeftWidth < 200) newLeftWidth = 200;
+            if (newLeftWidth > 600) newLeftWidth = 600;
+
+            // Cập nhật Grid: [Mới] [Gutter] [Auto] [Gutter] [Cũ - Map]
+            appShell.style.gridTemplateColumns = `${newLeftWidth}px 4px 1fr 4px ${currentMapWidth}px`;
+        }
+
+        if (isResizingRight) {
+            // Chiều rộng Map = Tổng màn hình - Vị trí chuột
+            let newRightWidth = window.innerWidth - e.clientX;
+
+            // Giới hạn Min/Max Map
+            if (newRightWidth < 200) newRightWidth = 200;
+            if (newRightWidth > 900) newRightWidth = 900;
+
+            // Cập nhật Grid: [Cũ - Sidebar] [Gutter] [Auto] [Gutter] [Mới]
+            appShell.style.gridTemplateColumns = `${currentSidebarWidth}px 4px 1fr 4px ${newRightWidth}px`;
+        }
+    });
+
+    // --- THẢ CHUỘT ---
+    document.addEventListener('mouseup', function() {
+        if (isResizingLeft || isResizingRight) {
+            isResizingLeft = false;
+            isResizingRight = false;
+            gutterLeft.classList.remove('active');
+            gutterRight.classList.remove('active');
+            toggleIframePointer(true); // Bật lại bản đồ
+            document.body.style.cursor = '';
+        }
+    });
+});
+</script>
+</body>
+
+<script>
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+function toggleChat() {
+  const chatSection = document.getElementById("chatbot-section");
+  const sidebar = document.querySelector(".sidebar");
+  const main = document.querySelector(".main");
+  const gutterLeft = document.querySelector(".gutter-left");
+  const gutterRight = document.querySelector(".gutter-right");
+  const appShell = document.querySelector(".app-shell");
+
+  const currentDisplay = window.getComputedStyle(chatSection).display;
+  if (currentDisplay === "none") {
+    // Show chatbot and map, hide sidebar and main
+    chatSection.style.display = "block";
+    sidebar.style.display = "none";
+    main.style.display = "none";
+    gutterLeft.style.display = "none";
+    gutterRight.style.display = "none";
+    // Grid: 1fr (chatbot) 1fr (map)
+    appShell.style.gridTemplateColumns = "1fr 1fr";
+  } else {
+    // Hide chatbot, show sidebar and main
+    chatSection.style.display = "none";
+    sidebar.style.display = "block";
+    main.style.display = "block";
+    gutterLeft.style.display = "block";
+    gutterRight.style.display = "block";
+    // Reset grid
+    appShell.style.gridTemplateColumns = "300px 4px 1fr 4px 400px";
+  }
+}
+
+// Initialize chatbot when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Chatbot DOMContentLoaded fired');
+  const chatInput = document.querySelector('#chatbot-section .chat-input input');
+  const sendButton = document.querySelector('#chatbot-section .chat-input button');
+  const chatBody = document.querySelector('#chatbot-section .chat-body');
+
+  console.log('chatInput:', chatInput);
+  console.log('sendButton:', sendButton);
+  console.log('chatBody:', chatBody);
+
+  if (!chatInput || !sendButton || !chatBody) {
+    console.error('Chatbot elements not found!');
+    return; // If not on page with chatbot
+  }
+
+  // Function to add message to chat
+  function addMessage(text, isUser = false) {
+    console.log('addMessage called:', text, 'isUser:', isUser);
+    const msgDiv = document.createElement('div');
+    msgDiv.className = isUser ? 'user-msg' : 'bot-msg';
+    msgDiv.innerHTML = parseClickable(text);
+    chatBody.appendChild(msgDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    console.log('Message added to chatBody');
+  }
+
+  // Function to parse clickable links in text
+  function parseClickable(text) {
+    // First, parse markdown-style links
+    text = text.replace(/\[([^\]]+)\]\(clickable:([^\)]+)\)/g, '<a href="#" onclick="showOnMap(\'$2\'); return false;">$1</a>');
+    
+    // Then, parse known location names
+    const knownLocations = [
+      'Nguyen Hue Walking Street',
+      'Ben Thanh Market',
+      'Notre-Dame Cathedral Basilica',
+      'War Remnants Museum',
+      'Independence Palace',
+      'Saigon Central Post Office',
+      'Ho Chi Minh Mausoleum',
+      'Halong Bay'
+      // Add more as needed
+    ];
+    knownLocations.forEach(loc => {
+      const key = loc.toLowerCase().replace(/\s+/g, '_');
+      const regex = new RegExp(`\\b${loc}\\b`, 'gi');
+      text = text.replace(regex, `<a href="#" onclick="showOnMap('${key}'); return false;">${loc}</a>`);
+    });
+    
+    return text;
+  }
+
+  // Function to show location on map
+  function showOnMap(location) {
+    console.log('showOnMap called with:', location);
+    
+    const locations = {
+      'ho_chi_minh_mausoleum': { lat: 21.0369, lng: 105.8342, name: 'Ho Chi Minh Mausoleum', category: 'Historical Site' },
+      'halong_bay': { lat: 20.9101, lng: 107.1839, name: 'Halong Bay', category: 'Natural Wonder' },
+      'nguyen_hue_walking_street': { lat: 10.7725, lng: 106.6981, name: 'Nguyen Hue Walking Street', category: 'Street' },
+      'ben_thanh_market': { lat: 10.7723, lng: 106.6980, name: 'Ben Thanh Market', category: 'Market' },
+      'notre_dame_cathedral': { lat: 10.7798, lng: 106.6990, name: 'Notre-Dame Cathedral Basilica', category: 'Cathedral' },
+      'war_remnants_museum': { lat: 10.7797, lng: 106.6918, name: 'War Remnants Museum', category: 'Museum' },
+      'independence_palace': { lat: 10.7768, lng: 106.6952, name: 'Independence Palace', category: 'Historical Site' },
+      'saigon_central_post_office': { lat: 10.7799, lng: 106.6997, name: 'Saigon Central Post Office', category: 'Historical Building' },
+      // Add more as needed
+    };
+    
+    const locationData = locations[location.toLowerCase().replace(/\s+/g, '_')];
+    console.log('locationData found:', locationData);
+    if (locationData) {
+      const iframe = document.querySelector('.map-pane__body iframe');
+      const detailPanel = document.getElementById('destination-detail-panel');
+      console.log('iframe:', iframe);
+      console.log('detailPanel:', detailPanel);
+      
+      // Update map iframe
+      if (iframe) {
+        iframe.src = `https://maps.google.com/maps?output=embed&q=${locationData.lat},${locationData.lng}&z=16`;
+        console.log('Map updated to:', locationData.lat, locationData.lng);
+      }
+      
+      // Show detail panel
+      if (detailPanel) {
+        document.getElementById('detail-title').textContent = locationData.name;
+        document.getElementById('detail-category').textContent = locationData.category;
+        document.getElementById('detail-address').textContent = `${locationData.lat}, ${locationData.lng}`;
+        document.getElementById('detail-rating').textContent = '';
+        
+        const detailImage = document.getElementById('detail-image');
+        if (detailImage) {
+          detailImage.style.backgroundImage = `url('https://picsum.photos/400/300')`;
+        }
+        
+        detailPanel.style.display = 'block';
+      }
+      
+      console.log('Map centered to:', locationData);
+    } else {
+      alert('Location not found: ' + location + '. Add to locations object.');
+    }
+  }
+
+  // Function to send message to Gemini API
+  async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // Add user message to chat
+    addMessage(message, true);
+    chatInput.value = '';
+
+    // Show typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'bot-msg typing';
+    typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    chatBody.appendChild(typingDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Animate typing dots
+    let dotCount = 0;
+    const typingInterval = setInterval(() => {
+      dotCount = (dotCount + 1) % 4;
+      const dots = '.'.repeat(dotCount);
+      typingDiv.innerHTML = dots;
+    }, 500);
+
+    try {
+      console.log('About to send message:', message);
+      // Send to backend API
+      const response = await fetch('/api/chat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      body: JSON.stringify({ 
+        message: message, 
+        type: 'tripplanner',
+        travelers: '{{ travelers }}',
+        destination: '{{ trip_destination }}',
+        date_range: '{{ date_range }}'
+      })
+      });
+
+      // Remove typing indicator
+        clearInterval(typingInterval);
+        typingDiv.remove();
+
+      const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (data.reply) {
+        console.log('Adding bot reply:', data.reply);
+        addMessage(data.reply);
+      } else if (data.error) {
+        addMessage('Error: ' + data.error);
+      } else {
+        addMessage('Sorry, I couldn\'t understand that.');
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      // Remove typing indicator
+      clearInterval(typingInterval);
+      typingDiv.remove();
+      addMessage('Sorry, there was an error. Please try again.');
+    }
+  }
+
+  // Event listeners
+  sendButton.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
 });
 </script>
 
+<style>
+.bot-msg, .user-msg {
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.bot-msg {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  align-self: flex-start;
+}
+
+.user-msg {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+  align-self: flex-end;
+}
+
+.typing {
+  font-style: italic;
+  color: #000;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  animation: typing-bounce 1.4s infinite;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+</style>
+
 </body>
-</html>

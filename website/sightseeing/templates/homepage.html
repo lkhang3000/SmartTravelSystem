@@ -132,13 +132,14 @@
     });
   });
 </script><meta name="referrer" content="origin"><meta data-intl-tel-input-cdn-path="intlTelInput/">
-</head>  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
+</head>  
+<body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
     <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
-        id="header" style="position: absolute; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+    id="header" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
 
     <!-- Logo (left) -->
     <div style="flex: 0 0 auto;">
-        <a href="./" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
+        <a href="{% url 'home' %}" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
             <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home">
         </a>
     </div>
@@ -160,7 +161,7 @@
                 </a>
             </div>
             <div class="u-custom-menu u-nav-container" style="min-width: 0;">
-                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
+                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center; color: black">
                     <li class="u-nav-item"><a class="u-button-style u-nav-link" href="./">{% trans "Home" %}</a></li>
                     <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}">{% trans "About us" %}</a></li>
                     <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}">{% trans "Contact us" %}</a></li>
@@ -219,11 +220,11 @@
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
     {% if user.is_authenticated %}
-        <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
-             <div style="background:#F7931E; border-radius:50%; width:45px; height:45px; 
+    <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
+             <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
                          display:flex; align-items:center; justify-content:center;
                          transition:0.2s;"
-                  onmouseover="this.style.background='#C48300'"
+                  onmouseover="this.style.background='#FB8700'"
                   onmouseout="this.style.background='#F7931E'">
                  <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:20px; height:20px;">
              </div>
@@ -235,10 +236,10 @@
              </span>
              {% endif %}
          </a>
-        <div style="position:relative;">
+    <div style="position:relative;">
             <button id="userMenuBtn" style="
                 padding:8px 12px;
-                background:#F7931E;
+                background:#FB8700;
                 border-radius:25px;
                 color:white;
                 font-weight:700;
@@ -249,8 +250,8 @@
                 gap:8px;
                 transition:0.2s;
             "
-            onmouseover="this.style.background='#C48300'"
-            onmouseout="this.style.background='#F7931E'"
+            onmouseover="this.style.background='#FB8700'"
+            onmouseout="this.style.background='#FB8700'"
             onclick="toggleUserMenu()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -306,15 +307,16 @@
                     🚪 Logout
                 </a>
             </div>
-    {% else %}
+</div>
+{% else %}
         <a href="{% url 'login_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="font-weight: bold; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;c border-radius: 25px;">
            {% trans "Log in" %}
         </a>
         <a href="{% url 'signup_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="font-weight: bold; padding: 10px 20px; background-color: white; color: black; border-radius: 25px;">
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;c border-radius: 25px;">
            {% trans "Register" %}
         </a>
     {% endif %}
@@ -350,10 +352,12 @@
         <div class="custom-expanded data-layout-selected u-clearfix u-layout-wrap u-radius u-layout-wrap-1">
           <div class="u-layout">
             <div class="u-layout-row">
+              <!-- Single unified form for all filters -->
+              <form id="unified-search-form" action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical" method="get" style="display: flex; width: 100%; gap: 0;">
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-1">
                 <div class="u-container-layout u-valign-top u-container-layout-1">
                   <div class="custom-expanded u-form u-form-1">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-1">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-1" style="padding: 10px;">
                         <label class="u-custom-font u-font-montserrat u-label u-label-1">{% trans "Location" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="location-filter" name="location" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-1">
@@ -365,22 +369,13 @@
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-2"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
                   </div>
                 </div>
               </div>
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-2">
                 <div class="u-container-layout u-valign-top u-container-layout-2">
                   <div class="custom-expanded u-form u-form-2">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-3">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-3" style="padding: 10px;">
                         <label class="u-custom-font u-font-montserrat u-label u-label-2">{% trans "Category" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="category-filter" name="category" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-white u-input-2">
@@ -392,22 +387,13 @@
                           <svg class="u-caret u-caret-svg u-text-white" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-3"></a>
-                      </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
                   </div>
                 </div>
               </div>
               <div class="u-container-style u-layout-cell u-size-20 u-layout-cell-3">
                 <div class="u-container-layout u-valign-top u-container-layout-3">
                   <div class="custom-expanded u-form u-form-3">
-                    <form action="{% url 'recommend_result' %}" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" method="get" style="padding: 10px;">                      <div class="u-form-group u-form-select u-label-none u-form-group-5">
+                      <div class="u-form-group u-form-select u-label-none u-form-group-5" style="padding: 10px;">
                         <label class="u-custom-font u-font-montserrat u-label u-label-3">{% trans "Rating" %}</label>
                         <div class="u-form-select-wrapper">
                           <select id="rating-filter" name="rating" class="u-border-2 u-border-custom-color-7 u-color-var u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-text-body-alt-color u-input-3">
@@ -421,18 +407,13 @@
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-                      <div class="u-align-right u-form-group u-form-submit u-label-none">
-                        <input type="submit" value="submit" class="u-form-control-hidden">
-                        <a href="#" class="u-border-none u-btn u-btn-submit u-button-style u-none u-btn-4"></a>
+                      <div class="u-align-right u-form-group u-form-submit u-label-none" style="padding: 10px;">
+                        <button type="submit" class="u-border-none u-btn u-btn-submit u-button-style u-gradient u-none u-text-white u-btn-4" style="padding: 10px 30px; cursor: pointer;">{% trans "Search" %}</button>
                       </div>
-                      <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
-                      <div class="u-form-send-error u-form-send-message"> Unable to send your message. Please fix errors then try again. </div>
-                      <input type="hidden" value="" name="recaptchaResponse">
-                      <input type="hidden" name="formServices" value="92b96f62-616b-eb60-685b-a41e4218e3f2">
-                    </form>
                   </div>
                 </div>
               </div>
+              </form>
             </div>
           </div>
         </div>
@@ -582,126 +563,9 @@
   </div>
 </section>
     
-    
-    
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-sheet-1">
-        <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
-          <div class="chat-container"><!-- Floating Button -->
-            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
-            <div class="chat-box" id="chatBox">
-              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
-              </div>
-              <div class="chat-body">
-                <div class="bot-msg">Hello! How can I help you today?</div>
-              </div>
-              <div class="chat-input">
-                <input type="text" placeholder="Type a message...">
-                <button>➤</button>
-              </div>
-            </div>
-          </div>
-          <style> .chat-container {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    z-index: 9999;
-    font-family: sans-serif;
-  }
-
-  /* Floating button */
-  .chat-button {
-    width: 60px;
-    height: 60px;
-    background-color: #1e5f74; /* darker ocean tone */
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    font-size: 28px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    color: #fff;
-  }
-
-  .chat-button:hover {
-    transform: scale(1.1);
-    background-color: #174c5c; /* slightly darker hover */
-  }
-
-  /* Chat box */
-  .chat-box {
-    display: none;
-    position: absolute;
-    bottom: 75px;
-    right: 0;
-    width: 350px;
-    height: 450px;
-    background: #eaf4f6; /* light blue-gray */
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    overflow: hidden;
-    flex-direction: column;
-    color: #000; /* black text */
-  }
-
-  .chat-header {
-    background-color: #1e5f74;
-    color: #000;
-    padding: 12px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .chat-body {
-    padding: 10px;
-    flex: 1;
-    overflow-y: auto;
-    background: #f5f8f9;
-  }
-
-  .bot-msg {
-    background: #c8e3e8; /* pale teal bubble */
-    padding: 8px 12px;
-    border-radius: 10px;
-    width: fit-content;
-    color: #000;
-  }
-
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #ccc;
-  }
-
-  .chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    color: #000;
-    background: #fff;
-  }
-
-  .chat-input button {
-    background: #1e5f74;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    color: #fff;
-  }
-
-  .chat-input button:hover {
-    background: #174c5c;
-  }
-
-  .close-btn {
-    cursor: pointer;
-    font-size: 20px;
-  } </style>
+   <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
         </div>
-        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation">
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" aria-label="Menu navigation">
           <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
             <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
               <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
@@ -710,7 +574,7 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="./" style="padding: 10px 20px;">Home</a>
+            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">Home</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
 </li></ul>
@@ -719,19 +583,199 @@
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="./">Home</a>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">Home</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">Contact us</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">Contact us</a>
 </li></ul>
               </div>
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-        <p class="u-small-text u-text u-text-variant u-text-1">This project of Group 8 is to not be copied due to copyright law.<br>This project is for educational purposes only and is not intended for commercial use. 
-        </p>
+        <p class="u-small-text u-text u-text-variant u-text-1">This webstite of Group 8 is not a product to be monetized and is only for a group project </p>
       </div></footer>
+
+    <div class="chat-container">
+        <div class="chat-button" onclick="toggleChat()"> 💬 </div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">
+                <span>Travel Assistant</span>
+                <span class="close-btn" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-body">
+                <div class="bot-msg">Hello! How can I help you today?</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Typing message...">
+                <button>➤</button>
+            </div>
+        </div>
+    </div>
+
     <section class="u-backlink u-clearfix u-grey-80"> This <a href="https://nicepage.com/one-page-template">One Page Template</a> was created with Nicepage Builder 
     </section>
+
+    <style>
+  /* CSS FIX CHO CHATBOT - TÔNG MÀU SMARTTOUR #FB8700 */
+  .chat-container { 
+    position: fixed;
+    bottom: 25px;
+    right: 25px; 
+    z-index: 10000;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Nút bấm nổi (Floating Button) */
+  .chat-button {
+    width: 60px;
+    height: 60px;
+    background: #fb8700; /* Màu chủ đạo */
+    background: linear-gradient(135deg, #fb8700, #ffae42); /* Gradient cam năng động */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(251, 135, 0, 0.4);
+    font-size: 28px;
+    color: #fff;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .chat-button:hover {
+    transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, #e67a00, #fb8700);
+    box-shadow: 0 8px 20px rgba(251, 135, 0, 0.6);
+  }
+
+  /* Khung Chat (Chat Box) */
+  .chat-box {
+    display: none;
+    position: absolute;
+    bottom: 75px;
+    left: 0;
+    width: 360px;
+    height: 500px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    overflow: hidden;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+    border: 1px solid rgba(251, 135, 0, 0.1);
+  }
+
+  /* Header của Chat */
+  .chat-header {
+    background-color: #fb8700; 
+    color: #fff;
+    padding: 15px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.5px;
+  }
+
+  /* Thân Chat (Chat Body) */
+  .chat-body {
+    padding: 15px;
+    flex: 1;
+    overflow-y: auto;
+    background: #fff9f2; /* Màu nền cam cực nhẹ để làm dịu mắt */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Tin nhắn từ Bot */
+  .bot-msg {
+    background: #ffe0b3; /* Màu cam nhạt cho bot */
+    padding: 10px 14px;
+    border-radius: 15px 15px 15px 4px;
+    max-width: 85%;
+    color: #854700; /* Chữ nâu đậm trên nền cam nhạt */
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    align-self: flex-start !important;
+  }
+
+  /* Tin nhắn từ Người dùng */
+  .user-msg {
+    background: #fb8700; /* Màu cam chính */
+    padding: 10px 14px;
+    border-radius: 15px 15px 4px 15px;
+    max-width: 85%;
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 2px 8px rgba(251, 135, 0, 0.2);
+    align-self: flex-end !important;
+  }
+
+  /* Phần nhập liệu (Input Area) */
+  .chat-input {
+    display: flex;
+    padding: 12px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    align-items: center;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ffe0b3;
+    border-radius: 25px;
+    outline: none;
+    font-size: 14px;
+    transition: border 0.3s ease;
+  }
+
+  .chat-input input:focus {
+    border: 1px solid #fb8700;
+  }
+
+  .chat-input button {
+    background: #fb8700;
+    border: none;
+    width: 38px;
+    height: 38px;
+    margin-left: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .chat-input button:hover {
+    background: #e67a00;
+    transform: scale(1.05);
+  }
+
+  .close-btn { 
+    cursor: pointer; 
+    font-size: 22px; 
+    line-height: 1;
+    opacity: 0.8;
+  }
   
-</body></html>
+  .close-btn:hover { opacity: 1; }
+
+  /* Hiệu ứng mờ dần khi mở */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Tùy chỉnh thanh cuộn cho đẹp */
+  .chat-body::-webkit-scrollbar { width: 5px; }
+  .chat-body::-webkit-scrollbar-track { background: #fff9f2; }
+  .chat-body::-webkit-scrollbar-thumb { background: #ffe0b3; border-radius: 10px; }
+</style>
+</body>
+</html>
