@@ -161,3 +161,18 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.destination.desName} - {self.content[:50]}"
 
+
+class UserRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    destination = models.ForeignKey(Destinations, on_delete=models.CASCADE, related_name='user_ratings')
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # 1-5 stars
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'destination')  # One rating per user per destination
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.destination.desName} - {self.rating} stars"
+

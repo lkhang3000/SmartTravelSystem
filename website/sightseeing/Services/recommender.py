@@ -24,7 +24,7 @@ import json
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
 django.setup()
 
-from sightseeing.models import SearchHistory, Destinations, UsersProfile
+from sightseeing.models import SearchHistory, Destinations, UsersProfile, UserRating
 
 def cosine_similarity_matrix(matrix: np.ndarray) -> np.ndarray:
     """Calculate cosine similarity matrix without scikit-learn"""
@@ -34,8 +34,8 @@ def cosine_similarity_matrix(matrix: np.ndarray) -> np.ndarray:
     similarity = np.dot(normalized_matrix, normalized_matrix.T)
     return similarity
 
-class ContentBasedRecommender:
-    """Content-based recommender using destination features"""
+class ContentSimilarityRecommender:
+    """Content similarity recommender using destination features (formerly ContentBasedRecommender)"""
 
     def __init__(self):
         self.destinations_df = None
@@ -117,32 +117,72 @@ class ContentBasedRecommender:
         return pd.DataFrame(results)
 
     def recommend_by_preferences(self, user_preferences: Dict, top_n: int = 10) -> pd.DataFrame:
-        """Recommend based on user preferences (category, budget, duration, etc.)"""
+        """Recommend based on user preferences (category, budget, duration, etc.) with flexible category matching"""
         if self.destinations_df.empty:
             return pd.DataFrame()
+
+        # Define related categories for flexible matching
+        category_relations = {
+            'Entertainment': ['Entertainment', 'Temple', 'Beach', 'Museum', 'Park', 'Historical'],
+            'Temple': ['Temple', 'Historical', 'Cultural', 'Religious', 'Museum'],
+            'Beach': ['Beach', 'Resort', 'Adventure', 'Nature', 'Relaxation'],
+            'Museum': ['Museum', 'Historical', 'Cultural', 'Educational', 'Art'],
+            'Park': ['Park', 'Nature', 'Recreation', 'Outdoor', 'Relaxation'],
+            'Historical': ['Historical', 'Museum', 'Cultural', 'Temple', 'Monument'],
+            'Cultural': ['Cultural', 'Museum', 'Historical', 'Temple', 'Traditional'],
+            'Nature': ['Nature', 'Park', 'Beach', 'Mountain', 'Adventure'],
+            'Adventure': ['Adventure', 'Nature', 'Beach', 'Mountain', 'Sports'],
+            'Relaxation': ['Relaxation', 'Beach', 'Park', 'Spa', 'Resort']
+        }
+
+        # Keywords that indicate entertainment value
+        entertainment_keywords = [
+            'festival', 'celebration', 'event', 'show', 'performance', 'music', 'dance',
+            'party', 'fun', 'entertainment', 'amusement', 'recreation', 'activity',
+            'experience', 'attraction', 'tourist', 'visitor', 'popular', 'famous'
+        ]
 
         scored_destinations = []
 
         for dest_id, dest_info in self.destinations_df.iterrows():
             score = 0.0
+            category = dest_info['category']
+            name = dest_info['desName'].lower()
+            description = str(dest_info.get('description', '')).lower()
 
-            # Category preference
-            if 'category' in user_preferences and dest_info['category'] == user_preferences['category']:
-                score += 0.4
+            # Category preference with flexible matching
+            if 'category' in user_preferences:
+                user_category = user_preferences['category']
 
-            # Budget compatibility - Skip since no price field
-            # if 'budget' in user_preferences:
-            #     dest_price = dest_info.get('price', 0)
-            #     user_budget = user_preferences['budget']
-            #     if dest_price <= user_budget:
-            #         score += 0.3
-            #     elif dest_price <= user_budget * 1.5:  # Allow some flexibility
-            #         score += 0.1
+                # Exact category match - highest score
+                if category == user_category:
+                    score += 0.4
 
-            # Rating preference
-            if dest_info.get('rating', 0) >= 4.0:
+                # Related category match - medium score
+                elif user_category in category_relations and category in category_relations[user_category]:
+                    score += 0.25
+
+                # Special case: Entertainment can match destinations with entertainment keywords
+                elif user_category == 'Entertainment':
+                    has_entertainment_keywords = any(keyword in name or keyword in description
+                                                   for keyword in entertainment_keywords)
+                    if has_entertainment_keywords:
+                        score += 0.2
+
+            # Rating preference - higher rating gets bonus
+            rating = dest_info.get('rating', 0)
+            if rating >= 4.5:
+                score += 0.15
+            elif rating >= 4.0:
+                score += 0.1
+            elif rating >= 3.5:
+                score += 0.05
+
+            # Location preference (if provided)
+            if 'location' in user_preferences and dest_info.get('location') == user_preferences['location']:
                 score += 0.1
 
+            # Only include destinations with some relevance
             if score > 0:
                 scored_destinations.append({
                     'destination_id': dest_id,
@@ -179,42 +219,70 @@ class AIRecommender:
         self._load_or_train_models()
 
     def _load_data(self):
-        """Load and prepare data for AI models"""
+        """Load and prepare data for AI models using combined SearchHistory and UserRating"""
         try:
             # Load search history
             search_entries = SearchHistory.objects.all().values('user_id', 'destination_id', 'score')
-            if not search_entries:
-                print("No training data for AI Recommender")
-                return
-
-            search_df = pd.DataFrame(list(search_entries))
-
-            # Convert destination_id format
-            search_df['destination_id'] = search_df['destination_id'].astype(str)
-            search_df['destination_id'] = search_df['destination_id'].apply(
-                lambda x: f"dest_{int(x):03d}" if x.isdigit() else x
+            search_df = pd.DataFrame(list(search_entries)) if search_entries else pd.DataFrame()
+            
+            # Load user ratings
+            rating_entries = UserRating.objects.select_related('user__usersprofile').values(
+                'user__usersprofile__custom_user_id', 'destination__destination_id', 'rating'
             )
+            rating_df = pd.DataFrame(list(rating_entries)) if rating_entries else pd.DataFrame()
+            
+            # Rename columns for consistency
+            if not rating_df.empty:
+                rating_df = rating_df.rename(columns={
+                    'user__usersprofile__custom_user_id': 'user_id',
+                    'destination__destination_id': 'destination_id'
+                })
+            
+            # Combine data
+            combined_df = pd.concat([search_df, rating_df], ignore_index=True)
+            
+            if not combined_df.empty:
+                # Convert destination_id format
+                combined_df['destination_id'] = combined_df['destination_id'].astype(str)
+                combined_df['destination_id'] = combined_df['destination_id'].apply(
+                    lambda x: f"dest_{int(x):03d}" if x.isdigit() else x
+                )
+                
+                # Group by user and destination, calculate average rating
+                combined_df = combined_df.groupby(['user_id', 'destination_id']).agg({
+                    'score': 'mean',
+                    'rating': 'mean'
+                }).reset_index()
+                
+                # Create final score: average of available scores, scaled to 0-5.0
+                combined_df['final_score'] = combined_df[['score', 'rating']].mean(axis=1, skipna=True)
+                combined_df['final_score'] = combined_df['final_score'].fillna(combined_df['score']).fillna(combined_df['rating'])
+                combined_df['final_score'] = combined_df['final_score'].clip(0, 5.0)
+                
+                # Create mappings
+                unique_users = combined_df['user_id'].unique()
+                unique_items = combined_df['destination_id'].unique()
 
-            # Create mappings
-            unique_users = search_df['user_id'].unique()
-            unique_items = search_df['destination_id'].unique()
+                self.user_id_map = {user: idx for idx, user in enumerate(unique_users)}
+                self.item_id_map = {item: idx for idx, item in enumerate(unique_items)}
+                self.reverse_user_map = {v: k for k, v in self.user_id_map.items()}
+                self.reverse_item_map = {v: k for k, v in self.item_id_map.items()}
 
-            self.user_id_map = {user: idx for idx, user in enumerate(unique_users)}
-            self.item_id_map = {item: idx for idx, item in enumerate(unique_items)}
-            self.reverse_user_map = {v: k for k, v in self.user_id_map.items()}
-            self.reverse_item_map = {v: k for k, v in self.item_id_map.items()}
+                self.num_users = len(unique_users)
+                self.num_items = len(unique_items)
 
-            self.num_users = len(unique_users)
-            self.num_items = len(unique_items)
+                # Create user-item matrix
+                self.user_item_matrix = np.zeros((self.num_users, self.num_items))
+                for _, row in combined_df.iterrows():
+                    user_idx = self.user_id_map[row['user_id']]
+                    item_idx = self.item_id_map[row['destination_id']]
+                    self.user_item_matrix[user_idx, item_idx] = row['final_score']
 
-            # Create user-item matrix
-            self.user_item_matrix = np.zeros((self.num_users, self.num_items))
-            for _, row in search_df.iterrows():
-                user_idx = self.user_id_map[row['user_id']]
-                item_idx = self.item_id_map[row['destination_id']]
-                self.user_item_matrix[user_idx, item_idx] = row['score']
-
-            print(f"✓ AI Recommender loaded: {self.num_users} users, {self.num_items} items")
+                print(f"✓ AI Recommender loaded: {self.num_users} users, {self.num_items} items, {len(combined_df)} ratings")
+                print(f"  Average rating: {combined_df['final_score'].mean():.2f}")
+            else:
+                print("No training data for AI Recommender")
+                self.user_item_matrix = None
 
         except Exception as e:
             print(f"Error loading AI data: {e}")
@@ -397,22 +465,49 @@ class NeuralRecommender:
         self._load_or_train_model()
 
     def _load_data(self):
-        """Load and prepare data for neural network"""
+        """Load and prepare data for neural network using combined ratings"""
         try:
             # Load search history
             search_entries = SearchHistory.objects.all().values('user_id', 'destination_id', 'score')
-            if search_entries:
-                search_df = pd.DataFrame(list(search_entries))
-
+            search_df = pd.DataFrame(list(search_entries)) if search_entries else pd.DataFrame()
+            
+            # Load user ratings
+            rating_entries = UserRating.objects.select_related('user__usersprofile').values(
+                'user__usersprofile__custom_user_id', 'destination__destination_id', 'rating'
+            )
+            rating_df = pd.DataFrame(list(rating_entries)) if rating_entries else pd.DataFrame()
+            
+            # Rename columns for consistency
+            if not rating_df.empty:
+                rating_df = rating_df.rename(columns={
+                    'user__usersprofile__custom_user_id': 'user_id',
+                    'destination__destination_id': 'destination_id'
+                })
+            
+            # Combine data
+            combined_df = pd.concat([search_df, rating_df], ignore_index=True)
+            
+            if not combined_df.empty:
                 # Convert destination_id format
-                search_df['destination_id'] = search_df['destination_id'].astype(str)
-                search_df['destination_id'] = search_df['destination_id'].apply(
+                combined_df['destination_id'] = combined_df['destination_id'].astype(str)
+                combined_df['destination_id'] = combined_df['destination_id'].apply(
                     lambda x: f"dest_{int(x):03d}" if x.isdigit() else x
                 )
-
+                
+                # Group by user and destination, calculate average rating
+                combined_df = combined_df.groupby(['user_id', 'destination_id']).agg({
+                    'score': 'mean',
+                    'rating': 'mean'
+                }).reset_index()
+                
+                # Create final score: average of available scores, scaled to 0-5.0
+                combined_df['final_score'] = combined_df[['score', 'rating']].mean(axis=1, skipna=True)
+                combined_df['final_score'] = combined_df['final_score'].fillna(combined_df['score']).fillna(combined_df['rating'])
+                combined_df['final_score'] = combined_df['final_score'].clip(0, 5.0)
+                
                 # Create mappings
-                unique_users = search_df['user_id'].unique()
-                unique_items = search_df['destination_id'].unique()
+                unique_users = combined_df['user_id'].unique()
+                unique_items = combined_df['destination_id'].unique()
 
                 self.user_id_map = {user: idx for idx, user in enumerate(unique_users)}
                 self.item_id_map = {item: idx for idx, item in enumerate(unique_items)}
@@ -423,9 +518,9 @@ class NeuralRecommender:
                 self.num_items = len(unique_items)
 
                 # Prepare training data
-                user_indices = search_df['user_id'].map(self.user_id_map)
-                item_indices = search_df['destination_id'].map(self.item_id_map)
-                ratings = search_df['score'].values
+                user_indices = combined_df['user_id'].map(self.user_id_map)
+                item_indices = combined_df['destination_id'].map(self.item_id_map)
+                ratings = combined_df['final_score'].values
 
                 self.train_data = {
                     'user_indices': user_indices.values,
@@ -434,6 +529,7 @@ class NeuralRecommender:
                 }
 
                 print(f"Neural CF: {self.num_users} users, {self.num_items} items, {len(ratings)} ratings")
+                print(f"  Average rating: {ratings.mean():.2f}")
             else:
                 print("No training data for Neural CF")
                 self.train_data = None
@@ -582,11 +678,11 @@ class NeuralRecommender:
             return None
 
 class HybridRecommender:
-    """Hybrid recommender combining collaborative, content-based, and AI methods"""
+    """Hybrid recommender combining user behavior, content similarity, and AI methods"""
 
     def __init__(self):
-        self.collaborative = CollaborativeRecommender()
-        self.content_based = ContentBasedRecommender()
+        self.collaborative = UserBehaviorRecommender()
+        self.content_based = ContentSimilarityRecommender()
         self.ai = AIRecommender()  # AI-powered recommender
         self.collab_weight = 0.4   # Weight for collaborative filtering
         self.content_weight = 0.3  # Weight for content-based
@@ -596,7 +692,7 @@ class HybridRecommender:
         """Hybrid recommendation for user using collaborative + content + AI"""
         recommendations = []
 
-        # Get collaborative recommendations
+        # Get user behavior recommendations
         collab_recs = self.collaborative.recommend_for_user(user_id, top_n=top_n*3)
         collab_dict = {row['destination_id']: row for _, row in collab_recs.iterrows()}
 
@@ -650,7 +746,7 @@ class HybridRecommender:
         """Hybrid similar destinations"""
         recommendations = []
 
-        # Collaborative similarity
+        # User behavior similarity
         collab_similar = self.collaborative.get_similar_destinations(destination_id, user_rating, top_n=top_n*2)
         collab_dict = {row['destination_id']: row for _, row in collab_similar.iterrows()}
 
@@ -682,7 +778,9 @@ class HybridRecommender:
         recommendations.sort(key=lambda x: x['hybrid_score'], reverse=True)
         return pd.DataFrame(recommendations[:top_n])
 
-class CollaborativeRecommender:
+class UserBehaviorRecommender:
+    """User behavior-based recommender using search history and ratings (formerly CollaborativeRecommender)"""
+
     def __init__(self):
         self.user_item_matrix = None
         self.item_similarity_df = None
@@ -691,43 +789,78 @@ class CollaborativeRecommender:
         self._build_similarity_matrix()
 
     def _load_data(self):
-        """Load data from SearchHistory model instead of CSV"""
-        from ..models import SearchHistory
-        
+        """Load data from SearchHistory and UserRating models"""
         try:
             # Load search history data from database
             search_history_entries = SearchHistory.objects.all().values('user_id', 'destination_id', 'score')
-            if search_history_entries:
-                search_df = pd.DataFrame(list(search_history_entries))
-                print(f"Loaded {len(search_df)} search history records from database")
-
+            search_df = pd.DataFrame(list(search_history_entries)) if search_history_entries else pd.DataFrame()
+            
+            # Load user rating data from database
+            user_rating_entries = UserRating.objects.select_related('user__usersprofile').values(
+                'user__usersprofile__custom_user_id', 'destination__destination_id', 'rating'
+            )
+            rating_df = pd.DataFrame(list(user_rating_entries)) if user_rating_entries else pd.DataFrame()
+            
+            # Rename columns for consistency
+            if not rating_df.empty:
+                rating_df = rating_df.rename(columns={
+                    'user__usersprofile__custom_user_id': 'user_id',
+                    'destination__destination_id': 'destination_id'
+                })
+            
+            print(f"Loaded {len(search_df)} search history records from database")
+            print(f"Loaded {len(rating_df)} user rating records from database")
+            
+            # Combine search history and user ratings
+            combined_df = pd.concat([search_df, rating_df], ignore_index=True)
+            
+            if not combined_df.empty:
                 # Convert destination_id to proper format (dest_XXX)
-                search_df['destination_id'] = search_df['destination_id'].astype(str)
-                search_df['destination_id'] = search_df['destination_id'].apply(
+                combined_df['destination_id'] = combined_df['destination_id'].astype(str)
+                combined_df['destination_id'] = combined_df['destination_id'].apply(
                     lambda x: f"dest_{int(x):03d}" if x.isdigit() else x
                 )
-
+                
+                # Group by user and destination, calculate average rating
+                # This combines search scores and explicit ratings
+                combined_df = combined_df.groupby(['user_id', 'destination_id']).agg({
+                    'score': 'mean',  # For search history
+                    'rating': 'mean'  # For user ratings
+                }).reset_index()
+                
+                # Create final score: average of available scores, scaled to 0-5.0
+                combined_df['final_score'] = combined_df[['score', 'rating']].mean(axis=1, skipna=True)
+                
+                # Fill NaN values (when only one type of rating exists)
+                combined_df['final_score'] = combined_df['final_score'].fillna(combined_df['score']).fillna(combined_df['rating'])
+                
+                # Ensure score is within 0-5.0 range
+                combined_df['final_score'] = combined_df['final_score'].clip(0, 5.0)
+                
+                print(f"Combined {len(combined_df)} unique user-destination ratings")
+                
                 # Create user-item matrix
-                self.user_item_matrix = search_df.pivot_table(
+                self.user_item_matrix = combined_df.pivot_table(
                     index='user_id',
                     columns='destination_id',
-                    values='score',
+                    values='final_score',
                     fill_value=0
                 )
-
+                
                 print(f"User-item matrix shape: {self.user_item_matrix.shape}")
                 print(f"Total ratings: {(self.user_item_matrix > 0).sum().sum()}")
+                print(f"Average rating: {self.user_item_matrix[self.user_item_matrix > 0].mean().mean():.2f}")
             else:
-                print("No search history data in database")
+                print("No rating data available")
                 self.user_item_matrix = pd.DataFrame()
-
+            
             # Load destinations info from database
             destinations = Destinations.objects.all().values('destination_id', 'desName', 'category', 'rating', 'location')
             self.destinations_df = pd.DataFrame(list(destinations))
             self.destinations_df.set_index('destination_id', inplace=True)
-
+            
             print(f"Loaded {len(self.destinations_df)} destinations from database")
-
+            
         except Exception as e:
             print(f"Error loading data: {e}")
             self.destinations_df = pd.DataFrame()

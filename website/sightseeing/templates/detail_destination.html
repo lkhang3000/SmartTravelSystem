@@ -773,6 +773,9 @@
         </div>
 
         <div style="margin-bottom: 30px; text-align: center;">
+            <div style="margin-bottom: 10px; font-size: 14px; color: #666;">
+                Rate this destination (optional):
+            </div>
             <div id="rating-container" 
                  data-selected-rating="0" 
                  style="/* 3. TĂNG KÍCH THƯỚC SAO LÊN 60PX */
@@ -804,7 +807,7 @@
                            transition:0.2s;" 
                     onmouseover="this.style.background='#C48300'" 
                     onmouseout="this.style.background='#F7931E'">
-                Post Comment
+                Post Comment & Rating
             </button>
         </div>
     </form>
@@ -815,7 +818,7 @@
             if (!ratingContainer) return; 
 
             const stars = ratingContainer.querySelectorAll('.star');
-            let selectedRating = 0; 
+            let selectedRating = 0; // Start with no rating selected
 
             function updateStars(rating) {
                 const finalRating = Math.max(0, rating); 
@@ -852,22 +855,18 @@
                     let clickedRating = parseInt(this.getAttribute('data-value'));
                     
                     if (clickedRating === selectedRating) {
-                        if (clickedRating > 1) { 
-                            selectedRating = 0; 
-                        }
+                        // If clicking the same rating, deselect it
+                        selectedRating = 0; 
                     } else {
                         selectedRating = clickedRating;
                     }
-                    
-                    if (selectedRating === 0) selectedRating = 1;
 
                     updateStars(selectedRating);
                     ratingContainer.setAttribute('data-selected-rating', selectedRating);
                 });
             });
             
-            // Khởi tạo: Mức sao thấp nhất là 1
-            selectedRating = 1;
+            // Khởi tạo: Không có rating nào được chọn
             updateStars(selectedRating);
         });
     </script>
@@ -888,6 +887,18 @@
                 <div class="comment-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <div class="comment-author" style="font-weight:600; color:#333;">
                         👤 {{ comment.user.username }}
+                        {% if comment.user_rating %}
+                        <span style="margin-left: 10px; font-size: 14px; color: #666;">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= comment.user_rating %}
+                                    <span style="color: gold;">★</span>
+                                {% else %}
+                                    <span style="color: #ccc;">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                            ({{ comment.user_rating }}/5)
+                        </span>
+                        {% endif %}
                     </div>
                     <div class="comment-date" style="font-size:12px; color:#666;">
                         {{ comment.created_at|date:"M d, Y H:i" }}
