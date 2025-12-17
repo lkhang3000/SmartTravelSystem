@@ -1,5 +1,6 @@
 /**
  * MAIN.JS - Gộp logic xử lý Itinerary, Expenses, Map và UI
+ * Updated: Tích hợp AI Chat nâng cao
  */
 
 // 1. HELPER FUNCTIONS (Dùng chung toàn bộ file)
@@ -20,7 +21,9 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie('csrftoken');
-const currentLang = window.location.pathname.split('/')[1] || 'en';
+// Lấy ngôn ngữ từ URL một cách an toàn hơn
+const pathParts = window.location.pathname.split('/');
+const currentLang = (pathParts[1] && pathParts[1].length === 2) ? pathParts[1] : 'en';
 
 // Hàm lấy dữ liệu từ biến Global (được định nghĩa trong HTML)
 function getDjangoData() {
@@ -39,25 +42,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const systemDestinations = contextData.systemDestinations;
     const trans = contextData.translations;
 
-    // --- AI CHAT TOGGLE ---
+    // --- AI CHAT EVENT LISTENERS ---
+    // Xử lý nút mở chat
     const aiBtn = document.querySelector('.ai-chip');
-        if (aiBtn) {
-          aiBtn.addEventListener('click', toggleChat);
-        }
-  function toggleChat(){
-  const panel = document.getElementById('ai-chat-panel');
-  panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
-  }
-
-  const aiInput = document.getElementById('ai-user-input');
-if (aiInput) {
-  aiInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();   // ⛔ CHẶN RELOAD
-      sendAIMessage();      // ✅ GỬI AI
+    if (aiBtn) {
+        aiBtn.addEventListener('click', function(e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định (tránh reload trang nếu nằm trong form)
+            console.log("Đã click vào nút AI"); // Kiểm tra xem nút có nhận lệnh click không
+            toggleChat();
+        });
+    } else {
+        console.warn("Không tìm thấy nút có class '.ai-chip'");
     }
-  });
-}
+    
+    // Xử lý nút đóng chat (nếu bạn thêm nút X vào header của chat panel)
+    const closeAiBtn = document.querySelector('#ai-chat-panel button'); 
+    if (closeAiBtn) {
+        closeAiBtn.addEventListener('click', toggleChat);
+    }
+
+    // Xử lý phím Enter trong ô input
+    const aiInput = document.getElementById('ai-user-input');
+    if (aiInput) {
+        aiInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();   // ⛔ CHẶN RELOAD
+                sendAIMessage();      // ✅ GỬI AI
+            }
+        });
+    }
+
     // --- BIẾN DOM CHUNG ---
     const startInput = document.getElementById("start-date");
     const endInput = document.getElementById("end-date");
@@ -851,7 +865,7 @@ if (aiInput) {
     });
 });
 
-// 3. MODULES: SETTINGS, BUDGET, NOTES
+// 3. MODULES: SETTINGS, BUDGET, NOTES, AI
 // -----------------------------------------------------------------------------
 function initTripSettings() {
     const modal = document.getElementById('settings-modal');
@@ -907,7 +921,7 @@ function initBudgetLogic(contextData) {
 
     function updateBudgetDisplay() {
         const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
-        const currentBudget = totalBudget + totalExpenses; // Note: Logic gốc là cộng thêm expenses vào budget?
+        const currentBudget = totalBudget + totalExpenses; 
         
         const bDisplay = document.getElementById('total-budget-display');
         if (bDisplay) bDisplay.textContent = formatVND(currentBudget).replace(' VND', '');
@@ -1016,58 +1030,105 @@ function initNoteModal() {
     });
 }
 
+// Hàm UI: Toggle Chat
+function toggleChat() {
+    const panel = document.getElementById('ai-chat-panel');
+    if (panel) {
+        // Sử dụng getComputedStyle để lấy trạng thái hiển thị thực tế (kể cả khi ẩn bằng CSS class)
+        const currentStyle = window.getComputedStyle(panel).display;
+        
+        if (currentStyle === 'none') {
+            // Mở panel
+            panel.style.display = 'flex';
+            
+            // CỰC KỲ QUAN TRỌNG: Set z-index cao để không bị bản đồ hoặc header che mất
+            panel.style.zIndex = "10000"; 
+            
+            // Auto focus vào ô nhập liệu
+            const input = document.getElementById('ai-user-input');
+            if (input) input.focus();
+        } else {
+            // Đóng panel
+            panel.style.display = 'none';
+        }
+    } else {
+        console.error("Lỗi: Không tìm thấy phần tử có id='ai-chat-panel' trong HTML");
+    }
+}
 
+// Hàm Logic: Gửi tin nhắn AI
 async function sendAIMessage(){
-  const input = document.getElementById('ai-user-input');
-  const msg = input.value.trim();
-  if(!msg) return;
+    const input = document.getElementById('ai-user-input');
+    const messages = document.getElementById('ai-chat-messages');
+    const msg = input.value.trim();
+    if (!msg) return;
 
-  const messages = document.getElementById('ai-chat-messages');
-  messages.innerHTML += `<div><b>You:</b> ${msg}</div>`;
-  input.value = '';
-
-  const destination =
-    document.getElementById('trip-title')?.innerText
-      ?.replace('Trip to', '')
-      ?.trim() || 'unknown';
-
-  const travelers =
-    document.getElementById('travelers-count')?.value || '1';
-
-  const startDate =
-    document.getElementById('start-date')?.value || '';
-
-  const endDate =
-    document.getElementById('end-date')?.value || '';
-
-  const lang = window.location.pathname.split('/')[1] || 'en';
-
-  try {
-    const res = await fetch(`/${lang}/api/chat/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken')
-      },
-      body: JSON.stringify({
-        message: msg,
-        type: 'tripplanner',
-        destination: destination,
-        travelers: travelers,
-        date_range: `${startDate} - ${endDate}`
-      })
-    });
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const data = await res.json();
-    messages.innerHTML += `<div><b>AI:</b> ${data.reply}</div>`;
+    // 1. Hiển thị tin nhắn người dùng (UI Đẹp hơn)
+    messages.innerHTML += `<div style="text-align: right; margin-bottom: 8px;">
+        <span style="background: #fb8700; color: white; padding: 8px 12px; border-radius: 12px 12px 0 12px; display: inline-block;">${msg}</span>
+    </div>`;
+    input.value = '';
     messages.scrollTop = messages.scrollHeight;
 
-  } catch (err) {
-    messages.innerHTML += `
-      <div style="color:red;">
-        <b>AI error:</b> ${err.message}
-      </div>`;
-  }
+    // 2. Hiển thị trạng thái "Typing..."
+    const loadingId = 'ai-loading-' + Date.now();
+    messages.innerHTML += `<div id="${loadingId}" style="margin-bottom: 8px;">
+        <span style="background: #f0f0f0; color: #666; padding: 8px 12px; border-radius: 12px 12px 12px 0; display: inline-block; font-style: italic;">AI is typing...</span>
+    </div>`;
+    messages.scrollTop = messages.scrollHeight;
+
+    // 3. Thu thập ngữ cảnh chuyến đi
+    const destination = document.getElementById('trip-title')?.innerText.replace('Trip to', '').trim() || 'unknown';
+    const travelers = document.getElementById('travelers-count')?.value || '1';
+    const startDate = document.getElementById('start-date')?.value || '';
+    const endDate = document.getElementById('end-date')?.value || '';
+    const budget = document.getElementById('budget-slider')?.value || '0'; // Lấy budget từ thanh trượt
+
+    // 4. Xác định ngôn ngữ và API URL
+    const lang = window.location.pathname.split('/')[1] || 'en';
+    // Đảm bảo URL hợp lệ (nếu lang là 'tripplanner' hoặc rỗng thì mặc định 'en')
+    const safeLang = (lang.length === 2) ? lang : 'en';
+    const apiUrl = `/${safeLang}/api/chat/`;
+
+    try {
+        const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                message: msg,
+                type: 'tripplanner', // Đánh dấu request từ Trip Planner
+                destination: destination,
+                travelers: travelers,
+                budget: budget, // Gửi budget cho backend
+                date_range: `${startDate} - ${endDate}`
+            })
+        });
+
+        // Xóa dòng loading
+        const loadingDiv = document.getElementById(loadingId);
+        if (loadingDiv) loadingDiv.remove();
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        
+        // 5. Hiển thị câu trả lời của AI
+        const reply = data.reply || "I couldn't get a response.";
+        messages.innerHTML += `<div style="text-align: left; margin-bottom: 8px;">
+            <span style="background: #f0f0f0; color: #333; padding: 8px 12px; border-radius: 12px 12px 12px 0; display: inline-block;">${reply}</span>
+        </div>`;
+
+    } catch (err) {
+        const loadingDiv = document.getElementById(loadingId);
+        if (loadingDiv) loadingDiv.remove();
+        
+        messages.innerHTML += `
+          <div style="color:red; font-size: 0.9em; margin-bottom: 8px;">
+            <b>AI error:</b> ${err.message}
+          </div>`;
+    }
+    messages.scrollTop = messages.scrollHeight;
 }

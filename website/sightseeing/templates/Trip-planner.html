@@ -2441,5 +2441,144 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+Lỗi này xác nhận chính xác vấn đề: Trong file HTML của bạn chưa có đoạn code tạo giao diện khung chat, nên JavaScript không tìm thấy phần tử ai-chat-panel để hiển thị.
+
+Bạn hãy mở file Trip-planner.html và thêm đoạn code sau vào cuối file (đặt ngay trước thẻ đóng </body>).
+
+Đoạn code này bao gồm cả HTML (cấu trúc khung chat) và CSS (để căn chỉnh vị trí và màu sắc).
+
+Copy đoạn code này vào cuối file Trip-planner.html:
+HTML
+
+<div id="ai-chat-panel" style="display: none;">
+  <div class="ai-chat-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+          <span>🤖</span>
+          <span>AI Assistant</span>
+      </div>
+      <button onclick="toggleChat()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">&times;</button>
+  </div>
+  
+  <div id="ai-chat-messages">
+      <div class="ai-message bot-msg">
+          Chào bạn! Tôi có thể giúp gì cho chuyến đi <b>{{ trip_destination|default:"này" }}</b> của bạn?
+          <br><br>
+          <i>Gợi ý: "Tìm quán ăn ngon", "Lên lịch trình ngày mai", "Chi phí dự kiến"...</i>
+      </div>
+  </div>
+
+  <div class="ai-chat-input-area">
+      <input type="text" id="ai-user-input" placeholder="Nhập câu hỏi..." autocomplete="off">
+      <button onclick="sendAIMessage()">➤</button>
+  </div>
+</div>
+
+<style>
+/* CSS CHO AI CHAT PANEL */
+#ai-chat-panel {
+    position: fixed;
+    bottom: 80px;      /* Cách đáy màn hình */
+    left: 280px;       /* Cách lề trái (để không đè lên Sidebar) */
+    width: 380px;
+    height: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;     /* Luôn nổi lên trên */
+    border: 1px solid #eee;
+    font-family: 'Montserrat', sans-serif;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-chat-header {
+    background: #fb8700; /* Màu cam chủ đạo */
+    color: white;
+    padding: 15px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+#ai-chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #fff9f2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ai-message {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 85%;
+    word-wrap: break-word;
+}
+
+.bot-msg {
+    background: white;
+    border: 1px solid #eee;
+    align-self: flex-start;
+    color: #333;
+    border-top-left-radius: 2px;
+}
+
+.user-msg {
+    background: #fb8700;
+    color: white;
+    align-self: flex-end;
+    border-top-right-radius: 2px;
+}
+
+.ai-chat-input-area {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 8px;
+    background: white;
+    border-radius: 0 0 12px 12px;
+}
+
+#ai-user-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+#ai-user-input:focus {
+    border-color: #fb8700;
+}
+
+.ai-chat-input-area button {
+    background: #fb8700;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.ai-chat-input-area button:hover {
+    background: #e67a00;
+}
+</style>
 </body>
 </html>
