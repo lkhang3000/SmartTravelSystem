@@ -464,8 +464,8 @@
                 </a>
             </div>
         {% else %}
-        <a href="{% url 'login_page' %}" style="color: black; font-weight: bold; text-decoration: none; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">Log in</a>
-        <a href="{% url 'signup_page' %}" style="background: white; color: black; font-weight: bold; text-decoration: none; padding: 10px 20px; border-radius: 25px;">Register</a>
+        <a href="{% url 'login_page' %}" style="color: black; font-weight: bold; text-decoration: none; padding: 10px 20px; border: 2px solid white; border-radius: 25px;">{% trans "Log in" %}</a>
+        <a href="{% url 'signup_page' %}" style="background: white; color: black; font-weight: bold; text-decoration: none; padding: 10px 20px; border-radius: 25px;">{% trans "Register" %}</a>
         {% endif %}
     </div>
 </header>

@@ -189,7 +189,7 @@
            "
            onmouseover="this.style.background='white'; this.style.color='#0ab1d9';"
            onmouseout="this.style.background='transparent'; this.style.color='white';">
-            Log in
+            {% trans "Log in" %}
         </a>
         <a href="{% url 'signup_page' %}"
            style="
@@ -203,7 +203,7 @@
            "
            onmouseover="this.style.background='#eee';"
            onmouseout="this.style.background='white';">
-            Register
+            {% trans "Register" %}
         </a>
         {% endif %}
     </div>
@@ -214,7 +214,7 @@
         <h1 class="mb-0">{% trans "Saved Destinations" %}</h1>
         {% if trip_items %}
             <a href="{% url 'trip_planner' %}" class="custom-link-button" role="button" tabindex="0">
-    <span style="color:white">Start planning</span>
+    <span style="color:white">{% trans "Start planning" %}</span>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
