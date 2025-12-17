@@ -25,6 +25,7 @@ from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
 from django.db import transaction
 from .models import Trip, TripItem, Destinations
+from django.db import models
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'reset_password_form.html'
@@ -721,12 +722,33 @@ def destination_detail(request, destination_id):
         # Handle comment submission
         if request.method == 'POST' and request.user.is_authenticated:
             content = request.POST.get('content', '').strip()
+            rating = request.POST.get('rating')
+            
+            # Handle comment submission (can include rating)
             if content:
+                # Create comment
                 Comment.objects.create(
                     user=request.user,
                     destination=destination,
                     content=content
                 )
+                
+                # Handle rating if provided
+                if rating and rating.isdigit():
+                    try:
+                        rating_value = int(rating)
+                        if 1 <= rating_value <= 5:
+                            # Create or update user rating
+                            UserRating.objects.update_or_create(
+                                user=request.user,
+                                destination=destination,
+                                defaults={'rating': rating_value}
+                            )
+                        else:
+                            messages.warning(request, 'Rating must be between 1 and 5.')
+                    except ValueError:
+                        messages.warning(request, 'Invalid rating value.')
+                
                 messages.success(request, 'Your comment has been added!')
                 # Update user preference score after commenting
                 from .Services.search_history_utils import update_user_preference_score
@@ -743,8 +765,15 @@ def destination_detail(request, destination_id):
         # Get hotels in the same location
         hotels = Hotel.objects.filter(location=destination.location).order_by('-rating')
         
-        # Get comments for this destination
-        comments = Comment.objects.filter(destination=destination).select_related('user')
+        # Get comments for this destination with user ratings
+        comments = Comment.objects.filter(destination=destination).select_related('user').annotate(
+            user_rating=models.Subquery(
+                UserRating.objects.filter(
+                    user=models.OuterRef('user'),
+                    destination=destination
+                ).values('rating')[:1]
+            )
+        )
         
         context = {
             'destination': destination,
