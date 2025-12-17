@@ -1413,3 +1413,173 @@ def update_profile_settings(request):
         return redirect('user_profile')
     
     return redirect('user_profile')
+
+def recommend_result(request):
+    """View for displaying recommended destinations with filtering and pagination"""
+    from .models import Location, Destinations
+    from django.core.paginator import Paginator
+    from .Services.recommender import get_recommender
+    
+    # Get all locations and categories for filters
+    all_locations = Location.objects.all().order_by('locationName')
+    all_categories = Destinations.objects.values_list('category', flat=True).distinct().exclude(category__isnull=True).order_by('category')
+    
+    # Get filter parameters from GET request
+    selected_location = request.GET.get('location', '')
+    if selected_location:
+        try:
+            selected_location = int(selected_location)
+        except ValueError:
+            selected_location = ''
+    selected_category = request.GET.get('category', '')
+    selected_rating = request.GET.get('rating', '')
+    page_number = request.GET.get('page', 1)
+    
+    # Base queryset
+    destinations = Destinations.objects.all().order_by('-rating')
+    
+    # Apply filters
+    if selected_location:
+        destinations = destinations.filter(location_id=selected_location)
+    
+    if selected_category:
+        destinations = destinations.filter(category=selected_category)
+    
+    if selected_rating:
+        try:
+            min_rating = float(selected_rating)
+            destinations = destinations.filter(rating__gte=min_rating)
+        except ValueError:
+            pass
+    
+    # Pagination
+    paginator = Paginator(destinations, 10)  # 10 per page
+    try:
+        page_obj = paginator.page(page_number)
+    except:
+        page_obj = paginator.page(1)
+    
+    search_results = page_obj.object_list
+    total_results = destinations.count()
+    
+    # Get top results (highest rated, limited to 3)
+    top_results = Destinations.objects.all().order_by('-rating')[:3]
+    
+    # Get collaborative recommendations using the recommender service
+    collaborative_recommendations = []
+    try:
+        recommender = get_recommender()
+        if request.user.is_authenticated:
+            # Get user-specific recommendations
+            user_recs = recommender.recommend_for_user(
+                request.user.username, 
+                user_preferences={'category': selected_category or None},
+                top_n=5
+            )
+            if not user_recs.empty:
+                # Convert to dict format expected by template
+                for _, row in user_recs.iterrows():
+                    dest = Destinations.objects.filter(desName=row['name']).first()
+                    if dest:
+                        collaborative_recommendations.append({
+                            'id': dest.id,
+                            'name': dest.desName,
+                            'location': dest.location.locationName if dest.location else '',
+                            'rating': dest.rating or 0,
+                            'price': getattr(dest, 'price', 500),
+                            'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
+                            'image_list': dest.get_image_list() or []
+                        })
+        else:
+            # For anonymous users, show top rated destinations
+            top_dests = Destinations.objects.filter(rating__gte=4.0).order_by('-rating')[:5]
+            for dest in top_dests:
+                collaborative_recommendations.append({
+                    'id': dest.id,
+                    'name': dest.desName,
+                    'location': dest.location.locationName if dest.location else '',
+                    'rating': dest.rating or 0,
+                    'price': getattr(dest, 'price', 500),
+                    'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg'
+                })
+    except Exception as e:
+        print(f"Error getting recommendations: {e}")
+        # Fallback: show top rated
+        top_dests = Destinations.objects.filter(rating__gte=4.0).order_by('-rating')[:5]
+        for dest in top_dests:
+            collaborative_recommendations.append({
+                'id': dest.id,
+                'name': dest.desName,
+                'location': dest.location.locationName if dest.location else '',
+                'rating': dest.rating or 0,
+                'price': getattr(dest, 'price', 500),
+                'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg'
+            })
+    
+    # Filter collaborative recommendations by selected location
+    if selected_location:
+        try:
+            collaborative_recommendations = [rec for rec in collaborative_recommendations if Destinations.objects.get(id=rec['id']).location_id == selected_location]
+        except Exception as e:
+            print(f"Error filtering recommendations: {e}")
+            collaborative_recommendations = []
+    
+    # If no collaborative recommendations after filtering, show top rated in selected location
+    if not collaborative_recommendations and selected_location:
+        try:
+            top_in_location = Destinations.objects.filter(location_id=selected_location, rating__gte=4.0).order_by('-rating')[:5]
+            collaborative_recommendations = [{
+                'id': dest.id,
+                'name': dest.desName,
+                'location': dest.location.locationName if dest.location else '',
+                'rating': dest.rating or 0,
+                'price': getattr(dest, 'price', 500),
+                'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
+                'image_list': dest.get_image_list() or []
+            } for dest in top_in_location]
+        except Exception as e:
+            print(f"Error getting top in location: {e}")
+    
+    # Prepare search_results in the same format
+    formatted_search_results = []
+    for dest in search_results:
+        formatted_search_results.append({
+            'id': dest.id,
+            'name': dest.desName,
+            'location': dest.location.locationName if dest.location else '',
+            'rating': dest.rating or 0,
+            'price': getattr(dest, 'price', 500),
+            'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
+            'image_list': dest.get_image_list() or [],
+            'reviews_count': '2k+'  # Placeholder
+        })
+    
+    # Prepare top_results
+    formatted_top_results = []
+    for dest in top_results:
+        formatted_top_results.append({
+            'id': dest.id,
+            'name': dest.desName,
+            'location': dest.location.locationName if dest.location else '',
+            'rating': dest.rating or 0,
+            'price': getattr(dest, 'price', 500),
+            'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
+            'reviews_count': '2k+'
+        })
+    
+    context = {
+        'all_locations': all_locations,
+        'all_categories': all_categories,
+        'selected_location': selected_location,
+        'selected_category': selected_category,
+        'selected_rating': selected_rating,
+        'top_results': formatted_top_results,
+        'collaborative_recommendations': collaborative_recommendations,
+        'search_results': formatted_search_results,
+        'page_obj': page_obj,
+        'total_results': total_results,
+        'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
+        'LANGUAGE_CODE': request.LANGUAGE_CODE,
+    }
+    
+    return render(request, 'recommendResult.html', context)

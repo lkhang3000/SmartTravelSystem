@@ -613,7 +613,7 @@
                     <select name="location" class="filter-select-minimal">
                         <option value="">{% trans "All regions" %}</option>
                         {% for loc in all_locations %}
-                        <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
+                        <option value="{{ loc.id }}" {% if selected_location and selected_location == loc.id %}selected{% endif %}>{{ loc.locationName }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -720,8 +720,7 @@
             {% for spot in collaborative_recommendations %}
                 <div class="list-card" style="border: 2px solid #FB8700;"> 
                     <div class="list-card-image">
-                        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x300/?hotel'">
-                        <div style="position:absolute; top:10px; right:10px; background:#FB8700; color:white; padding:4px 10px; border-radius:15px; font-size:10px; font-weight:bold;">🤖 {% trans "AI Recommended" %}</div>
+                        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" data-images="{{ spot.image_list|join:',' }}" onerror="nextImage(this)">
                     </div>
                     <div class="list-card-content">
                         <div style="display:flex; justify-content:space-between;">
@@ -750,7 +749,7 @@
                 {% for spot in search_results %}
                     <div class="list-card">
                         <div class="list-card-image">
-                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x300/?tourism'">
+                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" data-images="{{ spot.image_list|join:',' }}" onerror="nextImage(this)">
                             <div style="position:absolute; bottom:10px; left:10px; background:white; padding:3px 10px; border-radius:4px; font-size:11px; font-weight:bold; color:#333;">{% trans "5-Star Hotel" %}</div>
                         </div>
                         <div class="list-card-content">
@@ -1010,4 +1009,18 @@
   .chat-body::-webkit-scrollbar-track { background: #fff9f2; }
   .chat-body::-webkit-scrollbar-thumb { background: #ffe0b3; border-radius: 10px; }
 </style>
+
+<script>
+function nextImage(img) {
+  let images = img.dataset.images.split(',');
+  let currentSrc = img.src;
+  let currentIndex = images.indexOf(currentSrc);
+  if (currentIndex >= 0 && currentIndex < images.length - 1) {
+    img.src = images[currentIndex + 1];
+  } else {
+    img.src = '/static/images/default-image.jpg';
+  }
+}
+</script>
+
 </body></html>
