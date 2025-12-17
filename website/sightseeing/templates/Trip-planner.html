@@ -462,58 +462,1984 @@
     </div>
   </div>
 </div>
+<script>
+// Store destinations data from Django context
+const systemDestinations = [
+    {% for dest in destinations %}
+    {
+        id: '{{ dest.id }}',
+        name: '{{ dest.desName|escapejs }}',
+        category: '{{ dest.category|default:""|escapejs }}',
+        rating: '{{ dest.ratings|default:""|escapejs }}',
+        image: '{{ dest.image_url|default:"https://picsum.photos/400/200"|escapejs }}',
+        address: '{{ dest.address|default:""|escapejs }}'
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
 
-<!-- AI CHAT PANEL -->
-<div id="ai-chat-panel" class="ai-chat-panel" style="display:none;">
-  <div class="ai-chat-header">
-    <span>AI Trip Assistant</span>
-    <button onclick="toggleChat()">✖</button>
-  </div>
+document.addEventListener("DOMContentLoaded", function () {
 
-  <div class="ai-chat-messages" id="ai-chat-messages"></div>
+    const startInput = document.getElementById("start-date");
+    const endInput = document.getElementById("end-date");
 
-  <div class="ai-chat-input">
-    <input type="text" id="ai-user-input"
-           placeholder="Ask about your trip, itinerary, budget...">
-  </div>
-</div>
+    const daysContainer = document.getElementById("itinerary-days");
+    const sidebarDaysContainer = document.getElementById("sidebar-days");
+
+    // Helper function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function formatDate(date) {
+        const options = { weekday: 'long', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    function formatDateShort(date) {
+        const options = { weekday: 'short', month: 'numeric', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    function generateDays() {
+        daysContainer.innerHTML = "";
+        sidebarDaysContainer.innerHTML = "";
+
+        // Parse dd/mm/yyyy format
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                // dd/mm/yyyy -> yyyy-mm-dd
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+            return new Date(dateStr);
+        }
+
+        const start = parseDate(startInput.value);
+        const end = parseDate(endInput.value);
+
+        if (!start || !end || isNaN(start) || isNaN(end) || start > end) {
+            daysContainer.innerHTML = "<p style='color:#999;'>Please select valid dates</p>";
+            return;
+        }
+
+        let current = new Date(start);
+        let dayNumber = 1;
+
+        while (current <= end) {
+            const formatted = formatDate(current);
+            const formattedShort = formatDateShort(current);
+
+            // Create day card in main itinerary
+            const dayCard = document.createElement("div");
+            dayCard.classList.add("itinerary-day-full");
+            dayCard.setAttribute("data-day", dayNumber);
+
+            dayCard.innerHTML = `
+                <div class="itinerary-day-full__head">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>${formatted}</h3>
+                        <button class="day-toggle-btn" data-day="${dayNumber}">
+                            <span class="toggle-icon">▼</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="itinerary-day-content" style="display: none;">
+                    <!-- Recommended destinations for this day -->
+                    <div class="day-explore-section">
+                        <h4 style="margin: 16px 0; font-size: 16px; color: var(--text-main);">{% trans "Recommended destinations" %}</h4>
+                        <div class="day-carousel-wrapper">
+                            <button class="day-carousel-btn day-prev-btn" data-day="${dayNumber}">❮</button>
+                            <div class="day-carousel-track" id="day-carousel-${dayNumber}">
+                                <!-- Destinations will be added here -->
+                            </div>
+                            <button class="day-carousel-btn day-next-btn" data-day="${dayNumber}">❯</button>
+                        </div>
+                    </div>
+
+                    <!-- Timeline container -->
+                    <div class="itinerary-timeline">
+                        <!-- Places will be added here -->
+                    </div>
+
+                    <!-- Add place button -->
+                    <div class="place-input-row">
+                        <button class="place-input-btn" data-day="${dayNumber}">
+                            <span style="color: #999;">+ Add a place</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            daysContainer.appendChild(dayCard);
+            
+            // Add toggle functionality
+            const toggleBtn = dayCard.querySelector('.day-toggle-btn');
+            const dayContent = dayCard.querySelector('.itinerary-day-content');
+            
+            toggleBtn.addEventListener('click', function() {
+                const isOpen = dayContent.style.display !== 'none';
+                
+                if (isOpen) {
+                    dayContent.style.display = 'none';
+                    toggleBtn.querySelector('.toggle-icon').textContent = '▼';
+                    toggleBtn.classList.remove('open');
+                } else {
+                    dayContent.style.display = 'block';
+                    toggleBtn.querySelector('.toggle-icon').textContent = '▲';
+                    toggleBtn.classList.add('open');
+                }
+            });
+            
+            // Populate carousel with saved destinations
+            populateDayCarousel(dayNumber);
+
+            // Create sidebar button
+            const sidebarBtn = document.createElement("button");
+            sidebarBtn.classList.add("nav-item");
+            sidebarBtn.setAttribute("data-section", "itinerary-section");
+            sidebarBtn.setAttribute("data-day", dayNumber);
+            sidebarBtn.innerHTML = `
+                <span>${formattedShort}</span>
+                <span class="nav-item__pill">0 stops</span>
+            `;
+            
+            sidebarBtn.addEventListener('click', function() {
+                const dayCard = document.querySelector(`.itinerary-day-full[data-day="${dayNumber}"]`);
+                const mainContainer = document.querySelector('.main');
+                if (dayCard && mainContainer) {
+                    // Calculate position relative to main container
+                    const mainRect = mainContainer.getBoundingClientRect();
+                    const dayRect = dayCard.getBoundingClientRect();
+                    const scrollOffset = dayRect.top - mainRect.top + mainContainer.scrollTop - 20; // 20px padding
+                    
+                    mainContainer.scrollTo({
+                        top: scrollOffset,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+
+            sidebarDaysContainer.appendChild(sidebarBtn);
+
+            current.setDate(current.getDate() + 1);
+            dayNumber++;
+        }
+
+        // Attach event listeners
+        attachPlaceInputListeners();
+        setupDayCarousels();
+    }
+
+    function populateDayCarousel(dayNumber) {
+        const carouselTrack = document.getElementById(`day-carousel-${dayNumber}`);
+        if (!carouselTrack) return;
+        
+        // Use system destinations from Django context
+        if (!systemDestinations || systemDestinations.length === 0) {
+            carouselTrack.innerHTML = '<p style="color: #999; padding: 20px; text-align: center;">{% trans "No destinations available" %}</p>';
+            return;
+        }
+        
+        systemDestinations.forEach(dest => {
+            const rating = dest.rating ? dest.rating.replace(/,/g, '.') : '';
+            const subtitle = dest.category + (rating ? ` | ${rating}` : '');
+            const location = dest.address || dest.name;
+            
+            const miniCard = document.createElement('div');
+            miniCard.classList.add('day-explore-card');
+            miniCard.setAttribute('data-location', location);
+            miniCard.style.cursor = 'pointer';
+            miniCard.innerHTML = `
+                <div class="day-explore-card__image" style="background-image: url('${dest.image}'); background-size: cover; background-position: center;"></div>
+                <div class="day-explore-card__body">
+                    <h5 class="day-explore-card__title">${dest.name}</h5>
+                    <p class="day-explore-card__subtitle">${subtitle}</p>
+                    <button class="btn-add-to-day" data-day="${dayNumber}">
+                        + {% trans "Add" %}
+                    </button>
+                </div>
+            `;
+            
+            // Add click handler for map location and detail panel
+            miniCard.addEventListener('click', function(e) {
+                // Don't trigger if clicking the Add button
+                if (!e.target.closest('.btn-add-to-day')) {
+                    const iframe = document.querySelector('.map-pane__body iframe');
+                    const detailPanel = document.getElementById('destination-detail-panel');
+                    
+                    if (iframe && location) {
+                        iframe.src = `https://maps.google.com/maps?output=embed&q=${encodeURIComponent(location)}&z=16`;
+                    }
+                    
+                    // Show detail panel
+                    if (detailPanel) {
+                        document.getElementById('detail-title').textContent = dest.name;
+                        document.getElementById('detail-category').textContent = dest.category || '';
+                        document.getElementById('detail-rating').textContent = rating ? `⭐ ${rating}` : '';
+                        document.getElementById('detail-address').textContent = dest.address || '';
+                        
+                        const detailImage = document.getElementById('detail-image');
+                        detailImage.style.backgroundImage = `url('${dest.image}')`;
+                        
+                        detailPanel.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Add click handler for Add button
+            const addBtn = miniCard.querySelector('.btn-add-to-day');
+            addBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const currentDay = parseInt(dayNumber);
+                if (!currentDay || isNaN(currentDay)) {
+                    console.error('❌ Invalid day number:', dayNumber);
+                    return;
+                }
+                addPlaceToDay(currentDay, {
+                    title: dest.name,
+                    subtitle: subtitle,
+                    image: `url('${dest.image}')`,
+                    itemId: dest.id
+                });
+            });
+            
+            carouselTrack.appendChild(miniCard);
+        });
+    }
+
+    function setupDayCarousels() {
+        document.querySelectorAll('.day-carousel-wrapper').forEach(wrapper => {
+            const track = wrapper.querySelector('.day-carousel-track');
+            const prevBtn = wrapper.querySelector('.day-prev-btn');
+            const nextBtn = wrapper.querySelector('.day-next-btn');
+            
+            if (!track || !prevBtn || !nextBtn) return;
+            
+            prevBtn.addEventListener('click', () => {
+                track.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                track.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+        });
+    }
+
+    function attachPlaceInputListeners() {
+        document.querySelectorAll('.place-input-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const day = parseInt(this.getAttribute('data-day'));
+                if (!day || isNaN(day)) {
+                    console.error('❌ Invalid day value:', this.getAttribute('data-day'));
+                    return;
+                }
+                showPlaceSelector(day, this);
+            });
+        });
+    }
+
+    function showPlaceSelector(day, btnElement) {
+        // Validate day parameter
+        if (!day || isNaN(day)) {
+            console.error('❌ Invalid day parameter:', day);
+            alert('{% trans "Error: Invalid day" %}');
+            return;
+        }
+        
+        console.log('📍 Opening place selector for day:', day);
+        
+        // Create a dropdown with saved destinations
+        const dropdown = document.createElement('div');
+        dropdown.classList.add('place-selector-dropdown');
+        dropdown.innerHTML = `
+            <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-height: 400px; overflow-y: auto;">
+                <p style="font-weight: 600; margin-bottom: 10px;">{% trans "Saved destination" %}</p>
+                <div id="place-options-list"></div>
+            </div>
+        `;
+        
+        btnElement.parentElement.appendChild(dropdown);
+
+        // Load saved destinations (from trip_items)
+        loadSavedPlaces(day, dropdown);
+    }
+
+    function loadSavedPlaces(day, dropdown) {
+        // Validate day parameter
+        if (!day || isNaN(day)) {
+            console.error('❌ loadSavedPlaces: Invalid day parameter:', day);
+            return;
+        }
+        
+        console.log('📋 Loading saved places for day:', day);
+        
+        // Get saved destinations from the page
+        const savedCarousel = document.getElementById('saved-carousel');
+        const savedCards = savedCarousel.querySelectorAll('.explore-card');
+        const optionsList = dropdown.querySelector('#place-options-list');
+
+        if (savedCards.length === 0) {
+            optionsList.innerHTML = '<p style="color: #999; font-size: 0.9rem;">No saved destinations yet. Add some from Explore section first.</p>';
+            return;
+        }
+
+        savedCards.forEach(card => {
+            const title = card.querySelector('.explore-card__title').textContent;
+            let subtitle = card.querySelector('.explore-card__subtitle').textContent;
+            // Replace comma with period in rating
+            subtitle = subtitle.replace(/,/g, '.');
+            const img = card.querySelector('.explore-card__image').style.backgroundImage;
+            const removeBtn = card.querySelector('.remove-trip-item-btn');
+            const destinationId = removeBtn?.getAttribute('data-destination-id');
+            const itemId = removeBtn?.getAttribute('data-item-id');
+            
+            console.log('📍 Card:', title, '- destId:', destinationId, '- itemId:', itemId);
+
+            const option = document.createElement('div');
+            option.classList.add('place-option');
+            option.style.cssText = 'padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center; gap: 10px;';
+            option.innerHTML = `
+                <div style="width: 50px; height: 50px; border-radius: 6px; background-size: cover; background-position: center; ${img}"></div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 0.9rem;">${title}</div>
+                    <div style="font-size: 0.8rem; color: #666;">${subtitle}</div>
+                </div>
+            `;
+
+            option.addEventListener('click', function() {
+                addPlaceToDay(day, {
+                    title: title,
+                    subtitle: subtitle,
+                    image: img,
+                    itemId: destinationId  // Use destination ID, not trip item ID
+                });
+                dropdown.remove();
+            });
+
+            option.addEventListener('mouseenter', function() {
+                this.style.background = '#f5f5f5';
+            });
+            option.addEventListener('mouseleave', function() {
+                this.style.background = 'white';
+            });
+
+            optionsList.appendChild(option);
+        });
+
+        // Close dropdown when clicking outside
+        setTimeout(() => {
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.remove();
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }, 100);
+    }
+
+    function addPlaceToDay(day, placeData, existingItemId = null, existingNotes = null) {
+        // Validate day parameter
+        if (!day) {
+            console.error('❌ Cannot add place: day is undefined or null');
+            return;
+        }
+        
+        const dayCard = document.querySelector(`.itinerary-day-full[data-day="${day}"]`);
+        if (!dayCard) {
+            console.error(`❌ Cannot find day card for day ${day}`);
+            return;
+        }
+        
+        const timeline = dayCard.querySelector('.itinerary-timeline');
+        if (!timeline) {
+            console.error(`❌ Cannot find timeline for day ${day}`);
+            return;
+        }
+
+        const placeCard = document.createElement('div');
+        placeCard.classList.add('place-card');
+        
+        // Extract image URL from various formats
+        let imageUrl = placeData.image || '';
+        
+        // If image contains 'url(' then extract the URL
+        if (imageUrl.includes('url(')) {
+            const match = imageUrl.match(/url\(['"]?([^'"\)]+)['"]?\)/);
+            imageUrl = match ? match[1] : '';
+        }
+        // If it's a raw background-image style, extract it
+        else if (imageUrl.includes('background-image:')) {
+            const match = imageUrl.match(/url\(['"]?([^'"\)]+)['"]?\)/);
+            imageUrl = match ? match[1] : '';
+        }
+        // Otherwise assume it's a plain URL
+        
+        console.log('Adding place with image URL:', imageUrl);
+        
+        // Calculate order (number of existing places + 1)
+        const existingPlaces = timeline.querySelectorAll('.place-card').length;
+        
+        placeCard.innerHTML = `
+            <div class="place-card__timeline-marker"></div>
+            <div class="place-card__content">
+                <div class="place-card__image" style="background-image: url('${imageUrl}'); background-size: cover; background-position: center;"></div>
+                <div class="place-card__info">
+                    <h4 class="place-card__title">${placeData.title}</h4>
+                    <p class="place-card__subtitle">${placeData.subtitle}</p>
+                    <div class="place-card__actions">
+                        <button class="tiny-link add-note-btn" style="color: #ff8427;">Add note</button>
+                        <span class="dot-separator">·</span>
+                        <button class="tiny-link remove-place-btn" style="color: #ff8427;">Remove</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        timeline.appendChild(placeCard);
+        
+        // Store destination ID for later saving
+        if (placeData.itemId) {
+            placeCard.dataset.destinationId = placeData.itemId;
+        }
+        
+        // Set itemId if loading from database
+        if (existingItemId) {
+            placeCard.dataset.itemId = existingItemId;
+            if (existingNotes) {
+                placeCard.dataset.note = existingNotes;
+                // Display existing note
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('place-card__note');
+                noteElement.innerHTML = `<span style="color: #666;">${existingNotes}</span>`;
+                placeCard.querySelector('.place-card__info').appendChild(noteElement);
+            }
+        } else {
+            console.log('✨ Added to UI (Pending Save)');
+        }
+
+        // Add note handler
+        const addNoteBtn = placeCard.querySelector('.add-note-btn');
+        
+        addNoteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Add note clicked!');
+            
+            // Show note modal
+            const noteModal = document.getElementById('note-modal');
+            const noteText = document.getElementById('note-text');
+            
+            if (!noteModal) {
+                console.error('Note modal not found!');
+                return;
+            }
+            
+            // Load existing note if any
+            const existingNote = placeCard.dataset.note || '';
+            noteText.value = existingNote;
+            
+            noteModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            console.log('Note modal opened, display:', noteModal.style.display);
+            
+            // Store reference to this place card
+            if (!placeCard.id) {
+                placeCard.id = 'place-' + Date.now();
+            }
+            noteModal.dataset.targetPlace = placeCard.id;
+        });
+
+        // Add remove handler
+        placeCard.querySelector('.remove-place-btn').addEventListener('click', function() {
+            const itemId = placeCard.dataset.itemId;
+            if (itemId) {
+                removeItineraryItem(itemId);
+            }
+            placeCard.remove();
+            updateStopCount(day);
+        });
+
+        // Update stop count in sidebar
+        updateStopCount(day);
+    }
+
+    // API Functions
+    async function saveItineraryItem(destinationId, day, order, notes = '') {
+        // Validate parameters
+        if (!destinationId) {
+            console.error('❌ Cannot save: destinationId is missing');
+            return null;
+        }
+        if (!day) {
+            console.error('❌ Cannot save: day is missing');
+            return null;
+        }
+        
+        try {
+            console.log('💾 Saving item:', {destinationId, day, order, notes});
+            const csrftoken = getCookie('csrftoken');
+            
+            const response = await fetch('/api/itinerary/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    destination_id: destinationId,
+                    day: day,
+                    order: order,
+                    notes: notes
+                })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                console.log('✅ Saved to database:', data.item_id);
+                return data.item_id;
+            } else {
+                console.error('❌ Failed to save:', data.error);
+                return null;
+            }
+        } catch (error) {
+            console.error('❌ Error saving itinerary item:', error);
+            return null;
+        }
+    }
+
+    async function updateItineraryNote(itemId, notes) {
+        try {
+            const csrftoken = getCookie('csrftoken');
+            
+            const response = await fetch('/api/itinerary/update-note/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    item_id: itemId,
+                    notes: notes
+                })
+            });
+            
+            const data = await response.json();
+            console.log('✅ Note updated:', data.success);
+            return data.success;
+        } catch (error) {
+            console.error('❌ Error updating note:', error);
+            return false;
+        }
+    }
+
+    async function removeItineraryItem(itemId) {
+        try {
+            const csrftoken = getCookie('csrftoken');
+            
+            const response = await fetch('/api/itinerary/remove/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    item_id: itemId
+                })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                console.log('✅ Removed from database');
+            }
+            return data.success;
+        } catch (error) {
+            console.error('❌ Error removing item:', error);
+            return false;
+        }
+    }
+
+    async function saveAllItinerary() {
+        try {
+            console.log('💾 Saving all itinerary items...');
+            
+            // Show saving indicator
+            const saveBtn = document.getElementById('save-trip-btn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '⏳ Saving...';
+            saveBtn.disabled = true;
+            
+            // Collect all places from all days
+            const allItems = [];
+            const newItems = [];
+            const dayCards = document.querySelectorAll('.itinerary-day-full');
+            
+            console.log('📋 Found day cards:', dayCards.length);
+            
+            dayCards.forEach(dayCard => {
+                const day = parseInt(dayCard.getAttribute('data-day'));
+                const placeCards = dayCard.querySelectorAll('.place-card');
+                
+                console.log(`📍 Day ${day}: ${placeCards.length} places`);
+                
+                placeCards.forEach((placeCard, index) => {
+                    const itemId = placeCard.dataset.itemId;
+                    const destinationId = placeCard.dataset.destinationId;
+                    const title = placeCard.querySelector('.place-card__title')?.textContent;
+                    const note = placeCard.dataset.note || '';
+                    
+                    console.log(`  - Place: ${title}, itemId: ${itemId}, destId: ${destinationId}`);
+                    
+                    if (itemId) {
+                        // Item already exists in database, update it
+                        allItems.push({
+                            item_id: itemId,
+                            day: day,
+                            order: index,
+                            notes: note
+                        });
+                    } else if (destinationId) {
+                        // New item, need to save it first
+                        newItems.push({
+                            placeCard: placeCard,
+                            destination_id: destinationId,
+                            day: day,
+                            order: index,
+                            notes: note
+                        });
+                    }
+                });
+            });
+            
+            console.log('📊 Existing items:', allItems.length, '| New items:', newItems.length);
+            
+            if (allItems.length === 0 && newItems.length === 0) {
+                showNotification('ℹ️ No items to save', 'info');
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+                return false;
+            }
+            
+            // Save new items first
+            for (const newItem of newItems) {
+                const itemId = await saveItineraryItem(
+                    newItem.destination_id, 
+                    newItem.day, 
+                    newItem.order,
+                    newItem.notes
+                );
+                if (itemId) {
+                    newItem.placeCard.dataset.itemId = itemId;
+                    allItems.push({
+                        item_id: itemId,
+                        day: newItem.day,
+                        order: newItem.order,
+                        notes: newItem.notes
+                    });
+                }
+            }
+            
+            // Update all items (both existing and newly created)
+            const updatePromises = allItems.map(item => 
+                updateItineraryOrder(item.item_id, item.day, item.order, item.notes)
+            );
+            
+            const results = await Promise.all(updatePromises);
+            const successCount = results.filter(r => r).length;
+            
+            // Restore button
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+            
+            // Show notification
+            if (successCount === allItems.length) {
+                showNotification(`✅ Saved ${successCount} items successfully!`, 'success');
+            } else {
+                showNotification(`⚠️ Saved ${successCount}/${allItems.length} items`, 'warning');
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('❌ Error saving all items:', error);
+            const saveBtn = document.getElementById('save-trip-btn');
+            saveBtn.innerHTML = '💾 Save';
+            saveBtn.disabled = false;
+            showNotification('❌ Failed to save itinerary', 'error');
+            return false;
+        }
+    }
+    
+    async function updateItineraryOrder(itemId, day, order, notes) {
+        try {
+            const csrftoken = getCookie('csrftoken');
+            
+            const response = await fetch('/api/itinerary/update/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    item_id: itemId,
+                    day: day,
+                    order: order,
+                    notes: notes
+                })
+            });
+            
+            const data = await response.json();
+            return data.success;
+        } catch (error) {
+            console.error('❌ Error updating item:', error);
+            return false;
+        }
+    }
+    
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        const bgColor = type === 'success' ? '#10b981' : 
+                        type === 'error' ? '#ef4444' : 
+                        type === 'warning' ? '#f59e0b' : '#3b82f6';
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: ${bgColor};
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        `;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.3s ease-in';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    async function loadItinerary() {
+        try {
+            console.log(' Loading itinerary from database...');
+            const response = await fetch('/api/itinerary/get/');
+            const data = await response.json();
+            
+            if (data.success) {
+                console.log('✅ Loaded itinerary:', data.items.length, 'items');
+                
+                // Filter items with day assignments
+                const itemsWithDay = data.items.filter(item => item.day && item.day !== null);
+                const itemsWithoutDay = data.items.filter(item => !item.day || item.day === null);
+                
+                console.log(`📋 Items with day: ${itemsWithDay.length}, Items without day (saved only): ${itemsWithoutDay.length}`);
+                
+                // Restore only items that have been assigned to specific days
+                itemsWithDay.forEach(item => {
+                    console.log('📍 Restoring item to day', item.day, ':', item.destination.name);
+                    
+                    // Check if day card exists
+                    const dayCard = document.querySelector(`.itinerary-day-full[data-day="${item.day}"]`);
+                    if (!dayCard) {
+                        console.error('❌ Day card not found for day', item.day);
+                        return;
+                    }
+                    
+                    addPlaceToDay(item.day, {
+                        title: item.destination.name,
+                        subtitle: `${item.destination.category}${item.destination.rating ? ' | ' + item.destination.rating : ''}`,
+                        image: item.destination.image,
+                        itemId: item.destination.id
+                    }, item.id, item.notes);
+                });
+                
+                // Items without day are already shown in the "Saved destinations" section
+                if (itemsWithoutDay.length > 0) {
+                    console.log('ℹ️ Items without day assignment will remain in Saved destinations section');
+                }
+            } else {
+                console.error('❌ Failed to load itinerary:', data.error);
+            }
+        } catch (error) {
+            console.error('❌ Error loading itinerary:', error);
+        }
+    }
+
+    function updateStopCount(day) {
+        const dayCard = document.querySelector(`.itinerary-day-full[data-day="${day}"]`);
+        const placeCount = dayCard.querySelectorAll('.place-card').length;
+        
+        // Update in sidebar
+        const sidebarBtn = document.querySelector(`#sidebar-days .nav-item[data-day="${day}"]`);
+        if (sidebarBtn) {
+            const pill = sidebarBtn.querySelector('.nav-item__pill');
+            if (pill) {
+                pill.textContent = `${placeCount} stop${placeCount !== 1 ? 's' : ''}`;
+            }
+        }
+    }
+
+    let startPicker, endPicker;
+
+    startPicker = flatpickr(startInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            if (selectedDates.length > 0) {
+                endPicker.set("minDate", selectedDates[0]);
+                if (endPicker.selectedDates.length > 0 && endPicker.selectedDates[0] < selectedDates[0]) {
+                    endPicker.clear();
+                }
+            }
+            generateDays(); // Gọi hàm generateDays nằm cùng phạm vi
+        }
+    });
+
+    endPicker = flatpickr(endInput, {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: true,
+        onChange: function (selectedDates) {
+            generateDays(); // Gọi hàm generateDays nằm cùng phạm vi
+        }
+    });
+
+    // 2. XỬ LÝ NÚT THÊM NGÀY (ADD DAY BUTTON)
+    const addDayBtn = document.getElementById('add-day-btn');
+    if (addDayBtn) {
+        addDayBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Kiểm tra xem đã có ngày kết thúc chưa
+            if (!endPicker.selectedDates || endPicker.selectedDates.length === 0) {
+                const startDate = startPicker.selectedDates[0] || new Date();
+                endPicker.setDate(startDate, true);
+                return;
+            }
+            
+            // Lấy ngày kết thúc hiện tại + 1
+            const currentEndDate = endPicker.selectedDates[0];
+            const newEndDate = new Date(currentEndDate);
+            newEndDate.setDate(newEndDate.getDate() + 1);
+            
+            // Cập nhật ngày mới (trigger onChange -> gọi generateDays)
+            endPicker.setDate(newEndDate, true);
+            
+            // Hiệu ứng cuộn xuống ngày mới tạo
+            setTimeout(() => {
+                const daysContainer = document.getElementById("itinerary-days");
+                const newDayCard = daysContainer.lastElementChild;
+                if (newDayCard) {
+                    newDayCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Highlight
+                    newDayCard.style.transition = 'background 0.5s';
+                    newDayCard.style.background = '#fff8f0';
+                    setTimeout(() => {
+                        newDayCard.style.background = ''; 
+                    }, 1000);
+                }
+            }, 100);
+        });
+    }
+
+    // Save button handler
+  const saveTripBtn = document.getElementById('save-trip-btn');
+    if (saveTripBtn) {
+        saveTripBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const originalText = saveTripBtn.innerHTML;
+            saveTripBtn.innerHTML = '⏳ Saving...';
+            saveTripBtn.disabled = true;
+
+            try {
+                const tripData = {
+                    title: document.getElementById('trip-title').innerText.replace('Trip to ', '').trim(),
+                    start_date: document.getElementById('start-date').value,
+                    end_date: document.getElementById('end-date').value,
+                    budget: document.getElementById('budget-slider').value,
+                    travelers: document.getElementById('travelers-count').value,
+                    items: [] 
+                };
+
+                const dayCards = document.querySelectorAll('.itinerary-day-full');
+                dayCards.forEach(dayCard => {
+                    const dayNumber = parseInt(dayCard.getAttribute('data-day'));
+                    const placeCards = dayCard.querySelectorAll('.place-card');
+                    
+                    placeCards.forEach((placeCard, index) => {
+                        const destinationId = placeCard.dataset.destinationId;
+                        const note = placeCard.dataset.note || '';
+                        
+                        if (destinationId) {
+                            tripData.items.push({
+                                destination_id: destinationId,
+                                day: dayNumber,
+                                order: index,
+                                notes: note
+                            });
+                        }
+                    });
+                });
+
+                // --- KHẮC PHỤC LỖI 405 ---
+                const currentLang = window.location.pathname.split('/')[1] || 'en';
+                const apiUrl = `/${currentLang}/api/save-full-trip/`;
+                
+                console.log('🔗 API URL:', apiUrl); // Kiểm tra xem link đúng chưa
+
+                const csrftoken = getCookie('csrftoken');
+                const response = await fetch(apiUrl, { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify(tripData)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error ${response.status}: ${errorText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('✅ Trip saved successfully!', 'success');
+                } else {
+                    showNotification('❌ Error: ' + result.message, 'error');
+                }
+
+            } catch (error) {
+                console.error('Save Error:', error);
+                showNotification('❌ Save failed: ' + error.message, 'error');
+            } finally {
+                saveTripBtn.innerHTML = originalText;
+                saveTripBtn.disabled = false;
+            }
+        });
+    }
+
+
+    // Auto-fill button handler
+    const autoFillBtn = document.getElementById('auto-fill-btn');
+    if (autoFillBtn) {
+        autoFillBtn.addEventListener('click', async function() {
+            // 1. Lấy dữ liệu
+            const savedCarousel = document.getElementById('saved-carousel');
+            const savedCards = Array.from(savedCarousel.querySelectorAll('.explore-card'));
+            const dayCards = document.querySelectorAll('.itinerary-day-full');
+            const totalDays = dayCards.length;
+
+            // Validate
+            if (savedCards.length === 0) {
+                alert('{% trans "No saved destinations to auto-fill." %}');
+                return;
+            }
+            if (totalDays === 0) {
+                alert('{% trans "Please add days to your trip first." %}');
+                return;
+            }
+
+            if (!confirm(`{% trans "Auto-fill will distribute" %} ${savedCards.length} {% trans "places across" %} ${totalDays} {% trans "days. Continue?" %}`)) {
+                return;
+            }
+
+            // UI Loading
+            const originalText = autoFillBtn.innerHTML;
+            autoFillBtn.innerHTML = '⏳ Processing...';
+            autoFillBtn.disabled = true;
+
+            let currentDayIndex = 0;
+            const updatePromises = [];
+
+            // 2. VÒNG LẶP XỬ LÝ
+           for (const card of savedCards) {
+                const title = card.querySelector('.explore-card__title').textContent;
+                const subtitle = card.querySelector('.explore-card__subtitle').textContent;
+                const imgStyle = card.querySelector('.explore-card__image').style.backgroundImage;
+                const removeBtn = card.querySelector('.remove-trip-item-btn');
+                
+                // --- SỬA LỖI TẠI ĐÂY ---
+                // Cần lấy Destination ID (để lưu vào DB) chứ không phải Item ID cũ
+                const destinationId = removeBtn?.getAttribute('data-destination-id'); 
+
+                const targetDayCard = dayCards[currentDayIndex];
+                const dayNumber = parseInt(targetDayCard.getAttribute('data-day'));
+                
+                // Gọi hàm thêm vào giao diện (itemId ở đây phải là Destination ID)
+                addPlaceToDay(dayNumber, {
+                    title: title,
+                    subtitle: subtitle,
+                    image: imgStyle,
+                    itemId: destinationId // <--- QUAN TRỌNG: Phải truyền destinationId
+                }, null); // Để null tham số thứ 2 để coi như item mới
+
+                card.remove();
+
+                currentDayIndex = (currentDayIndex + 1) % totalDays;
+            }
+
+            if (savedCarousel.children.length === 0) {
+                savedCarousel.innerHTML = '<p>{% trans "No saved destinations yet." %}</p>';
+            }
+            
+            for(let i = 1; i <= totalDays; i++) {
+                updateStopCount(i);
+            }
+
+            try {
+                await Promise.all(updatePromises);
+                showNotification(`✅ {% trans "Auto-filled" %} ${savedCards.length} {% trans "places successfully!" %}`, 'success');
+            } catch (err) {
+                console.error(err);
+                showNotification('⚠️ Some items might not be saved correctly.', 'warning');
+            } finally {
+                autoFillBtn.innerHTML = originalText;
+                autoFillBtn.disabled = false;
+            }
+        });
+    }
+
+    // generate on page load
+    generateDays();
+    
+    // Load saved itinerary after generating days
+    setTimeout(() => {
+        console.log('⏰ Loading itinerary after 1 second...');
+        loadItinerary();
+    }, 1000);
+});
+</script>
+<script>
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Get current language from URL
+  const currentLang = window.location.pathname.split('/')[1] || 'en'; // 'vi' or 'en'
+  
+  // Setup section toggles for navigation
+  function setupSectionToggles() {
+    const navItems = document.querySelectorAll('.nav-item[data-section]');
+    
+    navItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const targetSection = this.getAttribute('data-section');
+        
+        // Just scroll to target section, don't hide/show
+        const target = document.getElementById(targetSection);
+        if (target) {
+          // Smooth scroll to section
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Update active state
+        navItems.forEach(nav => nav.classList.remove('nav-item--active'));
+        this.classList.add('nav-item--active');
+      });
+    });
+  }
+  
+  // Initialize section toggles
+  setupSectionToggles();
+  
+  // Add to Trip buttons
+  document.querySelectorAll('.add-to-trip-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const destId = btn.getAttribute('data-destination-id');
+      
+      if (!destId) {
+        console.error('No destination ID found');
+        alert('Error: No destination ID');
+        return;
+      }
+      
+      console.log('Adding destination ID:', destId);
+      console.log('Language:', currentLang);
+      
+      // Use language-prefixed URL
+      const url = `/${currentLang}/destination/${destId}/add-trip/`;
+      console.log('Fetch URL:', url);
+      
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers.get('content-type'));
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Server returned HTML instead of JSON. Check URL and authentication.');
+        }
+        
+        return response.json();
+      })
+      .then(data => {
+        console.log('Response data:', data);
+        if (data.success) {
+          alert(data.message || 'Added to trip successfully!');
+          window.location.reload();
+        } else {
+          alert(data.message || 'Error adding to trip');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Network error: ' + error.message);
+      });
+    });
+  });
+  // Auto-fill day
+  document.querySelectorAll('.itinerary-day-full__actions .tiny-link').forEach(function(btn) {
+    if (btn.textContent.trim() === 'Auto-fill day') {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const dayName = btn.closest('.itinerary-day-full__head').querySelector('h3').textContent;
+        fetch('/auto-fill-day/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ day: dayName })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Auto-filled: ' + data.suggested.map(i => i.name).join(', '));
+            window.location.reload();
+          } else {
+            alert(data.message || 'Error auto-filling day');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error auto-filling day');
+        });
+      });
+    }
+  });
+
+  // Remove trip item (Real-time AJAX)
+  document.querySelectorAll('.remove-trip-item-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const itemId = btn.getAttribute('data-item-id');
+      const itemName = btn.getAttribute('data-item-name');
+      const confirmMsg = btn.getAttribute('data-confirm-msg');
+      
+      if (!confirm(confirmMsg)) {
+        return;
+      }
+      
+      console.log('Removing trip item ID:', itemId);
+      
+      // Use language-prefixed URL
+      const url = `/${currentLang}/trip/remove/${itemId}/`;
+      console.log('Remove URL:', url);
+      
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          // If not JSON, just reload the page
+          console.log('Non-JSON response, reloading page...');
+          window.location.reload();
+          return;
+        }
+        
+        return response.json();
+      })
+      .then(data => {
+        if (!data) return; // Already handled reload above
+        
+        console.log('Response data:', data);
+        
+        if (data.success) {
+          // Remove the card from DOM without page reload
+          const card = btn.closest('.explore-card');
+          if (card) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
+            card.style.transition = 'all 0.3s ease';
+            
+            setTimeout(() => {
+              card.remove();
+              
+              // Check if no more saved items
+              const carousel = document.getElementById('saved-carousel');
+              const remainingCards = carousel.querySelectorAll('.explore-card');
+              
+              if (remainingCards.length === 0) {
+                carousel.innerHTML = '<p>{% trans "No saved destinations yet." %}</p>';
+              }
+              
+              // Show success message
+              alert(`Removed "${itemName}" from your trip!`);
+            }, 300);
+          }
+        } else {
+          alert(data.message || 'Error removing item');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Network error: ' + error.message);
+      });
+    });
+  });
+  // Optimize route
+  document.querySelectorAll('.itinerary-day-full__actions .tiny-link').forEach(function(btn) {
+    if (btn.textContent.trim() === 'Optimize route') {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const dayName = btn.closest('.itinerary-day-full__head').querySelector('h3').textContent;
+        fetch('/optimize-route/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ day: dayName })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Optimized order: ' + data.optimized.map(i => i.name).join(', '));
+            window.location.reload();
+          } else {
+            alert(data.message || 'Error optimizing route');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error optimizing route');
+        });
+      });
+    }
+  });
+
+  // === TRIP SETTINGS MODAL ===
+  const settingsBtn = document.getElementById('settings-btn');
+  const settingsModal = document.getElementById('settings-modal');
+  const closeSettingsBtn = document.getElementById('close-settings');
+  const cancelSettingsBtn = document.getElementById('cancel-settings');
+  const saveSettingsBtn = document.getElementById('save-settings');
+  
+  // Open modal
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', function() {
+      settingsModal.style.display = 'flex';
+    });
+  }
+  
+  // Close modal
+  function closeModal() {
+    settingsModal.style.display = 'none';
+  }
+  
+  if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener('click', closeModal);
+  }
+  
+  if (cancelSettingsBtn) {
+    cancelSettingsBtn.addEventListener('click', closeModal);
+  }
+  
+  // Close on outside click
+  settingsModal.addEventListener('click', function(e) {
+    if (e.target === settingsModal) {
+      closeModal();
+    }
+  });
+  
+  // Travelers counter
+  const decreaseBtn = document.getElementById('decrease-travelers');
+  const increaseBtn = document.getElementById('increase-travelers');
+  const travelersInput = document.getElementById('travelers-count');
+  const travelersDisplay = document.getElementById('travelers-display');
+  
+  if (decreaseBtn) {
+    decreaseBtn.addEventListener('click', function() {
+      let value = parseInt(travelersInput.value);
+      if (value > 1) {
+        travelersInput.value = value - 1;
+        if (travelersDisplay) {
+          travelersDisplay.textContent = value - 1;
+        }
+      }
+    });
+  }
+  
+  if (increaseBtn) {
+    increaseBtn.addEventListener('click', function() {
+      let value = parseInt(travelersInput.value);
+      if (value < 20) {
+        travelersInput.value = value + 1;
+        if (travelersDisplay) {
+          travelersDisplay.textContent = value + 1;
+        }
+      }
+    });
+  }
+  
+  // Budget slider
+  const budgetSlider = document.getElementById('budget-slider');
+  const budgetValue = document.getElementById('budget-value');
+  
+  if (budgetSlider) {
+    budgetSlider.addEventListener('input', function() {
+      budgetValue.textContent = budgetSlider.value;
+    });
+  }
+  
+  // Save settings
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', function() {
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      const travelers = document.getElementById('travelers-count').value;
+      const budget = document.getElementById('budget-slider').value;
+      const tripType = document.querySelector('input[name="trip-type"]:checked').value;
+      
+      console.log('Saving trip settings:', {startDate, endDate, travelers, budget, tripType});
+      
+      // Send to backend
+      fetch(`/${currentLang}/update-trip-settings/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `start_date=${startDate}&end_date=${endDate}&travelers=${travelers}&budget=${budget}&trip_type=${tripType}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Response:', data);
+        if (data.success) {
+          alert('{% trans "Settings saved successfully!" %}');
+          closeModal();
+          window.location.reload();
+        } else {
+          alert('{% trans "Error saving settings" %}');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('{% trans "Network error" %}');
+      });
+    });
+  }
+
+  // ===================================
+  // BUDGET & EXPENSES FUNCTIONALITY
+  // ===================================
+
+  // Get budget and travelers from context
+  const rawBudget = '{{ budget|default_if_none:"0" }}';
+  const rawTravelers = '{{ travelers|default_if_none:"1" }}';
+
+  // Budget is in millions, convert to actual VND
+  const totalBudgetInMillions = (() => {
+    const normalized = (rawBudget || '0').toString().replace(/[^0-9.-]/g, '');
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : 0;
+  })();
+  
+  const totalBudget = totalBudgetInMillions * 1000000; // Convert millions to VND
+
+  const travelers = (() => {
+    const normalized = (rawTravelers || '1').toString().replace(/[^0-9.-]/g, '');
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+  })();
+  
+  // Store expenses
+  let expenses = [];
+
+  // Initialize budget display
+  function initBudget() {
+    updateBudgetDisplay();
+  }
+  
+  // Format number with thousand separators
+  function formatVND(amount) {
+    return Math.round(amount).toLocaleString('en-US') + ' VND';
+  }
+
+  // Update budget display with current expenses
+  function updateBudgetDisplay() {
+    const budgetDisplay = document.getElementById('total-budget-display');
+    const travelersDisplay = document.getElementById('travelers-display');
+    const perPersonDisplay = document.getElementById('per-person-display');
+    
+    // Calculate total expenses
+    const totalExpensesVND = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+    
+    // Current budget = initial budget + expenses (both in VND)
+    const currentBudgetVND = totalBudget + totalExpensesVND;
+    
+    if (budgetDisplay) {
+      budgetDisplay.textContent = formatVND(currentBudgetVND).replace(' VND', '');
+    }
+    
+    if (travelersDisplay) {
+      travelersDisplay.textContent = travelers;
+    }
+    
+    if (perPersonDisplay) {
+      const perPersonVND = currentBudgetVND / travelers;
+      perPersonDisplay.textContent = formatVND(perPersonVND);
+    }
+  }
+
+  // Expense modal management
+  const expenseModal = document.getElementById('expense-modal');
+  const addExpenseBtn = document.getElementById('add-expense-btn');
+  const addOtherExpenseBtn = document.getElementById('add-other-expense-btn');
+  const closeExpenseModalBtn = document.getElementById('close-expense-modal');
+  const cancelExpenseBtn = document.getElementById('cancel-expense');
+  const expenseForm = document.getElementById('expense-form');
+  const categoryBtns = document.querySelectorAll('.category-btn');
+
+  let selectedCategory = null;
+
+  // Open expense modal
+  function openExpenseModal() {
+  console.log('🚀 Opening expense modal...');
+  
+  const modal = document.getElementById('expense-modal');
+  if (!modal) {
+    console.error('❌ Modal not found!');
+    return;
+  }
+  
+  console.log('Before - opacity:', window.getComputedStyle(modal).opacity);
+  console.log('Before - visibility:', window.getComputedStyle(modal).visibility);
+  console.log('Before - display:', window.getComputedStyle(modal).display);
+  
+  // ADD CLASS, DON'T CHANGE DISPLAY
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  
+  // Force reflow
+  void modal.offsetHeight;
+  
+  console.log('After - opacity:', window.getComputedStyle(modal).opacity);
+  console.log('After - visibility:', window.getComputedStyle(modal).visibility);
+  console.log('After - display:', window.getComputedStyle(modal).display);
+  console.log('✅ Modal classes:', modal.className);
+}
+
+function closeExpenseModalFunc() {
+  const modal = document.getElementById('expense-modal');
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  
+  const form = document.getElementById('expense-form');
+  if (form) {
+    form.reset();
+  }
+  
+  selectedCategory = null;
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+}
+  // Category selection
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoryBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedCategory = btn.dataset.category;
+      
+      const nameGroup = document.getElementById('expense-name-group');
+      const nameInput = document.getElementById('expense-name');
+      
+      // Only show name input for 'other' category
+      if (selectedCategory === 'other') {
+        nameGroup.style.display = 'flex';
+        nameInput.required = true;
+        nameInput.value = '';
+      } else {
+        nameGroup.style.display = 'none';
+        nameInput.required = false;
+        nameInput.value = '';
+      }
+    });
+  });
+
+  // Add expense
+  if (expenseForm) {
+    expenseForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('expense-name');
+      const amountInput = document.getElementById('expense-amount');
+      const notesInput = document.getElementById('expense-notes');
+
+      const amount = amountInput ? Number(amountInput.value) : 0;
+      const notes = notesInput ? notesInput.value.trim() : '';
+      const category = selectedCategory || 'other';
+      
+      // Get display name: use custom name for 'other', otherwise use category
+      let displayName;
+      if (category === 'other' && nameInput) {
+        displayName = nameInput.value.trim();
+        if (!displayName) {
+          alert('{% trans "Please enter a name for this expense" %}');
+          return;
+        }
+      } else {
+        // Use category name from button
+        const categoryBtn = document.querySelector(`.category-btn[data-category="${category}"]`);
+        displayName = categoryBtn ? categoryBtn.querySelector('span:last-child').textContent : category;
+      }
+      
+      if (!selectedCategory) {
+        alert('{% trans "Please select a category" %}');
+        return;
+      }
+      
+      if (!Number.isFinite(amount) || amount <= 0) {
+        alert('{% trans "Please provide a positive amount" %}');
+        return;
+      }
+
+      const expense = {
+        id: Date.now(),
+        name: displayName,
+        amount,
+        notes,
+        category
+      };
+      
+      expenses.push(expense);
+      renderExpenses();
+      updateBudgetDisplay();
+      closeExpenseModalFunc();
+    });
+  }
+
+  // Get category icon
+  function getCategoryIcon(category) {
+    const icons = {
+      'flights': '✈️',
+      'accommodation': '🏨',
+      'car-rental': '🚗',
+      'transportation': '🚌',
+      'food': '🍽️',
+      'drinks': '🍹',
+      'tourism': '🏛️',
+      'activities': '🎯',
+      'shopping': '🛍️',
+      'essence': '⛽',
+      'races': '🎫',
+      'other': '📦'
+    };
+    return icons[category] || icons['other'];
+  }
+
+  // Render expenses
+  function renderExpenses() {
+    const expensesList = document.getElementById('expenses-list');
+    
+    if (expenses.length === 0) {
+      expensesList.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px 0;">{% trans "No expenses added yet" %}</p>';
+      return;
+    }
+    
+    // Sort expenses
+    const sortSelect = document.getElementById('expenses-sort');
+    const sortValue = sortSelect ? sortSelect.value : 'date-desc';
+    let sortedExpenses = [...expenses];
+    
+    switch (sortValue) {
+      case 'date-desc':
+        sortedExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+        break;
+      case 'date-asc':
+        sortedExpenses.sort((a, b) => new Date(a.date) - new Date(b.date));
+        break;
+      case 'amount-desc':
+        sortedExpenses.sort((a, b) => b.amount - a.amount);
+        break;
+      case 'amount-asc':
+        sortedExpenses.sort((a, b) => a.amount - b.amount);
+        break;
+    }
+    
+    expensesList.innerHTML = sortedExpenses.map(expense => `
+      <div class="expense-item">
+        <div class="expense-item__left">
+          <div class="expense-category-icon">
+            ${getCategoryIcon(expense.category)}
+          </div>
+          <div class="expense-item__info">
+            <h4>${expense.name}</h4>
+          </div>
+        </div>
+        <div class="expense-item__amount">
+          ${formatVND(expense.amount)}
+        </div>
+      </div>
+    `).join('');
+    
+    // Update budget display after rendering expenses
+    updateBudgetDisplay();
+  }
+
+  // Expenses toggle
+  const expensesToggle = document.getElementById('expenses-toggle');
+  const expensesList = document.getElementById('expenses-list');
+  
+  if (expensesToggle && expensesList) {
+    expensesToggle.addEventListener('click', () => {
+      expensesToggle.classList.toggle('collapsed');
+      expensesList.style.display = expensesList.style.display === 'none' ? 'flex' : 'none';
+    });
+  }
+
+  // Sort expenses
+  const expensesSort = document.getElementById('expenses-sort');
+  if (expensesSort) {
+    expensesSort.addEventListener('change', renderExpenses);
+  }
+
+  // Event listeners
+  console.log('Setting up expense modal event listeners...');
+  console.log('addExpenseBtn:', addExpenseBtn);
+  console.log('addOtherExpenseBtn:', addOtherExpenseBtn);
+  
+  if (addExpenseBtn) {
+    console.log('Adding click listener to addExpenseBtn');
+    addExpenseBtn.addEventListener('click', function(e) {
+      console.log('Add expense button clicked!');
+      e.preventDefault();
+      openExpenseModal();
+    });
+  } else {
+    console.error('Add expense button not found!');
+  }
+  
+  if (addOtherExpenseBtn) {
+    console.log('Adding click listener to addOtherExpenseBtn');
+    addOtherExpenseBtn.addEventListener('click', function(e) {
+      console.log('Add other expense button clicked!');
+      e.preventDefault();
+      openExpenseModal();
+    });
+  }
+  
+  if (closeExpenseModalBtn) {
+    closeExpenseModalBtn.addEventListener('click', closeExpenseModalFunc);
+  }
+  
+  if (cancelExpenseBtn) {
+    cancelExpenseBtn.addEventListener('click', closeExpenseModalFunc);
+  }
+  
+  // Close modal on outside click
+  if (expenseModal) {
+    expenseModal.addEventListener('click', (e) => {
+      if (e.target === expenseModal) {
+        closeExpenseModalFunc();
+      }
+    });
+  }
+
+  // Initialize budget on page load
+  initBudget();
+  renderExpenses();
+
+  // ============================================
+  // NOTE MODAL MANAGEMENT
+  // ============================================
+  console.log('Setting up note modal...');
+  
+  const noteModal = document.getElementById('note-modal');
+  const closeNoteModalBtn = document.getElementById('close-note-modal');
+  const cancelNoteBtn = document.getElementById('cancel-note');
+  const noteForm = document.getElementById('note-form');
+  const noteText = document.getElementById('note-text');
+
+  console.log('Note modal elements:', { noteModal, closeNoteModalBtn, cancelNoteBtn, noteForm, noteText });
+
+  function closeNoteModal() {
+    console.log('Closing note modal...');
+    if (noteModal) {
+      noteModal.style.display = 'none';
+      document.body.style.overflow = '';
+      if (noteForm) noteForm.reset();
+    }
+  }
+
+  // Handle note form submission
+  if (noteForm) {
+    console.log('Setting up note form submit listener...');
+    noteForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Note form submitted!');
+      
+      const note = noteText.value.trim();
+      if (!note) {
+        alert('{% trans "Please enter a note" %}');
+        return;
+      }
+
+      const placeId = noteModal.dataset.targetPlace;
+      const placeCard = document.getElementById(placeId);
+      
+      console.log('Saving note for place:', placeId, placeCard);
+      
+      if (placeCard) {
+        // Check if note element already exists
+        let noteElement = placeCard.querySelector('.place-card__note');
+        
+        if (!noteElement) {
+          // Create note element
+          noteElement = document.createElement('div');
+          noteElement.classList.add('place-card__note');
+          const placeInfo = placeCard.querySelector('.place-card__info');
+          placeInfo.appendChild(noteElement);
+        }
+        
+        // Update note content
+        noteElement.innerHTML = `<span style="color: #666;">📝 ${note}</span>`;
+        
+        // Store note in data attribute
+        placeCard.dataset.note = note;
+        
+        // Save to database
+        const itemId = placeCard.dataset.itemId;
+        if (itemId) {
+          await updateItineraryNote(itemId, note);
+        }
+        
+        console.log('Note saved successfully!');
+      }
+      
+      closeNoteModal();
+    });
+  } else {
+    console.error('Note form not found!');
+  }
+
+  // Close note modal event listeners
+  if (closeNoteModalBtn) {
+    closeNoteModalBtn.addEventListener('click', closeNoteModal);
+  }
+  
+  if (cancelNoteBtn) {
+    cancelNoteBtn.addEventListener('click', closeNoteModal);
+  }
+  
+  // Close modal on outside click
+  if (noteModal) {
+    noteModal.addEventListener('click', (e) => {
+      if (e.target === noteModal) {
+        closeNoteModal();
+      }
+    });
+  }
+
+});
+</script>
 
 <script>
-    // Khởi tạo namespace toàn cục để chứa dữ liệu từ Django
-    window.djangoContext = {
-        // Danh sách destinations
-        systemDestinations: [
-            {% for dest in destinations %}
-            {
-                id: '{{ dest.id }}',
-                name: '{{ dest.desName|escapejs }}',
-                category: '{{ dest.category|default:""|escapejs }}',
-                rating: '{{ dest.ratings|default:""|escapejs }}',
-                image: '{{ dest.image_url|default:"https://picsum.photos/400/200"|escapejs }}',
-                address: '{{ dest.address|default:""|escapejs }}'
-            }{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ],
-        // Thông tin budget/travelers
-        budget: '{{ budget|default_if_none:"0" }}',
-        travelers: '{{ travelers|default_if_none:"1" }}',
-        // Các text dịch thuật (nếu cần dùng trong JS)
-        translations: {
-            errorInvalidDay: '{% trans "Error: Invalid day" %}',
-            savedDestination: '{% trans "Saved destination" %}',
-            addToDay: '{% trans "Add" %}',
-            noDestinations: '{% trans "No destinations available" %}',
-            autoFillConfirm: '{% trans "Auto-fill will distribute" %}',
-            placesAcross: '{% trans "places across" %}',
-            days: '{% trans "days. Continue?" %}',
-            autoFillSuccess: '{% trans "places successfully!" %}',
-            settingsSaved: '{% trans "Settings saved successfully!" %}',
-            networkError: '{% trans "Network error" %}',
-            enterNote: '{% trans "Please enter a note" %}'
-        }
-    };
-</script>
-<script src="/static/js/main.js"></script>
+document.addEventListener('DOMContentLoaded', function () {
 
+  // Handle card clicks to show location on map (for saved destinations)
+  document.querySelectorAll('.explore-card[data-location]').forEach(card => {
+    card.addEventListener('click', function () {
+      const location = card.dataset.location;
+      const iframe = document.querySelector('.map-pane__body iframe');
+      const detailPanel = document.getElementById('destination-detail-panel');
+
+      if (iframe && location) {
+        iframe.src = 
+          `https://maps.google.com/maps?output=embed&q=${encodeURIComponent(location)}&z=16`;
+      }
+      
+      // Show detail panel
+      if (detailPanel) {
+        const title = card.querySelector('.explore-card__title')?.textContent || 'Unknown';
+        const subtitle = card.querySelector('.explore-card__subtitle')?.textContent || '';
+        const imageUrl = card.querySelector('.explore-card__image')?.style.backgroundImage?.replace(/url\(["']?([^"']+)["']?\)/g, '$1') || '';
+        
+        document.getElementById('detail-title').textContent = title;
+        document.getElementById('detail-category').textContent = subtitle;
+        document.getElementById('detail-address').textContent = location;
+        document.getElementById('detail-rating').textContent = '';
+        
+        const detailImage = document.getElementById('detail-image');
+        if (imageUrl) {
+          detailImage.style.backgroundImage = `url('${imageUrl}')`;
+        }
+        
+        detailPanel.style.display = 'block';
+      }
+    });
+  });
+  
+  // Note: day-explore-card click handlers are added dynamically in populateDayCarousel()
+  
+  // Close detail panel button
+  const closeDetailBtn = document.getElementById('close-detail-panel');
+  if (closeDetailBtn) {
+    closeDetailBtn.addEventListener('click', function() {
+      document.getElementById('destination-detail-panel').style.display = 'none';
+    });
+  }
+
+    const appShell = document.querySelector('.app-shell');
+    const gutterLeft = document.getElementById('gutter-left');
+    const gutterRight = document.getElementById('gutter-right');
+    // Lưu ý: Đảm bảo bạn đã thêm class="map-pane" vào thẻ aside bên phải ở Bước 2
+    const mapIframe = document.querySelector('.map-pane iframe');
+
+    // Các cột: [0]:Sidebar, [1]:Gutter, [2]:Main, [3]:Gutter, [4]:Map
+    // Chúng ta cần lấy phần tử DOM thực tế để đo kích thước chính xác
+    const sidebarEl = document.querySelector('.sidebar');
+    const mapEl = document.querySelector('.map-pane');
+
+    if (!appShell || !gutterLeft || !gutterRight || !sidebarEl || !mapEl) return;
+
+    let isResizingLeft = false;
+    let isResizingRight = false;
+
+    // Hàm chặn sự kiện chuột vào iframe để không bị mất focus khi kéo
+    function toggleIframePointer(enable) {
+        if (mapIframe) {
+            mapIframe.style.pointerEvents = enable ? 'auto' : 'none';
+        }
+    }
+
+    // --- KÉO TRÁI ---
+    gutterLeft.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        isResizingLeft = true;
+        gutterLeft.classList.add('active');
+        toggleIframePointer(false); // Tắt tương tác bản đồ
+        document.body.style.cursor = 'col-resize';
+    });
+
+    // --- KÉO PHẢI ---
+    gutterRight.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        isResizingRight = true;
+        gutterRight.classList.add('active');
+        toggleIframePointer(false); // Tắt tương tác bản đồ
+        document.body.style.cursor = 'col-resize';
+    });
+
+    // --- DI CHUYỂN CHUỘT ---
+    document.addEventListener('mousemove', function(e) {
+        if (!isResizingLeft && !isResizingRight) return;
+
+        // Lấy chiều rộng hiện tại của 2 cột bên cạnh để giữ nguyên cột không kéo
+        const currentSidebarWidth = sidebarEl.offsetWidth;
+        const currentMapWidth = mapEl.offsetWidth;
+
+        if (isResizingLeft) {
+            let newLeftWidth = e.clientX;
+            
+            // Giới hạn Min/Max Sidebar
+            if (newLeftWidth < 200) newLeftWidth = 200;
+            if (newLeftWidth > 600) newLeftWidth = 600;
+
+            // Cập nhật Grid: [Mới] [Gutter] [Auto] [Gutter] [Cũ - Map]
+            appShell.style.gridTemplateColumns = `${newLeftWidth}px 4px 1fr 4px ${currentMapWidth}px`;
+        }
+
+        if (isResizingRight) {
+            // Chiều rộng Map = Tổng màn hình - Vị trí chuột
+            let newRightWidth = window.innerWidth - e.clientX;
+
+            // Giới hạn Min/Max Map
+            if (newRightWidth < 200) newRightWidth = 200;
+            if (newRightWidth > 900) newRightWidth = 900;
+
+            // Cập nhật Grid: [Cũ - Sidebar] [Gutter] [Auto] [Gutter] [Mới]
+            appShell.style.gridTemplateColumns = `${currentSidebarWidth}px 4px 1fr 4px ${newRightWidth}px`;
+        }
+    });
+
+    // --- THẢ CHUỘT ---
+    document.addEventListener('mouseup', function() {
+        if (isResizingLeft || isResizingRight) {
+            isResizingLeft = false;
+            isResizingRight = false;
+            gutterLeft.classList.remove('active');
+            gutterRight.classList.remove('active');
+            toggleIframePointer(true); // Bật lại bản đồ
+            document.body.style.cursor = '';
+        }
+    });
+});
+</script>
 </body>
 </html>
