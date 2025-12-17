@@ -640,60 +640,65 @@
     <section class="recommendation-section" id="block-1" style="padding: 40px 20px;">
         <div class="container" style="max-width: 1200px; margin: 0 auto;">
             
-            {% comment %} Top results logic updated for new card style {% endcomment %}
-            {% if top_results or search_results %}
-                {% with spots=top_results|slice:":3"|default:search_results|dictsortreversed:"rating"|slice:":3" header_title=top_results|yesno:"Top Picks for You,Top Results" %}
-                    {% if spots %}
-                    <div class="top-results-section" style="margin-bottom: 40px; text-align: left;">
-                        <div class="top-picks-header">
-                            <h3 class="top-picks-title">📈 {% trans header_title %}</h3>
-                            <a href="#" class = "smart-btn" style = "background: #FB8700;">{% trans "View All" %}</a>
+            {% comment %} Top results logic updated to respect filters {% endcomment %}
+{% if top_results or search_results %}
+    {% comment %} 
+       Logic: 
+       1. If search_results exists (user filtered), use those.
+       2. If not, fallback to top_results.
+    {% endcomment %}
+    {% with spots=search_results|dictsortreversed:"rating"|slice:":3"|default:top_results|slice:":3" header_title=search_results|yesno:"Search Highlights,Top Picks for You" %}
+        {% if spots %}
+        <div class="top-results-section" style="margin-bottom: 40px; text-align: left;">
+            <div class="top-picks-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 class="top-picks-title" style="margin: 0;">📈 {% trans header_title %}</h3>
+                <a href="#all-results" class="smart-btn" style="background: #FB8700; color: white; padding: 8px 20px; border-radius: 20px; text-decoration: none;">{% trans "View All" %}</a>
+            </div>
+            
+            <div class="recommendation-grid">
+                {% for spot in spots %}
+                    <div class="recommendation-card">
+                        <div class="card-image-wrapper">
+                            <a href="{% url 'destination_detail' spot.id %}">
+                                <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
+                                     onerror="this.src='https://source.unsplash.com/featured/400x300/?{{ spot.name|urlencode }}'">
+                            </a>
+                            <span class="status-badge">
+                                {% if spot.rating >= 4.9 %}{% trans "Luxury" %}
+                                {% elif spot.rating >= 4.8 %}{% trans "Popular" %}
+                                {% else %}{% trans "Best Value" %}
+                                {% endif %}
+                            </span>
                         </div>
-                        
-                        <div class="recommendation-grid">
-                            {% for spot in spots %}
-                                <div class="recommendation-card">
-                                    <div class="card-image-wrapper">
-                                        <a href="{% url 'destination_detail' spot.id %}">
-                                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
-                                                 onerror="this.src='https://source.unsplash.com/featured/400x300/?{{ spot.name|urlencode }}'">
-                                        </a>
-                                        <span class="status-badge">
-                                            {% if spot.rating >= 4.9 %}{% trans "Luxury" %}
-                                            {% elif spot.rating >= 4.8 %}{% trans "Popular" %}
-                                            {% else %}{% trans "Best Value" %}
-                                            {% endif %}
-                                        </span>
-                                    </div>
 
-                                    <div class="card-content" style="padding: 15px;">
-                                        <h3 class="spot-name" style="font-size: 18px; font-weight: 700; margin: 0;">
-                                            <a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a>
-                                        </h3>
-                                        
-                                        <div style="color: #666; font-size: 14px; margin: 5px 0;">
-                                            📍 {{ spot.location }}
-                                        </div>
+                        <div class="card-content" style="padding: 15px;">
+                            <h3 class="spot-name" style="font-size: 18px; font-weight: 700; margin: 0;">
+                                <a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a>
+                            </h3>
+                            
+                            <div style="color: #666; font-size: 14px; margin: 5px 0;">
+                                📍 {{ spot.location }}
+                            </div>
 
-                                        <div class="card-bottom-row">
-                                            <div style="color: #Fb8700; font-weight: 700;">
-                                                ★ {{ spot.rating }} 
-                                                <span style="color: #999; font-weight: 400; font-size: 12px;">({{ spot.reviews_count|default:"2k+" }} reviews)</span>
-                                            </div>
-                                            
-                                            <div style="text-align: right;">
-                                                <span style="color: #fb8700; font-size: 18px; font-weight: 800; display: block;">${{ spot.price|default:"450" }}</span>
-                                                <span style="font-size: 10px; color: #888;">per night</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="card-bottom-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                <div style="color: #Fb8700; font-weight: 700;">
+                                    ★ {{ spot.rating }} 
+                                    <span style="color: #999; font-weight: 400; font-size: 12px;">({{ spot.reviews_count|default:"2k+" }} reviews)</span>
                                 </div>
-                            {% endfor %}
+                                
+                                <div style="text-align: right;">
+                                    <span style="color: #fb8700; font-size: 18px; font-weight: 800; display: block;">${{ spot.price|default:"450" }}</span>
+                                    <span style="font-size: 10px; color: #888;">per night</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    {% endif %}
-                {% endwith %}
-            {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    {% endwith %}
+{% endif %}
 
             {% comment %} START: Two-Column Results Area with 10/10 Split {% endcomment %}
 <div class="results-layout">
