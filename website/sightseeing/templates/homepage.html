@@ -421,7 +421,7 @@
         
     <section class="u-clearfix u-container-align-center u-white u-section-2" id="sec-9086">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-sheet-1">
-        <a href="{% url 'recommend_result' %}" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">{% trans "Start Your Journey" %}</a>
+        <a href="#" onclick="document.getElementById('unified-search-form').submit(); return false;" class="u-border-none u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-gradient u-hover-color-var u-none u-radius u-text-white u-btn-1">{% trans "Start Your Journey" %}</a>
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
@@ -576,71 +576,6 @@
         </div>
       </div>
     </section>
-    <section class="u-clearfix u-section-3" id="block-11">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-sheet-1">
-        <div class="u-container-style u-expanded-width u-grey-10 u-group u-hidden-xs u-radius u-shape-round u-group-1">          <div class="u-container-layout u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs u-container-layout-1"><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-1"><img src="{% static 'images/535188-3efc346f.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-2"><img src="{% static 'images/3721843-2a83ae95.png' %}" alt=""></span><span class="u-file-icon u-icon u-text-custom-color-7 u-icon-3"><img src="{% static 'images/4516627-672a4d01.png' %}" alt=""></span>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">{% trans "Ask. Explore. Connect" %}</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-2">{% trans "Your trip, Your way" %}</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-3">{% trans "Top Spots, Hotels & Dining" %}</p>
-            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-4">{% trans "Get insider tips and advices from locals in real-time chat forums for an epic journey." %}</p>
-            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-5">{% trans "Find top attractions with nearby hotels and restaurants tailored to your preferences." %}</p>
-            <p class="u-align-center u-custom-font u-font-montserrat u-text u-text-6">{% trans "Easily create your travel itinerary and organize every part of your journey." %}</p>
-            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-1">{% trans "Explore" %}</a>
-            <a href="{% url 'input_trip_planner' %}" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-2">{% trans "Schedule" %}</a>
-            <a href="" class="u-border-3 u-border-custom-color-7 u-border-hover-custom-color-10 u-btn u-btn-round u-button-style u-custom-font u-font-montserrat u-radius u-white u-btn-3">{% trans "Connect" %}</a>
-          </div>
-        </div>
-      </div>
-    </section>    <section class="u-clearfix u-section-4" id="block-10">
-      <div class="u-clearfix u-sheet u-valign-top-lg u-valign-top-md u-valign-top-sm u-sheet-1">
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-custom-color-7 u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">{% trans "Explore the Country" %}</h6>
-        <h2 class="u-align-center u-custom-font u-font-montserrat u-text u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">{% trans "Popular Destinations" %}</h2>
-        <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-3" data-animation-name="customAnimationIn" data-animation-duration="1000" data-animation-delay="0">{% trans "Discover amazing places and book your perfect stay" %}<span style="font-weight: 400;"><span style="font-weight: 700;"><span style="font-weight: 400;"></span></span></span>
-        </h6>
-        <div class="u-border-1 u-border-black u-container-style u-expanded-width-xs u-gradient u-group u-hover-feature u-radius u-shape-round u-group-1">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-container-layout-1">
-            <img class="custom-expanded u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-hover-feature u-image u-image-round u-radius u-image-1" src="{% static 'images/pexels-triduhi-youtuber-27418881.jpg' %}" alt="" data-image-width="5820" data-image-height="3880">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-4">Imperial Capital Hue</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-5">Hue City</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-6"> ★★★★☆ (9236 reviews)</p>
-            <p class="u-text u-text-7"> "Ancient Hue mesmerizes with imperial citadels, tranquil pagodas, and poetic riverside charm that preserves Vietnam’s graceful royal heritage."</p>
-            <a href="" class="u-border-2 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-1">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-8">200.000<span style="text-decoration: underline !important;">đ</span>/Person
-            </p>
-          </div>
-        </div>
-        <div class="u-border-1 u-border-black u-container-style u-expanded-width-xs u-gradient u-group u-hover-feature u-radius u-shape-round u-group-2">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-container-layout-2">
-            <img class="custom-expanded u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-hover-feature u-image u-image-round u-radius u-image-2" src="{% static 'images/pexels-phamthe-13519138.jpg' %}" alt="" data-image-width="2726" data-image-height="4088">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-9">Hoang Kiem Lake </p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-10">Hanoi </p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-11"> ★★★☆☆ (837 reviews)</p>
-            <p class="u-text u-text-12"> “A peaceful lake in Hanoi’s Old Quarter, known for Ngoc Son Temple and the iconic crimson The Huc Bridge glowing beautifully at night.”</p>
-            <a href="" class="u-border-2 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-2">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-13">Free of Charge</p>
-          </div>
-        </div>
-        <div class="u-border-1 u-border-black u-container-style u-gradient u-group u-hover-feature u-radius u-shape-round u-group-3">
-          <div class="u-container-layout u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-container-layout-3">
-            <img class="custom-expanded u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-hover-feature u-image u-image-round u-radius u-image-3" src="{% static 'images/cave-wallpaper-l.jpg' %}" alt="" data-image-width="1916" data-image-height="1400">
-            <p class="u-custom-font u-font-montserrat u-text u-text-black u-text-default u-text-14">Sung Sot Cave</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-15">Ha Long Bay</p>
-            <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-16"> ★★★★★ (3618 reviews)</p>
-            <p class="u-text u-text-17"> “The largest and most spectacular cave in Ha Long Bay, featuring massive chambers, dramatic rock formations, and colorful illuminated pathways.”</p>
-            <a href="" class="u-border-2 u-border-grey-75 u-border-hover-black u-btn u-btn-round u-button-style u-grey-15 u-hover-custom-color-7 u-radius u-btn-3">Details </a>
-            <p class="u-custom-font u-font-montserrat u-text u-text-18">250.000<span style="text-decoration: underline !important;">đ</span>/Person
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
     <section id="sec-merged" class="u-clearfix u-white" style="padding:60px 20px;">
   <div class="u-clearfix u-sheet" style="max-width:1200px; margin:0 auto;">
     
@@ -661,9 +596,7 @@
         </h3>
         <div class="custom-expanded u-border-4 u-border-custom-color-6 u-line u-line-horizontal u-line-1" 
              style="width:550px; height:4px; background:#478ac9; margin:0 0 20px;"></div>
-        <p class="u-text" style="margin:0 0 20px; font-size:16px; line-height:1.6;">
-          {% trans "Allow us to help schedule your vacation. We provide a flexible itinerary that maximizes your visits to attractions while allowing time to relax and enjoy local delicacies and landmarks." %}
-        </p>
+        <a href="{% url 'input_trip_planner' %}" style="background: linear-gradient(to right, #ff7e5f, #feb47b); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 10px;">{% trans "Plan Your Trip" %}</a>
       </div>
     </div>
 
@@ -700,22 +633,6 @@
 </section>
 {% endif %}
 
-    <!-- Row 2: Content Left, Image Right -->
-    <div style="display:flex; gap:40px; align-items:center; flex-wrap:wrap; flex-direction:row-reverse;">
-      <div style="flex:1 1 45%; min-width:280px;">
-        <img src="{% static 'images/carl-tronders-3nSoYKQ_bqg-unsplash1.jpg' %}" alt="{% trans 'Local guide' %}" 
-             style="width:100%; border-radius:12px; display:block;">
-      </div>
-      <div style="flex:1 1 45%; min-width:280px; background:#2c3e50; padding:40px; border-radius:12px; color:#fff;">
-        <h2 class="u-custom-font u-font-montserrat u-text" 
-            style="margin:0 0 20px; font-size:28px; font-weight:700; color:#fff;">
-          {% trans "LOCAL" %}<br>{% trans "GUIDE" %}
-        </h2>
-        <p class="u-custom-font u-font-montserrat u-text" style="margin:0; font-size:16px; line-height:1.6; color:#e8f4f8;">
-          {% trans "We are currently developing a new feature that allows you to have a direct chat with local residents. Allowing you to discover attractions such as hidden sceneries, food vendors and hotels." %}
-        </p>
-      </div>
-    </div>
 
   </div>
 </section>
@@ -925,5 +842,21 @@
   .chat-body::-webkit-scrollbar-track { background: #fff9f2; }
   .chat-body::-webkit-scrollbar-thumb { background: #ffe0b3; border-radius: 10px; }
 </style>
+
+<script>
+function updateHeaderOpacity() {
+  const header = document.getElementById('header');
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const maxScroll = 300; // adjust the distance over which opacity changes
+  const opacity = Math.min(scrollTop / maxScroll, 1);
+  header.style.backgroundColor = `rgba(220, 220, 220, ${opacity * 0.7})`;
+}
+
+window.addEventListener('scroll', updateHeaderOpacity);
+
+// Set initial opacity on page load
+document.addEventListener('DOMContentLoaded', updateHeaderOpacity);
+</script>
+
 </body>
 </html>
