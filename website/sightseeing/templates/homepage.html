@@ -140,11 +140,7 @@
     <!-- Logo (left) -->
     <div style="flex: 0 0 auto;">
         <a href="{% url 'home' %}" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
-<<<<<<< HEAD
-            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home">
-=======
             <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="{% trans 'Home' %}">
->>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
         </a>
     </div>
 
@@ -224,34 +220,6 @@
     <!-- Buttons (right) -->
     <div style="display: flex; gap: 10px; align-items: center;">
     {% if user.is_authenticated %}
-<<<<<<< HEAD
-    <a href="{% url 'trip_list' %}" style="position: relative; display: inline-block; margin-top: 9px;">
-       <div style="background:#F7931E; border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center; transition:0.2s;">
-            <img src="{% static 'images/list_icon.png' %}" style="width:20px; height:20px; filter: brightness(0) invert(1);" alt="Trip List">
-        </div>
-       {% if trip_count > 0 %}
-       <span style="position: absolute; top: -5px; right: -5px; background-color: #ff4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white;">{{ trip_count }}</span>
-       {% endif %}
-    </a>
-
-    <div style="position: relative; display: inline-block; margin-left: 15px;">
-    <button id="userMenuBtn" onclick="toggleUserMenu()"
-       style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; padding: 10px 30px; border: 2px solid white; border-radius: 50px; background-color: #B9D1EA; color: black; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-       {{ user.first_name|default:user.username }}
-    </button>
-    
-    <div id="userDropdown" style="display: none; position: absolute; right: 0; top: 58px; background-color: #ffffff; min-width: 190px; box-shadow: 0px 10px 30px rgba(0,0,0,0.15); z-index: 3000; border-radius: 18px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); padding: 8px 0;">
-    <a href="{% url 'user_profile' %}" style="display: flex; align-items: center; padding: 12px 20px; text-decoration: none; color: #333; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 500; transition: background 0.2s;">
-        <span style="margin-right: 12px; font-size: 18px; color: #512da8;">👤</span> {% trans "My Profile" %}
-    </a>
-    
-    <div style="height: 1px; background: #f0f0f0; margin: 4px 20px;"></div>
-    
-    <a href="{% url 'logout' %}" style="display: flex; align-items: center; padding: 12px 20px; text-decoration: none; color: #e53935; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 500; transition: background 0.2s;">
-        <span style="margin-right: 12px; font-size: 18px; color: #e53935;">⮞</span> {% trans "Logout" %}
-    </a>
-</div>
-=======
     <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
              <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
                          display:flex; align-items:center; justify-content:center;
@@ -339,7 +307,6 @@
                     🚪 Logout
                 </a>
             </div>
->>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
 </div>
 {% else %}
         <a href="{% url 'login_page' %}"
@@ -440,12 +407,7 @@
                           <svg class="u-caret u-caret-svg u-text-body-alt-color" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="fill:currentColor;" xml:space="preserve"><polygon class="st0" points="8,12 2,4 14,4 "></polygon></svg>
                         </div>
                       </div>
-<<<<<<< HEAD
-=======
-                      <div class="u-align-right u-form-group u-form-submit u-label-none" style="padding: 10px;">
-                        <button type="submit" class="u-border-none u-btn u-btn-submit u-button-style u-gradient u-none u-text-white u-btn-4" style="padding: 10px 30px; cursor: pointer;">{% trans "Search" %}</button>
-                      </div>
->>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
+                    
                   </div>
                 </div>
               </div>
@@ -758,128 +720,7 @@
   </div>
 </section>
     
-<<<<<<< HEAD
-    
-    
    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
-        <div class="custom-expanded u-clearfix u-custom-html u-preserve-proportions u-custom-html-1">
-          <div class="chat-container"><!-- Floating Button -->
-            <div class="chat-button" onclick="toggleChat()"> 💬 </div><!-- Chat Box -->
-            <div class="chat-box" id="chatBox">
-              <div class="chat-header"><span>Travel Assistant</span><span class="close-btn" onclick="toggleChat()">×</span>
-              </div>
-              <div class="chat-body">
-                <div class="bot-msg">Hello! How can I help you today?</div>
-              </div>
-              <div class="chat-input">
-                <input type="text" placeholder="Type a message...">
-                <button>➤</button>
-              </div>
-            </div>
-          </div>
-          <style> .chat-container {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    z-index: 9999;
-    font-family: sans-serif;
-  }
-
-  /* Floating button */
-  .chat-button {
-    width: 60px;
-    height: 60px;
-    background-color: #1e5f74; /* darker ocean tone */
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    font-size: 28px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    color: #fff;
-  }
-
-  .chat-button:hover {
-    transform: scale(1.1);
-    background-color: #174c5c; /* slightly darker hover */
-  }
-
-  /* Chat box */
-  .chat-box {
-    display: none;
-    position: absolute;
-    bottom: 75px;
-    right: 0;
-    width: 350px;
-    height: 450px;
-    background: #eaf4f6; /* light blue-gray */
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    overflow: hidden;
-    flex-direction: column;
-    color: #000; /* black text */
-  }
-
-  .chat-header {
-    background-color: #1e5f74;
-    color: #000;
-    padding: 12px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .chat-body {
-    padding: 10px;
-    flex: 1;
-    overflow-y: auto;
-    background: #f5f8f9;
-  }
-
-  .bot-msg {
-    background: #c8e3e8; /* pale teal bubble */
-    padding: 8px 12px;
-    border-radius: 10px;
-    width: fit-content;
-    color: #000;
-  }
-
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #ccc;
-  }
-
-  .chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    color: #000;
-    background: #fff;
-  }
-
-  .chat-input button {
-    background: #1e5f74;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    color: #fff;
-  }
-
-  .chat-input button:hover {
-    background: #174c5c;
-  }
-
-  .close-btn {
-    cursor: pointer;
-    font-size: 20px;
-  } </style>
-=======
-   <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="footer"><div class="u-clearfix u-sheet u-valign-bottom-lg u-valign-bottom-md u-valign-bottom-sm u-valign-bottom-xs u-sheet-1">
->>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
         </div>
         <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" aria-label="Menu navigation">
           <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
@@ -890,41 +731,25 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-<<<<<<< HEAD
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
-=======
             <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">{% trans "Home" %}</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">{% trans "About us" %}</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">{% trans "Contact us" %}</a>
->>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
 </li></ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse" id="4bf4" role="region" aria-label="Menu panel">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-<<<<<<< HEAD
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">Contact us</a>
-=======
                 <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">{% trans "Home" %}</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">{% trans "About us" %}</a>
 </li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">{% trans "Contact us" %}</a>
->>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
 </li></ul>
               </div>
             </div>
             <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
           </div>
         </nav>
-<<<<<<< HEAD
-        <p class="u-small-text u-text u-text-variant u-text-1">This webstite of Group 8 is not a product to be monetized and is only for a group project </p>
-=======
         <p class="u-small-text u-text u-text-variant u-text-1">{% trans "This webstite of Group 8 is not a product to be monetized and is only for a group project" %}</p>
->>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
       </div></footer>
 
     <div class="chat-container">
