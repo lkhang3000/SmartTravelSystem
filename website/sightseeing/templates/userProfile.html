@@ -81,15 +81,15 @@
         }
 
         .sidebar-menu a:hover {
-            background-color: #f0f8ff;
-            color: #1e76ff;
+            background-color: #fff4e6; /* Màu nền cam cực nhạt khi hover */
+            color: #fb8700; /* Chữ đổi sang cam */
         }
 
         .sidebar-menu a.active {
-            background-color: #eaf2ff;
-            color: #1e76ff;
+            background-color: #fff4e6; /* Màu nền cam cực nhạt cho mục active */
+            color: #fb8700; /* Chữ màu cam */
             font-weight: bold;
-            border-left: 3px solid #1e76ff;
+            border-left: 4px solid #fb8700; /* Thanh dọc bên trái màu cam */
         }
 
         .sidebar-menu a.logout {
@@ -153,7 +153,7 @@
             height: 80px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #1e76ff;
+            border: 3px solid #fb8700;
         }
         
         .profile-details {
@@ -218,7 +218,7 @@
         .saved-trip-item h4 {
             margin-top: 0;
             font-size: 18px;
-            color: #1e76ff;
+            color: #fb8700;
         }
 
         .saved-trip-item p {
@@ -301,7 +301,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background: #F7931E;
+            background: #Fb8700;
             color: #fff !important;
             padding: 10px 25px; /* Điều chỉnh padding cho phù hợp hơn */
             border: none;
@@ -358,7 +358,7 @@
             align-items: center;
             margin-bottom: 10px;
             font-weight: bold;
-            color: #1e76ff;
+            color: #fb8700;
         }
 
         .calendar-header button {
@@ -366,7 +366,7 @@
             border: none;
             font-size: 18px;
             cursor: pointer;
-            color: #1e76ff;
+            color: #fb8700;
             padding: 5px;
         }
 
@@ -401,15 +401,15 @@
             padding: 4px 12px;
             font-size: 13px;
             border-radius: 20px;
-            border: 1px solid #1e76ff;
-            background: white;
-            color: #1e76ff;
+            border: none;
+            background: #fb8700;
+            color: white;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .change-email-btn:hover {
-            background: #1e76ff;
+            background: #FFA93D;
             color: white;
         }
 
@@ -469,7 +469,7 @@
         }
 
         .calendar-grid span.selected {
-            background-color: #1e76ff;
+            background-color: #fb8700;
             color: white;
             font-weight: bold;
         }
@@ -485,7 +485,7 @@
         }
 
         .clear-history-btn {
-            background: #F7931E; 
+            background: #Fb8700; 
             box-shadow: 1px;
         }
 
@@ -494,41 +494,136 @@
 
 <body>
 
-<header class="u-header"
-    id="header"
-    style="
-        position:sticky; top:0; z-index:1000; height:100px; 
-        display:flex; align-items:center; justify-content:space-between;
-        padding:0 30px; background: rgba(138, 213, 234, 0.85);
-        backdrop-filter: blur(10px); 
-    ">
-    <div style="display:flex; align-items:center;">
-        <a href="{% url 'home' %}" style="text-decoration:none; display:flex; align-items:center;">
-            <img src="{% static 'images/Odyscape.png' %}" style="height:80px;width:80px;margin-right:10px;">
-            <span style="font-size:32px;font-weight:800;color:white;letter-spacing:1px;">ODYSCAPE</span>
+<header class="u-clearfix u-header u-overlap"
+    id="header" 
+    style="position: sticky; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.9) !important; border: none !important;">
+    
+    <div style="flex: 0 0 auto; display: flex; align-items: center;">
+        <a href="{% url 'home' %}" style="display: block;">
+            <img src="{% static 'images/Odyscape.png' %}" style="height: 100px; width: auto; object-fit: contain; display: block;" title="Home">
         </a>
     </div>
 
-    <div style="display:flex;align-items:center;gap:15px;">
-        {% if user.is_authenticated %}
-        <div style="position:relative;">
-            <button id="userMenuBtn"
-                style="padding:8px 12px;background:#F7931E;border-radius:25px;color:white;font-weight:700;border:none;">
-                {{ user.username }}
-            </button>
+    <div style="flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 40px;">
+        
+        <nav class="u-menu u-menu-one-level u-offcanvas" style="margin: 0 !important;">
+            <ul class="u-nav u-unstyled" style="display: flex; gap: 25px; margin: 0; padding: 0; list-style: none; align-items: center;">
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'home' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trang chủ" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'about_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "About us" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'contact_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Contact us" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'input_trip_planner' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trip Planner" %}</a></li>
+            </ul>
+        </nav>
 
-            <div id="userDropdown"
-                style="display:none;position:absolute;top:110%;right:0;background:white;
-                        border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:180px;">
-                <a href="{% url 'user_profile' %}" style="padding:12px 16px;display:block;border-bottom:1px solid #eee;">👤 {% trans "My Profile" %}</a>
-                <a href="{% url 'recommend_result' %}" style="padding:12px 16px;display:block;border-bottom:1px solid #eee;">🗺️ My Destinations</a>
-                <a href="{% url 'logout' %}" style="padding:12px 16px;display:block;color:#d32f2f;">🚪 Logout</a>
-            </div>
+        <div style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0; display: flex;">
+                {% csrf_token %}
+                <input name="language" type="hidden" value="vi">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                    <svg viewBox="0 0 512 512" width="30" height="30"><path fill="#da251d" d="M0 0h512v512H0z"/><path fill="#ff0" d="m256 120 35 108h113l-91 66 35 108-92-67-92 67 35-108-91-66h113z"/></svg>
+                </button>
+            </form>
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0; display: flex;">
+                {% csrf_token %}
+                <input name="language" type="hidden" value="en">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                    <svg viewBox="0 0 512 512" width="30" height="30"><path fill="#012169" d="M0 0h512v512H0z"/><path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/><path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/><path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/><path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/></svg>
+                </button>
+            </form>
         </div>
-        {% endif %}
-    </div>
-</header>
 
+        <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 20px;">
+            {% if user.is_authenticated %}
+    <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
+             <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
+                         display:flex; align-items:center; justify-content:center;
+                         transition:0.2s;"
+                  onmouseover="this.style.background='#FB8700'"
+                  onmouseout="this.style.background='#F7931E'">
+                 <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:20px; height:20px;">
+             </div>
+             {% if trip_count %}
+             <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; 
+                          width:20px; height:20px; display:flex; align-items:center; justify-content:center; 
+                          font-size:12px; font-weight:bold;">
+                 {{ trip_count }}
+             </span>
+             {% endif %}
+         </a>
+    <div style="position:relative;">
+            <button id="userMenuBtn" style="
+                padding:8px 12px;
+                background:#FB8700;
+                border-radius:25px;
+                color:white;
+                font-weight:700;
+                border:none;
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                gap:8px;
+                transition:0.2s;
+            "
+            onmouseover="this.style.background='#FB8700'"
+            onmouseout="this.style.background='#FB8700'"
+            onclick="toggleUserMenu()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                {{ user.username }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+            <div id="userDropdown" style="
+                display:none;
+                position:absolute;
+                top:110%;
+                right:0;
+                background:white;
+                border-radius:8px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                min-width:180px;
+                z-index:1000;
+            ">
+                <a href="{% url 'user_profile' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    👤 My Profile
+                </a>
+                <a href="/logout/" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#d32f2f;
+                    text-decoration:none;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    🚪 Logout
+                </a>
+            </div>
+</div>
+{% else %}
+        <a href="{% url 'login_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
+           {% trans "Log in" %}
+        </a>
+        <a href="{% url 'signup_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
+           {% trans "Register" %}
+        </a>
+    {% endif %}
+</div>
+</header>
 
 <div class="main-layout-wrapper">
     <div class="settings-sidebar">
@@ -551,7 +646,7 @@
             <h2>{% trans "Personal Information" %}</h2>
             
             <div class="profile-header">
-                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=1e76ff&color=fff&size=80" 
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=fb8700&color=fff&size=80" 
                     class="profile-avatar" alt="User Avatar">
                 <div class="profile-details">
                     <p><strong>{% trans "Username" %}:</strong> {{ user.username }}</p>
