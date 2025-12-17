@@ -1,0 +1,67 @@
+{
+  "locations": [
+    {
+      "name": "Bà Nà Hills",
+      "location": "Đà Nẵng",
+      "region": "miền Trung",
+      "category": "Núi",
+      "rating": 4.7
+    },
+    {
+      "name": "Bãi biển Mỹ Khê",
+      "location": "Đà Nẵng",
+      "region": "miền Trung",
+      "category": "Biển",
+      "rating": 4.8
+    },
+    {
+      "name": "Đỉnh Fansipan",
+      "location": "Sa Pa",
+      "region": "Tây Bắc",
+      "category": "Núi",
+      "rating": 4.9
+    },
+    {
+      "name": "Bản Cát Cát",
+      "location": "Sa Pa",
+      "region": "Tây Bắc",
+      "category": "Làng văn hóa",
+      "rating": 4.6
+    },
+    {
+      "name": "Phố cổ Hội An",
+      "location": "Quảng Nam",
+      "region": "miền Trung",
+      "category": "Di sản",
+      "rating": 4.8
+    },
+    {
+      "name": "Vịnh Hạ Long",
+      "location": "Quảng Ninh",
+      "region": "miền Bắc",
+      "category": "Biển",
+      "rating": 4.9
+    },
+    {
+      "name": "Ninh Bình – Tràng An",
+      "location": "Ninh Bình",
+      "region": "miền Bắc",
+      "category": "Thiên nhiên",
+      "rating": 4.8
+    },
+    {
+      "name": "Đà Lạt",
+      "location": "Lâm Đồng",
+      "region": "Tây Nguyên",
+      "category": "Núi",
+      "rating": 4.7
+    },
+    {
+      "name": "Phú Quốc",
+      "location": "Kiên Giang",
+      "region": "miền Nam",
+      "category": "Biển",
+      "rating": 4.9
+    }
+  ]
+}

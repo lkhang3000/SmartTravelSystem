@@ -1,0 +1,104 @@
+{
+    "users": [
+        {
+            "timestamp": "2025-10-26T14:25:30.512Z",
+            "user_info": {
+                "username": "linh_travel",
+                "gender": "female",
+                "age": 22,
+                "language": "Vietnamese"
+            },
+            "trip_preferences": {
+                "tags": ["biển", "thư giãn", "ẩm thực địa phương"],
+                "location_size_preference": ["vừa", "lớn"],
+                "budget": 7000000,
+                "group_size": 2,
+                "domestic_or_international": {
+                    "type": "domestic",
+                    "region": "miền Trung"
+                },
+                "other_requirements": "ưu tiên nơi có homestay đẹp, gần biển"
+            },
+            "travel_period": {
+                "start_date": "2025-07-10",
+                "end_date": "2025-07-15"
+            },
+            "transportation": {
+                "preferred": "máy bay",
+                "backup": "tàu hỏa"
+            },
+            "geolocation": {
+                "country": "Việt Nam",
+                "city": "Đà Nẵng",
+                "landmark_suggestions": [
+                    {
+                        "name": "Bà Nà Hills",
+                        "description": "Khu du lịch nổi tiếng với Cầu Vàng và cảnh quan tuyệt đẹp trên đỉnh núi Chúa.",
+                        "coordinates": {
+                            "latitude": 16.001,
+                            "longitude": 107.989
+                        }
+                    },
+                    {
+                        "name": "Bãi biển Mỹ Khê",
+                        "description": "Một trong những bãi biển đẹp nhất hành tinh do Forbes bình chọn.",
+                        "coordinates": {
+                            "latitude": 16.064,
+                            "longitude": 108.248
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "timestamp": "2025-10-26T14:30:12.189Z",
+            "user_info": {
+                "username": "anh_nguyen",
+                "gender": "male",
+                "age": 28,
+                "language": "Vietnamese"
+            },
+            "trip_preferences": {
+                "tags": ["thiên nhiên", "núi rừng", "phiêu lưu"],
+                "location_size_preference": ["nhỏ", "vừa"],
+                "budget": 5000000,
+                "group_size": 4,
+                "domestic_or_international": {
+                    "type": "domestic",
+                    "region": "Tây Bắc"
+                },
+                "other_requirements": "thích trekking và chụp ảnh phong cảnh"
+            },
+            "travel_period": {
+                "start_date": "2025-09-01",
+                "end_date": "2025-09-05"
+            },
+            "transportation": {
+                "preferred": "xe khách",
+                "backup": "xe máy"
+            },
+            "geolocation": {
+                "country": "Việt Nam",
+                "city": "Sa Pa",
+                "landmark_suggestions": [
+                    {
+                        "name": "Đỉnh Fansipan",
+                        "description": "Nóc nhà Đông Dương, điểm đến hấp dẫn với cáp treo và cảnh núi hùng vĩ.",
+                        "coordinates": {
+                            "latitude": 22.304,
+                            "longitude": 103.776
+                        }
+                    },
+                    {
+                        "name": "Bản Cát Cát",
+                        "description": "Ngôi làng truyền thống của người H'Mông với phong cảnh và văn hóa đặc trưng vùng cao.",
+                        "coordinates": {
+                            "latitude": 22.338,
+                            "longitude": 103.832
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
