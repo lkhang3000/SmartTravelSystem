@@ -249,38 +249,46 @@
         function validateDates() {
             let start = document.getElementById("start-date").value;
             let end = document.getElementById("end-date").value;
-            if (!start || !end) return true; // let browser handle required
+
+            if (!start || !end) return true;
+
             let startParts = start.split('/');
             let endParts = end.split('/');
+
             if (startParts.length !== 3 || endParts.length !== 3) return true;
+
             let startDate = new Date(startParts[2], startParts[1] - 1, startParts[0]);
             let endDate = new Date(endParts[2], endParts[1] - 1, endParts[0]);
-            let diff = endDate - startDate;
-            let days = diff / (1000 * 60 * 60 * 24);
-            let startYear = startDate.getFullYear();
-            let isLeap = (startYear % 4 === 0 && startYear % 100 !== 0) || (startYear % 400 === 0);
+
+            let diffDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+            let year = startDate.getFullYear();
+            let isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
             let maxDays = isLeap ? 366 : 365;
-            if (days > maxDays) {
+
+            if (diffDays > maxDays) {
                 document.getElementById("dateError").style.display = "block";
                 return false;
             }
+
             document.getElementById("dateError").style.display = "none";
             return true;
         }
 
         document.addEventListener("DOMContentLoaded", function () {
             const millionVNDText = "{% trans 'million VND' %}";
-            
+
             const startPicker = flatpickr("#start-date", {
                 dateFormat: "d/m/Y",
                 minDate: "today",
-                allowInput: true,
+                allowInput: false,
                 monthSelectorType: "static",
                 yearSelectorType: "static",
                 closeOnSelect: false,
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length > 0) {
-                        endPicker.set('minDate', selectedDates[0]);
+                disableMobile: true,
+                onChange: function (selectedDates) {
+                    if (selectedDates.length) {
+                        endPicker.set("minDate", selectedDates[0]);
                     }
                 }
             });
@@ -288,20 +296,14 @@
             const endPicker = flatpickr("#end-date", {
                 dateFormat: "d/m/Y",
                 minDate: "today",
-                allowInput: true,
+                allowInput: false,
                 monthSelectorType: "static",
                 yearSelectorType: "static",
-                closeOnSelect: false
-            });
-
-            const endPicker = flatpickr(endInput, {
-                dateFormat: "d/m/Y",
-                minDate: "today",
+                closeOnSelect: false,
                 disableMobile: true
             });
 
-
-            // === BUDGET CALCULATION (GIỮ NGUYÊN) ===
+            // === BUDGET CALCULATION ===
             const budgetRange = document.getElementById("budgetRange");
             const budgetInput = document.getElementById("budgetInput");
             const travelersInput = document.getElementById("travelers");
@@ -342,10 +344,15 @@
 
             updateCalculation();
 
-            document.getElementById("start-date").addEventListener("input", () => document.getElementById("dateError").style.display = "none");
-            document.getElementById("end-date").addEventListener("input", () => document.getElementById("dateError").style.display = "none");
+            document.getElementById("start-date").addEventListener("input", () =>
+                document.getElementById("dateError").style.display = "none"
+            );
+            document.getElementById("end-date").addEventListener("input", () =>
+                document.getElementById("dateError").style.display = "none"
+            );
         });
     </script>
+
 
 </body>
 </html>
