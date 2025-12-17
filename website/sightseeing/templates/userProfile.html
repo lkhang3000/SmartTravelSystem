@@ -496,7 +496,7 @@
 
 <header class="u-clearfix u-header u-overlap"
     id="header" 
-    style="position: sticky; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.9) !important; border: none !important;">
+    style="position: sticky; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.9) !important; border: none !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
     
     <div style="flex: 0 0 auto; display: flex; align-items: center;">
         <a href="{% url 'home' %}" style="display: block;">
@@ -508,7 +508,7 @@
         
         <nav class="u-menu u-menu-one-level u-offcanvas" style="margin: 0 !important;">
             <ul class="u-nav u-unstyled" style="display: flex; gap: 25px; margin: 0; padding: 0; list-style: none; align-items: center;">
-                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'home' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trang chủ" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'home' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Home" %}</a></li>
                 <li class="u-nav-item"><a class="u-nav-link" href="{% url 'about_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "About us" %}</a></li>
                 <li class="u-nav-item"><a class="u-nav-link" href="{% url 'contact_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Contact us" %}</a></li>
                 <li class="u-nav-item"><a class="u-nav-link" href="{% url 'input_trip_planner' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trip Planner" %}</a></li>
@@ -595,7 +595,7 @@
                     transition:0.2s;
                 "                onmouseover="this.style.background='#f5f5f5'"
                 onmouseout="this.style.background='white'">
-                    👤 My Profile
+                    My Profile
                 </a>
                 <a href="/logout/" style="
                     display:block;
@@ -606,7 +606,7 @@
                 "
                 onmouseover="this.style.background='#f5f5f5'"
                 onmouseout="this.style.background='white'">
-                    🚪 Logout
+                    Logout
                 </a>
             </div>
 </div>
@@ -804,10 +804,10 @@
 
         <div id="search-history" class="content-section">
             <h2>{% trans "Search History" %}</h2>
-            <div class="history-item">📅 {% trans "December 5, 2025: Search for" %} **Ha Long Bay** ({% trans "4 days, 1 traveler" %})</div>
-            <div class="history-item">📅 {% trans "December 4, 2025: Search for" %} **Da Nang Beaches** ({% trans "3 days, High-end" %})</div>
-            <div class="history-item">📅 {% trans "November 28, 2025: Search for" %} **Ho Chi Minh City** ({% trans "Current saved trip details" %})</div>
-            <div class="history-item">📅 {% trans "November 15, 2025: Search for" %} **Phu Quoc Island** ({% trans "Resort focus" %})</div>
+            <div class="history-item">{% trans "December 5, 2025: Search for" %} **Ha Long Bay** ({% trans "4 days, 1 traveler" %})</div>
+            <div class="history-item">{% trans "December 4, 2025: Search for" %} **Da Nang Beaches** ({% trans "3 days, High-end" %})</div>
+            <div class="history-item">{% trans "November 28, 2025: Search for" %} **Ho Chi Minh City** ({% trans "Current saved trip details" %})</div>
+            <div class="history-item">{% trans "November 15, 2025: Search for" %} **Phu Quoc Island** ({% trans "Resort focus" %})</div>
             <div class="clear-history-wrapper">
                 <button class="smart-btn clear-history-btn">{% trans "Clear History" %}</button>
             </div>
