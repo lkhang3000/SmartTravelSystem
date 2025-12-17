@@ -152,6 +152,7 @@
     margin-right: 20px;
     border-right: 1px solid #ddd; /* The vertical divider */
     min-width: 180px;
+    align-items: flex-start;
 }
 
 /* Remove divider from the last filter before the button */
@@ -164,6 +165,7 @@
     color: #888;
     margin-bottom: 2px;
     font-weight: 500;
+    text-align: right;
 }
 
 .filter-select-minimal {
@@ -199,7 +201,7 @@
         /* General Styles for Figma Look */
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #f7f7f7; /* Light gray background */
+            background-color: white; /* Changed from light gray */
         }
         
         /* Filter Selects */
@@ -290,6 +292,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s, box-shadow 0.3s;
             text-align: left;
+            border: 4px solid #fb8700;
         }
 
         .recommendation-card:hover {
@@ -377,23 +380,23 @@
             width: 100% !important;
             max-width: 100% !important;
             align-items: stretch;
-            max-height: 180px !important;
+            max-height: 160px !important;
         }
         
         .list-card-image {
-            flex: 0 0 200px !important;
+            flex: 0 0 220px !important;
             position: relative;
-            height: 180px !important;
+            height: 200px !important;
             overflow: hidden !important;
-            min-width: 200px !important;
-            max-width: 200px !important;
+            min-width: 220px !important;
+            max-width: 220px !important;
         }
         
         .list-card-image img {
             width: 100% !important;
             height: 100% !important;
-            max-width: 200px !important;
-            max-height: 180px !important;
+            max-width: 220px !important;
+            max-height: 200px !important;
             object-fit: cover !important;
             display: block !important;
         }
@@ -441,7 +444,7 @@
 <body>
    <header class="u-clearfix u-header u-overlap"
     id="header" 
-    style="position: fixed; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(200, 200, 200, 0.85) !important; background-image: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; box-shadow: none !important;">
+    style="position: fixed; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.9) !important; background-image: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; box-shadow: none !important;">
         <a href="{% url 'home' %}" style="display: block; height: 100px;">
             <img src="{% static 'images/Odyscape.png' %}" style="height: 100px; width: auto; object-fit: contain; display: block;" title="Home">
         </a>
@@ -591,23 +594,25 @@
         }
  </script>
 
-    <section class="u-clearfix" style="padding: 120px 0 60px 0; background-color: #f0f0f0; margin-top: 20px;">
-    <div style="width: 100%; display: flex; justify-content: center;">
-        <form method="GET" action="" id="searchForm" class="u-form-custom-backend">
+    <section class="u-clearfix" style="padding: 120px 0 60px 0; background-image: url('{{ background_image }}'); background-size: cover; background-position: center; margin-top: 20px; text-align: center;">
+    <div style="width: 100%; display: flex; justify-content: center; align-items: center; position: relative; z-index: 1;">
+        <!-- Light overlay for text readability -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.1); z-index: -1;"></div>
+        <form method="GET" action="" id="searchForm" class="u-form-custom-backend" style="margin: 0 auto;">
             <div class="search-pill-container">
                 
                 <div class="filter-column">
-                    <span class="filter-label-text">📍 {% trans "Where to?" %}</span>
+                    <span class="filter-label-text">{% trans "Location" %}</span>
                     <select name="location" class="filter-select-minimal">
                         <option value="">{% trans "All regions" %}</option>
                         {% for loc in all_locations %}
-                        <option value="{{ loc.id }}" {% if selected_location and selected_location == loc.id %}selected{% endif %}>{{ loc.locationName }}</option>
+                        <option value="{{ loc.id }}" {% if selected_location|stringformat:"s" == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.locationName }}</option>
                         {% endfor %}
                     </select>
                 </div>
 
                 <div class="filter-column">
-                    <span class="filter-label-text">📂 {% trans "Category" %}</span>
+                    <span class="filter-label-text">{% trans "Category" %}</span>
                     <select name="category" class="filter-select-minimal">
                         <option value="">{% trans "All categories" %}</option>
                         {% for cat in all_categories %}
@@ -617,19 +622,19 @@
                 </div>
 
                 <div class="filter-column">
-                    <span class="filter-label-text">⭐ {% trans "Minimum Rating" %}</span>
+                    <span class="filter-label-text">{% trans "Rating" %}</span>
                     <select name="rating" class="filter-select-minimal">
                         <option value="">{% trans "All ratings" %}</option>
-                        <option value="2.0" {% if selected_rating == '2.0' %}selected{% endif %}>5.0 Stars</option>
-                        <option value="4.0" {% if selected_rating == '4.0' %}selected{% endif %}>4.0+ Stars</option>
-                        <option value="3.0" {% if selected_rating == '3.0' %}selected{% endif %}>3.0+ Stars</option>
-                        <option value="2.0" {% if selected_rating == '2.0' %}selected{% endif %}>2.0+ Stars</option>
-                        <option value="2.0" {% if selected_rating == '2.0' %}selected{% endif %}>1.0+ Stars</option>
+                        <option value="5.0" {% if selected_rating == "5.0" %}selected{% endif %}>5.0 Stars</option>
+                        <option value="4.0" {% if selected_rating == "4.0" %}selected{% endif %}>4.0+ Stars</option>
+                        <option value="3.0" {% if selected_rating == "3.0" %}selected{% endif %}>3.0+ Stars</option>
+                        <option value="2.0" {% if selected_rating == "2.0" %}selected{% endif %}>2.0+ Stars</option>
+                        <option value="1.0" {% if selected_rating == "1.0" %}selected{% endif %}>1.0+ Stars</option>
                     </select>
                 </div>
 
-                <button type="submit" class="search-btn-pill" style = "background: #fb8700">
-                    {% trans "Search Destinations" %}
+                <button type="submit" class="search-btn-pill" style = "background: #fb8700; margin-left: 40px;">
+                    {% trans "Search" %}
                 </button>
                 
             </div>
@@ -637,58 +642,49 @@
     </div>
 </section>
 
-    <section class="recommendation-section" id="block-1" style="padding: 40px 20px;">
+    <section class="recommendation-section" id="block-1" style="padding: 40px 20px; background: white;">
         <div class="container" style="max-width: 1200px; margin: 0 auto;">
             
             {% comment %} Top results logic updated to respect filters {% endcomment %}
-{% if top_results or search_results %}
-    {% comment %} 
-       Logic: 
-       1. If search_results exists (user filtered), use those.
-       2. If not, fallback to top_results.
-    {% endcomment %}
-    {% with spots=search_results|dictsortreversed:"rating"|slice:":3"|default:top_results|slice:":3" header_title=search_results|yesno:"Search Highlights,Top Picks for You" %}
-        {% if spots %}
-        <div class="top-results-section" style="margin-bottom: 40px; text-align: left;">
-            <div class="top-picks-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 class="top-picks-title" style="margin: 0;">📈 {% trans header_title %}</h3>
-                <a href="#all-results" class="smart-btn" style="background: #FB8700; color: white; padding: 8px 20px; border-radius: 20px; text-decoration: none;">{% trans "View All" %}</a>
-            </div>
-            
-            <div class="recommendation-grid">
-                {% for spot in spots %}
-                    <div class="recommendation-card">
+{% if collaborative_recommendations %}
+    <div class="recommended-carousel-section" style="margin-bottom: 40px; text-align: left;">
+        <div class="top-picks-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 class="top-picks-title" style="margin: 0; background: linear-gradient(to right, #fb8700, #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">{% trans "Recommended for You" %}</h3>
+            {% if collaborative_recommendations|length > 3 %}
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev-btn" onclick="moveCarousel(-1)">‹</button>
+                    <button class="carousel-btn next-btn" onclick="moveCarousel(1)">›</button>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="recommended-carousel-container">
+            <div class="recommended-carousel" id="recommendedCarousel">
+                {% for spot in collaborative_recommendations %}
+                    <div class="recommendation-card carousel-item">
                         <div class="card-image-wrapper">
                             <a href="{% url 'destination_detail' spot.id %}">
-                                <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
+                                <img src="{{ spot.image_url }}" alt="{{ spot.name }}"
                                      onerror="this.src='https://source.unsplash.com/featured/400x300/?{{ spot.name|urlencode }}'">
                             </a>
-                            <span class="status-badge">
-                                {% if spot.rating >= 4.9 %}{% trans "Luxury" %}
-                                {% elif spot.rating >= 4.8 %}{% trans "Popular" %}
-                                {% else %}{% trans "Best Value" %}
-                                {% endif %}
-                            </span>
                         </div>
 
                         <div class="card-content" style="padding: 15px;">
                             <h3 class="spot-name" style="font-size: 18px; font-weight: 700; margin: 0;">
                                 <a href="{% url 'destination_detail' spot.id %}" style="color:inherit; text-decoration:none;">{{ spot.name }}</a>
                             </h3>
-                            
+
                             <div style="color: #666; font-size: 14px; margin: 5px 0;">
-                                📍 {{ spot.location }}
+                                {{ spot.location }}
                             </div>
 
                             <div class="card-bottom-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div style="color: #Fb8700; font-weight: 700;">
-                                    ★ {{ spot.rating }} 
-                                    <span style="color: #999; font-weight: 400; font-size: 12px;">({{ spot.reviews_count|default:"2k+" }} reviews)</span>
+                                    ★ {{ spot.rating }}
                                 </div>
-                                
+
                                 <div style="text-align: right;">
-                                    <span style="color: #fb8700; font-size: 18px; font-weight: 800; display: block;">${{ spot.price|default:"450" }}</span>
-                                    <span style="font-size: 10px; color: #888;">per night</span>
+                                    <!-- Price removed as requested -->
                                 </div>
                             </div>
                         </div>
@@ -696,8 +692,7 @@
                 {% endfor %}
             </div>
         </div>
-        {% endif %}
-    {% endwith %}
+    </div>
 {% endif %}
 
             {% comment %} START: Two-Column Results Area with 10/10 Split {% endcomment %}
@@ -707,29 +702,7 @@
 
     <div style="flex: 1;">
         
-        {% comment %} 1. Recommended for You (Limited to Top 10) {% endcomment %}
-        {% if collaborative_recommendations %}
-            <h3 style="text-align: left; font-size: 22px; margin-bottom: 20px;">{% trans "Recommended for You" %}</h3>
-            {% for spot in collaborative_recommendations %}
-                <div class="list-card" style="border: 2px solid #FB8700;"> 
-                    <div class="list-card-image">
-                        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" data-images="{{ spot.image_list|join:',' }}" onerror="nextImage(this)">
-                    </div>
-                    <div class="list-card-content">
-                        <div style="display:flex; justify-content:space-between;">
-                            <h3 style="margin:0; font-size:18px;">{{ spot.name }}</h3>
-                            <div style="color:#Fb8700; font-weight:bold;">★ {{ spot.rating }}</div>
-                        </div>
-                        <div style="color:#666; font-size:13px; margin:5px 0;">📍 {{ spot.location }}</div>
-                        <div style="margin:10px 0;"><span class="amenity-tag">Free WiFi</span><span class="amenity-tag">Pool</span></div>
-                        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                            <span style="color:#FB8700; font-size:22px; font-weight:800;">${{ spot.price|default:"500" }} <small style="font-size:12px; color:#888;">/ night</small></span>
-                            <a href="{% url 'destination_detail' spot.id %}" class="smart-btn">{% trans "View Details" %}</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
+        {% comment %} 1. More Recommendations {% endcomment %}
 
         {% comment %} 2. All Results (Paginated 10 per page) {% endcomment %}
         <div class="search-results-section">
@@ -740,27 +713,25 @@
 
             {% if search_results %}
                 {% for spot in search_results %}
-                    <div class="list-card">
-                        <div class="list-card-image">
-                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" data-images="{{ spot.image_list|join:',' }}" onerror="nextImage(this)">
-                            <div style="position:absolute; bottom:10px; left:10px; background:white; padding:3px 10px; border-radius:4px; font-size:11px; font-weight:bold; color:#333;">{% trans "5-Star Hotel" %}</div>
-                        </div>
-                        <div class="list-card-content">
-                            <div style="display:flex; justify-content:space-between;">
-                                <h3 style="margin:0; font-size:18px;">{{ spot.name }}</h3>
-                                <div style="color:#Fb8700; font-weight:bold;">★ {{ spot.rating }}</div>
+                    <a href="{% url 'destination_detail' spot.id %}" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="list-card">
+                            <div class="list-card-image">
+                                <img src="{{ spot.image_url }}" alt="{{ spot.name }}" data-images="{{ spot.image_list|join:',' }}" onerror="nextImage(this)">
                             </div>
-                            <div style="color:#666; font-size:13px; margin:5px 0;">📍 {{ spot.location }}</div>
-                            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px;">
-                                <div>
-                                    <small style="display:block; color:#888; font-size:11px;">Starting from</small>
-                                    <span style="color:#Fb8700; font-size:22px; font-weight:800;">${{ spot.price|default:"620" }}</span>
-                                    <small style="color:#888;">/ night</small>
+                            <div class="list-card-content">
+                                <div style="display:flex; justify-content:space-between;">
+                                    <h3 style="margin:0; font-size:18px;">{{ spot.name }}</h3>
+                                    <div style="color:#Fb8700; font-weight:bold;">★ {{ spot.rating }}</div>
                                 </div>
-                                <a href="{% url 'destination_detail' spot.id %}" class="view-details-btn">{% trans "View Details" %}</a>
+                                <div style="color:#666; font-size:13px; margin:5px 0;">{{ spot.location }}</div>
+                                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px;">
+                                    <div>
+                                        <!-- Price removed as requested -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
             {% endif %}
         </div>
@@ -1001,6 +972,82 @@
   .chat-body::-webkit-scrollbar { width: 5px; }
   .chat-body::-webkit-scrollbar-track { background: #fff9f2; }
   .chat-body::-webkit-scrollbar-thumb { background: #ffe0b3; border-radius: 10px; }
+
+/* Carousel Styles */
+.recommended-carousel-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.recommended-carousel {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.carousel-item {
+    flex: 0 0 33.333%; /* Show 3 items at a time */
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.carousel-controls {
+    position: absolute;
+    top: 200px;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+}
+
+.carousel-controls .prev-btn {
+    position: absolute;
+    left: -50px;
+}
+
+.carousel-controls .next-btn {
+    position: absolute;
+    right: -50px;
+}
+
+.carousel-btn {
+    background: #FB8700;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.carousel-btn:hover {
+    background: #e67e00;
+}
+
+.carousel-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .carousel-item {
+        flex: 0 0 50%; /* Show 2 items on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-item {
+        flex: 0 0 100%; /* Show 1 item on very small screens */
+    }
+}
 </style>
 
 <script>
@@ -1014,6 +1061,52 @@ function nextImage(img) {
     img.src = '/static/images/default-image.jpg';
   }
 }
+
+// Carousel functionality
+let currentSlide = 0;
+const slidesToShow = window.innerWidth <= 480 ? 1 : window.innerWidth <= 768 ? 2 : 3;
+
+function moveCarousel(direction) {
+    const carousel = document.getElementById('recommendedCarousel');
+    const items = carousel.children;
+    const totalItems = items.length;
+    const maxSlide = Math.max(0, totalItems - slidesToShow);
+
+    currentSlide += direction;
+    currentSlide = Math.max(0, Math.min(currentSlide, maxSlide));
+
+    const translateX = -currentSlide * (100 / slidesToShow);
+    carousel.style.transform = `translateX(${translateX}%)`;
+
+    // Update button states
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+
+    if (prevBtn) prevBtn.disabled = currentSlide === 0;
+    if (nextBtn) nextBtn.disabled = currentSlide === maxSlide;
+}
+
+// Update slidesToShow on window resize
+window.addEventListener('resize', function() {
+    const newSlidesToShow = window.innerWidth <= 480 ? 1 : window.innerWidth <= 768 ? 2 : 3;
+    if (newSlidesToShow !== slidesToShow) {
+        location.reload(); // Simple solution - reload to recalculate
+    }
+});
+
+// Initialize carousel on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('recommendedCarousel');
+    if (carousel) {
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+
+        if (prevBtn) prevBtn.disabled = true; // Start at first slide
+        if (nextBtn && carousel.children.length <= slidesToShow) {
+            nextBtn.disabled = true; // Disable if not enough items
+        }
+    }
+});
 </script>
 
 </body></html>

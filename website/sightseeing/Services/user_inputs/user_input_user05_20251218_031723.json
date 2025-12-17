@@ -1,0 +1,18 @@
+{
+    "user_info": {
+        "username": "user05",
+        "created_at": "2025-12-18 03:17:23"
+    },
+    "trip_preferences": {
+        "domestic_or_international": {
+            "type": "domestic",
+            "region": null
+        },
+        "tags": [],
+        "budget": 0,
+        "departure_date": null,
+        "return_date": null,
+        "num_people": 1,
+        "favourite_destination_type": "Beach"
+    }
+}

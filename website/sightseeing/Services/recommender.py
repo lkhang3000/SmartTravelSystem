@@ -1016,12 +1016,12 @@ class UserBehaviorRecommender:
             print(f"User {user_id} not found")
             return pd.DataFrame()
 
-        # Get user's high-rated destinations (score >= 4.0)
+        # Get user's high-rated destinations (score >= 3.0)
         user_ratings = self.user_item_matrix.loc[user_id]
-        high_rated_dests = user_ratings[user_ratings >= 4.0]
+        high_rated_dests = user_ratings[user_ratings >= 3.0]
 
         if len(high_rated_dests) == 0:
-            print(f"User {user_id} has no high-rated destinations (>= 4.0)")
+            print(f"User {user_id} has no high-rated destinations (>= 3.0)")
             return pd.DataFrame()
 
         print(f"User {user_id} has {len(high_rated_dests)} high-rated destinations")

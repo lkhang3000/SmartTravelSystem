@@ -551,7 +551,7 @@
     
     <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: flex-start;">
       {% for trip in saved_trips %}
-      <a href="{% url 'user_profile' %}#saved-planners" style="text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 380px;">
+      <a href="{% url 'trip_planner' %}?trip_id={{ trip.id }}" style="text-decoration: none; color: inherit; flex: 1 1 300px; max-width: 380px;">
         <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
           <div style="height: 180px; background-image: url('{{ trip.display_image }}'); background-size: cover; background-position: center;"></div>
           <div style="padding: 15px;">

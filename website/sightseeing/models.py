@@ -13,6 +13,7 @@ class UsersProfile(models.Model):
     custom_user_id = models.CharField(max_length=20, unique=True, null=True, blank=True)  # Custom ID like user_001
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
+    favourite_destination_type = models.CharField(max_length=100, null=True, blank=True)  # Favourite category for recommendations
 
     def __str__(self):
         return self.name
@@ -130,6 +131,7 @@ class Trip(models.Model):
 
 class TripItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, null=True, blank=True)
     destination = models.ForeignKey(Destinations, on_delete=models.CASCADE, null=True, blank=True)
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, null=True, blank=True)
     day = models.IntegerField(null=True, blank=True, help_text='Day number in the trip (1, 2, 3, etc.)')
@@ -138,7 +140,7 @@ class TripItem(models.Model):
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ['user', 'destination', 'hotel']
+        unique_together = ['user', 'trip', 'destination', 'hotel']
         ordering = ['day', 'order']
 
     def __str__(self):

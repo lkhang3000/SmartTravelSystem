@@ -139,7 +139,7 @@
     
     <div style="display: flex; align-items: center; gap: 30px;"> 
         
-        <a href="{% url 'recommend_result' %}" 
+        <a href="javascript:history.back()" 
            class="smart-btn"
            style="
                 /* Style tương tự smart-btn nhưng căn chỉnh trong Header */
@@ -600,8 +600,11 @@
             <div style="margin-bottom: 10px; font-size: 14px; color: #666;">
                 Rate this destination (optional):
             </div>
+            
+        
+            
             <div id="rating-container" 
-                 data-selected-rating="0" 
+                 data-selected-rating="{{ user_rating|default:0 }}" 
                  style="/* 3. TĂNG KÍCH THƯỚC SAO LÊN 60PX */
                         font-size: 60px; 
                         color: #ccc; 
@@ -615,7 +618,7 @@
                 <span class="star" data-value="4" style="transition: color 0.2s; margin: 0 5px;">☆</span>
                 <span class="star" data-value="5" style="transition: color 0.2s; margin: 0 5px;">☆</span>
             </div>
-            <input type="hidden" name="rating" id="rating-value" value="0">
+            <input type="hidden" name="rating" id="rating-value" value="{{ user_rating|default:0 }}">
         </div>
 
         <div style="text-align: center;">
@@ -642,7 +645,11 @@
             if (!ratingContainer) return; 
 
             const stars = ratingContainer.querySelectorAll('.star');
-            let selectedRating = 0; // Start with no rating selected
+            let selectedRating = {{ user_rating|default:0 }}; // Load user's existing rating
+            
+            // Set initial rating display
+            updateStars(selectedRating);
+            ratingContainer.setAttribute('data-selected-rating', selectedRating);
 
             function updateStars(rating) {
                 const finalRating = Math.max(0, rating); 
@@ -690,7 +697,7 @@
                 });
             });
             
-            // Khởi tạo: Không có rating nào được chọn
+            // Khởi tạo với rating hiện tại
             updateStars(selectedRating);
         });
     </script>

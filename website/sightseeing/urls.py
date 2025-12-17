@@ -63,6 +63,8 @@ urlpatterns = [
 
     # User pages
     path('profile/', views.user_profile, name='user_profile'),
+    path('profile/delete-trip/<int:trip_id>/', views.delete_trip, name='delete_trip'),
+    path('profile/clear-history/', views.clear_history, name='clear_history'),
     path('user-input/', views.user_input, name='user_input'),
     path('save-user-input/', views.save_user_input, name='save_user_input'),
     path('recommend-result/', views.recommend_result, name='recommend_result'),

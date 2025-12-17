@@ -139,6 +139,9 @@
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
         }
+        .messages {
+            margin-bottom: 20px;
+        }
         .messages li {
             padding: 10px 15px;
             margin-bottom: 10px;
@@ -274,6 +277,51 @@
             background-size: cover;
             background-position: center;
             position: relative;
+        }
+
+        .trip-delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 152, 0, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .trip-delete-btn:hover {
+            background: rgba(255, 152, 0, 1);
+        }
+
+        .trip-delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 152, 0, 1);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s ease;
+        }
+
+        .trip-delete-btn:hover {
+            background: rgba(255, 152, 0, 1);
         }
 
         .history-item {
@@ -632,7 +680,7 @@
             <a href="#" class="menu-item active" data-target="personal-info">{% trans "Personal Information" %}</a>
             <a href="#" class="menu-item" data-target="security">{% trans "Security & Password" %}</a>
             <a href="#" class="menu-item" data-target="saved-planners">{% trans "Saved Planners" %}</a>
-            <a href="#" class="menu-item" data-target="search-history">{% trans "Search History" %}</a>
+            <a href="#" class="menu-item" data-target="search-history">{% trans "View History" %}</a>
 
             <div class="menu-divider"></div>
             
@@ -641,6 +689,13 @@
     </div>
 
     <div class="settings-content">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <div id="personal-info" class="content-section active">
             <h2>{% trans "Personal Information" %}</h2>
@@ -656,75 +711,20 @@
                             {% trans "Change Email" %}
                         </button>
                     </p>
-
                 </div>
             </div>
-
-            
 
             <form method="POST" action="{% url 'update_profile_settings' %}">
                 {% csrf_token %}
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="group_size">{% trans "Group size" %}</label>
-                        <input type="number" id="group_size" name="num_people" value="{{ request.session.user_preferences.trip_preferences.num_people|default:'1' }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="budget">{% trans "Budget (VND)" %}</label>
-                        <input type="number" id="budget" name="budget" value="{{ request.session.user_preferences.trip_preferences.budget|default:'1000000' }}">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group date-input-container">
-                        <label for="arrival_day">{% trans "Arrival Day" %}</label>
-                        <input type="text" id="arrival_day" name="departure_date" 
-                               value="{{ request.session.user_preferences.trip_preferences.departure_date|default:'2025-12-01' }}" 
-                               readonly class="date-input-field">
-                        <div id="arrival_calendar" class="mini-calendar"></div>
-                    </div>
-                    <div class="form-group date-input-container">
-                        <label for="departure_day">{% trans "Departure Day" %}</label>
-                        <input type="text" id="departure_day" name="return_date" 
-                               value="{{ request.session.user_preferences.trip_preferences.return_date|default:'2025-12-02' }}" 
-                               readonly class="date-input-field">
-                        <div id="departure_calendar" class="mini-calendar"></div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="Regions">{% trans "Destination" %}</label>
-                        <select id="Regions" name="region">
-                            <option value="All regions">{% trans "All regions" %}</option>
-                            <option value="Ho Chi Minh City" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Ho Chi Minh City" %}selected{% endif %}>{% trans "Ho Chi Minh City" %}</option>
-                            <option value="Hanoi" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Hanoi" %}selected{% endif %}>{% trans "Hanoi" %}</option>
-                            <option value="Da Nang" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Da Nang" %}selected{% endif %}>{% trans "Da Nang" %}</option>
-                            <option value="Hue" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Hue" %}selected{% endif %}>{% trans "Hue" %}</option>
-                            <option value="Can Tho" {% if request.session.user_preferences.trip_preferences.domestic_or_international.region == "Can Tho" %}selected{% endif %}>{% trans "Can Tho" %}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="Category">{% trans "Category" %}</label>
-                        <select id="category" name="tags">
-                            <option value="All categories">{% trans "All categories" %}</option>
-                            <option value="Landmark">{% trans "Landmark" %}</option>
-                            <option value="Scenery">{% trans "Scenery" %}</option>
-                            <option value="Sanctuary">{% trans "Sanctuary" %}</option>
-                            <option value="Museum">{% trans "Museum" %}</option>
-                            <option value="Attraction">{% trans "Attraction" %}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="Rating">{% trans "Ratings" %}</label>
-                        <select id="Rating" name="rating">
-                            <option value="All ratings" selected>{% trans "All ratings" %}</option>
-                            <option value="1">★☆☆☆☆(1+)</option>
-                            <option value="2">★★☆☆☆(2+)</option>
-                            <option value="3">★★★☆☆(3+)</option>
-                            <option value="4">★★★★☆(4+)</option>
-                            <option value="5">★★★★★</option>
+                        <label for="favourite_destination_type">{% trans "Favourite type of destination" %}</label>
+                        <select id="favourite_destination_type" name="favourite_destination_type">
+                            <option value="">{% trans "Select a category" %}</option>
+                            {% for category in all_categories %}
+                            <option value="{{ category }}" {% if user.usersprofile.favourite_destination_type == category %}selected{% endif %}>{{ category }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -737,14 +737,6 @@
 
 
         <div id="security" class="content-section">
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li class="{{ message.tags }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
             <h2>{% trans "Security & Password" %}</h2>
             <form method="POST" action="{% url 'change_password' %}">
                 {% csrf_token %}
@@ -772,7 +764,7 @@
 
             {% if trips %}
                 {% for trip in trips %}
-                <a href="{% url 'trip_planner' %}" class="trip-card-link">
+                <a href="{% url 'trip_planner' %}?trip_id={{ trip.id }}" class="trip-card-link">
                     <div class="trip-card-container">
                         <div class="trip-card-info">
                             <h3 class="trip-card-title">{% trans "Trip to" %} {{ trip.destination }}</h3>
@@ -790,6 +782,10 @@
 
                         <div class="trip-card-image"
                             style="background-image: url('{{ trip.display_image }}');">
+                            <form method="post" action="{% url 'delete_trip' trip.id %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this trip?')">
+                                {% csrf_token %}
+                                <button type="submit" class="trip-delete-btn" title="Delete Trip">×</button>
+                            </form>
                         </div>
                     </div>
                 </a>
@@ -797,19 +793,25 @@
             {% else %}
                 <div style="padding: 20px; text-align: center; color: #666;">
                     <p>{% trans "You haven't saved any trips yet." %}</p>
-                    <a href="{% url 'trip_planner' %}" class="smart-btn" style="text-decoration: none;">{% trans "Create New Trip" %}</a>
+                    <a href="{% url 'input_trip_planner' %}" class="smart-btn" style="text-decoration: none;">{% trans "Create New Trip" %}</a>
                 </div>
             {% endif %}
         </div>
 
         <div id="search-history" class="content-section">
-            <h2>{% trans "Search History" %}</h2>
-            <div class="history-item">{% trans "December 5, 2025: Search for" %} **Ha Long Bay** ({% trans "4 days, 1 traveler" %})</div>
-            <div class="history-item">{% trans "December 4, 2025: Search for" %} **Da Nang Beaches** ({% trans "3 days, High-end" %})</div>
-            <div class="history-item">{% trans "November 28, 2025: Search for" %} **Ho Chi Minh City** ({% trans "Current saved trip details" %})</div>
-            <div class="history-item">{% trans "November 15, 2025: Search for" %} **Phu Quoc Island** ({% trans "Resort focus" %})</div>
+            <h2>{% trans "View History" %}</h2>
+            {% if search_history %}
+                {% for item in search_history %}
+                <div class="history-item">{{ item.date }}: {% trans "See" %} **{{ item.destination }}**</div>
+                {% endfor %}
+            {% else %}
+                <div class="history-item">{% trans "No view history available." %}</div>
+            {% endif %}
             <div class="clear-history-wrapper">
-                <button class="smart-btn clear-history-btn">{% trans "Clear History" %}</button>
+                <form method="post" action="{% url 'clear_history' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="smart-btn clear-history-btn">{% trans "Clear History" %}</button>
+                </form>
             </div>
         </div>
 
@@ -1120,6 +1122,18 @@ document.addEventListener('DOMContentLoaded', function () {
             emailModal.classList.add('active');
         {% endif %}
     {% endfor %}
+    
+    // Auto-hide messages after 7 seconds
+    setTimeout(function() {
+        const messages = document.querySelector('.messages');
+        if (messages) {
+            messages.style.transition = 'opacity 0.5s ease';
+            messages.style.opacity = '0';
+            setTimeout(function() {
+                messages.style.display = 'none';
+            }, 500);
+        }
+    }, 7000);
 });
 </script>
 

@@ -47,26 +47,49 @@ def update_user_preference_score(user, destination):
         user_profile = UsersProfile.objects.filter(user=user).first()
         if not user_profile:
             # Create UsersProfile if it doesn't exist
-            # Generate next user ID
-            existing_profiles = UsersProfile.objects.all().order_by('-id')
-            next_id = 1
-            if existing_profiles:
-                # Extract number from last custom_user_id (format: user_XXX)
-                last_profile = existing_profiles.first()
-                if last_profile.custom_user_id and last_profile.custom_user_id.startswith('user_'):
-                    try:
-                        last_num = int(last_profile.custom_user_id.split('_')[1])
-                        next_id = last_num + 1
-                    except (ValueError, IndexError):
-                        next_id = existing_profiles.count() + 1
+            from django.db import transaction
             
-            user_profile = UsersProfile.objects.create(
-                user=user,
-                name=user.first_name + ' ' + user.last_name if user.first_name or user.last_name else user.username,
-                email=user.email,
-                custom_user_id=f"user_{next_id:03d}"
-            )
-            print(f"Created UsersProfile for user {user.username} with custom_user_id {user_profile.custom_user_id}")
+            with transaction.atomic():
+                # Generate unique user ID with retry logic
+                max_attempts = 10
+                for attempt in range(max_attempts):
+                    try:
+                        # Get the highest existing user number
+                        existing_ids = UsersProfile.objects.filter(
+                            custom_user_id__startswith='user_'
+                        ).values_list('custom_user_id', flat=True)
+                        
+                        # Extract numbers from existing IDs
+                        existing_nums = []
+                        for existing_id in existing_ids:
+                            try:
+                                num = int(existing_id.split('_')[1])
+                                existing_nums.append(num)
+                            except (ValueError, IndexError):
+                                continue
+                        
+                        # Find next available number
+                        next_id = 1
+                        if existing_nums:
+                            next_id = max(existing_nums) + 1
+                        
+                        custom_user_id = f"user_{next_id:03d}"
+                        
+                        # Create profile with unique ID
+                        user_profile = UsersProfile.objects.create(
+                            user=user,
+                            name=user.first_name + ' ' + user.last_name if user.first_name or user.last_name else user.username,
+                            email=user.email,
+                            custom_user_id=custom_user_id
+                        )
+                        print(f"Created UsersProfile for user {user.username} with custom_user_id {user_profile.custom_user_id}")
+                        break  # Success, exit retry loop
+                        
+                    except Exception as e:
+                        if attempt == max_attempts - 1:
+                            # If all attempts failed, let it raise the exception
+                            raise e
+                        # Continue to next attempt
         
         user_id = user_profile.custom_user_id
         

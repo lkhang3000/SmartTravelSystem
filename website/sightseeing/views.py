@@ -25,7 +25,6 @@ from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
 from django.db import transaction
 from .models import Trip, TripItem, Destinations
-from django.db import models
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'reset_password_form.html'
@@ -253,34 +252,57 @@ def logout_view(request):
 
 def signup_page(request):
     from django.contrib.auth import login
+    from django.db import transaction
     
     if request.method == "POST":
         form = registerForm(request.POST)
         if form.is_valid():
             user = form.save()
             
-            # Auto-create UsersProfile with custom_user_id
+            # Auto-create UsersProfile with custom_user_id using atomic transaction
             from .models import UsersProfile
-            # Generate next user ID
-            existing_profiles = UsersProfile.objects.all().order_by('-id')
-            next_id = 1
-            if existing_profiles:
-                # Extract number from last custom_user_id (format: user_XXX)
-                last_profile = existing_profiles.first()
-                if last_profile.custom_user_id and last_profile.custom_user_id.startswith('user_'):
+            
+            with transaction.atomic():
+                # Generate unique user ID with retry logic
+                max_attempts = 10
+                for attempt in range(max_attempts):
                     try:
-                        last_num = int(last_profile.custom_user_id.split('_')[1])
-                        next_id = last_num + 1
-                    except (ValueError, IndexError):
-                        next_id = existing_profiles.count() + 1
-            
-            UsersProfile.objects.create(
-                user=user,
-                name=form.cleaned_data.get('first_name', '') + ' ' + form.cleaned_data.get('last_name', ''),
-                email=form.cleaned_data.get('email'),
-                custom_user_id=f"user_{next_id:03d}"
-            )
-            
+                        # Get the highest existing user number
+                        existing_ids = UsersProfile.objects.filter(
+                            custom_user_id__startswith='user_'
+                        ).values_list('custom_user_id', flat=True)
+                        
+                        # Extract numbers from existing IDs
+                        existing_nums = []
+                        for existing_id in existing_ids:
+                            try:
+                                num = int(existing_id.split('_')[1])
+                                existing_nums.append(num)
+                            except (ValueError, IndexError):
+                                continue
+                        
+                        # Find next available number
+                        next_id = 1
+                        if existing_nums:
+                            next_id = max(existing_nums) + 1
+                        
+                        custom_user_id = f"user_{next_id:03d}"
+                        
+                        # Create profile with unique ID
+                        user_profile = UsersProfile.objects.create(
+                            user=user,
+                            name=form.cleaned_data.get('first_name', '') + ' ' + form.cleaned_data.get('last_name', ''),
+                            email=form.cleaned_data.get('email'),
+                            custom_user_id=custom_user_id
+                        )
+                        break  # Success, exit retry loop
+                        
+                    except Exception as e:
+                        if attempt == max_attempts - 1:
+                            # If all attempts failed, let it raise the exception
+                            raise e
+                        # Continue to next attempt
+                
             # Tự động đăng nhập sau khi đăng ký
             login(request, user)
             username = form.cleaned_data.get('username')
@@ -378,7 +400,6 @@ def password_reset_complete(request):
 def recommend_result(request):
     """Display personalized recommendations based on user preferences and filters"""
     from django.db.models import Q
-    from django.core.paginator import Paginator # Added missing import
     from .Services.recommender import get_recommender
 
     # Get user data from session or use default
@@ -386,6 +407,11 @@ def recommend_result(request):
 
     # Get filter parameters from GET request
     selected_location = request.GET.get('location', '')
+    if selected_location:
+        try:
+            selected_location = int(selected_location)
+        except ValueError:
+            selected_location = ''
     selected_category = request.GET.get('category', '')
     selected_price = request.GET.get('price', '')
     selected_rating = request.GET.get('rating', '')
@@ -400,6 +426,7 @@ def recommend_result(request):
             recommender = get_recommender()
             user_profile = UsersProfile.objects.filter(user=request.user).first()
             if user_profile and user_profile.custom_user_id:
+                # Extract user preferences for hybrid recommender
                 user_preferences = {}
                 if user_data:
                     prefs = user_data.get('trip_preferences', {})
@@ -409,13 +436,18 @@ def recommend_result(request):
                         'region': prefs.get('domestic_or_international', {}).get('region', '')
                     }
 
+                # Determine top_n based on category - more for beaches
+                top_n = 30 if selected_category.lower() == 'beach' else 20
+
                 collab_recommendations = recommender.recommend_for_user(
                     user_profile.custom_user_id,
                     user_preferences=user_preferences,
-                    top_n=20
+                    top_n=top_n
                 )
                 if not collab_recommendations.empty:
+                    print(f"Found {len(collab_recommendations)} hybrid recommendations")
                     for _, row in collab_recommendations.iterrows():
+                        # Get destination by destination_id
                         try:
                             dest = Destinations.objects.get(destination_id=row['destination_id'])
                             rec_dict = {
@@ -423,36 +455,55 @@ def recommend_result(request):
                                 'name': dest.desName,
                                 'location': dest.location.locationName if dest.location else 'Unknown',
                                 'category': dest.category or 'General',
-                                'rating': float(dest.rating or 0.0),
+                                'rating': dest.rating or 0.0,
                                 'address': dest.address or '',
                                 'description': dest.description or '',
                                 'price_range': dest.price_range or 'Contact for pricing',
                                 'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/800/600',
                                 'recommendation_type': 'hybrid',
                                 'hybrid_score': row['hybrid_score'],
+                                'collab_score': row.get('collab_score', 0),
+                                'content_score': row.get('content_score', 0)
                             }
                             collaborative_recommendations.append(rec_dict)
                             recommendations_list.append(rec_dict)
+                            print(f"Added hybrid rec: {rec_dict['name']} (hybrid_score: {row['hybrid_score']:.3f})")
                         except Destinations.DoesNotExist:
+                            print(f"Destination {row['destination_id']} not found in DB")
                             continue
         except Exception as e:
             print(f"Hybrid recommendation failed: {e}")
 
+    # Always get search results from database (content-based)
     # Start with all destinations from database
     destinations_query = Destinations.objects.all().select_related('location')
 
-    # Apply filters
+    # Apply filters from URL parameters (priority over session data)
     if selected_location:
         destinations_query = destinations_query.filter(location__id=selected_location)
     elif user_data:
+        # Fall back to session data if no URL filter
         preferences = user_data.get('trip_preferences', {})
         location_name = preferences.get('domestic_or_international', {}).get('region', '')
         if location_name:
-            destinations_query = destinations_query.filter(location__locationName__icontains=location_name)
+            destinations_query = destinations_query.filter(
+                location__locationName__icontains=location_name
+            )
+    elif request.session.get('trip_destination'):
+        # Fall back to trip destination from trip planner
+        trip_destination = request.session.get('trip_destination', '').strip()
+        if trip_destination:
+            # Try to match as location name first
+            destinations_query = destinations_query.filter(
+                location__locationName__icontains=trip_destination
+            )
+            # If no results, it will fall through to show all (which is fine)
 
+    # Filter by category
     if selected_category:
         destinations_query = destinations_query.filter(category__icontains=selected_category)
     elif user_data:
+        # Fall back to session tags
         preferences = user_data.get('trip_preferences', {})
         tags = [t.lower() for t in preferences.get('tags', [])]
         if tags:
@@ -460,58 +511,134 @@ def recommend_result(request):
             for tag in tags:
                 tag_filter |= Q(category__icontains=tag) | Q(desName__icontains=tag)
             destinations_query = destinations_query.filter(tag_filter)
+    elif not collaborative_recommendations and request.user.is_authenticated:
+        # No collaborative recs and no filters - infer preferences from user's search history
+        try:
+            from .models import SearchHistory
+            user_profile = UsersProfile.objects.filter(user=request.user).first()
+            if user_profile:
+                # Get user's recent search history
+                recent_searches = SearchHistory.objects.filter(
+                    user_id=user_profile.custom_user_id
+                ).order_by('-timestamp')[:10]
+                
+                if recent_searches:
+                    # Get categories from recent searches
+                    searched_dest_ids = [s.destination_id for s in recent_searches]
+                    searched_categories = Destinations.objects.filter(
+                        destination_id__in=searched_dest_ids
+                    ).values_list('category', flat=True).distinct()
+                    
+                    if searched_categories:
+                        # Use the most common category from recent searches
+                        from collections import Counter
+                        category_counts = Counter(searched_categories)
+                        inferred_category = category_counts.most_common(1)[0][0]
+                        destinations_query = destinations_query.filter(category__icontains=inferred_category)
+                        print(f"Inferred category from search history: {inferred_category}")
+        except Exception as e:
+            print(f"Error inferring preferences from search history: {e}")
 
+    # Filter by price range
     if selected_price:
         if selected_price == 'free':
-            destinations_query = destinations_query.filter(Q(price_range__icontains='free') | Q(price_range__icontains='miễn phí'))
+            destinations_query = destinations_query.filter(
+                Q(price_range__icontains='free') | Q(price_range__icontains='miễn phí')
+            )
         elif selected_price == 'budget':
-            destinations_query = destinations_query.filter(Q(price_range__icontains='50k') | Q(price_range__icontains='100k'))
-        # ... (Keep other price filters as you have them)
+            destinations_query = destinations_query.filter(
+                Q(price_range__icontains='50k') | Q(price_range__icontains='100k') |
+                Q(price_range__icontains='150k') | Q(price_range__icontains='budget')
+            )
+        elif selected_price == 'medium':
+            destinations_query = destinations_query.filter(
+                Q(price_range__icontains='200k') | Q(price_range__icontains='300k') |
+                Q(price_range__icontains='400k') | Q(price_range__icontains='500k')
+            )
+        elif selected_price == 'premium':
+            destinations_query = destinations_query.filter(
+                Q(price_range__icontains='600k') | Q(price_range__icontains='1000k') |
+                Q(price_range__icontains='million') | Q(price_range__icontains='premium')
+            )
 
+    # Filter by rating
     if selected_rating:
         try:
-            destinations_query = destinations_query.filter(rating__gte=float(selected_rating))
+            min_rating = float(selected_rating)
+            destinations_query = destinations_query.filter(rating__gte=min_rating)
         except ValueError:
             pass
 
-    # Sort by rating and execute search_results query
+    # Sort by rating (highest first) for content-based
     search_results_query = destinations_query.order_by('-rating')
 
+    # Convert to list of dicts for template
     for dest in search_results_query:
         search_dict = {
             'id': dest.id,
             'name': dest.desName,
             'location': dest.location.locationName if dest.location else 'Unknown',
             'category': dest.category or 'General',
-            'rating': float(dest.rating or 0.0),
+            'rating': dest.rating or 0.0,
             'address': dest.address or '',
             'description': dest.description or '',
             'price_range': dest.price_range or 'Contact for pricing',
             'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/800/600',
-            'recommendation_type': 'search_result'
+            'recommendation_type': 'search_result',
+            'similarity_score': None
         }
         search_results.append(search_dict)
+        # Add to main list if no collaborative or to show all
         if not collaborative_recommendations:
             recommendations_list.append(search_dict)
 
-    # --- FIX: Derive Top Results from the filtered search_results BEFORE pagination ---
-    top_results = sorted(search_results, key=lambda x: x.get('rating', 0), reverse=True)[:3]
+    # Sort collaborative recommendations by similarity score, content-based by rating
+    if recommendations_list and recommendations_list[0].get('recommendation_type') == 'collaborative':
+        recommendations_list.sort(key=lambda x: x.get('similarity_score', 0), reverse=True)
+    else:
+        recommendations_list.sort(key=lambda x: x.get('rating', 0), reverse=True)
 
+    # Check if any filters are applied
     filters_applied = bool(selected_location or selected_category or selected_price or selected_rating)
 
-    # Pagination Logic
+    # Always implement pagination for search results
+    page_size = 15 if selected_category.lower() == 'beach' else 10
     if not collaborative_recommendations:
-        paginator = Paginator(search_results, 10)
+        # No collaborative recommendations - paginate all search results
+        paginator = Paginator(search_results, page_size)
         page_number = request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
+        try:
+            page_number = int(page_number)
+        except ValueError:
+            page_number = 1
+
+        try:
+            page_obj = paginator.page(page_number)
+        except:
+            page_obj = paginator.page(1)
+
         paginated_results = page_obj.object_list
         total_results = len(search_results)
+        collaborative_recommendations = []  # Ensure it's empty
     else:
-        collaborative_recommendations = recommendations_list[:10]
-        remaining_results = recommendations_list[10:]
+        # Have collaborative recommendations - show them first, then paginate remaining
+        collab_count = 15 if selected_category.lower() == 'beach' else 10
+        collaborative_recommendations = recommendations_list[:collab_count]  # Top N collaborative
+        remaining_results = recommendations_list[collab_count:]  # Rest for pagination
+        
         if remaining_results:
-            paginator = Paginator(remaining_results, 10)
-            page_obj = paginator.get_page(request.GET.get('page', 1))
+            paginator = Paginator(remaining_results, page_size)
+            page_number = request.GET.get('page', 1)
+            try:
+                page_number = int(page_number)
+            except ValueError:
+                page_number = 1
+
+            try:
+                page_obj = paginator.page(page_number)
+            except:
+                page_obj = paginator.page(1)
+
             paginated_results = page_obj.object_list
             total_results = len(remaining_results)
         else:
@@ -519,14 +646,12 @@ def recommend_result(request):
             page_obj = None
             total_results = 0
 
+    # Get all locations and categories for filter dropdowns
     all_locations = Location.objects.all().order_by('locationName')
     all_categories = Destinations.objects.values_list('category', flat=True).distinct().order_by('category')
-    all_categories = [cat for cat in all_categories if cat]
-    top_filtered_items = sorted(search_results, key=lambda x: x.get('rating', 0), reverse=True)[:3]
+    all_categories = [cat for cat in all_categories if cat]  # Remove None values
 
     context = {
-        'top_results': top_filtered_items, # Added to context
-        'search_results': paginated_results,
         'recommendations': recommendations_list,
         'collaborative_recommendations': collaborative_recommendations,
         'search_results': paginated_results,
@@ -594,10 +719,41 @@ def user_profile(request):
                 trip.display_image = hotel_in_loc.image_url
                 continue
 
+    # 3. Lấy user preferences từ session
+    user_data = request.session.get('user_preferences', None)
+    
+    # 4. Lấy tất cả categories để hiển thị trong select
+    all_categories = Destinations.objects.values_list('category', flat=True).distinct().exclude(category__isnull=True).order_by('category')
+    all_categories = [cat for cat in all_categories if cat]  # Remove None/empty values
+
     context = {
-        'trips': trips
+        'trips': trips,
+        'user_preferences': user_data,
+        'all_categories': all_categories,
     }
     return render(request, 'userProfile.html', context)
+
+@login_required
+def delete_trip(request, trip_id):
+    try:
+        trip = Trip.objects.get(id=trip_id, user=request.user)
+        # Delete associated TripItems first
+        TripItem.objects.filter(trip=trip).delete()
+        # Then delete the trip
+        trip.delete()
+        messages.success(request, 'Trip deleted successfully.')
+    except Trip.DoesNotExist:
+        messages.error(request, 'Trip not found.')
+    
+    return redirect('user_profile')
+
+@login_required
+def clear_history(request):
+    if request.method == 'POST':
+        # Clear SearchHistory for the user
+        SearchHistory.objects.filter(user_id=request.user.usersprofile.custom_user_id).delete()
+        messages.success(request, 'Search history cleared successfully.')
+    return redirect('user_profile')
 
 def user_input(request):
     return render(request, 'userInput.html')
@@ -665,34 +821,34 @@ def destination_detail(request, destination_id):
         # Handle comment submission
         if request.method == 'POST' and request.user.is_authenticated:
             content = request.POST.get('content', '').strip()
-            rating = request.POST.get('rating')
+            rating = request.POST.get('rating', '0')
             
-            # Handle comment submission (can include rating)
             if content:
-                # Create comment
                 Comment.objects.create(
                     user=request.user,
                     destination=destination,
                     content=content
                 )
+                messages.success(request, 'Your comment has been added!')
                 
-                # Handle rating if provided
-                if rating and rating.isdigit():
+                # Handle rating submission
+                if rating and rating != '0':
                     try:
                         rating_value = int(rating)
                         if 1 <= rating_value <= 5:
-                            # Create or update user rating
-                            UserRating.objects.update_or_create(
+                            # Update or create user rating
+                            user_rating, created = UserRating.objects.update_or_create(
                                 user=request.user,
                                 destination=destination,
                                 defaults={'rating': rating_value}
                             )
-                        else:
-                            messages.warning(request, 'Rating must be between 1 and 5.')
-                    except ValueError:
-                        messages.warning(request, 'Invalid rating value.')
+                            if created:
+                                messages.success(request, f'Your {rating_value}-star rating has been saved!')
+                            else:
+                                messages.success(request, f'Your rating has been updated to {rating_value} stars!')
+                    except (ValueError, TypeError):
+                        pass
                 
-                messages.success(request, 'Your comment has been added!')
                 # Update user preference score after commenting
                 from .Services.search_history_utils import update_user_preference_score
                 update_user_preference_score(request.user, destination)
@@ -708,20 +864,31 @@ def destination_detail(request, destination_id):
         # Get hotels in the same location
         hotels = Hotel.objects.filter(location=destination.location).order_by('-rating')
         
-        # Get comments for this destination with user ratings
-        comments = Comment.objects.filter(destination=destination).select_related('user').annotate(
-            user_rating=models.Subquery(
-                UserRating.objects.filter(
-                    user=models.OuterRef('user'),
-                    destination=destination
-                ).values('rating')[:1]
-            )
-        )
+        # Get comments for this destination
+        comments = Comment.objects.filter(destination=destination).select_related('user')
+        
+        # Add rating to each comment
+        for comment in comments:
+            try:
+                user_rating_obj = UserRating.objects.get(user=comment.user, destination=destination)
+                comment.user_rating = user_rating_obj.rating
+            except UserRating.DoesNotExist:
+                comment.user_rating = None
+        
+        # Get user's current rating for this destination
+        user_rating = None
+        if request.user.is_authenticated:
+            try:
+                user_rating_obj = UserRating.objects.get(user=request.user, destination=destination)
+                user_rating = user_rating_obj.rating
+            except UserRating.DoesNotExist:
+                user_rating = None
         
         context = {
             'destination': destination,
             'hotels': hotels,
             'comments': comments,
+            'user_rating': user_rating,
             'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
         }
         return render(request, 'detail_destination.html', context)
@@ -736,6 +903,21 @@ def contact_us(request):
     return render(request, 'Contact-us.html')
 
 def trip_planner(request):
+    # Check if loading a saved trip
+    trip_id = request.GET.get('trip_id')
+    if trip_id and request.user.is_authenticated:
+        try:
+            trip = Trip.objects.get(id=trip_id, user=request.user)
+            # Load trip data into session
+            request.session['trip_destination'] = trip.destination
+            request.session['trip_start_date'] = trip.departure_date.isoformat() if trip.departure_date else None
+            request.session['trip_end_date'] = trip.arrival_date.isoformat() if trip.arrival_date else None
+            request.session['trip_budget'] = trip.budget
+            request.session['trip_travelers'] = trip.travelers
+            request.session.modified = True
+        except Trip.DoesNotExist:
+            pass  # Ignore if trip not found
+
     # Lấy thông tin trip từ session
     destination_name = request.session.get('trip_destination', 'Your Destination')
     from datetime import datetime
@@ -786,8 +968,10 @@ def trip_planner(request):
 
     # Lấy các địa điểm đã lưu trong trip
     trip_items = []
+    saved_items = []
     if request.user.is_authenticated:
-        trip_items = TripItem.objects.filter(user=request.user).select_related('destination', 'hotel')
+        saved_items = TripItem.objects.filter(user=request.user, trip__isnull=True).select_related('destination', 'hotel')
+        trip_items = TripItem.objects.filter(user=request.user, trip__isnull=False).select_related('destination', 'hotel')
 
     days = []
     num_days = 0
@@ -815,6 +999,7 @@ def trip_planner(request):
     context = {
         'destinations': destinations,
         'trip_items': trip_items,
+        'saved_items': saved_items,
         'trip_destination': destination_name,
         'departure_date': departure_date,
         'arrival_date': arrival_date,
@@ -869,7 +1054,7 @@ def trip_form(request):
         
         try:
             # Convert budget to integer
-            budget = int(budget) if budget else 0
+            budget = int(budget) if budget else 50
             travelers = int(travelers) if travelers else 1
             
             # Parse dates if provided
@@ -1345,8 +1530,20 @@ def update_profile_settings(request):
         return_date = request.POST.get('return_date')
         num_people = request.POST.get('num_people', 1)
         tags = request.POST.getlist('tags', [])
+        favourite_destination_type = request.POST.get('favourite_destination_type')
         
-        # 2. Tạo cấu trúc JSON
+        # 2. Cập nhật UsersProfile nếu có favourite_destination_type
+        if favourite_destination_type:
+            try:
+                user_profile = UsersProfile.objects.get(user=request.user)
+                user_profile.favourite_destination_type = favourite_destination_type
+                user_profile.save()
+                messages.success(request, f'✅ Favourite destination type updated to: {favourite_destination_type}')
+            except UsersProfile.DoesNotExist:
+                messages.error(request, 'User profile not found.')
+                return redirect('user_profile')
+        
+        # 3. Tạo cấu trúc JSON cho session
         user_data = {
             "user_info": {
                 "username": username,
@@ -1361,15 +1558,16 @@ def update_profile_settings(request):
                 "budget": int(budget) if budget else 0,
                 "departure_date": departure_date if departure_date else None,
                 "return_date": return_date if return_date else None,
-                "num_people": int(num_people) if num_people else 1
+                "num_people": int(num_people) if num_people else 1,
+                "favourite_destination_type": favourite_destination_type
             }
         }
         
-        # 3. Lưu vào Session
+        # 4. Lưu vào Session
         request.session['user_preferences'] = user_data
         request.session.modified = True
         
-        # 4. Lưu file JSON (Optional)
+        # 5. Lưu file JSON (Optional)
         try:
             input_folder = os.path.join('sightseeing', 'Services', 'user_inputs')
             os.makedirs(input_folder, exist_ok=True)
@@ -1380,7 +1578,7 @@ def update_profile_settings(request):
         except Exception as e:
             print(f"Error saving JSON: {e}")
 
-        # 5. Thông báo và Quay lại trang Profile
+        # 6. Thông báo và Quay lại trang Profile
         messages.success(request, '✅ Profile settings updated successfully!')
         return redirect('user_profile')
     
@@ -1459,8 +1657,7 @@ def recommend_result(request):
                             'location': dest.location.locationName if dest.location else '',
                             'rating': dest.rating or 0,
                             'price': getattr(dest, 'price', 500),
-                            'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
-                            'image_list': dest.get_image_list() or []
+                            'image_url': dest.get_thumbnail_url() or '/static/images/placeholder.jpg'
                         })
         else:
             # For anonymous users, show top rated destinations
@@ -1472,7 +1669,7 @@ def recommend_result(request):
                     'location': dest.location.locationName if dest.location else '',
                     'rating': dest.rating or 0,
                     'price': getattr(dest, 'price', 500),
-                    'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg'
+                    'image_url': dest.get_thumbnail_url() or '/static/images/placeholder.jpg'
                 })
     except Exception as e:
         print(f"Error getting recommendations: {e}")
@@ -1485,32 +1682,8 @@ def recommend_result(request):
                 'location': dest.location.locationName if dest.location else '',
                 'rating': dest.rating or 0,
                 'price': getattr(dest, 'price', 500),
-                'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg'
+                'image_url': dest.get_thumbnail_url() or '/static/images/placeholder.jpg'
             })
-    
-    # Filter collaborative recommendations by selected location
-    if selected_location:
-        try:
-            collaborative_recommendations = [rec for rec in collaborative_recommendations if Destinations.objects.get(id=rec['id']).location_id == selected_location]
-        except Exception as e:
-            print(f"Error filtering recommendations: {e}")
-            collaborative_recommendations = []
-    
-    # If no collaborative recommendations after filtering, show top rated in selected location
-    if not collaborative_recommendations and selected_location:
-        try:
-            top_in_location = Destinations.objects.filter(location_id=selected_location, rating__gte=4.0).order_by('-rating')[:5]
-            collaborative_recommendations = [{
-                'id': dest.id,
-                'name': dest.desName,
-                'location': dest.location.locationName if dest.location else '',
-                'rating': dest.rating or 0,
-                'price': getattr(dest, 'price', 500),
-                'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
-                'image_list': dest.get_image_list() or []
-            } for dest in top_in_location]
-        except Exception as e:
-            print(f"Error getting top in location: {e}")
     
     # Prepare search_results in the same format
     formatted_search_results = []
@@ -1521,8 +1694,7 @@ def recommend_result(request):
             'location': dest.location.locationName if dest.location else '',
             'rating': dest.rating or 0,
             'price': getattr(dest, 'price', 500),
-            'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
-            'image_list': dest.get_image_list() or [],
+            'image_url': dest.get_thumbnail_url() or '/static/images/placeholder.jpg',
             'reviews_count': '2k+'  # Placeholder
         })
     
@@ -1535,7 +1707,7 @@ def recommend_result(request):
             'location': dest.location.locationName if dest.location else '',
             'rating': dest.rating or 0,
             'price': getattr(dest, 'price', 500),
-            'image_url': dest.get_thumbnail_url() or '/static/images/default-image.jpg',
+            'image_url': dest.get_thumbnail_url() or '/static/images/placeholder.jpg',
             'reviews_count': '2k+'
         })
     

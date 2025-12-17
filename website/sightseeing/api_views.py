@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 import json
-from .models import TripItem, Destinations
+from .models import TripItem, Destinations, Trip
 
 @login_required
 @require_http_methods(["POST"])
@@ -25,11 +25,21 @@ def save_itinerary_item(request):
         except Destinations.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Destination not found'}, status=404)
         
+        # Check if there's a current trip in session
+        trip = None
+        trip_id = request.session.get('trip_id')
+        if trip_id:
+            try:
+                trip = Trip.objects.get(id=trip_id, user=request.user)
+            except Trip.DoesNotExist:
+                pass
+        
         # Create or update trip item
         trip_item, created = TripItem.objects.update_or_create(
             user=request.user,
             destination=destination,
             defaults={
+                'trip': trip,
                 'day': day,
                 'order': order,
                 'notes': notes
@@ -179,12 +189,21 @@ def save_all_itinerary(request):
 @login_required
 @require_http_methods(["GET"])
 def get_itinerary(request):
-    """Get all itinerary items for current user"""
+    """Get itinerary items for current trip or user items if no trip"""
     try:
-        trip_items = TripItem.objects.filter(
-            user=request.user,
-            destination__isnull=False
-        ).select_related('destination').order_by('day', 'order')
+        # Check if there's a current trip in session
+        trip_id = request.session.get('trip_id')
+        
+        if trip_id:
+            # If there's a trip, get items for that trip
+            trip_items = TripItem.objects.filter(
+                user=request.user,
+                trip_id=trip_id,
+                destination__isnull=False
+            ).select_related('destination').order_by('day', 'order')
+        else:
+            # For new trips, return empty (saved destinations are shown in sidebar, not auto-added to itinerary)
+            trip_items = TripItem.objects.none()
         
         items_data = []
         for item in trip_items:
