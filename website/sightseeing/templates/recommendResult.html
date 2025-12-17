@@ -668,7 +668,7 @@
                                     <div class="card-image-wrapper">
                                         <a href="{% url 'destination_detail' spot.id %}">
                                             <img src="{{ spot.image_url }}" alt="{{ spot.name }}" 
-                                                 onerror="this.src='/static/images/placeholder.jpg'">
+                                                 onerror="this.src='https://source.unsplash.com/featured/400x300/?{{ spot.name|urlencode }}'">
                                         </a>
                                         <span class="status-badge">
                                             {% if spot.rating >= 4.9 %}{% trans "Luxury" %}
@@ -709,6 +709,23 @@
 
             {% comment %} START: Two-Column Results Area with 10/10 Split {% endcomment %}
 <div class="results-layout">
+    
+    <aside class="filter-sidebar">
+        <div class="filter-widget">
+            <div class="widget-title">Budget</div>
+            <div style="font-size: 14px; color: #555;">
+                <label style="display:flex; justify-content:space-between; margin-bottom:10px;"><input type="checkbox"> Under $100 <span>12</span></label>
+                <label style="display:flex; justify-content:space-between; margin-bottom:10px;"><input type="checkbox"> $100 - $300 <span>24</span></label>
+            </div>
+        </div>
+        <div class="filter-widget">
+            <div class="widget-title">Popular Amenities</div>
+            <div style="font-size: 14px; color: #555;">
+                <label style="display:block; margin-bottom:10px;">📶 Free WiFi</label>
+                <label style="display:block; margin-bottom:10px;">🏊 Pool</label>
+            </div>
+        </div>
+    </aside>
 
     <div style="flex: 1;">
         
@@ -718,7 +735,7 @@
             {% for spot in collaborative_recommendations %}
                 <div class="list-card" style="border: 2px solid #FB8700;"> 
                     <div class="list-card-image">
-                        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='/static/images/placeholder.jpg'">
+                        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x300/?hotel'">
                         <div style="position:absolute; top:10px; right:10px; background:#FB8700; color:white; padding:4px 10px; border-radius:15px; font-size:10px; font-weight:bold;">🤖 {% trans "AI Recommended" %}</div>
                     </div>
                     <div class="list-card-content">
@@ -748,7 +765,7 @@
                 {% for spot in search_results %}
                     <div class="list-card">
                         <div class="list-card-image">
-                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='/static/images/placeholder.jpg'">
+                            <img src="{{ spot.image_url }}" alt="{{ spot.name }}" onerror="this.src='https://source.unsplash.com/featured/400x300/?tourism'">
                             <div style="position:absolute; bottom:10px; left:10px; background:white; padding:3px 10px; border-radius:4px; font-size:11px; font-weight:bold; color:#333;">{% trans "5-Star Hotel" %}</div>
                         </div>
                         <div class="list-card-content">
@@ -884,7 +901,7 @@
     display: none;
     position: absolute;
     bottom: 75px;
-    right: 0;
+    left: 0;
     width: 360px;
     height: 500px;
     background: #ffffff;
