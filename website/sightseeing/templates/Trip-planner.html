@@ -56,6 +56,7 @@
 
       </nav>
     </aside>
+<<<<<<< HEAD
 
     <!-- CHATBOT SECTION -->
     <section class="chatbot-section" id="chatbot-section" style="display: none; height: 100vh; overflow: hidden;">
@@ -77,6 +78,8 @@
       </div>
     </section>
 
+=======
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
     <div class="gutter gutter-left" id="gutter-left"></div>
     <!-- MAIN CONTENT -->
     <main class="main">
@@ -265,7 +268,10 @@
           </div>
         </div>
       </section>
+<<<<<<< HEAD
 
+=======
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
     </main>
     <div class="gutter gutter-right" id="gutter-right"></div>
     <!-- RIGHT MAP PANEL -->
@@ -1393,8 +1399,158 @@ document.addEventListener("DOMContentLoaded", function () {
     if (saveTripBtn) {
         saveTripBtn.addEventListener('click', async function(e) {
             e.preventDefault();
-            console.log('💾 Save button clicked');
-            saveAllItinerary();
+            
+            const originalText = saveTripBtn.innerHTML;
+            saveTripBtn.innerHTML = '⏳ Saving...';
+            saveTripBtn.disabled = true;
+
+            try {
+                const tripData = {
+                    title: document.getElementById('trip-title').innerText.replace('Trip to ', '').trim(),
+                    start_date: document.getElementById('start-date').value,
+                    end_date: document.getElementById('end-date').value,
+                    budget: document.getElementById('budget-slider').value,
+                    travelers: document.getElementById('travelers-count').value,
+                    items: [] 
+                };
+
+                const dayCards = document.querySelectorAll('.itinerary-day-full');
+                dayCards.forEach(dayCard => {
+                    const dayNumber = parseInt(dayCard.getAttribute('data-day'));
+                    const placeCards = dayCard.querySelectorAll('.place-card');
+                    
+                    placeCards.forEach((placeCard, index) => {
+                        const destinationId = placeCard.dataset.destinationId;
+                        const note = placeCard.dataset.note || '';
+                        
+                        if (destinationId) {
+                            tripData.items.push({
+                                destination_id: destinationId,
+                                day: dayNumber,
+                                order: index,
+                                notes: note
+                            });
+                        }
+                    });
+                });
+
+                // --- KHẮC PHỤC LỖI 405 ---
+                const currentLang = window.location.pathname.split('/')[1] || 'en';
+                const apiUrl = `/${currentLang}/api/save-full-trip/`;
+                
+                console.log('🔗 API URL:', apiUrl); // Kiểm tra xem link đúng chưa
+
+                const csrftoken = getCookie('csrftoken');
+                const response = await fetch(apiUrl, { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify(tripData)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error ${response.status}: ${errorText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('✅ Trip saved successfully!', 'success');
+                } else {
+                    showNotification('❌ Error: ' + result.message, 'error');
+                }
+
+            } catch (error) {
+                console.error('Save Error:', error);
+                showNotification('❌ Save failed: ' + error.message, 'error');
+            } finally {
+                saveTripBtn.innerHTML = originalText;
+                saveTripBtn.disabled = false;
+            }
+        });
+    }
+
+
+    // Auto-fill button handler
+    const autoFillBtn = document.getElementById('auto-fill-btn');
+    if (autoFillBtn) {
+        autoFillBtn.addEventListener('click', async function() {
+            // 1. Lấy dữ liệu
+            const savedCarousel = document.getElementById('saved-carousel');
+            const savedCards = Array.from(savedCarousel.querySelectorAll('.explore-card'));
+            const dayCards = document.querySelectorAll('.itinerary-day-full');
+            const totalDays = dayCards.length;
+
+            // Validate
+            if (savedCards.length === 0) {
+                alert('{% trans "No saved destinations to auto-fill." %}');
+                return;
+            }
+            if (totalDays === 0) {
+                alert('{% trans "Please add days to your trip first." %}');
+                return;
+            }
+
+            if (!confirm(`{% trans "Auto-fill will distribute" %} ${savedCards.length} {% trans "places across" %} ${totalDays} {% trans "days. Continue?" %}`)) {
+                return;
+            }
+
+            // UI Loading
+            const originalText = autoFillBtn.innerHTML;
+            autoFillBtn.innerHTML = '⏳ Processing...';
+            autoFillBtn.disabled = true;
+
+            let currentDayIndex = 0;
+            const updatePromises = [];
+
+            // 2. VÒNG LẶP XỬ LÝ
+           for (const card of savedCards) {
+                const title = card.querySelector('.explore-card__title').textContent;
+                const subtitle = card.querySelector('.explore-card__subtitle').textContent;
+                const imgStyle = card.querySelector('.explore-card__image').style.backgroundImage;
+                const removeBtn = card.querySelector('.remove-trip-item-btn');
+                
+                // --- SỬA LỖI TẠI ĐÂY ---
+                // Cần lấy Destination ID (để lưu vào DB) chứ không phải Item ID cũ
+                const destinationId = removeBtn?.getAttribute('data-destination-id'); 
+
+                const targetDayCard = dayCards[currentDayIndex];
+                const dayNumber = parseInt(targetDayCard.getAttribute('data-day'));
+                
+                // Gọi hàm thêm vào giao diện (itemId ở đây phải là Destination ID)
+                addPlaceToDay(dayNumber, {
+                    title: title,
+                    subtitle: subtitle,
+                    image: imgStyle,
+                    itemId: destinationId // <--- QUAN TRỌNG: Phải truyền destinationId
+                }, null); // Để null tham số thứ 2 để coi như item mới
+
+                card.remove();
+
+                currentDayIndex = (currentDayIndex + 1) % totalDays;
+            }
+
+            if (savedCarousel.children.length === 0) {
+                savedCarousel.innerHTML = '<p>{% trans "No saved destinations yet." %}</p>';
+            }
+            
+            for(let i = 1; i <= totalDays; i++) {
+                updateStopCount(i);
+            }
+
+            try {
+                await Promise.all(updatePromises);
+                showNotification(`✅ {% trans "Auto-filled" %} ${savedCards.length} {% trans "places successfully!" %}`, 'success');
+            } catch (err) {
+                console.error(err);
+                showNotification('⚠️ Some items might not be saved correctly.', 'warning');
+            } finally {
+                autoFillBtn.innerHTML = originalText;
+                autoFillBtn.disabled = false;
+            }
         });
     }
 
@@ -2399,6 +2555,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.style.cursor = '';
         }
     });
+<<<<<<< HEAD
 });
 </script>
 </body>
@@ -2692,4 +2849,8 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 
+=======
+});
+</script>
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
 </body>

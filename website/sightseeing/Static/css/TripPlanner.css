@@ -4,7 +4,7 @@
   --border-subtle: #e4e4ea;
   --text-main: #111827;
   --text-muted: #6b7280;
-  --primary: #ff5a3c;
+  --primary: #fb8700;
   --primary-soft: rgba(255, 90, 60, 0.12);
   --sidebar-bg: #111827;
   --sidebar-text: #f9fafb;
@@ -48,7 +48,11 @@ body {
 }
 
 .gutter:hover, .gutter.active {
+<<<<<<< HEAD
   background-color: #ff5a3c; /* Màu cam khi hover */
+=======
+  background-color: #f98e15; /* Màu cam khi hover */
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
 }
 
 .map-pane {
@@ -136,7 +140,7 @@ body {
   border: none;
   border-radius: 999px;
   padding: 8px 14px;
-  background: #ff8427;
+  background: #fb8700;
   color: white;
   font-size: 13px;
   display: inline-flex;
@@ -231,7 +235,7 @@ body {
   font-size: 11px;
   padding: 2px 6px;
   border-radius: 999px;
-  background: #ff8427;
+  background: #fb8700;
   color: white;
 }
 
@@ -949,7 +953,7 @@ body {
 }
 
 .btn-add-to-day:hover {
-  background: #e54a2f;
+  background: #fb8700;
   transform: translateY(-1px);
 }
 
@@ -1598,6 +1602,7 @@ body {
 .btn--add-expense {
   background: var(--primary);
   color: white;
+  background: #fb8700;
   border: none;
   padding: 10px 20px;
   border-radius: var(--radius-md);
@@ -1607,9 +1612,9 @@ body {
 }
 
 .btn--add-expense:hover {
-  background: #e54a2f;
+  background: #fb8700;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 90, 60, 0.25);
+  box-shadow: 0 4px 12px rgba(255, 177, 60, 0.838);
 }
 
 .budget-overview {
@@ -2007,7 +2012,7 @@ body {
 }
 
 .btn--submit:hover {
-  background: #e54a2f;
+  background: #fb8700;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(255, 90, 60, 0.25);
 }

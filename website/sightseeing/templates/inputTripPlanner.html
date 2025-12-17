@@ -1,10 +1,10 @@
 {% load static %}
-<!DOCTYPE html>
-<html style="font-size: 16px;" lang="en">
+{% load i18n %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
+<html style="font-size: 16px;" lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <title>Plan Your Trip - Odyscape</title>
+    <title>DEBUG TEST TITLE - Odyscape</title><!-- DEBUG -->
     
     <link rel="stylesheet" href="{% static 'css/nicepageForInputTripPlanner.css' %}" media="screen">
     <link rel="stylesheet" href="{% static 'css/indexForInputTripPlanner.css' %}" media="screen">
@@ -180,19 +180,19 @@
             
             <div class="u-list-item-1">
                 <div class="u-container-layout-1" style="text-align: center;">
-                    <img class="u-image u-image-1" src="{% static 'images/Odyscape.png' %}" alt="Odyscape Logo">
+                    <img class="u-image u-image-1" src="{% static 'images/Odyscape.png' %}" alt="{{ odyscape_logo }}">
                     
-                    <h1 class="u-text-1" style="font-size: 1.8rem; margin: 5px 0 10px;">Plan a new trip</h1>
+                    <h1 class="u-text-1" style="font-size: 1.8rem; margin: 5px 0 10px;">{{ plan_new_trip }}</h1>
                     
-                    <a href="#" class="link-new-guide">Or write a new guide</a>
+                    <a href="#" class="link-new-guide">{{ or_write_guide }}</a>
 
                     <form action="{% url 'trip_form' %}" method="POST" class="u-form-vertical" style="margin-top: 15px; text-align: left;" onsubmit="return validateDates()">
                         {% csrf_token %}
                         
                         <div class="u-form-group">
-                            <label for="destination" class="u-label">Destination</label>
+                            <label for="destination" class="u-label">{% trans "Destination" %}</label>
                             <select id="destination" name="destination" class="u-input-rectangle" style="width: 100%;" required>
-                                <option value="">Where do you want to go?</option>
+                                <option value="">{% trans "Where do you want to go?" %}</option>
                                 {% for loc in all_locations %}
                                 <option value="{{ loc.locationName }}">{{ loc.locationName }}</option>
                                 {% endfor %}
@@ -201,25 +201,25 @@
 
                         <div style="display: flex; gap: 15px; margin-top: 15px;">
                             <div class="u-form-group" style="flex: 1;">
-                                <label class="u-label">Start Date</label>
-                                <input type="text" id="start-date" name="departure" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy" required>
+                                <label class="u-label">{% trans "Start Date" %}</label>
+                                <input type="text" id="start-date" name="departure" class="u-input-rectangle datepicker" placeholder="{% trans 'dd/mm/yyyy' %}" required>
                             </div>
                             <div class="u-form-group" style="flex: 1;">
-                                <label class="u-label">End Date</label>
-                                <input type="text" id="end-date" name="arrival" class="u-input-rectangle datepicker" placeholder="dd/mm/yyyy" required>
+                                <label class="u-label">{% trans "End Date" %}</label>
+                                <input type="text" id="end-date" name="arrival" class="u-input-rectangle datepicker" placeholder="{% trans 'dd/mm/yyyy' %}" required>
                             </div>
                         </div>
-                        <div id="dateError" style="color: red; font-size: 0.9rem; margin-top: 5px; display: none;">Trip duration cannot exceed 1 year.</div>
+                        <div id="dateError" style="color: red; font-size: 0.9rem; margin-top: 5px; display: none;">{% trans "Trip duration cannot exceed 1 year." %}</div>
 
                         <div class="u-form-group" style="margin-top: 15px;">
-                            <label for="travelers" class="u-label">Travelers</label>
+                            <label for="travelers" class="u-label">{% trans "Travelers" %}</label>
                             <input type="number" id="travelers" name="travelers" 
                                    class="u-input-rectangle" style="width: 100%;" 
-                                   min="1" step="1" value="1" placeholder="Enter number of people" required>
+                                   min="1" step="1" value="1" placeholder="{% trans 'Enter number of people' %}" required>
                         </div>
 
                         <div class="u-form-group" style="margin-top: 15px;">
-                            <label class="u-label">Total Budget (Million VND)</label>
+                            <label class="u-label">{% trans "Total Budget (Million VND)" %}</label>
                             <div class="range-container">
                                 <span style="font-size: 0.8rem; color: #777;">0</span>
                                 <input type="range" id="budgetRange" name="budget" min="0" max="100" value="0" step="1">
@@ -227,17 +227,17 @@
                                 <input type="number" id="budgetInput" class="u-input-rectangle budget-display" value="0" min="0" max="100">
                             </div>
                             <div class="budget-total-display" style="margin-top: 5px; font-size: 0.9rem; color: #FB8700; font-weight: 600;">
-                                Current budget: <span id="totalBudgetDisplay">0</span> million VND
+                                {% trans "Current budget:" %} <span id="totalBudgetDisplay">0</span> {% trans "million VND" %}
                             </div>
                         </div>
 
                         <div class="price-result-box">
-                            <span class="price-label">Price / Person:</span>
+                            <span class="price-label">{% trans "Price / Person:" %}</span>
                             <span class="price-value" id="priceDisplay">0 ₫</span>
                             <input type="hidden" name="price_per_person" id="hiddenPricePerPerson">
                         </div>
 
-                        <button type="submit">START PLANNING</button>
+                        <button type="submit">{% trans "START PLANNING" %}</button>
                     </form>
                 </div>
             </div>
@@ -249,56 +249,61 @@
         function validateDates() {
             let start = document.getElementById("start-date").value;
             let end = document.getElementById("end-date").value;
-            if (!start || !end) return true; // let browser handle required
+
+            if (!start || !end) return true;
+
             let startParts = start.split('/');
             let endParts = end.split('/');
+
             if (startParts.length !== 3 || endParts.length !== 3) return true;
+
             let startDate = new Date(startParts[2], startParts[1] - 1, startParts[0]);
             let endDate = new Date(endParts[2], endParts[1] - 1, endParts[0]);
-            let diff = endDate - startDate;
-            let days = diff / (1000 * 60 * 60 * 24);
-            let startYear = startDate.getFullYear();
-            let isLeap = (startYear % 4 === 0 && startYear % 100 !== 0) || (startYear % 400 === 0);
+
+            let diffDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+            let year = startDate.getFullYear();
+            let isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
             let maxDays = isLeap ? 366 : 365;
-            if (days > maxDays) {
+
+            if (diffDays > maxDays) {
                 document.getElementById("dateError").style.display = "block";
                 return false;
             }
+
             document.getElementById("dateError").style.display = "none";
             return true;
         }
 
         document.addEventListener("DOMContentLoaded", function () {
+            const millionVNDText = "{% trans 'million VND' %}";
 
-            // === DATE PICKER START / END ===
-            const startInput = document.querySelector('input[name="departure"]');
-            const endInput   = document.querySelector('input[name="arrival"]');
-
-            const startPicker = flatpickr(startInput, {
+            const startPicker = flatpickr("#start-date", {
                 dateFormat: "d/m/Y",
                 minDate: "today",
+                allowInput: false,
+                monthSelectorType: "static",
+                yearSelectorType: "static",
+                closeOnSelect: false,
                 disableMobile: true,
                 onChange: function (selectedDates) {
-                    if (selectedDates.length > 0) {
+                    if (selectedDates.length) {
                         endPicker.set("minDate", selectedDates[0]);
-
-                        // Nếu end date < start date thì clear
-                        if (endPicker.selectedDates.length > 0 &&
-                            endPicker.selectedDates[0] < selectedDates[0]) {
-                            endPicker.clear();
-                        }
                     }
                 }
             });
 
-            const endPicker = flatpickr(endInput, {
+            const endPicker = flatpickr("#end-date", {
                 dateFormat: "d/m/Y",
                 minDate: "today",
+                allowInput: false,
+                monthSelectorType: "static",
+                yearSelectorType: "static",
+                closeOnSelect: false,
                 disableMobile: true
             });
 
-
-            // === BUDGET CALCULATION (GIỮ NGUYÊN) ===
+            // === BUDGET CALCULATION ===
             const budgetRange = document.getElementById("budgetRange");
             const budgetInput = document.getElementById("budgetInput");
             const travelersInput = document.getElementById("travelers");
@@ -307,10 +312,8 @@
             const totalBudgetDisplay = document.getElementById("totalBudgetDisplay");
 
             const formatCurrency = (amount) => {
-                return new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                }).format(amount);
+                let million = amount / 1000000;
+                return million.toFixed(1) + " " + millionVNDText;
             };
 
             function updateCalculation() {
@@ -341,10 +344,15 @@
 
             updateCalculation();
 
-            document.getElementById("start-date").addEventListener("input", () => document.getElementById("dateError").style.display = "none");
-            document.getElementById("end-date").addEventListener("input", () => document.getElementById("dateError").style.display = "none");
+            document.getElementById("start-date").addEventListener("input", () =>
+                document.getElementById("dateError").style.display = "none"
+            );
+            document.getElementById("end-date").addEventListener("input", () =>
+                document.getElementById("dateError").style.display = "none"
+            );
         });
     </script>
+
 
 </body>
 </html>

@@ -30,6 +30,27 @@
     background-color: #a4c2e0 !important;
 }
 
+.dropdown-item {
+    color: #333 !important;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f4f7f9;
+    color: #000 !important;
+}
+
+#userMenuBtn:hover {
+    background-color: #a4c2e0 !important;
+}
+
 .u-section-1 .u-sheet-1 {
   min-height: 750px;
 }

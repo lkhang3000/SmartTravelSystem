@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en">
+<html style="font-size: 16px;" lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <title>Create Account - Odyscape</title>
+    <title>{% trans "Create Account" %} - Odyscape</title>
     
     <link rel="stylesheet" href="{% static 'css/nicepageForSignupPage.css' %}" media="screen">
     
@@ -198,8 +199,8 @@
                     <img src="{% static 'images/Odyscape.png' %}" alt="Odyscape" class="login-logo">
                 </a>
 
-                <h1 class="login-title">Create Account</h1>
-                <p class="login-subtitle">Join Odyscape today</p>
+                <h1 class="login-title">{% trans "Create Account" %}</h1>
+                <p class="login-subtitle">{% trans "Join Odyscape today" %}</p>
 
                 {% if messages %}
                     {% for message in messages %}
@@ -218,41 +219,41 @@
                     </div>
 
                     <div class="custom-input-group">
-                        <label for="email" class="custom-label">Email</label>
-                        <input type="email" id="email" name="email" class="custom-input" placeholder="Enter your email" required>
+                        <label for="email" class="custom-label">{% trans "Email" %}</label>
+                        <input type="email" id="email" name="email" class="custom-input" placeholder="{% trans 'Enter your email' %}" required>
                     </div>
 
                     <div class="form-row">
                         <div class="custom-input-group">
-                            <label for="first_name" class="custom-label">First Name</label>
-                            <input type="text" id="first_name" name="first_name" class="custom-input" placeholder="First name">
+                            <label for="first_name" class="custom-label">{% trans "First Name" %}</label>
+                            <input type="text" id="first_name" name="first_name" class="custom-input" placeholder="{% trans 'First name' %}">
                         </div>
                         <div class="custom-input-group">
-                            <label for="last_name" class="custom-label">Last Name</label>
-                            <input type="text" id="last_name" name="last_name" class="custom-input" placeholder="Last name">
+                            <label for="last_name" class="custom-label">{% trans "Last Name" %}</label>
+                            <input type="text" id="last_name" name="last_name" class="custom-input" placeholder="{% trans 'Last name' %}">
                         </div>
                     </div>
 
                     <div class="custom-input-group">
-                        <label for="password1" class="custom-label">Password</label>
-                        <input type="password" id="password1" name="password1" class="custom-input" placeholder="Create a password (8+ chars)" required minlength="8">
+                        <label for="password1" class="custom-label">{% trans "Password" %}</label>
+                        <input type="password" id="password1" name="password1" class="custom-input" placeholder="{% trans 'Create a password (8+ chars)' %}" required minlength="8">
                     </div>
 
                     <div class="custom-input-group">
-                        <label for="password2" class="custom-label">Confirm password</label>
-                        <input type="password" id="password2" name="password2" class="custom-input" placeholder="Confirm your password" required minlength="8">
+                        <label for="password2" class="custom-label">{% trans "Confirm password" %}</label>
+                        <input type="password" id="password2" name="password2" class="custom-input" placeholder="{% trans 'Confirm your password' %}" required minlength="8">
                     </div>
 
                     <div class="checkbox-group">
                         <input type="checkbox" id="agree" name="agree" required>
-                        <label for="agree">I accept the <a href="#">Terms of Service</a></label>
+                        <label for="agree">{% trans "I accept the" %} <a href="#">{% trans "Terms of Service" %}</a></label>
                     </div>
 
-                    <button type="submit" class="submit-btn">CREATE ACCOUNT</button>
+                    <button type="submit" class="submit-btn">{% trans "CREATE ACCOUNT" %}</button>
                 </form>
 
                 <p class="login-redirect-text">
-                    Already have an account? <a href="{% url 'login_page' %}">Login</a>
+                    {% trans "Already have an account?" %} <a href="{% url 'login_page' %}">{% trans "Login" %}</a>
                 </p>
             </div>
         </div>

@@ -42,7 +42,11 @@
     <!-- Logo (left) -->
     <div style="flex: 0 0 auto;">
         <a href="{% url 'home' %}" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
+<<<<<<< HEAD
             <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="Home">
+=======
+            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="{% trans 'Home' %}">
+>>>>>>> bbd82b264b88f5eb0e7268112771ef3a4114969f
         </a>
     </div>
 
@@ -401,18 +405,18 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">Contact us</a>
+            <ul class="u-nav u-unstyled u-nav-1" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'home' %}" style="padding: 10px 20px;">{% trans "Home" %}</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'about_us' %}" style="padding: 10px 20px;">{% trans "About us" %}</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="{% url 'contact_us' %}" style="padding: 10px 20px;">{% trans "Contact us" %}</a>
 </li></ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse" id="4bf4" role="region" aria-label="Menu panel">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close" tabindex="-1" aria-label="Close menu"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">Home</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">About us</a>
-</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">Contact us</a>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2" role="menubar"><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'home' %}">{% trans "Home" %}</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'about_us' %}">{% trans "About us" %}</a>
+</li><li role="none" class="u-nav-item"><a role="menuitem" class="u-button-style u-nav-link" href="{% url 'contact_us' %}">{% trans "Contact us" %}</a>
 </li></ul>
               </div>
             </div>

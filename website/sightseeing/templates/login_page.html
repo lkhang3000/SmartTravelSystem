@@ -1,15 +1,16 @@
 {% load static %}
+{% load i18n %}
 <!doctype html>
-<html lang="vi">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Log in</title>
+  <title>{% trans "Log in" %}</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body class="page">
   <main class="card">
-    <h1 class="brand">Log in</h1>
+    <h1 class="brand">{% trans "Log in" %}</h1>
 
     {% if messages %}
       {% for message in messages %}
@@ -25,23 +26,23 @@
       {% csrf_token %}
 
       <label class="field">
-        <span class="label">Email address</span>
+        <span class="label">{% trans "Email address" %}</span>
         <input type="email" name="username" value="{{ form.username.value|default:'' }}" required />
         {% if form.username.errors %}<div class="field-error">{{ form.username.errors.0 }}</div>{% endif %}
       </label>
 
       <label class="field">
-        <span class="label">Your password</span>
+        <span class="label">{% trans "Your password" %}</span>
         <input type="password" name="password" required />
         {% if form.password.errors %}<div class="field-error">{{ form.password.errors.0 }}</div>{% endif %}
       </label>
 
       <div class="row-between">
-        <a class="link" href="{% url 'password_reset' %}">Forget your password</a>
-        <button type="submit" class="btn primary">Log in</button>
+        <a class="link" href="{% url 'password_reset' %}">{% trans "Forget your password" %}</a>
+        <button type="submit" class="btn primary">{% trans "Log in" %}</button>
       </div>
 
-      <p class="muted">Don't have an account? <a href="{% url 'signup_page' %}">Sign up</a></p>
+      <p class="muted">{% trans "Don't have an account?" %} <a href="{% url 'signup_page' %}">{% trans "Sign up" %}</a></p>
     </form>
   </main>
 
