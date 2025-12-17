@@ -9,6 +9,8 @@ from django.urls import path
 from .views import CustomPasswordResetConfirmView
 from django.views.generic import TemplateView
 from django.contrib.auth.views import PasswordResetView
+from . import views
+from . import views_chatbot
 
 urlpatterns = [
     path(
@@ -81,4 +83,5 @@ urlpatterns = [
     path("update-trip/", views.update_trip, name="update_trip"),
     path('api/save-full-trip/', views.save_trip_api, name='save_trip_api'),
     path('update-profile-settings/', views.update_profile_settings, name='update_profile_settings'),
+    path('api/chat/', views_chatbot.chat_with_gemini, name='api_chat'),
 ]

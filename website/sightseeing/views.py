@@ -1555,3 +1555,49 @@ def recommend_result(request):
     }
     
     return render(request, 'recommendResult.html', context)
+
+@csrf_exempt
+def chat_api(request):
+    """API xử lý chat cho cả Homepage và Trip Planner"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_message = data.get('message', '').lower()
+            request_type = data.get('type', 'general') # Phân biệt nguồn gọi: 'tripplanner' hay 'general'
+            
+            reply_text = ""
+
+            # --- LOGIC CHO TRIP PLANNER (Có ngữ cảnh chuyến đi) ---
+            if request_type == 'tripplanner':
+                destination = data.get('destination', 'Unknown')
+                budget = data.get('budget', '0')
+                travelers = data.get('travelers', '1')
+                date_range = data.get('date_range', '')
+
+                # Logic trả lời giả lập (Bạn có thể thay bằng gọi API OpenAI/Gemini thật ở đây)
+                if "gợi ý" in user_message or "suggest" in user_message:
+                    reply_text = f"Vì bạn đi {destination} với ngân sách {budget} triệu cho {travelers} người, tôi gợi ý các địa điểm tham quan miễn phí như công viên thành phố hoặc bảo tàng địa phương."
+                elif "ăn" in user_message or "food" in user_message:
+                    reply_text = f"Tại {destination} có rất nhiều món ngon. Với nhóm {travelers} người, bạn nên đặt bàn trước tại các nhà hàng địa phương."
+                elif "lịch trình" in user_message or "itinerary" in user_message:
+                    reply_text = f"Lịch trình từ {date_range} có vẻ khá thoải mái. Bạn có muốn tôi sắp xếp lại thứ tự các điểm đến để tối ưu đường đi không?"
+                else:
+                    reply_text = f"Tôi thấy bạn đang lên kế hoạch đi {destination}. Bạn cần giúp gì cụ thể về ngân sách hay địa điểm không?"
+
+            # --- LOGIC CHO HOMEPAGE (Chat chung) ---
+            else:
+                if "hello" in user_message or "chào" in user_message:
+                    reply_text = "Chào bạn! Tôi là trợ lý ảo SmartTour. Bạn dự định đi du lịch ở đâu sắp tới?"
+                elif "đà nẵng" in user_message:
+                    reply_text = "Đà Nẵng là thành phố tuyệt vời! Chúng tôi có nhiều khách sạn và điểm tham quan hấp dẫn tại đó."
+                else:
+                    reply_text = "Tôi có thể giúp bạn tìm điểm đến, lên kế hoạch chuyến đi và dự trù kinh phí. Hãy hỏi tôi bất cứ điều gì!"
+
+            return JsonResponse({'success': True, 'reply': reply_text})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
