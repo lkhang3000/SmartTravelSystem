@@ -817,12 +817,20 @@ def trip_planner(request):
     return render(request, 'Trip-planner.html', context)
 
 def input_trip_planner(request):
+    from django.utils.translation import gettext as _, get_language
+    print(f"DEBUG: input_trip_planner called, language: {get_language()}")
     # Get all locations for destination dropdown
     all_locations = Location.objects.all().order_by('locationName')
     
     context = {
         'all_locations': all_locations,
+        'page_title': _('Plan Your Trip'),
+        'plan_new_trip': _('Plan a new trip'),
+        'odyscape_logo': _('Odyscape Logo'),
+        'or_write_guide': _('Or write a new guide'),
+        'destination_label': _('Destination'),
     }
+    print(f"DEBUG: context page_title: {context['page_title']}")
     return render(request, 'inputTripPlanner.html', context)
 
 def trip_form(request):
