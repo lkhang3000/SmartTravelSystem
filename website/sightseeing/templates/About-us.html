@@ -36,92 +36,46 @@
   }
 </script><meta data-intl-tel-input-cdn-path="intlTelInput/">
 </head>  <body data-home-page="Homepage.html" data-home-page-title="Homepage" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-overlap u-overlap-contrast u-xl-mode" data-lang="en">
-    <header class="u-clearfix u-gradient u-header u-overlap u-overlap-contrast u-valign-top-lg u-valign-top-md u-valign-top-sm u-valign-top-xs"
-        id="header" style="position: sticky; width: 100%; z-index: 2000; padding: 0 20px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; height: 100px">
-
-    <!-- Logo (left) -->
-    <div style="flex: 0 0 auto;">
-        <a href="{% url 'home' %}" data-page-id="2392505538" class="u-image u-logo u-image-1" data-image-width="150" data-image-height="150">
-            <img src="{% static 'images/Odyscape.png' %}" class="u-logo-image u-logo-image-1" title="{% trans 'Home' %}">
+    <header class="u-clearfix u-header u-overlap"
+    id="header" 
+    style="position: fixed; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.9) !important; border: none !important;">
+    
+    <div style="flex: 0 0 auto; display: flex; align-items: center;">
+        <a href="{% url 'home' %}" style="display: block;">
+            <img src="{% static 'images/Odyscape.png' %}" style="height: 100px; width: auto; object-fit: contain; display: block;" title="Home">
         </a>
     </div>
 
-    <!-- Nav + language (center) -->
-    <div style="flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; min-width: 0;">
-        <!-- Navigation -->
-        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" role="navigation" style="position: relative; top: 35px; left: 150px;">
-            <div class="menu-collapse u-custom-font u-font-montserrat" style="font-size: 1rem; letter-spacing: 0px;">
-                <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-hamburger-link u-nav-link u-text-hover-custom-color-7" href="#" tabindex="-1" aria-label="Open menu" aria-controls="4bf4">
-                    <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#svg-ec46"></use></svg>
-                    <svg class="u-svg-content" version="1.1" id="svg-ec46" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <rect y="1" width="16" height="2"></rect>
-                            <rect y="7" width="16" height="2"></rect>
-                            <rect y="13" width="16" height="2"></rect>
-                        </g>
-                    </svg>
-                </a>
-            </div>
-            <div class="u-custom-menu u-nav-container" style="min-width: 0; color: black">
-                <ul class="u-custom-font u-font-montserrat u-nav u-unstyled u-nav-1" role="menubar" style="flex-wrap: wrap; justify-content: center;">
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'home' %}">{% trans "Home" %}</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'about_us' %}">{% trans "About us" %}</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'contact_us' %}">{% trans "Contact us" %}</a></li>
-                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="{% url 'input_trip_planner' %}">{% trans "Trip Planner" %}</a></li>
-                </ul>
-            </div>
+    <div style="flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 40px;">
+        
+        <nav class="u-menu u-menu-one-level u-offcanvas" style="margin: 0 !important;">
+            <ul class="u-nav u-unstyled" style="display: flex; gap: 25px; margin: 0; padding: 0; list-style: none; align-items: center;">
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'home' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trang chủ" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'about_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "About us" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'contact_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Contact us" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'input_trip_planner' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trip Planner" %}</a></li>
+            </ul>
         </nav>
 
-       <!-- Language Switcher -->
-       <div class="u-language u-language-content-icon u-language-layout-icons u-spacing-10 u-language-1"
-     style="display: flex; align-items: center; gap: 5px; visibility: visible; margin-right: 70px; margin-top: 10px;">
+        <div style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0; display: flex;">
+                {% csrf_token %}
+                <input name="language" type="hidden" value="vi">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                    <svg viewBox="0 0 512 512" width="30" height="30"><path fill="#da251d" d="M0 0h512v512H0z"/><path fill="#ff0" d="m256 120 35 108h113l-91 66 35 108-92-67-92 67 35-108-91-66h113z"/></svg>
+                </button>
+            </form>
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0; display: flex;">
+                {% csrf_token %}
+                <input name="language" type="hidden" value="en">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                    <svg viewBox="0 0 512 512" width="30" height="30"><path fill="#012169" d="M0 0h512v512H0z"/><path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/><path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/><path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/><path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/></svg>
+                </button>
+            </form>
+        </div>
 
-    <!-- Vietnamese flag -->
-    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <input name="next" type="hidden" value="{{ request.path }}">
-        <input name="language" type="hidden" value="vi">
-        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="Tiếng Việt">
-            <span style="display: inline-block; width: 30px; height: 30px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                    <defs>
-                        <clipPath id="vn-a">
-                            <path fill-opacity=".7" d="M177.2 0h708.6v708.7H177.2z"/>
-                        </clipPath>
-                    </defs>
-                    <g fill-rule="evenodd" clip-path="url(#vn-a)" transform="translate(-128)scale(.72249)">
-                        <path fill="#da251d" d="M0 0h1063v708.7H0z"/>
-                        <path fill="#ff0" d="m661 527.5-124-92.6-123.3 93.5 45.9-152-123.2-93.8 152.4-1.3L536 129.8 584.3 281l152.4.2-122.5 94.7z"/>
-                    </g>
-                </svg>
-            </span>
-        </button>
-    </form>
-
-    <!-- UK flag -->
-    <form action="{% url 'set_language' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <input name="next" type="hidden" value="{{ request.path }}">
-        <input name="language" type="hidden" value="en">
-        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;" title="English">
-            <span style="display: inline-block; width: 30px; height: 30px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="30" height="30">
-                    <path fill="#012169" d="M0 0h512v512H0z"/>
-                    <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                    <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/>
-                    <path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/>
-                    <path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/>
-                </svg>
-            </span>
-        </button>
-    </form>
-
-</div>
-    </div>
-
-    <!-- Buttons (right) -->
-    <div style="display: flex; gap: 10px; align-items: center;">
-    {% if user.is_authenticated %}
+        <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 20px;">
+            {% if user.is_authenticated %}
     <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
              <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
                          display:flex; align-items:center; justify-content:center;
@@ -185,18 +139,6 @@
                 onmouseout="this.style.background='white'">
                     👤 My Profile
                 </a>
-                <a href="{% url 'recommend_result' %}" style="
-                    display:block;
-                    padding:12px 16px;
-                    color:#333;
-                    text-decoration:none;
-                    border-bottom:1px solid #eee;
-                    transition:0.2s;
-                "
-                onmouseover="this.style.background='#f5f5f5'"
-                onmouseout="this.style.background='white'">
-                    🗺️ My Destinations
-                </a>
                 <a href="/logout/" style="
                     display:block;
                     padding:12px 16px;
@@ -210,15 +152,15 @@
                 </a>
             </div>
 </div>
-    {% else %}
+{% else %}
         <a href="{% url 'login_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px; border-radius: 25px;">
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
            {% trans "Log in" %}
         </a>
         <a href="{% url 'signup_page' %}"
            class="u-btn u-button-style u-custom-font u-font-montserrat"
-           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px; border-radius: 25px;">
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
            {% trans "Register" %}
         </a>
     {% endif %}

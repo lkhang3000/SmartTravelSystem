@@ -132,7 +132,7 @@
 <body data-home-page="Page-1.html" data-home-page-title="Page 1" data-path-to-root="./" data-include-products="true" class="u-body u-clearfix u-xl-mode" data-lang="en">
     
 {% load static %}
-<header class="u-header"
+{% comment %} <header class="u-header"
     id="header"
     style="/* Container chính: Đảm bảo căn chỉnh các khối Left và Right */
            position:sticky; 
@@ -143,7 +143,7 @@
            align-items:center; 
            justify-content:space-between; /* Giữ Logo/Tên và User Menu xa nhau */
            padding:0 30px; 
-           background: rgba(171, 220, 249, 0.7);
+           background: rgba(146, 205, 239, 0.7);
            backdrop-filter: blur(10px); 
            -webkit-backdrop-filter: blur(10px);
            ">
@@ -261,6 +261,157 @@
                 onmouseover="this.style.background='#f5f5f5'"
                 onmouseout="this.style.background='white'">
                     🗺️ My Destinations
+                </a>
+                <a href="/logout/" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#d32f2f;
+                    text-decoration:none;
+                    transition:0.2s;
+                "
+                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    🚪 Logout
+                </a>
+            </div>
+</div>
+{% else %}
+        <a href="{% url 'login_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
+           {% trans "Log in" %}
+        </a>
+        <a href="{% url 'signup_page' %}"
+           class="u-btn u-button-style u-custom-font u-font-montserrat"
+           style="background: #fb8700; color: white; font-weight: bold; padding: 10px 20px;border-radius: 25px;">
+           {% trans "Register" %}
+        </a>
+    {% endif %}
+</div>
+</header> {% endcomment %}
+
+<header class="u-clearfix u-header u-overlap"
+    id="header" 
+    style="position: fixed; top: 0; left: 0; width: 100%; height: 100px; z-index: 2000; padding: 0 40px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; background-color: rgba(220, 220, 220, 0.9) !important; border: none !important;">
+    
+    <div style="display: flex; align-items: center; gap: 30px;"> 
+        
+        <a href="{% url 'recommend_result' %}" 
+           class="smart-btn"
+           style="
+                /* Style tương tự smart-btn nhưng căn chỉnh trong Header */
+                background:#FB8700; 
+                color:white; 
+                padding:10px 20px; 
+                border-radius:25px; 
+                text-decoration:none; 
+                font-weight:bold;
+                font-size:16px;
+                display:flex; align-items:center;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+           ">
+            <span style="font-size: 18px; margin-right: 5px;">&#x2190;</span> Back to Results
+        </a>
+        
+        <a href="{% url 'home' %}" style="display:flex; align-items:center; text-decoration: none;">
+            <img src="{% static 'images/Odyscape.png' %}"
+                 style="height: 80px; width: 80px; display:block; margin-right: 10px;" 
+                 alt="logo"> 
+        </a>
+    </div>
+
+    <div style="flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 40px;">
+        
+        <nav class="u-menu u-menu-one-level u-offcanvas" style="margin: 0 !important;">
+            <ul class="u-nav u-unstyled" style="display: flex; gap: 25px; margin: 0; padding: 0; list-style: none; align-items: center;">
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'home' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trang chủ" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'about_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "About us" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'contact_us' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Contact us" %}</a></li>
+                <li class="u-nav-item"><a class="u-nav-link" href="{% url 'input_trip_planner' %}" style="color: black; font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; font-size: 16px; padding: 10px 5px;">{% trans "Trip Planner" %}</a></li>
+            </ul>
+        </nav>
+
+        <div style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0; display: flex;">
+                {% csrf_token %}
+                <input name="language" type="hidden" value="vi">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                    <svg viewBox="0 0 512 512" width="30" height="30"><path fill="#da251d" d="M0 0h512v512H0z"/><path fill="#ff0" d="m256 120 35 108h113l-91 66 35 108-92-67-92 67 35-108-91-66h113z"/></svg>
+                </button>
+            </form>
+            <form action="{% url 'set_language' %}" method="post" style="margin: 0; display: flex;">
+                {% csrf_token %}
+                <input name="language" type="hidden" value="en">
+                <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                    <svg viewBox="0 0 512 512" width="30" height="30"><path fill="#012169" d="M0 0h512v512H0z"/><path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/><path fill="#C8102E" d="m184 324 11 34L42 512H0v-3zm124-12 54 8 150 147v45zM512 0 320 196l-4-44L466 0zM0 1l193 189-59-8L0 49z"/><path fill="#FFF" d="M176 0v512h160V0zM0 176v160h512V176z"/><path fill="#C8102E" d="M0 208v96h512v-96zM208 0v512h96V0z"/></svg>
+                </button>
+            </form>
+        </div>
+
+        <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 20px;">
+            {% if user.is_authenticated %}
+    <a href="{% url 'trip_list' %}" style="position:relative; text-decoration:none;">
+             <div style="background:#FB8700; border-radius:50%; width:45px; height:45px; 
+                         display:flex; align-items:center; justify-content:center;
+                         transition:0.2s;"
+                  onmouseover="this.style.background='#FB8700'"
+                  onmouseout="this.style.background='#F7931E'">
+                 <img src="{% static 'images/list_icon.png' %}" alt="Trip List" style="width:20px; height:20px;">
+             </div>
+             {% if trip_count %}
+             <span style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; 
+                          width:20px; height:20px; display:flex; align-items:center; justify-content:center; 
+                          font-size:12px; font-weight:bold;">
+                 {{ trip_count }}
+             </span>
+             {% endif %}
+         </a>
+    <div style="position:relative;">
+            <button id="userMenuBtn" style="
+                padding:8px 12px;
+                background:#FB8700;
+                border-radius:25px;
+                color:white;
+                font-weight:700;
+                border:none;
+                cursor:pointer;
+                display:flex;
+                align-items:center;
+                gap:8px;
+                transition:0.2s;
+            "
+            onmouseover="this.style.background='#FB8700'"
+            onmouseout="this.style.background='#FB8700'"
+            onclick="toggleUserMenu()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                {{ user.username }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+            <div id="userDropdown" style="
+                display:none;
+                position:absolute;
+                top:110%;
+                right:0;
+                background:white;
+                border-radius:8px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                min-width:180px;
+                z-index:1000;
+            ">
+                <a href="{% url 'user_profile' %}" style="
+                    display:block;
+                    padding:12px 16px;
+                    color:#333;
+                    text-decoration:none;
+                    border-bottom:1px solid #eee;
+                    transition:0.2s;
+                "                onmouseover="this.style.background='#f5f5f5'"
+                onmouseout="this.style.background='white'">
+                    👤 My Profile
                 </a>
                 <a href="/logout/" style="
                     display:block;
