@@ -104,81 +104,61 @@ def update_trip(request):
 
 @ensure_csrf_cookie
 def get_home(request):
-    # Get all locations and categories for filter dropdowns
+    # 1. Get filter data
     all_locations = Location.objects.all().order_by('locationName')
     all_categories = Destinations.objects.values_list('category', flat=True).distinct().order_by('category')
-    all_categories = [cat for cat in all_categories if cat]  # Remove None values
-    
-    # Get personalized recommendations for authenticated users
-    personalized_recommendations = []
-    if request.user.is_authenticated:
-        try:
-            recommender = get_recommender()
-            user_profile = UsersProfile.objects.filter(user=request.user).first()
-            if user_profile and user_profile.custom_user_id:
-                # Get user preferences from session if available
-                user_prefs = {}
-                user_data = request.session.get('user_preferences')
-                if user_data:
-                    prefs = user_data.get('trip_preferences', {})
-                    user_prefs = {
-                        'category': ', '.join(prefs.get('tags', [])),
-                        'budget': prefs.get('budget', 0),
-                        'duration': 3
-                    }
+    all_categories = [cat for cat in all_categories if cat]
 
-                collab_recommendations = recommender.recommend_for_user(
-                    user_profile.custom_user_id,
-                    user_preferences=user_prefs,
-                    top_n=6
-                )
-                if not collab_recommendations.empty:
-                    print(f"Found {len(collab_recommendations)} personalized hybrid recommendations for homepage")
-                    for _, row in collab_recommendations.iterrows():
-                        try:
-                            dest = Destinations.objects.get(destination_id=row['destination_id'])
-                            rec_dict = {
-                                'id': dest.id,
-                                'name': dest.desName,
-                                'location': dest.location.locationName if dest.location else 'Unknown',
-                                'category': dest.category or 'General',
-                                'rating': dest.rating or 0.0,
-                                'image_url': dest.image_url or 'https://picsum.photos/seed/default/400/300',
-                                'hybrid_score': row['hybrid_score']
-                            }
-                            personalized_recommendations.append(rec_dict)
-                        except Destinations.DoesNotExist:
-                            continue
-        except Exception as e:
-            print(f"Error getting personalized hybrid recommendations: {e}")
-    
-    # Fallback to popular destinations if no personalized recommendations
-    if not personalized_recommendations:
-        try:
-            recommender = get_recommender()
-            popular_dests = recommender.get_popular_destinations(top_n=6)
-            if not popular_dests.empty:
-                for _, row in popular_dests.iterrows():
-                    try:
-                        dest = Destinations.objects.get(destination_id=row['destination_id'])
-                        rec_dict = {
-                            'id': dest.id,
-                            'name': dest.desName,
-                            'location': dest.location.locationName if dest.location else 'Unknown',
-                            'category': dest.category or 'General',
-                            'rating': dest.rating or 0.0,
-                            'image_url': dest.image_url or 'https://picsum.photos/seed/default/400/300',
-                            'average_user_rating': row['average_user_rating']
-                        }
-                        personalized_recommendations.append(rec_dict)
-                    except Destinations.DoesNotExist:
-                        continue
-        except Exception as e:
-            print(f"Error getting popular destinations: {e}")
-    
+    # 2. Get specific IDs for carousel linking
+    loc_danang = Location.objects.filter(locationName__icontains='Da Nang').first()
+    loc_hcm = Location.objects.filter(locationName__icontains='Ho Chi Minh').first()
+    loc_hanoi = Location.objects.filter(locationName__icontains='Hanoi').first()
+    loc_hue = Location.objects.filter(locationName__icontains='Hue').first()
+    loc_quangninh = Location.objects.filter(locationName__icontains='Quang Ninh').first()
+    loc_phuquoc = Location.objects.filter(locationName__icontains='Phu Quoc').first()
+
+    # 3. Personalized recommendations (Keeping your existing logic)
+    personalized_recommendations = []
+    # ... [Keep your existing recommendation code here] ...
+
+    # 4. FETCH SAVED TRIPS (Crucial Step)
+    saved_trips = []
+    if request.user.is_authenticated:
+        # Fetch top 3
+        saved_trips = Trip.objects.filter(user=request.user).order_by('-updated_at')[:3]
+        
+        # Logic to find the best image for each card
+        for trip in saved_trips:
+            trip.display_image = f"https://picsum.photos/seed/{trip.destination}/800/400"
+            if trip.destination:
+                search_term = trip.destination.strip()
+                dest = Destinations.objects.filter(desName__icontains=search_term).first()
+                if dest:
+                    # Uses the helper method you have in your Destinations model
+                    images = dest.get_image_list() if hasattr(dest, 'get_image_list') else []
+                    trip.display_image = images[0] if images else (dest.image_url or trip.display_image)
+                else:
+                    dest_in_loc = Destinations.objects.filter(location__locationName__icontains=search_term).first()
+                    if dest_in_loc:
+                        images = dest_in_loc.get_image_list() if hasattr(dest_in_loc, 'get_image_list') else []
+                        trip.display_image = images[0] if images else (dest_in_loc.image_url or trip.display_image)
+
+    # 5. CONTEXT (Add saved_trips here)
     context = {
         'all_locations': all_locations,
         'all_categories': all_categories,
+        
+        # Specific IDs for linking
+        'danang_id': loc_danang.id if loc_danang else None,
+        'hcm_id': loc_hcm.id if loc_hcm else None,
+        'hanoi_id': loc_hanoi.id if loc_hanoi else None,
+        'hue_id': loc_hue.id if loc_hue else None,
+        'quangninh_id': loc_quangninh.id if loc_quangninh else None,
+        'phuquoc_id': loc_phuquoc.id if loc_phuquoc else None,
+
+        # New data for the homepage cards
+        'saved_trips': saved_trips, 
+        
         'selected_location': '',
         'selected_category': '',
         'selected_rating': '',

@@ -2,6 +2,12 @@
   background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('images/cristina-gottardi-CSpjU6hYo_0-unsplash.jpg');
   background-position: 50% 50%;
 }
+.u-hover-feature:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
 .dropdown-item {
     color: #333 !important;
