@@ -219,17 +219,23 @@ class AIRecommender:
         self._load_or_train_models()
 
     def _load_data(self):
-        """Load and prepare data for AI models using combined SearchHistory and UserRating"""
+        """Load and prepare data for AI models using search_history.csv"""
         try:
-            # Load search history
-            search_entries = SearchHistory.objects.all().values('user_id', 'destination_id', 'score')
-            search_df = pd.DataFrame(list(search_entries)) if search_entries else pd.DataFrame()
+            # Load from CSV instead of database
+            csv_path = os.path.join(os.path.dirname(__file__), 'search_history.csv')
+            if os.path.exists(csv_path):
+                search_df = pd.read_csv(csv_path)
+                print(f"Loaded {len(search_df)} search history records from CSV")
+            else:
+                search_df = pd.DataFrame()
+                print("No search_history.csv found, using empty data")
             
-            # Load user ratings
+            # Load user ratings from database
             rating_entries = UserRating.objects.select_related('user__usersprofile').values(
                 'user__usersprofile__custom_user_id', 'destination__destination_id', 'rating'
             )
             rating_df = pd.DataFrame(list(rating_entries)) if rating_entries else pd.DataFrame()
+            print(f"Loaded {len(rating_df)} user rating records from database")
             
             # Rename columns for consistency
             if not rating_df.empty:
@@ -690,6 +696,10 @@ class HybridRecommender:
 
     def recommend_for_user(self, user_id: str, user_preferences: Dict = None, top_n: int = 10) -> pd.DataFrame:
         """Hybrid recommendation for user using collaborative + content + AI"""
+        # If no preferences provided, infer from user's history
+        if not user_preferences:
+            user_preferences = self._infer_preferences_from_history(user_id)
+        
         recommendations = []
 
         # Get user behavior recommendations
@@ -740,6 +750,38 @@ class HybridRecommender:
         # Sort by hybrid score and return top_n
         recommendations.sort(key=lambda x: x['hybrid_score'], reverse=True)
         return pd.DataFrame(recommendations[:top_n])
+
+    def _infer_preferences_from_history(self, user_id: str) -> Dict:
+        """Infer user preferences from their search/rating history"""
+        if user_id not in self.ai.user_id_map:
+            # Default to Beach if no history
+            return {'category': 'Beach'}
+        
+        user_idx = self.ai.user_id_map[user_id]
+        user_ratings = self.ai.user_item_matrix[user_idx]
+        
+        # Get destinations with high ratings (>3.5)
+        high_rated_indices = np.where(user_ratings > 3.5)[0]
+        high_rated_dest_ids = [self.ai.reverse_item_map[idx] for idx in high_rated_indices]
+        
+        if not high_rated_dest_ids:
+            return {'category': 'Beach'}
+        
+        # Get categories from high-rated destinations
+        categories = []
+        for dest_id in high_rated_dest_ids:
+            if dest_id in self.collaborative.destinations_df.index:
+                cat = self.collaborative.destinations_df.loc[dest_id]['category']
+                if cat:
+                    categories.append(cat)
+        
+        if categories:
+            # Use most common category
+            from collections import Counter
+            most_common = Counter(categories).most_common(1)[0][0]
+            return {'category': most_common}
+        
+        return {'category': 'Beach'}
 
     def get_similar_destinations(self, destination_id: str, user_rating: float = 5.0,
                                user_preferences: Dict = None, top_n: int = 10) -> pd.DataFrame:
@@ -1088,14 +1130,19 @@ class UserBehaviorRecommender:
 
         return pd.DataFrame(results)
 
+    def reload_data(self):
+        """Reload all data from files and database"""
+        print("Reloading recommender data...")
+        self._load_data()
+        print("Data reloaded successfully")
 
 # Singleton instance
 _recommender_instance = None
 
-def get_recommender() -> HybridRecommender:
+def get_recommender(reload=False) -> HybridRecommender:
     """Get singleton instance of the hybrid recommender"""
     global _recommender_instance
-    if _recommender_instance is None:
+    if _recommender_instance is None or reload:
         _recommender_instance = HybridRecommender()
     return _recommender_instance
 

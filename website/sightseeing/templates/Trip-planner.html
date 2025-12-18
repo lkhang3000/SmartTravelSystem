@@ -9,6 +9,13 @@
   <title>{% trans "Trip Planner" %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}?v=20251216-3" />
+  <script>
+    window.djangoContext = {
+      budget: "{{ budget|default:'0' }}",
+      travelers: "{{ travelers|default:'1' }}",
+      translations: {}
+    };
+  </script>
   <script src="{% static 'js/TripPlanner.js' %}"></script>
 </head>
 <body>
@@ -427,7 +434,7 @@
             <div class="budget-input">
               <input type="range" id="budget-slider" min="0" max="100" step="1" value="{{ budget }}">
               <div class="budget-display">
-                <span id="budget-value">{{ budget|default:50 }}</span>
+                <span id="budget-value">{{ budget|default:0 }}</span>
                 <span>{% trans "Million VND" %}</span>
               </div>
             </div>

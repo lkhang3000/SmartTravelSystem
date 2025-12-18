@@ -471,6 +471,50 @@ def recommend_result(request):
                         except Destinations.DoesNotExist:
                             print(f"Destination {row['destination_id']} not found in DB")
                             continue
+                    
+                    # Filter collaborative recommendations by selected filters
+                    if selected_category:
+                        collaborative_recommendations = [
+                            rec for rec in collaborative_recommendations 
+                            if selected_category.lower() in (rec['category'] or '').lower()
+                        ]
+                        recommendations_list = [
+                            rec for rec in recommendations_list 
+                            if rec.get('recommendation_type') != 'hybrid' or selected_category.lower() in (rec['category'] or '').lower()
+                        ]
+                        print(f"After category filter: {len(collaborative_recommendations)} hybrid recommendations")
+                    
+                    if selected_location:
+                        # Get location name
+                        try:
+                            loc = Location.objects.get(id=selected_location)
+                            loc_name = loc.locationName.lower()
+                            collaborative_recommendations = [
+                                rec for rec in collaborative_recommendations 
+                                if loc_name in (rec['location'] or '').lower()
+                            ]
+                            recommendations_list = [
+                                rec for rec in recommendations_list 
+                                if rec.get('recommendation_type') != 'hybrid' or loc_name in (rec['location'] or '').lower()
+                            ]
+                            print(f"After location filter: {len(collaborative_recommendations)} hybrid recommendations")
+                        except Location.DoesNotExist:
+                            pass
+                    
+                    if selected_rating:
+                        try:
+                            min_rating = float(selected_rating)
+                            collaborative_recommendations = [
+                                rec for rec in collaborative_recommendations 
+                                if rec['rating'] >= min_rating
+                            ]
+                            recommendations_list = [
+                                rec for rec in recommendations_list 
+                                if rec.get('recommendation_type') != 'hybrid' or rec['rating'] >= min_rating
+                            ]
+                            print(f"After rating filter: {len(collaborative_recommendations)} hybrid recommendations")
+                        except ValueError:
+                            pass
         except Exception as e:
             print(f"Hybrid recommendation failed: {e}")
 
@@ -481,23 +525,6 @@ def recommend_result(request):
     # Apply filters from URL parameters (priority over session data)
     if selected_location:
         destinations_query = destinations_query.filter(location__id=selected_location)
-    elif user_data:
-        # Fall back to session data if no URL filter
-        preferences = user_data.get('trip_preferences', {})
-        location_name = preferences.get('domestic_or_international', {}).get('region', '')
-        if location_name:
-            destinations_query = destinations_query.filter(
-                location__locationName__icontains=location_name
-            )
-    elif request.session.get('trip_destination'):
-        # Fall back to trip destination from trip planner
-        trip_destination = request.session.get('trip_destination', '').strip()
-        if trip_destination:
-            # Try to match as location name first
-            destinations_query = destinations_query.filter(
-                location__locationName__icontains=trip_destination
-            )
-            # If no results, it will fall through to show all (which is fine)
 
     # Filter by category
     if selected_category:
@@ -942,8 +969,11 @@ def trip_planner(request):
             arrival_date = datetime.strptime(arrival_raw, "%Y-%m-%d").date()
 
 
-    # 1. Lấy Budget từ Session (mặc định là 50 triệu nếu chưa có)
-    budget = request.session.get('trip_budget', 50) 
+    # 1. Lấy Budget từ Session (mặc định là 0 nếu chưa có)
+    budget = request.session.get('trip_budget', 0)
+    if budget is None or budget == '':
+        budget = 0
+        request.session['trip_budget'] = 0
     travelers = request.session.get('trip_travelers', 1)
 
     # 2. Đảm bảo budget là con số để tránh lỗi hiển thị
@@ -952,8 +982,7 @@ def trip_planner(request):
     except (TypeError, ValueError):
         budget_display = 50.0
 
-    # 3. Tính toán giá mỗi người
-    price_per_person = round(budget_display / travelers, 2) if travelers > 0 else 0
+    # 3. Tính toán giá mỗi người (removed)
 
     trip_map_url = request.session.get('trip_map_url', None)
     trip_image_url = request.session.get('trip_image_url', None)
@@ -1013,7 +1042,6 @@ def trip_planner(request):
         'arrival_date': arrival_date,
         'budget': budget_display, # Số triệu (VD: 50.0)
         'travelers': travelers,
-        'price_per_person': price_per_person,
         'trip_map_url': trip_map_url,
         'trip_image_url': trip_image_url,
         'days': days,
@@ -1030,7 +1058,6 @@ def input_trip_planner(request):
     all_locations = Location.objects.all().order_by('locationName')
     
     # Get current trip data from session
-    budget = request.session.get('trip_budget', 50)
     travelers = request.session.get('trip_travelers', 1)
     destination = request.session.get('trip_destination', '')
     start_date = request.session.get('trip_start_date', '')
@@ -1043,7 +1070,6 @@ def input_trip_planner(request):
         'odyscape_logo': _('Odyscape Logo'),
         'or_write_guide': _('Or write a new guide'),
         'destination_label': _('Destination'),
-        'budget': budget,
         'travelers': travelers,
         'destination': destination,
         'start_date': start_date,
@@ -1063,9 +1089,7 @@ def trip_form(request):
         destination = request.POST.get('destination', '').strip()
         departure_date = request.POST.get('departure', '').strip()
         arrival_date = request.POST.get('arrival', '').strip()
-        budget = request.POST.get('budget', 0)
         travelers = request.POST.get('travelers', 1)
-        price_per_person = request.POST.get('price_per_person', '').strip()
         
         # Validate required fields
         if not destination:
@@ -1073,8 +1097,7 @@ def trip_form(request):
             return redirect('input_trip_planner')
         
         try:
-            # Convert budget to integer
-            budget = int(budget) if budget else 0
+            # Convert to integer
             travelers = int(travelers) if travelers else 1
             
             # Parse dates if provided
@@ -1098,18 +1121,14 @@ def trip_form(request):
                 destination=destination,
                 departure_date=departure,
                 arrival_date=arrival,
-                budget=budget,
-                travelers=travelers,
-                price_per_person=price_per_person if price_per_person else None
+                travelers=travelers
             )
             
             # Store trip data in session for trip planner
             request.session['trip_destination'] = destination
             request.session['trip_start_date'] = departure.isoformat() if departure else None
             request.session['trip_end_date'] = arrival.isoformat() if arrival else None
-            request.session['trip_budget'] = budget
             request.session['trip_travelers'] = travelers
-            request.session['trip_price_per_person'] = price_per_person
             
             # Store trip ID for itinerary API
             request.session['trip_id'] = trip.id
