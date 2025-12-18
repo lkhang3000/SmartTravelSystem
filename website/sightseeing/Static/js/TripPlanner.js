@@ -816,7 +816,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- TRIP SETTINGS & BUDGET ---
     initTripSettings();
-    initBudgetLogic(contextData);
     initNoteModal();
 
     // --- INITIALIZATION ---
@@ -987,8 +986,6 @@ function initBudgetLogic(contextData) {
     }
 
     updateBudgetDisplay();
-}
-
 function initNoteModal() {
     const modal = document.getElementById('note-modal');
     const form = document.getElementById('note-form');
@@ -1082,7 +1079,6 @@ async function sendAIMessage(){
     const travelers = document.getElementById('travelers-count')?.value || '1';
     const startDate = document.getElementById('start-date')?.value || '';
     const endDate = document.getElementById('end-date')?.value || '';
-    const budget = document.getElementById('budget-slider')?.value || '0'; // Lấy budget từ thanh trượt
 
     // 4. Xác định ngôn ngữ và API URL
     const lang = window.location.pathname.split('/')[1] || 'en';
@@ -1102,7 +1098,6 @@ async function sendAIMessage(){
                 type: 'tripplanner', // Đánh dấu request từ Trip Planner
                 destination: destination,
                 travelers: travelers,
-                budget: budget, // Gửi budget cho backend
                 date_range: `${startDate} - ${endDate}`
             })
         });

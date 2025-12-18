@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}?v=20251216-3" />
   <script>
     window.djangoContext = {
-      budget: "{{ budget|default:'0' }}",
+      budget: "0",
       travelers: "{{ travelers|default:'1' }}",
       translations: {}
     };
@@ -53,12 +53,6 @@
           <div id="sidebar-days">
             <!-- Days will be dynamically generated here -->
           </div>
-        </div>
-
-        <div class="nav-section">
-          <button class="nav-item" data-section="budget-section">
-            <span>{% trans "Budgeting" %}</span>
-          </button>
         </div>
 
       </nav>
@@ -202,59 +196,6 @@
         {% trans "Add another day" %}
         </button>
 
-      <!-- BUDGETING SECTION -->
-      <section class="section budget-section" id="budget-section">
-        <div class="section__header">
-          <h2>{% trans "Budgeting" %}</h2>
-          <button class="btn btn--primary btn--add-expense" id="add-expense-btn">
-            + {% trans "Add an expense" %}
-          </button>
-        </div>
-
-        <div class="budget-overview">
-          <div class="budget-total">
-            <span class="budget-amount" id="total-budget-display">
-              {% if budget %}
-                {{ budget }}.000.000
-              {% else %}
-                Not set
-              {% endif %}
-            </span>
-          </div>
-          <div class="budget-meta">
-            <div class="budget-info-row">
-              <span class="budget-info-label">{% trans "Travelers" %}:</span>
-              <span class="budget-info-value" id="travelers-display">{% firstof travelers 1 %}</span>
-            </div>
-            <div class="budget-info-row">
-              <span class="budget-info-label">{% trans "Per person" %}:</span>
-              <span class="budget-info-value" id="per-person-display">Calculating...</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="expenses-container">
-          <div class="expenses-header">
-            <button class="expenses-toggle" id="expenses-toggle">
-              <span class="toggle-icon">▼</span>
-              <h3>{% trans "Expenses" %}</h3>
-            </button>
-            <div class="expenses-sort">
-              <span>{% trans "Sort by:" %}</span>
-              <select id="expenses-sort">
-                <option value="date-desc">{% trans "Date (newest first)" %}</option>
-                <option value="date-asc">{% trans "Date (oldest first)" %}</option>
-                <option value="amount-desc">{% trans "Amount (highest first)" %}</option>
-                <option value="amount-asc">{% trans "Amount (lowest first)" %}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="expenses-list" id="expenses-list">
-            <!-- Expenses will be dynamically added here -->
-          </div>
-        </div>
-      </section>
     </main>
     <div class="gutter gutter-right" id="gutter-right"></div>
     <!-- RIGHT MAP PANEL -->
@@ -291,76 +232,6 @@
 
     </aside>
 
-  </div>
-
-  <!-- Expense Modal -->
-  <div class="expense-modal" id="expense-modal">
-    <div class="expense-modal__content">
-      <div class="expense-modal__header">
-        <h3 id="expense-modal-title">{% trans "Add an expense" %}</h3>
-        <button class="expense-modal__close" id="close-expense-modal">&times;</button>
-      </div>
-      
-      <form class="expense-form" id="expense-form">
-        <div class="expense-form__group">
-          <label>{% trans "Choose a category" %}</label>
-          <div class="expense-categories">
-            <button type="button" class="category-btn" data-category="flights">
-              <span class="category-btn__icon">✈️</span>
-              <span>{% trans "Flights" %}</span>
-            </button>
-            <button type="button" class="category-btn" data-category="accommodation">
-              <span class="category-btn__icon">🏨</span>
-              <span>{% trans "Accommodation" %}</span>
-            </button>
-            <button type="button" class="category-btn" data-category="car-rental">
-              <span class="category-btn__icon">🚗</span>
-              <span>{% trans "Car rental" %}</span>
-            </button>
-            <button type="button" class="category-btn" data-category="transportation">
-              <span class="category-btn__icon">🚌</span>
-              <span>{% trans "Transportation" %}</span>
-            </button>
-            <button type="button" class="category-btn" data-category="food">
-              <span class="category-btn__icon">🍽️</span>
-              <span>{% trans "Food" %}</span>
-            </button>
-            <button type="button" class="category-btn" data-category="drinks">
-              <span class="category-btn__icon">🍹</span>
-              <span>{% trans "Drinks" %}</span>
-            </button>
-            <button type="button" class="category-btn" data-category="shopping">
-              <span class="category-btn__icon">🛍️</span>
-              <span>{% trans "Shopping" %}</span>
-            </button>
-            <button type="button" class="category-btn" data-category="other">
-              <span class="category-btn__icon">📦</span>
-              <span>{% trans "Other" %}</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="expense-form__group" id="expense-name-group" style="display: none;">
-          <label for="expense-name">{% trans "Expense name" %}</label>
-          <input type="text" id="expense-name" placeholder="{% trans 'Enter expense name' %}">
-        </div>
-
-        <div class="expense-form__group">
-          <label for="expense-amount">{% trans "Amount (VND)" %}</label>
-          <input type="number" id="expense-amount" placeholder="0" min="0" step="1000" required>
-        </div>
-
-        <div class="expense-form__group">
-          <label for="expense-notes">{% trans "Notes (optional)" %}</label>
-          <textarea id="expense-notes" rows="3" placeholder="{% trans 'Add any additional details' %}"></textarea>
-        </div>
-
-        <div class="expense-form__actions">
-          <button type="button" class="btn--cancel" id="cancel-expense">{% trans "Cancel" %}</button>
-          <button type="submit" class="btn--submit">{% trans "Add expense" %}</button>
-        </div>
-      </form>
-    </div>
   </div>
 
   <!-- Note Modal -->
@@ -422,21 +293,6 @@
               <input type="number" id="travelers-count" min="0" max="20" step="1" value="{{ travelers }}" readonly>
 
               <button type="button" class="counter-btn" id="increase-travelers">+</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Budget -->
-        <div class="form-section">
-          <h4>{% trans "Budget" %} (VND)</h4>
-          <div class="form-group">
-            <label for="budget">{% trans "Total Budget" %}</label>
-            <div class="budget-input">
-              <input type="range" id="budget-slider" min="0" max="100" step="1" value="{{ budget }}">
-              <div class="budget-display">
-                <span id="budget-value">{{ budget|default:0 }}</span>
-                <span>{% trans "Million VND" %}</span>
-              </div>
             </div>
           </div>
         </div>

@@ -980,7 +980,7 @@ def trip_planner(request):
     try:
         budget_display = float(budget)
     except (TypeError, ValueError):
-        budget_display = 50.0
+        budget_display = 0.0
 
     # 3. Tính toán giá mỗi người (removed)
 
@@ -1007,7 +1007,7 @@ def trip_planner(request):
     trip_items = []
     saved_items = []
     if request.user.is_authenticated:
-        saved_items = TripItem.objects.filter(user=request.user, trip__isnull=True).select_related('destination', 'hotel')
+        saved_items = TripItem.objects.filter(user=request.user).select_related('destination', 'hotel')
         trip_items = TripItem.objects.filter(user=request.user, trip__isnull=False).select_related('destination', 'hotel')
 
     days = []
@@ -1040,7 +1040,6 @@ def trip_planner(request):
         'trip_destination': destination_name,
         'departure_date': departure_date,
         'arrival_date': arrival_date,
-        'budget': budget_display, # Số triệu (VD: 50.0)
         'travelers': travelers,
         'trip_map_url': trip_map_url,
         'trip_image_url': trip_image_url,
@@ -1166,7 +1165,6 @@ def update_trip_settings(request):
     if request.method == 'POST':
         try:
             travelers = request.POST.get('travelers')
-            budget = request.POST.get('budget')
             trip_type = request.POST.get('trip_type')
 
             from datetime import datetime
@@ -1184,8 +1182,6 @@ def update_trip_settings(request):
 
             if travelers:
                 request.session['trip_travelers'] = int(travelers)
-            if budget:
-                request.session['trip_budget'] = int(budget)
             if trip_type:
                 request.session['trip_type'] = trip_type
 
