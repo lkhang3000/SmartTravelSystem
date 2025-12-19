@@ -398,301 +398,143 @@ def password_reset_complete(request):
     return render(request, 'password_reset_complete.html')
 
 def recommend_result(request):
-    """Display personalized recommendations based on user preferences and filters"""
+    """
+    Display recommended destinations with proper filter linking
+    - Recommended for You  : collaborative_recommendations
+    - All Results          : search_results (from DB)
+    """
     from django.db.models import Q
+    from django.core.paginator import Paginator
     from .Services.recommender import get_recommender
 
-    # Get user data from session or use default
-    user_data = request.session.get('user_preferences', None)
-
-    # Get filter parameters from GET request
+    # =========================
+    # 1. GET FILTER PARAMS
+    # =========================
     selected_location = request.GET.get('location', '')
-    if selected_location:
-        try:
-            selected_location = int(selected_location)
-        except ValueError:
-            selected_location = ''
     selected_category = request.GET.get('category', '')
-    selected_price = request.GET.get('price', '')
     selected_rating = request.GET.get('rating', '')
 
-    recommendations_list = []
-    collaborative_recommendations = []
-    search_results = []
+    try:
+        selected_location = int(selected_location) if selected_location else ''
+    except ValueError:
+        selected_location = ''
 
-    # Try collaborative filtering first if user is authenticated
+    # =========================
+    # 2. RECOMMENDED FOR YOU (COLLABORATIVE)
+    # =========================
+    collaborative_recommendations = []
+
     if request.user.is_authenticated:
         try:
             recommender = get_recommender()
             user_profile = UsersProfile.objects.filter(user=request.user).first()
+
             if user_profile and user_profile.custom_user_id:
-                # Extract user preferences for hybrid recommender
-                user_preferences = {}
-                if user_data:
-                    prefs = user_data.get('trip_preferences', {})
-                    user_preferences = {
-                        'category': selected_category or ', '.join(prefs.get('tags', [])),
-                        'budget': prefs.get('budget', 0),
-                        'region': prefs.get('domestic_or_international', {}).get('region', '')
-                    }
-
-                # Determine top_n based on category - more for beaches
-                top_n = 30 if selected_category.lower() == 'beach' else 20
-
-                collab_recommendations = recommender.recommend_for_user(
+                user_recs = recommender.recommend_for_user(
                     user_profile.custom_user_id,
-                    user_preferences=user_preferences,
-                    top_n=top_n
+                    user_preferences={'category': selected_category or None},
+                    top_n=10
                 )
-                if not collab_recommendations.empty:
-                    print(f"Found {len(collab_recommendations)} hybrid recommendations")
-                    for _, row in collab_recommendations.iterrows():
-                        # Get destination by destination_id
-                        try:
-                            dest = Destinations.objects.get(destination_id=row['destination_id'])
-                            rec_dict = {
-                                'id': dest.id,
-                                'name': dest.desName,
-                                'location': dest.location.locationName if dest.location else 'Unknown',
-                                'category': dest.category or 'General',
-                                'rating': dest.rating or 0.0,
-                                'address': dest.address or '',
-                                'description': dest.description or '',
-                                'price_range': dest.price_range or 'Contact for pricing',
-                                'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/800/600',
-                                'recommendation_type': 'hybrid',
-                                'hybrid_score': row['hybrid_score'],
-                                'collab_score': row.get('collab_score', 0),
-                                'content_score': row.get('content_score', 0)
-                            }
-                            collaborative_recommendations.append(rec_dict)
-                            recommendations_list.append(rec_dict)
-                            print(f"Added hybrid rec: {rec_dict['name']} (hybrid_score: {row['hybrid_score']:.3f})")
-                        except Destinations.DoesNotExist:
-                            print(f"Destination {row['destination_id']} not found in DB")
+
+                if not user_recs.empty:
+                    for _, row in user_recs.iterrows():
+                        dest = Destinations.objects.filter(
+                            destination_id=row['destination_id']
+                        ).first()
+                        if not dest:
                             continue
-                    
-                    # Filter collaborative recommendations by selected filters
-                    if selected_category:
-                        collaborative_recommendations = [
-                            rec for rec in collaborative_recommendations 
-                            if selected_category.lower() in (rec['category'] or '').lower()
-                        ]
-                        recommendations_list = [
-                            rec for rec in recommendations_list 
-                            if rec.get('recommendation_type') != 'hybrid' or selected_category.lower() in (rec['category'] or '').lower()
-                        ]
-                        print(f"After category filter: {len(collaborative_recommendations)} hybrid recommendations")
-                    
-                    if selected_location:
-                        # Get location name
-                        try:
-                            loc = Location.objects.get(id=selected_location)
-                            loc_name = loc.locationName.lower()
-                            collaborative_recommendations = [
-                                rec for rec in collaborative_recommendations 
-                                if loc_name in (rec['location'] or '').lower()
-                            ]
-                            recommendations_list = [
-                                rec for rec in recommendations_list 
-                                if rec.get('recommendation_type') != 'hybrid' or loc_name in (rec['location'] or '').lower()
-                            ]
-                            print(f"After location filter: {len(collaborative_recommendations)} hybrid recommendations")
-                        except Location.DoesNotExist:
-                            pass
-                    
-                    if selected_rating:
-                        try:
-                            min_rating = float(selected_rating)
-                            collaborative_recommendations = [
-                                rec for rec in collaborative_recommendations 
-                                if rec['rating'] >= min_rating
-                            ]
-                            recommendations_list = [
-                                rec for rec in recommendations_list 
-                                if rec.get('recommendation_type') != 'hybrid' or rec['rating'] >= min_rating
-                            ]
-                            print(f"After rating filter: {len(collaborative_recommendations)} hybrid recommendations")
-                        except ValueError:
-                            pass
+
+                        # APPLY FILTERS TO COLLAB RESULTS
+                        if selected_location and dest.location_id != selected_location:
+                            continue
+                        if selected_category and selected_category.lower() not in (dest.category or '').lower():
+                            continue
+                        if selected_rating:
+                            try:
+                                if dest.rating < float(selected_rating):
+                                    continue
+                            except ValueError:
+                                pass
+
+                        collaborative_recommendations.append({
+                            'id': dest.id,
+                            'name': dest.desName,
+                            'location': dest.location.locationName if dest.location else '',
+                            'rating': dest.rating or 0,
+                            'price': getattr(dest, 'price', 500),
+                            'image_url': dest.get_thumbnail_url() or '/static/images/placeholder.jpg',
+                        })
         except Exception as e:
-            print(f"Hybrid recommendation failed: {e}")
+            print(f"Collaborative error: {e}")
 
-    # Always get search results from database (content-based)
-    # Start with all destinations from database
-    destinations_query = Destinations.objects.all().select_related('location')
+    # =========================
+    # 3. ALL RESULTS (DB SEARCH)
+    # =========================
+    destinations = Destinations.objects.all().select_related('location')
 
-    # Apply filters from URL parameters (priority over session data)
     if selected_location:
-        destinations_query = destinations_query.filter(location__id=selected_location)
+        destinations = destinations.filter(location_id=selected_location)
 
-    # Filter by category
     if selected_category:
-        destinations_query = destinations_query.filter(category__icontains=selected_category)
-    elif user_data:
-        # Fall back to session tags
-        preferences = user_data.get('trip_preferences', {})
-        tags = [t.lower() for t in preferences.get('tags', [])]
-        if tags:
-            tag_filter = Q()
-            for tag in tags:
-                tag_filter |= Q(category__icontains=tag) | Q(desName__icontains=tag)
-            destinations_query = destinations_query.filter(tag_filter)
-    elif not collaborative_recommendations and request.user.is_authenticated:
-        # No collaborative recs and no filters - infer preferences from user's search history
-        try:
-            from .models import SearchHistory
-            user_profile = UsersProfile.objects.filter(user=request.user).first()
-            if user_profile:
-                # Get user's recent search history
-                recent_searches = SearchHistory.objects.filter(
-                    user_id=user_profile.custom_user_id
-                ).order_by('-timestamp')[:10]
-                
-                if recent_searches:
-                    # Get categories from recent searches
-                    searched_dest_ids = [s.destination_id for s in recent_searches]
-                    searched_categories = Destinations.objects.filter(
-                        destination_id__in=searched_dest_ids
-                    ).values_list('category', flat=True).distinct()
-                    
-                    if searched_categories:
-                        # Use the most common category from recent searches
-                        from collections import Counter
-                        category_counts = Counter(searched_categories)
-                        inferred_category = category_counts.most_common(1)[0][0]
-                        destinations_query = destinations_query.filter(category__icontains=inferred_category)
-                        print(f"Inferred category from search history: {inferred_category}")
-        except Exception as e:
-            print(f"Error inferring preferences from search history: {e}")
+        destinations = destinations.filter(category__icontains=selected_category)
 
-    # Filter by price range
-    if selected_price:
-        if selected_price == 'free':
-            destinations_query = destinations_query.filter(
-                Q(price_range__icontains='free') | Q(price_range__icontains='miễn phí')
-            )
-        elif selected_price == 'budget':
-            destinations_query = destinations_query.filter(
-                Q(price_range__icontains='50k') | Q(price_range__icontains='100k') |
-                Q(price_range__icontains='150k') | Q(price_range__icontains='budget')
-            )
-        elif selected_price == 'medium':
-            destinations_query = destinations_query.filter(
-                Q(price_range__icontains='200k') | Q(price_range__icontains='300k') |
-                Q(price_range__icontains='400k') | Q(price_range__icontains='500k')
-            )
-        elif selected_price == 'premium':
-            destinations_query = destinations_query.filter(
-                Q(price_range__icontains='600k') | Q(price_range__icontains='1000k') |
-                Q(price_range__icontains='million') | Q(price_range__icontains='premium')
-            )
-
-    # Filter by rating
     if selected_rating:
         try:
-            min_rating = float(selected_rating)
-            destinations_query = destinations_query.filter(rating__gte=min_rating)
+            destinations = destinations.filter(rating__gte=float(selected_rating))
         except ValueError:
             pass
 
-    # Sort by rating (highest first) for content-based
-    search_results_query = destinations_query.order_by('-rating')
+    destinations = destinations.order_by('-rating')
 
-    # Convert to list of dicts for template
-    for dest in search_results_query:
-        search_dict = {
+    # =========================
+    # 4. PAGINATION (ALL RESULTS)
+    # =========================
+    paginator = Paginator(destinations, 10)
+    page_number = request.GET.get('page', 1)
+
+    try:
+        page_obj = paginator.page(page_number)
+    except:
+        page_obj = paginator.page(1)
+
+    search_results = []
+    for dest in page_obj.object_list:
+        search_results.append({
             'id': dest.id,
             'name': dest.desName,
-            'location': dest.location.locationName if dest.location else 'Unknown',
-            'category': dest.category or 'General',
-            'rating': dest.rating or 0.0,
-            'address': dest.address or '',
-            'description': dest.description or '',
-            'price_range': dest.price_range or 'Contact for pricing',
-            'image_url': dest.get_thumbnail_url() or 'https://picsum.photos/seed/default/800/600',
-            'recommendation_type': 'search_result',
-            'similarity_score': None
-        }
-        search_results.append(search_dict)
-        # Add to main list if no collaborative or to show all
-        if not collaborative_recommendations:
-            recommendations_list.append(search_dict)
+            'location': dest.location.locationName if dest.location else '',
+            'rating': dest.rating or 0,
+            'price': getattr(dest, 'price', 500),
+            'image_url': dest.get_thumbnail_url() or '/static/images/placeholder.jpg',
+            'reviews_count': '2k+',
+        })
 
-    # Sort collaborative recommendations by similarity score, content-based by rating
-    if recommendations_list and recommendations_list[0].get('recommendation_type') == 'collaborative':
-        recommendations_list.sort(key=lambda x: x.get('similarity_score', 0), reverse=True)
-    else:
-        recommendations_list.sort(key=lambda x: x.get('rating', 0), reverse=True)
-
-    # Check if any filters are applied
-    filters_applied = bool(selected_location or selected_category or selected_price or selected_rating)
-
-    # Always implement pagination for search results
-    page_size = 15 if selected_category.lower() == 'beach' else 10
-    if not collaborative_recommendations:
-        # No collaborative recommendations - paginate all search results
-        paginator = Paginator(search_results, page_size)
-        page_number = request.GET.get('page', 1)
-        try:
-            page_number = int(page_number)
-        except ValueError:
-            page_number = 1
-
-        try:
-            page_obj = paginator.page(page_number)
-        except:
-            page_obj = paginator.page(1)
-
-        paginated_results = page_obj.object_list
-        total_results = len(search_results)
-        collaborative_recommendations = []  # Ensure it's empty
-    else:
-        # Have collaborative recommendations - show them first, then paginate remaining
-        collab_count = 15 if selected_category.lower() == 'beach' else 10
-        collaborative_recommendations = recommendations_list[:collab_count]  # Top N collaborative
-        remaining_results = recommendations_list[collab_count:]  # Rest for pagination
-        
-        if remaining_results:
-            paginator = Paginator(remaining_results, page_size)
-            page_number = request.GET.get('page', 1)
-            try:
-                page_number = int(page_number)
-            except ValueError:
-                page_number = 1
-
-            try:
-                page_obj = paginator.page(page_number)
-            except:
-                page_obj = paginator.page(1)
-
-            paginated_results = page_obj.object_list
-            total_results = len(remaining_results)
-        else:
-            paginated_results = []
-            page_obj = None
-            total_results = 0
-
-    # Get all locations and categories for filter dropdowns
+    # =========================
+    # 5. FILTER DATA FOR UI
+    # =========================
     all_locations = Location.objects.all().order_by('locationName')
-    all_categories = Destinations.objects.values_list('category', flat=True).distinct().order_by('category')
-    all_categories = [cat for cat in all_categories if cat]  # Remove None values
+    all_categories = Destinations.objects.values_list(
+        'category', flat=True
+    ).distinct().exclude(category__isnull=True).order_by('category')
 
+    # =========================
+    # 6. CONTEXT
+    # =========================
     context = {
-        'recommendations': recommendations_list,
-        'collaborative_recommendations': collaborative_recommendations,
-        'search_results': paginated_results,
-        'user_preferences': user_data,
+        'collaborative_recommendations': collaborative_recommendations,  # Recommended for You
+        'search_results': search_results,                                # All Results
+        'page_obj': page_obj,
+        'total_results': destinations.count(),
+
         'all_locations': all_locations,
         'all_categories': all_categories,
+
         'selected_location': selected_location,
         'selected_category': selected_category,
-        'selected_price': selected_price,
         'selected_rating': selected_rating,
-        'total_results': total_results,
-        'page_obj': page_obj,
-        'filters_applied': filters_applied,
-        'trip_count': TripItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0,
+
+        'trip_count': TripItem.objects.filter(user=request.user).count()
+        if request.user.is_authenticated else 0,
     }
 
     return render(request, 'recommendResult.html', context)

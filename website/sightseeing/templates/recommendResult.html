@@ -598,7 +598,7 @@
     <div style="width: 100%; display: flex; justify-content: center; align-items: center; position: relative; z-index: 1;">
         <!-- Light overlay for text readability -->
         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.1); z-index: -1;"></div>
-        <form method="GET" action="" id="searchForm" class="u-form-custom-backend" style="margin: 0 auto;">
+        <form id="unified-search-form" action="{% url 'recommend_result' %}" method="get" style="margin: 0 auto;">
             <div class="search-pill-container">
                 
                 <div class="filter-column">
