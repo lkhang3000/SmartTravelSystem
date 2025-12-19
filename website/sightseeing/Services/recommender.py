@@ -248,19 +248,27 @@ class AIRecommender:
             combined_df = pd.concat([search_df, rating_df], ignore_index=True)
             
             if not combined_df.empty:
+                # --- PHẦN SỬA LỖI QUAN TRỌNG ---
+                # Kiểm tra và tạo cột nếu thiếu để tránh lỗi KeyError
+                if 'score' not in combined_df.columns:
+                    combined_df['score'] = np.nan
+                if 'rating' not in combined_df.columns:
+                    combined_df['rating'] = np.nan
+                # -------------------------------
+
                 # Convert destination_id format
                 combined_df['destination_id'] = combined_df['destination_id'].astype(str)
                 combined_df['destination_id'] = combined_df['destination_id'].apply(
                     lambda x: f"dest_{int(x):03d}" if x.isdigit() else x
                 )
                 
-                # Group by user and destination, calculate average rating
+                # Group by user and destination
                 combined_df = combined_df.groupby(['user_id', 'destination_id']).agg({
                     'score': 'mean',
                     'rating': 'mean'
                 }).reset_index()
                 
-                # Create final score: average of available scores, scaled to 0-5.0
+                # Create final score
                 combined_df['final_score'] = combined_df[['score', 'rating']].mean(axis=1, skipna=True)
                 combined_df['final_score'] = combined_df['final_score'].fillna(combined_df['score']).fillna(combined_df['rating'])
                 combined_df['final_score'] = combined_df['final_score'].clip(0, 5.0)
@@ -285,15 +293,16 @@ class AIRecommender:
                     self.user_item_matrix[user_idx, item_idx] = row['final_score']
 
                 print(f"✓ AI Recommender loaded: {self.num_users} users, {self.num_items} items, {len(combined_df)} ratings")
-                print(f"  Average rating: {combined_df['final_score'].mean():.2f}")
             else:
                 print("No training data for AI Recommender")
                 self.user_item_matrix = None
 
         except Exception as e:
             print(f"Error loading AI data: {e}")
+            import traceback
+            traceback.print_exc()
             self.user_item_matrix = None
-
+            
     def _load_or_train_models(self):
         """Load existing models or train new ones"""
         nmf_path = os.path.join(self.model_path, 'nmf_model.pkl')
