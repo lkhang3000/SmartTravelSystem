@@ -2389,5 +2389,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const track = document.getElementById("saved-carousel");
+  const prevBtn = document.querySelector(".prev-btn");
+  const nextBtn = document.querySelector(".next-btn");
+
+  const scrollAmount = 300; // px mỗi lần trượt
+
+  nextBtn.addEventListener("click", () => {
+    track.scrollLeft += scrollAmount;
+  });
+
+  prevBtn.addEventListener("click", () => {
+    track.scrollLeft -= scrollAmount;
+  });
+});
+</script>
 </body>
 </html>
