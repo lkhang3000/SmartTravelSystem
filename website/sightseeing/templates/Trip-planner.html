@@ -9,13 +9,6 @@
   <title>{% trans "Trip Planner" %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="{% static 'css/TripPlanner.css' %}?v=20251216-3" />
-  <script>
-    window.djangoContext = {
-      budget: "0",
-      travelers: "{{ travelers|default:'1' }}",
-      translations: {}
-    };
-  </script>
   <script src="{% static 'js/TripPlanner.js' %}"></script>
 </head>
 <body>
@@ -53,6 +46,12 @@
           <div id="sidebar-days">
             <!-- Days will be dynamically generated here -->
           </div>
+        </div>
+
+        <div class="nav-section">
+          <button class="nav-item" data-section="budget-section">
+            <span>{% trans "Budgeting" %}</span>
+          </button>
         </div>
 
       </nav>
@@ -196,6 +195,53 @@
         {% trans "Add another day" %}
         </button>
 
+      <!-- BUDGETING SECTION -->
+      <section class="section budget-section" id="budget-section">
+        <div class="section__header">
+          <h2>{% trans "Budgeting" %}</h2>
+          <button class="btn btn--primary btn--add-expense" id="add-expense-btn">
+            + {% trans "Add an expense" %}
+          </button>
+        </div>
+
+        <div class="budget-overview">
+          <div class="budget-total">
+            <span class="budget-amount" id="total-budget-display">0</span>
+          </div>
+          <div class="budget-meta">
+            <div class="budget-info-row">
+              <span class="budget-info-label">{% trans "Travelers" %}:</span>
+              <span class="budget-info-value" id="travelers-display">{{ travelers }}</span>
+            </div>
+            <div class="budget-info-row">
+              <span class="budget-info-label">{% trans "Per person" %}:</span>
+              <span class="budget-info-value" id="per-person-display">0 VND</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="expenses-container">
+          <div class="expenses-header">
+            <button class="expenses-toggle" id="expenses-toggle">
+              <span class="toggle-icon">▼</span>
+              <h3>{% trans "Expenses" %}</h3>
+            </button>
+            <div class="expenses-sort">
+              <span>{% trans "Sort by:" %}</span>
+              <select id="expenses-sort">
+                <option value="date-desc">{% trans "Date (newest first)" %}</option>
+                <option value="date-asc">{% trans "Date (oldest first)" %}</option>
+                <option value="amount-desc">{% trans "Amount (highest first)" %}</option>
+                <option value="amount-asc">{% trans "Amount (lowest first)" %}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="expenses-list" id="expenses-list">
+            <!-- Expenses will be dynamically added here -->
+          </div>
+        </div>
+      </section>
     </main>
     <div class="gutter gutter-right" id="gutter-right"></div>
     <!-- RIGHT MAP PANEL -->
@@ -232,6 +278,76 @@
 
     </aside>
 
+  </div>
+
+  <!-- Expense Modal -->
+  <div class="expense-modal" id="expense-modal">
+    <div class="expense-modal__content">
+      <div class="expense-modal__header">
+        <h3 id="expense-modal-title">{% trans "Add an expense" %}</h3>
+        <button class="expense-modal__close" id="close-expense-modal">&times;</button>
+      </div>
+      
+      <form class="expense-form" id="expense-form">
+        <div class="expense-form__group">
+          <label>{% trans "Choose a category" %}</label>
+          <div class="expense-categories">
+            <button type="button" class="category-btn" data-category="flights">
+              <span class="category-btn__icon">✈️</span>
+              <span>{% trans "Flights" %}</span>
+            </button>
+            <button type="button" class="category-btn" data-category="accommodation">
+              <span class="category-btn__icon">🏨</span>
+              <span>{% trans "Accommodation" %}</span>
+            </button>
+            <button type="button" class="category-btn" data-category="car-rental">
+              <span class="category-btn__icon">🚗</span>
+              <span>{% trans "Car rental" %}</span>
+            </button>
+            <button type="button" class="category-btn" data-category="transportation">
+              <span class="category-btn__icon">🚌</span>
+              <span>{% trans "Transportation" %}</span>
+            </button>
+            <button type="button" class="category-btn" data-category="food">
+              <span class="category-btn__icon">🍽️</span>
+              <span>{% trans "Food" %}</span>
+            </button>
+            <button type="button" class="category-btn" data-category="drinks">
+              <span class="category-btn__icon">🍹</span>
+              <span>{% trans "Drinks" %}</span>
+            </button>
+            <button type="button" class="category-btn" data-category="shopping">
+              <span class="category-btn__icon">🛍️</span>
+              <span>{% trans "Shopping" %}</span>
+            </button>
+            <button type="button" class="category-btn" data-category="other">
+              <span class="category-btn__icon">📦</span>
+              <span>{% trans "Other" %}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="expense-form__group" id="expense-name-group" style="display: none;">
+          <label for="expense-name">{% trans "Expense name" %}</label>
+          <input type="text" id="expense-name" placeholder="{% trans 'Enter expense name' %}">
+        </div>
+
+        <div class="expense-form__group">
+          <label for="expense-amount">{% trans "Amount (VND)" %}</label>
+          <input type="number" id="expense-amount" placeholder="0" min="0" step="1000" required>
+        </div>
+
+        <div class="expense-form__group">
+          <label for="expense-notes">{% trans "Notes (optional)" %}</label>
+          <textarea id="expense-notes" rows="3" placeholder="{% trans 'Add any additional details' %}"></textarea>
+        </div>
+
+        <div class="expense-form__actions">
+          <button type="button" class="btn--cancel" id="cancel-expense">{% trans "Cancel" %}</button>
+          <button type="submit" class="btn--submit">{% trans "Add expense" %}</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Note Modal -->
@@ -293,6 +409,21 @@
               <input type="number" id="travelers-count" min="0" max="20" step="1" value="{{ travelers }}" readonly>
 
               <button type="button" class="counter-btn" id="increase-travelers">+</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Budget -->
+        <div class="form-section">
+          <h4>{% trans "Budget" %} (VND)</h4>
+          <div class="form-group">
+            <label for="budget">{% trans "Total Budget" %}</label>
+            <div class="budget-input">
+              <input type="range" id="budget-slider" min="0" max="100" step="1" value="{{ budget }}">
+              <div class="budget-display">
+                <span id="budget-value">{{ budget|default:50 }}</span>
+                <span>{% trans "Million VND" %}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -796,7 +927,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 placeCard.querySelector('.place-card__info').appendChild(noteElement);
             }
         } else {
-            console.log('✨ Added to UI (Pending Save)');
+            // Save to database (new item) - only if day is valid
+            if (!day) {
+                console.error('❌ Cannot save: day is undefined or null');
+                return;
+            }
+            saveItineraryItem(placeData.itemId, day, existingPlaces).then(itemId => {
+                if (itemId) {
+                    placeCard.dataset.itemId = itemId;
+                    console.log('✅ Item saved with ID:', itemId);
+                } else {
+                    console.error('❌ Failed to save item to database');
+                }
+            });
         }
 
         // Add note handler
@@ -1234,86 +1377,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Save button handler
-  const saveTripBtn = document.getElementById('save-trip-btn');
+    const saveTripBtn = document.getElementById('save-trip-btn');
     if (saveTripBtn) {
-        saveTripBtn.addEventListener('click', async function(e) {
+        saveTripBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            const originalText = saveTripBtn.innerHTML;
-            saveTripBtn.innerHTML = '⏳ Saving...';
-            saveTripBtn.disabled = true;
-
-            try {
-                const tripData = {
-                    title: document.getElementById('trip-title').innerText.replace('Trip to ', '').trim(),
-                    start_date: document.getElementById('start-date').value,
-                    end_date: document.getElementById('end-date').value,
-                    budget: document.getElementById('budget-slider').value,
-                    travelers: document.getElementById('travelers-count').value,
-                    items: [] 
-                };
-
-                const dayCards = document.querySelectorAll('.itinerary-day-full');
-                dayCards.forEach(dayCard => {
-                    const dayNumber = parseInt(dayCard.getAttribute('data-day'));
-                    const placeCards = dayCard.querySelectorAll('.place-card');
-                    
-                    placeCards.forEach((placeCard, index) => {
-                        const destinationId = placeCard.dataset.destinationId;
-                        const note = placeCard.dataset.note || '';
-                        
-                        if (destinationId) {
-                            tripData.items.push({
-                                destination_id: destinationId,
-                                day: dayNumber,
-                                order: index,
-                                notes: note
-                            });
-                        }
-                    });
-                });
-
-                // --- KHẮC PHỤC LỖI 405 ---
-                const currentLang = window.location.pathname.split('/')[1] || 'en';
-                const apiUrl = `/${currentLang}/api/save-full-trip/`;
-                
-                console.log('🔗 API URL:', apiUrl); // Kiểm tra xem link đúng chưa
-
-                const csrftoken = getCookie('csrftoken');
-                const response = await fetch(apiUrl, { 
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken
-                    },
-                    body: JSON.stringify(tripData)
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Server error ${response.status}: ${errorText}`);
-                }
-
-                const result = await response.json();
-
-                if (result.success) {
-                    showNotification('✅ Trip saved successfully!', 'success');
-                } else {
-                    showNotification('❌ Error: ' + result.message, 'error');
-                }
-
-            } catch (error) {
-                console.error('Save Error:', error);
-                showNotification('❌ Save failed: ' + error.message, 'error');
-            } finally {
-                saveTripBtn.innerHTML = originalText;
-                saveTripBtn.disabled = false;
-            }
+            console.log('💾 Save button clicked');
+            saveAllItinerary();
         });
     }
 
-
-    // Auto-fill button handler
     const autoFillBtn = document.getElementById('auto-fill-btn');
     if (autoFillBtn) {
         autoFillBtn.addEventListener('click', async function() {
@@ -1346,28 +1418,35 @@ document.addEventListener("DOMContentLoaded", function () {
             const updatePromises = [];
 
             // 2. VÒNG LẶP XỬ LÝ
-           for (const card of savedCards) {
+            for (const card of savedCards) {
                 const title = card.querySelector('.explore-card__title').textContent;
                 const subtitle = card.querySelector('.explore-card__subtitle').textContent;
                 const imgStyle = card.querySelector('.explore-card__image').style.backgroundImage;
                 const removeBtn = card.querySelector('.remove-trip-item-btn');
-                
-                // --- SỬA LỖI TẠI ĐÂY ---
-                // Cần lấy Destination ID (để lưu vào DB) chứ không phải Item ID cũ
-                const destinationId = removeBtn?.getAttribute('data-destination-id'); 
+                const itemId = removeBtn?.getAttribute('data-item-id');
 
                 const targetDayCard = dayCards[currentDayIndex];
                 const dayNumber = parseInt(targetDayCard.getAttribute('data-day'));
+                const currentPlacesCount = targetDayCard.querySelectorAll('.place-card').length; 
                 
-                // Gọi hàm thêm vào giao diện (itemId ở đây phải là Destination ID)
+                // GỌI HÀM CÓ SẴN (Giờ đã gọi được vì nằm cùng scope)
                 addPlaceToDay(dayNumber, {
                     title: title,
                     subtitle: subtitle,
                     image: imgStyle,
-                    itemId: destinationId // <--- QUAN TRỌNG: Phải truyền destinationId
-                }, null); // Để null tham số thứ 2 để coi như item mới
+                    itemId: itemId 
+                }, itemId);
 
                 card.remove();
+
+                if (itemId) {
+                    const promise = updateItineraryOrder(itemId, dayNumber, currentPlacesCount, '')
+                        .then(success => {
+                            if(!success) console.warn(`Failed to sync item ${itemId}`);
+                            return success;
+                        });
+                    updatePromises.push(promise);
+                }
 
                 currentDayIndex = (currentDayIndex + 1) % totalDays;
             }
@@ -1420,7 +1499,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-let csrftoken = getCookie('csrftoken');
+const csrftoken = getCookie('csrftoken');
 
 document.addEventListener('DOMContentLoaded', function() {
   // Get current language from URL
@@ -1762,66 +1841,149 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // ===================================
-  // BUDGET & EXPENSES FUNCTIONALITY - FIXED
+  // BUDGET & EXPENSES FUNCTIONALITY
   // ===================================
 
-  // Sử dụng tên biến riêng biệt để tránh lỗi Redeclaration (trùng tên)
-  let initialBudgetMillion = parseFloat('{{ budget|default:"50" }}');
-  if (initialBudgetMillion === 0) initialBudgetMillion = 50; // Default to 50 if 0
-  let currentTravelersCount = parseInt('{{ travelers|default:"1" }}');
+  // Get budget and travelers from context
+  const rawBudget = '{{ budget|default_if_none:"0" }}';
+  const rawTravelers = '{{ travelers|default_if_none:"1" }}';
 
-  // Quy đổi sang VND để tính toán
-  let totalBaseBudgetVND = initialBudgetMillion * 1000000;
-  let tripExpensesList = []; 
+  // Budget is in millions, convert to actual VND
+  const totalBudgetInMillions = (() => {
+    const normalized = (rawBudget || '0').toString().replace(/[^0-9.-]/g, '');
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : 0;
+  })();
+  
+  const totalBudget = totalBudgetInMillions * 1000000; // Convert millions to VND
 
-  // Hàm format tiền tệ
-  function formatVNDCustom(amount) {
-    return Math.round(amount).toLocaleString('vi-VN') + ' VND';
+  const travelers = (() => {
+    const normalized = (rawTravelers || '1').toString().replace(/[^0-9.-]/g, '');
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+  })();
+  
+  // Store expenses
+  let expenses = [];
+
+  // Initialize budget display
+  function initBudget() {
+    updateBudgetDisplay();
+  }
+  
+  // Format number with thousand separators
+  function formatVND(amount) {
+    return Math.round(amount).toLocaleString('en-US') + ' VND';
   }
 
-  // HÀM QUAN TRỌNG: Cập nhật hiển thị ngay lập tức
-  function refreshBudgetUI() {
-    const totalDisplay = document.getElementById('total-budget-display');
+  // Update budget display with current expenses
+  function updateBudgetDisplay() {
+    const budgetDisplay = document.getElementById('total-budget-display');
     const travelersDisplay = document.getElementById('travelers-display');
     const perPersonDisplay = document.getElementById('per-person-display');
     
-    // Tính tổng chi phí từ các khoản add thêm (nếu có)
-    const expenseSum = tripExpensesList.reduce((sum, exp) => sum + exp.amount, 0);
-    const finalTotalVND = totalBaseBudgetVND + expenseSum;
+    // Calculate total expenses
+    const totalExpensesVND = expenses.reduce((sum, expense) => sum + expense.amount, 0);
     
-    if (totalDisplay) {
-        // Hiển thị số tiền tổng (Xóa chữ VND để khớp giao diện của bạn)
-        totalDisplay.textContent = Math.round(finalTotalVND).toLocaleString('vi-VN');
+    // Current budget = initial budget + expenses (both in VND)
+    const currentBudgetVND = totalBudget + totalExpensesVND;
+    
+    if (budgetDisplay) {
+      budgetDisplay.textContent = formatVND(currentBudgetVND).replace(' VND', '');
     }
     
     if (travelersDisplay) {
-        travelersDisplay.textContent = currentTravelersCount;
+      travelersDisplay.textContent = travelers;
     }
     
     if (perPersonDisplay) {
-        const avg = currentTravelersCount > 0 ? (finalTotalVND / currentTravelersCount) : 0;
-        perPersonDisplay.textContent = formatVNDCustom(avg);
+      const perPersonVND = currentBudgetVND / travelers;
+      perPersonDisplay.textContent = formatVND(perPersonVND);
     }
   }
 
-  // GỌI HÀM NGAY KHI LOAD TRANG
-  document.addEventListener('DOMContentLoaded', function() {
-      console.log("Budget System Initialized:", totalBaseBudgetVND);
-      refreshBudgetUI();
+  // Expense modal management
+  const expenseModal = document.getElementById('expense-modal');
+  const addExpenseBtn = document.getElementById('add-expense-btn');
+  const addOtherExpenseBtn = document.getElementById('add-other-expense-btn');
+  const closeExpenseModalBtn = document.getElementById('close-expense-modal');
+  const cancelExpenseBtn = document.getElementById('cancel-expense');
+  const expenseForm = document.getElementById('expense-form');
+  const categoryBtns = document.querySelectorAll('.category-btn');
+
+  let selectedCategory = null;
+
+  // Open expense modal
+  function openExpenseModal() {
+  console.log('🚀 Opening expense modal...');
+  
+  const modal = document.getElementById('expense-modal');
+  if (!modal) {
+    console.error('❌ Modal not found!');
+    return;
+  }
+  
+  console.log('Before - opacity:', window.getComputedStyle(modal).opacity);
+  console.log('Before - visibility:', window.getComputedStyle(modal).visibility);
+  console.log('Before - display:', window.getComputedStyle(modal).display);
+  
+  // ADD CLASS, DON'T CHANGE DISPLAY
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  
+  // Force reflow
+  void modal.offsetHeight;
+  
+  console.log('After - opacity:', window.getComputedStyle(modal).opacity);
+  console.log('After - visibility:', window.getComputedStyle(modal).visibility);
+  console.log('After - display:', window.getComputedStyle(modal).display);
+  console.log('✅ Modal classes:', modal.className);
+}
+
+function closeExpenseModalFunc() {
+  const modal = document.getElementById('expense-modal');
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  
+  const form = document.getElementById('expense-form');
+  if (form) {
+    form.reset();
+  }
+  
+  selectedCategory = null;
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+}
+  // Category selection
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      categoryBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedCategory = btn.dataset.category;
+      
+      const nameGroup = document.getElementById('expense-name-group');
+      const nameInput = document.getElementById('expense-name');
+      
+      // Only show name input for 'other' category
+      if (selectedCategory === 'other') {
+        nameGroup.style.display = 'flex';
+        nameInput.required = true;
+        nameInput.value = '';
+      } else {
+        nameGroup.style.display = 'none';
+        nameInput.required = false;
+        nameInput.value = '';
+      }
+    });
   });
 
-  // Cập nhật khi người dùng kéo Slider trong Settings Modal
-  const bSlider = document.getElementById('budget-slider');
-  const bValueText = document.getElementById('budget-value');
-  
-  if (bSlider) {
-    bSlider.addEventListener('input', function() {
-      bValueText.textContent = this.value;
-      // Cập nhật biến toàn cục và vẽ lại UI ngay lập tức
-      totalBaseBudgetVND = parseFloat(this.value) * 1000000;
-      refreshBudgetUI();
-    });
-  }
+  // Add expense
+  if (expenseForm) {
+    expenseForm.addEventListener('submit', (e) => {
+      e.preventDefault();
       
       const nameInput = document.getElementById('expense-name');
       const amountInput = document.getElementById('expense-amount');
@@ -1996,6 +2158,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  // Initialize budget on page load
+  initBudget();
+  renderExpenses();
 
   // ============================================
   // NOTE MODAL MANAGEMENT
@@ -2221,191 +2387,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.style.cursor = '';
         }
     });
-});
-</script>
-
-<div id="ai-chat-panel" style="display: none;">
-  <div class="ai-chat-header">
-      <div style="display: flex; align-items: center; gap: 8px;">
-          <span>🤖</span>
-          <span>AI Assistant</span>
-      </div>
-      <button onclick="toggleChat()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">&times;</button>
-  </div>
-  
-  <div id="ai-chat-messages">
-      <div class="ai-message bot-msg">
-          Chào bạn! Tôi có thể giúp gì cho chuyến đi <b>{{ trip_destination|default:"này" }}</b> của bạn?
-          <br><br>
-          <i>Gợi ý: "Tìm quán ăn ngon", "Lên lịch trình ngày mai", "Chi phí dự kiến"...</i>
-      </div>
-  </div>
-
-  <div class="ai-chat-input-area">
-      <input type="text" id="ai-user-input" placeholder="Nhập câu hỏi..." autocomplete="off">
-      <button onclick="sendAIMessage()">➤</button>
-  </div>
-</div>
-
-<style>
-/* CSS CHO AI CHAT PANEL */
-#ai-chat-panel {
-    position: fixed;
-    bottom: 80px;      /* Cách đáy màn hình */
-    left: 280px;       /* Cách lề trái (để không đè lên Sidebar) */
-    width: 380px;
-    height: 500px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    z-index: 9999;     /* Luôn nổi lên trên */
-    border: 1px solid #eee;
-    font-family: 'Montserrat', sans-serif;
-    animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.ai-chat-header {
-    background: #fb8700; /* Màu cam chủ đạo */
-    color: white;
-    padding: 15px;
-    border-radius: 12px 12px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-}
-
-#ai-chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background: #fff9f2;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.ai-message {
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 85%;
-    word-wrap: break-word;
-}
-
-.bot-msg {
-    background: white;
-    border: 1px solid #eee;
-    align-self: flex-start;
-    color: #333;
-    border-top-left-radius: 2px;
-}
-
-.user-msg {
-    background: #fb8700;
-    color: white;
-    align-self: flex-end;
-    border-top-right-radius: 2px;
-}
-
-.ai-chat-input-area {
-    padding: 10px;
-    border-top: 1px solid #eee;
-    display: flex;
-    gap: 8px;
-    background: white;
-    border-radius: 0 0 12px 12px;
-}
-
-#ai-user-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    outline: none;
-}
-
-#ai-user-input:focus {
-    border-color: #fb8700;
-}
-
-.ai-chat-input-area button {
-    background: #fb8700;
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s;
-}
-
-.ai-chat-input-area button:hover {
-    background: #e67a00;
-}
-</style>
-
-<script>
-// Chat functions
-function toggleChat() {
-    const panel = document.getElementById('ai-chat-panel');
-    if (panel.style.display === 'none' || panel.style.display === '') {
-        panel.style.display = 'flex';
-    } else {
-        panel.style.display = 'none';
-    }
-}
-
-function sendAIMessage() {
-    const input = document.getElementById('ai-user-input');
-    const message = input.value.trim();
-    if (!message) return;
-    
-    // Add user message
-    addMessage(message, 'user');
-    input.value = '';
-    
-    // Send to API
-    fetch('/api/chat/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken
-        },
-        body: JSON.stringify({ message: message })
-    })
-    .then(response => response.json())
-    .then(data => {
-        addMessage(data.response, 'bot');
-    })
-    .catch(error => {
-        addMessage('Xin lỗi, có lỗi xảy ra.', 'bot');
-    });
-}
-
-function addMessage(text, type) {
-    const messages = document.getElementById('ai-chat-messages');
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'ai-message ' + (type === 'user' ? 'user-msg' : 'bot-msg');
-    msgDiv.innerHTML = text;
-    messages.appendChild(msgDiv);
-    messages.scrollTop = messages.scrollHeight;
-}
-
-// Allow sending message on Enter key
-document.getElementById('ai-user-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendAIMessage();
-    }
 });
 </script>
 </body>
